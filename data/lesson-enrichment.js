@@ -84,7 +84,10 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "Antes de ler, tente 15 minutos de teste exploratório em qualquer site. Não planeje — só explore. Depois leia a aula e veja se você usou charters, SFDIPOT ou SBTM sem saber.",
       "en": "Before reading, try 15 minutes of exploratory testing on any site. Don't plan — just explore. Then read the lesson and see if you used charters, SFDIPOT or SBTM without knowing it."
     },
-    "seniorNote": null
+    "seniorNote": {
+      "pt": "Teste exploratório como sênior não é 'brincar com o app'. É investigação estruturada com objetivos de negócio. Cada sessão deve ter um charter claro, notas de bugs reais, e preferencialmente um debrief com desenvolvedores. O valor está em descobrir edge cases que scripts jamais encontrariam — bugs de integração, problemas de performance, comportamentos inesperados de estado.",
+      "en": "Exploratory testing as a senior isn't 'playing with the app'. It's structured investigation with business objectives. Each session should have a clear charter, real bug notes, and preferably a debrief with developers. The value lies in discovering edge cases scripts would never find — integration bugs, performance issues, unexpected state behaviors."
+    }
   },
   "s4-l1": {
     "tier": "beginner",
@@ -309,7 +312,10 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "Destructuring e spread são os recursos JS mais usados em código de testes modernos. Se você ver '{ page }' em um teste Playwright e não souber o que significa, esta aula explica exatamente isso.",
       "en": "Destructuring and spread are the most-used JS features in modern test code. If you see '{ page }' in a Playwright test and don't know what it means, this lesson explains exactly that."
     },
-    "seniorNote": null
+    "seniorNote": {
+      "pt": "JavaScript moderno é essencial para automação web moderna. Conhecer async/await, Promises, e métodos de array (map, filter, reduce) permite escrever testes mais limpos e poderosos. Como sênior, você também deve entender o que acontece sob o capô: event loop, hoisting, e closure — bugs sutis de async geralmente vêm de mal-entender esses conceitos.",
+      "en": "Modern JavaScript is essential for modern web automation. Knowing async/await, Promises, and array methods (map, filter, reduce) allows writing cleaner, more powerful tests. As a senior, you should also understand what's under the hood: event loop, hoisting, and closure — subtle async bugs usually come from misunderstanding these concepts."
+    }
   },
   "w1-l2": {
     "tier": "intermediate",
@@ -994,7 +1000,10 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "QA de segurança não é Security Engineer — você não precisa saber explorar vulnerabilidades. Precisa saber testá-las: verificar se os controles de segurança implementados pelos devs funcionam.",
       "en": "Security QA isn't a Security Engineer — you don't need to know how to exploit vulnerabilities. You need to test them: verify if security controls implemented by devs actually work."
     },
-    "seniorNote": null
+    "seniorNote": {
+      "pt": "QA de segurança como sênior envolve shift-left security integrando verificações em CI/CD (SAST, DAST, SCA). Você não precisa ser pentester, mas deve saber identificar controles críticos (auth, authz, input validation, encryption) e garantir que eles estão sendo testados automaticamente. Colabore com Security Engineers para entender threat modeling e validar que mitigações estão implementadas corretamente.",
+      "en": "Security QA as a senior involves shift-left security integrating checks in CI/CD (SAST, DAST, SCA). You don't need to be a pentester, but should know how to identify critical controls (auth, authz, input validation, encryption) and ensure they're being tested automatically. Collaborate with Security Engineers to understand threat modeling and validate that mitigations are correctly implemented."
+    }
   },
   "sec1-l2": {
     "tier": "intermediate",
@@ -1317,7 +1326,10 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "Um test strategy document de 1 página é mais útil que 10 páginas de plano de teste. Deve responder: O que testamos? Como testamos? Quem é responsável? Quais são os critérios de aceite? Quando paramos?",
       "en": "A 1-page test strategy document is more useful than a 10-page test plan. It should answer: What do we test? How do we test? Who is responsible? What are the acceptance criteria? When do we stop?"
     },
-    "seniorNote": null
+    "seniorNote": {
+      "pt": "Test strategy como sênior é um documento vivo, não shelfware. Revisite trimestralmente ou quando a arquitetura mudar significativamente. O valor está na alinhamento entre time e negócio, não no documento em si. Se ninguém lê ou usa sua strategy, ela precisa ser repensada — talvez esteja longa demais ou desconectada da realidade do dia a dia.",
+      "en": "Test strategy as a senior is a living document, not shelfware. Revisit quarterly or when architecture changes significantly. The value lies in alignment between team and business, not the document itself. If no one reads or uses your strategy, it needs rethinking — perhaps it's too long or disconnected from daily reality."
+    }
   },
   "lead1-l2": {
     "tier": "senior",
