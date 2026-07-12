@@ -20,11 +20,13 @@
   const achievementsList = window.TG_ACHIEVEMENTS   || [];
 
   let lang        = getStorage(STORAGE_LANG, "tg-qaway-lang") || "pt";
+  // Expose lang globally for utils.js
+  window.lang = lang;
   let persona     = getStorage(STORAGE_PERSONA) || "experienced";
   let progress    = loadProgress();
-  let bookmarks   = loadJson(STORAGE_BOOKMARKS, []);
-  let quizzesPassed = loadJson(STORAGE_QUIZZES, {});
-  let checklistState = loadJson(STORAGE_CHECKLISTS, {});
+  const bookmarks   = loadJson(STORAGE_BOOKMARKS, []);
+  const quizzesPassed = loadJson(STORAGE_QUIZZES, {});
+  const checklistState = loadJson(STORAGE_CHECKLISTS, {});
   let theme       = getStorage(STORAGE_THEME) || "dark";
   let seniorMode  = getStorage(STORAGE_SENIOR_MODE) === "true";
   let currentView = "home";
@@ -151,6 +153,7 @@
   // ── Language ──────────────────────────────────────────────────────────────
   function setLang(newLang) {
     lang = newLang === "en" ? "en" : "pt";
+    window.lang = lang; // Keep global lang in sync
     localStorage.setItem(STORAGE_LANG, lang);
     document.documentElement.lang = lang === "en" ? "en" : "pt-BR";
     document.title = t("meta.title");
@@ -175,20 +178,12 @@
     const label = document.getElementById("lang-label");
     const flag  = btn?.querySelector(".lang-flag");
     if (label) label.textContent = t("lang.toggle");
-    if (flag) flag.textContent = lang === "pt" ? "🇧🇷" : "🇺🇸";
+    if (flag) flag.textContent = getCurrentLangKey() === "pt" ? "🇧🇷" : "🇺🇸";
   }
 
 
   // ── Utilities ─────────────────────────────────────────────────────────────
-  function getCurrentLangKey() {
-    return lang === "en" ? "en" : "pt";
-  }
-
-  function escapeHtml(str) {
-    return String(str)
-      .replace(/&/g, "&amp;").replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-  }
+  // getCurrentLangKey and escapeHtml are now in utils.js and shared across the app
 
   function showToast(msg) {
     const el = document.getElementById("toast");
@@ -328,7 +323,7 @@
       return `<div class="achievement-card ${isUnlocked ? "unlocked" : "locked"}" title="${isUnlocked ? data.desc : "?"}">
         <div class="ach-icon">${isUnlocked ? ach.icon : "🔒"}</div>
         <div class="ach-title">${isUnlocked ? escapeHtml(data.title) : "???"}</div>
-        <div class="ach-desc">${isUnlocked ? escapeHtml(data.desc) : (lang === "en" ? "Keep learning to unlock" : "Continue estudando para desbloquear")}</div>
+        <div class="ach-desc">${isUnlocked ? escapeHtml(data.desc) : t("achievements.lockedMessage")}</div>
       </div>`;
     }).join("");
   }
@@ -356,11 +351,6 @@
 
   function isRecommended(trackId) {
     return (PERSONA_TRACKS[persona] || []).includes(trackId);
-  }
-
-  function filterTracks(list) {
-    if (trackFilter === "all") return list;
-    return list.filter((tr) => TRACK_AUDIENCE[tr.id] === trackFilter);
   }
 
   function sortTracksForPersona(list) {
@@ -421,7 +411,7 @@
       <div class="track-card-header">
         <span class="track-icon">${track.icon}</span>
         <div class="track-badges">
-          ${isComplete ? `<span class="badge-complete">✅ ${lang === "en" ? "Complete" : "Completo"}</span>` : ""}
+          ${isComplete ? `<span class="badge-complete">✅ ${t("dashboard.complete")}</span>` : ""}
           ${rec && !isComplete ? `<span class="badge-rec">${t("track.recommended")}</span>` : ""}
           <span class="tier-badge tier-${audience}">${tierLabel(audience)}</span>
         </div>
@@ -790,7 +780,6 @@
     let coursesHtml = "";
     raw.courses.forEach((rawCourse, idx) => {
       const course      = localizedCourse(rawCourse);
-      const isLastCourse = idx === raw.courses.length - 1;
       const lessonsHtml  = rawCourse.lessons.map((rawLesson) => {
         const lesson = localizedLesson(rawLesson);
         const enr    = getEnrichment(rawLesson.id);
@@ -863,7 +852,6 @@
     const enr      = getEnrichment(rawLesson.id);
     const isBookmarked = bookmarks.includes(rawLesson.id);
     const langKey  = getCurrentLangKey();
-    const isProjectLesson = rawLesson.id.includes("-l") && course.title.toLowerCase().includes("project" || "projeto");
     saveLastLesson(lessonId);
 
     document.getElementById("lesson-track-link").textContent = track.title;

@@ -70,9 +70,12 @@ window.TG_I18N = {
       explain: "Explicação", backTrack: "← Voltar à trilha", takeQuiz: "🎯 Fazer Quiz",
       alreadyPassed: "Você já aprovou este quiz!", tryAgain: "Tentar Novamente",
       questions: "perguntas", pass: "Aprovação",
+      noQuiz: "Nenhum quiz disponível para esta trilha ainda.",
     },
     checklist: {
       title: "Checklist do Projeto Final", progress: "itens concluídos",
+      complete: "Projeto concluído! Parabéns.",
+      toastComplete: "✅ Checklist do projeto completo!",
     },
     settings: {
       theme: "Tema", seniorMode: "Modo Sênior", seniorModeDesc: "Oculta dicas de iniciante",
@@ -104,6 +107,13 @@ window.TG_I18N = {
     footer: {
       line1: "Testers Guild QA Course · Do iniciante ao sênior · Uso pessoal e estudo",
       line2: "Plataforma independente de formação em Qualidade de Software.",
+    },
+    labs: {
+      noLabs: "Nenhum lab disponível.",
+      openLab: "Abrir lab ↗",
+    },
+    achievements: {
+      lockedMessage: "Continue estudando para desbloquear",
     },
     levels: { beginner: "Iniciante", intermediate: "Intermediário", advanced: "Avançado" },
     price: "R$ 0",
@@ -183,9 +193,12 @@ window.TG_I18N = {
       explain: "Explanation", backTrack: "← Back to path", takeQuiz: "🎯 Take Quiz",
       alreadyPassed: "You already passed this quiz!", tryAgain: "Try Again",
       questions: "questions", pass: "Pass",
+      noQuiz: "No quiz available for this track yet.",
     },
     checklist: {
       title: "Final Project Checklist", progress: "items done",
+      complete: "Project complete! Great work.",
+      toastComplete: "✅ Project checklist complete!",
     },
     settings: {
       theme: "Theme", seniorMode: "Senior Mode", seniorModeDesc: "Hide beginner tips",
@@ -217,6 +230,13 @@ window.TG_I18N = {
     footer: {
       line1: "Testers Guild QA Course · Beginner to senior · Personal study use",
       line2: "Independent Software Quality training platform.",
+    },
+    labs: {
+      noLabs: "No labs available.",
+      openLab: "Open lab ↗",
+    },
+    achievements: {
+      lockedMessage: "Keep learning to unlock",
     },
     levels: { beginner: "Beginner", intermediate: "Intermediate", advanced: "Advanced" },
     price: "$0",

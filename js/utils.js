@@ -21,9 +21,20 @@ function escapeHtml(str) {
  */
 function getCurrentLangKey() {
   // Check if lang is defined globally (from app.js) or use fallback
-  if (typeof lang !== "undefined") {
-    return lang === "en" ? "en" : "pt";
+  if (typeof window !== "undefined" && window.lang) {
+    return window.lang === "en" ? "en" : "pt";
   }
   // Fallback for testing or if lang is not defined
   return "pt";
+}
+
+// Export for Node.js/test environment
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { escapeHtml, getCurrentLangKey };
+}
+
+// Export for browser environment
+if (typeof window !== "undefined") {
+  window.escapeHtml = escapeHtml;
+  window.getCurrentLangKey = getCurrentLangKey;
 }

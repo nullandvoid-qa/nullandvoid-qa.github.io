@@ -3,7 +3,7 @@
 :root {
   /* Charcoal / Graphite dark palette */
   --bg:           #1a1a1a;
-  --bg-card:      #222222;
+  --bg-card:      #222;
   --bg-elevated:  #2e2e2e;
   --border:       #3a3a3a;
   --text:         #f0f0f0;
@@ -303,7 +303,7 @@ a:hover { text-decoration: underline; }
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, #00cfeb, #0099bb);
+  background: linear-gradient(135deg, #00cfeb, #09b);
   transform: translateY(-1px);
   box-shadow: 0 6px 28px rgba(0, 229, 255, 0.5);
 }
@@ -1104,13 +1104,13 @@ a:hover { text-decoration: underline; }
 ═══════════════════════════════════════════════════ */
 [data-theme="light"] {
   --bg:           #f2f2f2;
-  --bg-card:      #ffffff;
+  --bg-card:      #fff;
   --bg-elevated:  #e8e8e8;
   --border:       #d0d0d0;
   --text:         #1a1a1a;
-  --text-muted:   #666666;
-  --accent:       #0099bb;
-  --accent-hover: #007799;
+  --text-muted:   #666;
+  --accent:       #09b;
+  --accent-hover: #079;
   --accent-glow:  rgba(0, 153, 187, 0.2);
   --pink:         #cc005a;
   --pink-hover:   #aa0048;
@@ -1133,29 +1133,29 @@ a:hover { text-decoration: underline; }
 }
 
 [data-theme="light"] .btn-primary {
-  color: #ffffff;
-  background: linear-gradient(135deg, #0099bb, #007799);
+  color: #fff;
+  background: linear-gradient(135deg, #09b, #079);
   box-shadow: 0 4px 18px rgba(0, 153, 187, 0.3);
 }
 
-[data-theme="light"] .tier-beginner     { background: rgba(0, 153, 187, 0.1);  color: #0077aa; }
+[data-theme="light"] .tier-beginner     { background: rgba(0, 153, 187, 0.1);  color: #07a; }
 [data-theme="light"] .tier-intermediate { background: rgba(204, 0, 90, 0.1);   color: #aa0050; }
-[data-theme="light"] .tier-senior       { background: rgba(80, 80, 80, 0.12);  color: #444444; }
+[data-theme="light"] .tier-senior       { background: rgba(80, 80, 80, 0.12);  color: #444; }
 
 [data-theme="light"] .lesson-box-beginner {
   background: rgba(0, 153, 187, 0.06);
   border-color: rgba(0, 153, 187, 0.2);
 }
-[data-theme="light"] .lesson-box-beginner h3 { color: #0077aa; }
+[data-theme="light"] .lesson-box-beginner h3 { color: #07a; }
 
 [data-theme="light"] .lesson-box-senior {
   background: rgba(80, 80, 80, 0.06);
   border-color: rgba(80, 80, 80, 0.18);
 }
-[data-theme="light"] .lesson-box-senior h3 { color: #555555; }
+[data-theme="light"] .lesson-box-senior h3 { color: #555; }
 
 [data-theme="light"] .discord-banner {
-  background: linear-gradient(135deg, #f0f0f0 0%, #ffffff 40%, #f5f5f5 100%);
+  background: linear-gradient(135deg, #f0f0f0 0%, #fff 40%, #f5f5f5 100%);
 }
 
 [data-theme="light"] .discord-cta { color: #1a1a1a; }
@@ -1670,7 +1670,7 @@ a:hover { text-decoration: underline; }
   border-radius: var(--radius-lg);
   overflow: hidden;
   position: relative;
-  background: linear-gradient(135deg, #1a1a1a 0%, #222222 40%, #2a2a2a 100%);
+  background: linear-gradient(135deg, #1a1a1a 0%, #222 40%, #2a2a2a 100%);
   border: 1px solid rgba(88, 101, 242, 0.45);
   box-shadow: 0 0 0 1px rgba(88, 101, 242, 0.15), 0 8px 32px rgba(88, 101, 242, 0.18);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
