@@ -1478,29 +1478,6 @@
   updateLangToggle();
   checkAchievements();
   initDiscordBanner();
-  
-  // Ensure data is loaded before rendering
-  const checkDataAndRender = () => {
-    if (typeof window.TG_QAWAY_TRACKS !== 'undefined' && 
-        Array.isArray(window.TG_QAWAY_TRACKS) && 
-        window.TG_QAWAY_TRACKS.length > 0) {
-      // Verify that tracks have valid courses and lessons structure
-      const hasValidData = window.TG_QAWAY_TRACKS.some(track => 
-        track.courses && Array.isArray(track.courses) && track.courses.some(course =>
-          course.lessons && Array.isArray(course.lessons) && course.lessons.length > 0
-        )
-      );
-      
-      if (hasValidData) {
-        renderHome();
-      } else {
-        setTimeout(checkDataAndRender, 100);
-      }
-    } else {
-      setTimeout(checkDataAndRender, 100);
-    }
-  };
-  
-  checkDataAndRender();
+  renderHome();
 
 })();
