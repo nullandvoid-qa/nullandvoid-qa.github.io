@@ -581,7 +581,10 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "Newman é o que transforma Postman de ferramenta manual em ferramenta de CI. O comando 'newman run collection.json -e environment.json' é tudo que você precisa para integrar na pipeline.",
       "en": "Newman is what transforms Postman from a manual tool into a CI tool. The command 'newman run collection.json -e environment.json' is all you need to integrate into the pipeline."
     },
-    "seniorNote": null
+    "seniorNote": {
+      "pt": "Como sênior, você deve questionar se Postman/Newman é a solução certa ou se deve migrar para automação nativa (Jest, Supertest, REST Assured). Postman é ótimo para time não-técnico, mas para escala de longo prazo, código versionado com framework de teste oferece mais controle, paralelização e integração com outras ferramentas. Avalie trade-offs: Postman para início rápido, frameworks para escala e manutenção.",
+      "en": "As a senior, you should question if Postman/Newman is the right solution or if you should migrate to native automation (Jest, Supertest, REST Assured). Postman is great for non-technical teams, but for long-term scale, versioned code with test framework offers more control, parallelization, and integration with other tools. Evaluate trade-offs: Postman for quick start, frameworks for scale and maintenance."
+    }
   },
   "a2-l3": {
     "tier": "intermediate",
@@ -1226,7 +1229,10 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "Passe 5 minutos navegando em qualquer site APENAS com o teclado (Tab, Shift+Tab, Enter, Space). Você vai encontrar mais barreiras de acessibilidade em 5 minutos do que qualquer ferramenta automática revelaria.",
       "en": "Spend 5 minutes navigating any website using ONLY the keyboard (Tab, Shift+Tab, Enter, Space). You'll find more accessibility barriers in 5 minutes than any automated tool would reveal."
     },
-    "seniorNote": null
+    "seniorNote": {
+      "pt": "Acessibilidade como sênior não é só testar com axe-core — é shift-left a11y. Integre a11y no lint (eslint-plugin-jsx-a11y), em PR reviews (checklist de semântica HTML), e em testes E2E (validar keyboard navigation). Colabore com UX/design desde o wireframe — a11y deve ser considerada no design, não remediada no final. Consulte usuários reais com deficiência em sessões de teste.",
+      "en": "Accessibility as a senior isn't just testing with axe-core — it's shift-left a11y. Integrate a11y in lint (eslint-plugin-jsx-a11y), in PR reviews (HTML semantics checklist), and in E2E tests (validate keyboard navigation). Collaborate with UX/design from wireframe — a11y should be considered in design, not remediated at the end. Consult real users with disabilities in testing sessions."
+    }
   },
   "a11y1-l2": {
     "tier": "intermediate",
