@@ -17,7 +17,6 @@ window.TG_I18N = {
       statPrice: "Para sempre",
       ctaExplore: "Explorar Trilhas →",
       ctaProgress: "Ver Progresso",
-      loading: "Carregando...",
     },
     persona: {
       title: "Qual é o seu perfil?",
@@ -47,7 +46,7 @@ window.TG_I18N = {
     features: {
       unlocked: { title: "Tudo liberado", desc: "Nenhuma aula bloqueada. Sem assinatura, sem cartão." },
       dual: { title: "Iniciante + Sênior", desc: "Cada aula tem dicas para quem começa e notas Guild Master para experientes." },
-      tracks: { title: "8 trilhas originais", desc: "Fundamentos até maestria: web, API, performance, security, DevOps, a11y." },
+      tracks: { title: "9 trilhas originais", desc: "Fundamentos até maestria: web, API, mobile, performance, security, DevOps, a11y." },
       progress: { title: "Progresso local", desc: "Marque aulas concluídas — salvo no navegador, sem conta." },
     },
     track: {
@@ -67,23 +66,15 @@ window.TG_I18N = {
     },
     quiz: {
       title: "Quiz da Trilha", start: "Iniciar Quiz", submit: "Verificar respostas",
-      passed: "Aprovado!", failed: "Tente novamente", score: "Pontuação",
+      passed: "Aprovado!", failed: "Tente novamente", score: "Acertos",
       explain: "Explicação", backTrack: "← Voltar à trilha", takeQuiz: "🎯 Fazer Quiz",
-      alreadyPassed: "Você já aprovou este quiz!", tryAgain: "Tentar Novamente",
-      questions: "perguntas", pass: "Aprovação",
-      noQuiz: "Nenhum quiz disponível para esta trilha ainda.",
     },
     checklist: {
       title: "Checklist do Projeto Final", progress: "itens concluídos",
-      complete: "Projeto concluído! Parabéns.",
-      toastComplete: "✅ Checklist do projeto completo!",
     },
     settings: {
       theme: "Tema", seniorMode: "Modo Sênior", seniorModeDesc: "Oculta dicas de iniciante",
       light: "Claro", dark: "Escuro",
-      lightTitle: "☀️ Tema claro", darkTitle: "🌙 Tema escuro",
-      seniorModeEnabled: "Modo Sênior ativado", seniorModeDisabled: "Modo Sênior desativado",
-      seniorModeOn: "Modo Sênior ATIVO", seniorModeOff: "Modo Sênior",
     },
     certificate: {
       title: "Certificado da Guilda", download: "Imprimir / Salvar PDF",
@@ -97,12 +88,7 @@ window.TG_I18N = {
       resetProgress: "Resetar progresso", resetConfirm: "Tem certeza que deseja apagar todo o progresso?",
       continueTitle: "Continuar de onde parou", continueBtn: "Retomar aula →",
       searchPlaceholder: "Buscar trilhas ou aulas…", noResults: "Nenhum resultado encontrado.",
-      bookmarksTitle: "Aulas Favoritas", quizzesPassed: "Quizzes aprovados",
-      noBookmarks: "Nenhuma aula favoritada ainda.", complete: "Completo",
-      quizzesPassedLabel: "Quizzes aprovados",
-      exportProgress: "Exportar Progresso", importProgress: "Importar Progresso",
-      exportSuccess: "Progresso exportado com sucesso!", importSuccess: "Progresso importado com sucesso!",
-      importError: "Erro ao importar progresso. Verifique o arquivo.",
+      bookmarksTitle: "Aulas Favoritas",
     },
     toast: {
       lessonDone: "Aula concluída! 🎉", lessonUndone: "Aula desmarcada",
@@ -113,13 +99,6 @@ window.TG_I18N = {
     footer: {
       line1: "Null and Void QA Course · Do iniciante ao sênior · Uso pessoal e estudo",
       line2: "Plataforma independente de formação em Qualidade de Software.",
-    },
-    labs: {
-      noLabs: "Nenhum lab disponível.",
-      openLab: "Abrir lab ↗",
-    },
-    achievements: {
-      lockedMessage: "Continue estudando para desbloquear",
     },
     levels: { beginner: "Iniciante", intermediate: "Intermediário", advanced: "Avançado" },
     price: "R$ 0",
@@ -146,7 +125,6 @@ window.TG_I18N = {
       statPrice: "Forever",
       ctaExplore: "Explore Paths →",
       ctaProgress: "View Progress",
-      loading: "Loading...",
     },
     persona: {
       title: "What's your profile?",
@@ -196,23 +174,15 @@ window.TG_I18N = {
     },
     quiz: {
       title: "Path Quiz", start: "Start Quiz", submit: "Check answers",
-      passed: "Passed!", failed: "Try again", score: "Score",
+      passed: "Passed!", failed: "Try again", score: "Correct",
       explain: "Explanation", backTrack: "← Back to path", takeQuiz: "🎯 Take Quiz",
-      alreadyPassed: "You already passed this quiz!", tryAgain: "Try Again",
-      questions: "questions", pass: "Pass",
-      noQuiz: "No quiz available for this track yet.",
     },
     checklist: {
       title: "Final Project Checklist", progress: "items done",
-      complete: "Project complete! Great work.",
-      toastComplete: "✅ Project checklist complete!",
     },
     settings: {
       theme: "Theme", seniorMode: "Senior Mode", seniorModeDesc: "Hide beginner tips",
       light: "Light", dark: "Dark",
-      lightTitle: "☀️ Light theme", darkTitle: "🌙 Dark theme",
-      seniorModeEnabled: "Senior mode enabled", seniorModeDisabled: "Senior mode disabled",
-      seniorModeOn: "Senior Mode ON", seniorModeOff: "Senior Mode",
     },
     certificate: {
       title: "Guild Certificate", download: "Print / Save PDF",
@@ -226,12 +196,7 @@ window.TG_I18N = {
       resetProgress: "Reset progress", resetConfirm: "Are you sure you want to erase all progress?",
       continueTitle: "Continue where you left off", continueBtn: "Resume lesson →",
       searchPlaceholder: "Search paths or lessons…", noResults: "No results found.",
-      bookmarksTitle: "Bookmarked Lessons", quizzesPassed: "Quizzes passed",
-      noBookmarks: "No bookmarked lessons yet.", complete: "Complete",
-      quizzesPassedLabel: "Quizzes passed",
-      exportProgress: "Export Progress", importProgress: "Import Progress",
-      exportSuccess: "Progress exported successfully!", importSuccess: "Progress imported successfully!",
-      importError: "Error importing progress. Please check the file.",
+      bookmarksTitle: "Bookmarked Lessons",
     },
     toast: {
       lessonDone: "Lesson completed! 🎉", lessonUndone: "Lesson unmarked",
@@ -242,13 +207,6 @@ window.TG_I18N = {
     footer: {
       line1: "Null and Void QA Course · Beginner to senior · Personal study use",
       line2: "Independent Software Quality training platform.",
-    },
-    labs: {
-      noLabs: "No labs available.",
-      openLab: "Open lab ↗",
-    },
-    achievements: {
-      lockedMessage: "Keep learning to unlock",
     },
     levels: { beginner: "Beginner", intermediate: "Intermediate", advanced: "Advanced" },
     price: "$0",
