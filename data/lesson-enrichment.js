@@ -351,7 +351,10 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "Custom commands são o equivalente Cypress dos Page Objects: centraliza lógica repetida. Crie cy.login() como primeiro custom command — você vai usar em 90% dos outros testes.",
       "en": "Custom commands are Cypress's equivalent of Page Objects: centralizes repeated logic. Create cy.login() as your first custom command — you'll use it in 90% of other tests."
     },
-    "seniorNote": null
+    "seniorNote": {
+      "pt": "Custom commands são poderosos, mas abuse leva a testes mágicos difíceis de debugar. Como sênior, mantenha commands simples e documentados. Se um command faz mais de 3 coisas, provavelmente está fazendo demais. Considere Page Objects para ações complexas, commands para helpers simples. Commands que abstraem demais podem esconder problemas reais — mantenha testes legíveis.",
+      "en": "Custom commands are powerful, but overuse leads to magical tests hard to debug. As a senior, keep commands simple and documented. If a command does more than 3 things, it's probably doing too much. Consider Page Objects for complex actions, commands for simple helpers. Commands that abstract too much can hide real problems — keep tests readable."
+    }
   },
   "w2-l3": {
     "tier": "intermediate",
