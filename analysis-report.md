@@ -1,4 +1,4 @@
-# Testers Guild QA Course - Analysis Report
+# Null and Void QA Course - Analysis Report
 
 **Date:** July 12, 2026  
 **Repository:** testersguild.github.io  
@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-The Testers Guild QA Course is a well-structured, feature-rich learning platform for software quality assurance. The project demonstrates solid foundations in internationalization, accessibility, and user experience. However, there are significant opportunities for improvement in code quality, performance optimization, and test coverage.
+The Null and Void QA Course is a well-structured, feature-rich learning platform for software quality assurance. The project demonstrates solid foundations in internationalization, accessibility, and user experience. However, there are significant opportunities for improvement in code quality, performance optimization, and test coverage.
 
 **Key Strengths:**
 - Well-organized folder structure
@@ -530,7 +530,7 @@ Consider Playwright or Cypress for:
 
 ## 12. Conclusion
 
-The Testers Guild QA Course platform demonstrates solid engineering fundamentals with excellent UX design and a comprehensive feature set. However, technical debt has accumulated in several areas that need attention:
+The Null and Void QA Course platform demonstrates solid engineering fundamentals with excellent UX design and a comprehensive feature set. However, technical debt has accumulated in several areas that need attention:
 
 **Most Critical Issues:**
 1. Broken test suite preventing quality assurance

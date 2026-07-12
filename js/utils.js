@@ -1,5 +1,5 @@
 /**
- * Utility functions for Testers Guild QA Course
+ * Utility functions for Null and Void QA Course
  */
 
 /**

@@ -1,7 +1,7 @@
 {
   "name": "testersguild.github.io",
   "version": "1.0.0",
-  "description": "Testers Guild QA Course - Main Website",
+  "description": "Null and Void QA Course - Main Website",
   "private": true,
   "scripts": {
     "test": "jest --coverage",

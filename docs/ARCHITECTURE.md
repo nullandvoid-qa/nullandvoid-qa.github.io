@@ -1,8 +1,8 @@
-# Testers Guild QA Course - Architecture Documentation
+# Null and Void QA Course - Architecture Documentation
 
 ## Overview
 
-The Testers Guild QA Course is a single-page application (SPA) built with vanilla JavaScript, designed to provide comprehensive software quality assurance training. The application uses a component-based architecture with clear separation of concerns.
+The Null and Void QA Course is a single-page application (SPA) built with vanilla JavaScript, designed to provide comprehensive software quality assurance training. The application uses a component-based architecture with clear separation of concerns.
 
 ## Technology Stack
 

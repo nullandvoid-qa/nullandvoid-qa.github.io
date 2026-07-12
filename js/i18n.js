@@ -1,7 +1,7 @@
 window.TG_I18N = {
   pt: {
     meta: {
-      title: "Testers Guild QA Course — Trilhas Gratuitas",
+      title: "Null and Void QA Course — Trilhas Gratuitas",
       description: "Formação QA do zero ao sênior. Trilhas gratuitas para iniciantes e conteúdo avançado para experientes.",
     },
     nav: {
@@ -10,7 +10,7 @@ window.TG_I18N = {
     },
     hero: {
       badge: "100% Gratuito · Do zero ao sênior · Sem cadastro",
-      title: "Bem-vindo à Testers Guild",
+      title: "Bem-vindo à Null and Void",
       subtitle: "Formação QA pensada para quem está começando — com profundidade para quem já é sênior. Escolha seu perfil abaixo e siga a rota ideal.",
       statTracks: "Trilhas da Guilda",
       statLessons: "Aulas disponíveis",
@@ -31,7 +31,7 @@ window.TG_I18N = {
       availableTracksSub: "Cada trilha tem identidade própria — filtradas pelo seu perfil.",
       allTracks: "Todas as Trilhas",
       allTracksSub: "Filtre por nível ou explore tudo — 100% gratuito.",
-      whyTitle: "Por que a Testers Guild?",
+      whyTitle: "Por que a Null and Void?",
       whySub: "Uma plataforma, dois mundos: base sólida para iniciantes e profundidade para seniors.",
       myProgress: "Meu Progresso",
       myProgressSub: "Acompanhe suas aulas concluídas em todas as trilhas.",
@@ -88,7 +88,7 @@ window.TG_I18N = {
     certificate: {
       title: "Certificado da Guilda", download: "Imprimir / Salvar PDF",
       earned: "Parabéns! Você completou", route: "Rota",
-      date: "Data", name: "Membro da Testers Guild",
+      date: "Data", name: "Membro da Null and Void",
     },
     filter: { all: "Todos", beginner: "Iniciante", intermediate: "Intermediário", senior: "Avançado" },
     dashboard: {
@@ -111,7 +111,7 @@ window.TG_I18N = {
       quizPassed: "Quiz aprovado! 🎯", achievementUnlocked: "Conquista desbloqueada!",
     },
     footer: {
-      line1: "Testers Guild QA Course · Do iniciante ao sênior · Uso pessoal e estudo",
+      line1: "Null and Void QA Course · Do iniciante ao sênior · Uso pessoal e estudo",
       line2: "Plataforma independente de formação em Qualidade de Software.",
     },
     labs: {
@@ -125,12 +125,12 @@ window.TG_I18N = {
     price: "R$ 0",
     breadcrumb: { tracks: "Trilhas", roadmap: "Rotas", glossary: "Glossário", labs: "Labs", quiz: "Quiz" },
     lang: { toggle: "ENG", current: "PT" },
-    brand: { name: "Testers Guild", suffix: "QA Course" },
+    brand: { name: "Null and Void", suffix: "QA Course" },
     roadmap: { start: "Começar →", why: "Por quê" },
   },
   en: {
     meta: {
-      title: "Testers Guild QA Course — Free Learning Paths",
+      title: "Null and Void QA Course — Free Learning Paths",
       description: "QA training from zero to senior. Free paths for beginners and advanced content for experienced testers.",
     },
     nav: {
@@ -139,7 +139,7 @@ window.TG_I18N = {
     },
     hero: {
       badge: "100% Free · Zero to senior · No signup",
-      title: "Welcome to the Testers Guild",
+      title: "Welcome to the Null and Void",
       subtitle: "QA training built for newcomers — with depth for senior testers. Pick your profile below and follow the ideal route.",
       statTracks: "Guild paths",
       statLessons: "Available lessons",
@@ -160,7 +160,7 @@ window.TG_I18N = {
       availableTracksSub: "Each path has its own identity — filtered for your profile.",
       allTracks: "All Paths",
       allTracksSub: "Filter by level or explore everything — 100% free.",
-      whyTitle: "Why Testers Guild?",
+      whyTitle: "Why Null and Void?",
       whySub: "One platform, two worlds: solid basics for beginners and depth for seniors.",
       myProgress: "My Progress",
       myProgressSub: "Track completed lessons across all paths.",
@@ -217,7 +217,7 @@ window.TG_I18N = {
     certificate: {
       title: "Guild Certificate", download: "Print / Save PDF",
       earned: "Congratulations! You completed", route: "Route",
-      date: "Date", name: "Testers Guild Member",
+      date: "Date", name: "Null and Void Member",
     },
     filter: { all: "All", beginner: "Beginner", intermediate: "Intermediate", senior: "Advanced" },
     dashboard: {
@@ -240,7 +240,7 @@ window.TG_I18N = {
       quizPassed: "Quiz passed! 🎯", achievementUnlocked: "Achievement unlocked!",
     },
     footer: {
-      line1: "Testers Guild QA Course · Beginner to senior · Personal study use",
+      line1: "Null and Void QA Course · Beginner to senior · Personal study use",
       line2: "Independent Software Quality training platform.",
     },
     labs: {
@@ -254,7 +254,7 @@ window.TG_I18N = {
     price: "$0",
     breadcrumb: { tracks: "Paths", roadmap: "Routes", glossary: "Glossary", labs: "Labs", quiz: "Quiz" },
     lang: { toggle: "PT", current: "EN" },
-    brand: { name: "Testers Guild", suffix: "QA Course" },
+    brand: { name: "Null and Void", suffix: "QA Course" },
     roadmap: { start: "Start →", why: "Why" },
   },
 };

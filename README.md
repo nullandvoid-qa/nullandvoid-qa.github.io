@@ -1,4 +1,4 @@
-# Testers Guild QA Course
+# Null and Void QA Course
 
 Plataforma **100% gratuita** de formação em Qualidade de Software — pensada para **iniciantes** e com profundidade para **seniors**.
 

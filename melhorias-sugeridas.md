@@ -1,6 +1,6 @@
-# Melhorias Sugeridas - Testers Guild QA Course
+# Melhorias Sugeridas - Null and Void QA Course
 
-Relatório de análise do repositório Testers Guild gerado em 12/07/2026.
+Relatório de análise do repositório Null and Void gerado em 12/07/2026.
 
 ---
 
@@ -470,6 +470,6 @@ Diretório para assets, variável não utilizada no teste, lazy loading para ima
 
 ## CONCLUSÃO
 
-O projeto Testers Guild está bem estruturado e funciona bem, mas há oportunidades significativas de melhoria especialmente em **qualidade do código** (redução de duplicação), **internacionalização** (remover textos hardcoded), **performance** (otimização de carregamento) e **testes** (aumentar cobertura drasticamente).
+O projeto Null and Void está bem estruturado e funciona bem, mas há oportunidades significativas de melhoria especialmente em **qualidade do código** (redução de duplicação), **internacionalização** (remover textos hardcoded), **performance** (otimização de carregamento) e **testes** (aumentar cobertura drasticamente).
 
 As melhorias sugeridas totalizam **46 itens** distribuídos em **10 categorias**, com **12 de alta prioridade**, **22 de média prioridade** e **12 de baixa prioridade**.

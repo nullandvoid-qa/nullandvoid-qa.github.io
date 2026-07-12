@@ -1,4 +1,4 @@
-# Contributing to Testers Guild QA Course
+# Contributing to Null and Void QA Course
 
 Thank you for your interest in contributing! This project is a free, open-source QA learning platform.
 
