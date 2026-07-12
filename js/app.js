@@ -286,26 +286,51 @@
 
   // ── Progress helpers ──────────────────────────────────────────────────────
   function countLessons(track) {
-    return track.courses.reduce((s, c) => s + c.lessons.length, 0);
+    if (!track || !track.courses || !Array.isArray(track.courses)) return 0;
+    return track.courses.reduce((s, c) => s + (c.lessons ? c.lessons.length : 0), 0);
   }
 
   function getTrackProgress(track) {
+    if (!track || !track.courses || !Array.isArray(track.courses)) {
+      return { done: 0, total: 0, pct: 0 };
+    }
+    
     const total = countLessons(track);
-    const done  = track.courses.reduce((s, c) => s + c.lessons.filter((l) => progress[l.id]).length, 0);
+    const done  = track.courses.reduce((s, c) => {
+      if (!c.lessons || !Array.isArray(c.lessons)) return s;
+      return s + c.lessons.filter((l) => progress[l.id]).length;
+    }, 0);
     return { done, total, pct: total ? Math.round((done / total) * 100) : 0 };
   }
 
   function getGlobalProgress() {
-    const all  = tracks.flatMap((tr) => tr.courses.flatMap((c) => c.lessons));
+    // Defensive check to ensure tracks array is valid
+    if (!tracks || !Array.isArray(tracks) || tracks.length === 0) {
+      return { done: 0, total: 0, pct: 0 };
+    }
+    
+    const all  = tracks.flatMap((tr) => {
+      if (!tr.courses || !Array.isArray(tr.courses)) return [];
+      return tr.courses.flatMap((c) => {
+        if (!c.lessons || !Array.isArray(c.lessons)) return [];
+        return c.lessons;
+      });
+    });
     const done = all.filter((l) => progress[l.id]).length;
     return { done, total: all.length, pct: all.length ? Math.round((done / all.length) * 100) : 0 };
   }
 
   function getAllLessons() {
+    if (!tracks || !Array.isArray(tracks)) return [];
+    
     const lessons = [];
     tracks.forEach((track) => {
+      if (!track.courses || !Array.isArray(track.courses)) return;
+      
       const lt = localizedTrack(track);
       track.courses.forEach((course) => {
+        if (!course.lessons || !Array.isArray(course.lessons)) return;
+        
         const lc = localizedCourse(course);
         course.lessons.forEach((lesson) => {
           lessons.push({ ...localizedLesson(lesson), trackId: track.id, trackTitle: lt.title, courseTitle: lc.title });
@@ -340,11 +365,20 @@
     }
   }
 
-  function findTrack(id) { return tracks.find((tr) => tr.id === id); }
+  function findTrack(id) { 
+    if (!tracks || !Array.isArray(tracks)) return null;
+    return tracks.find((tr) => tr.id === id); 
+  }
 
   function findLesson(lessonId) {
+    if (!tracks || !Array.isArray(tracks)) return null;
+    
     for (const track of tracks) {
+      if (!track.courses || !Array.isArray(track.courses)) continue;
+      
       for (const course of track.courses) {
+        if (!course.lessons || !Array.isArray(course.lessons)) continue;
+        
         const lesson = course.lessons.find((l) => l.id === lessonId);
         if (lesson) {
           return {
@@ -444,6 +478,8 @@
   }
 
   function sortTracksForPersona(list) {
+    if (!list || !Array.isArray(list)) return [];
+    
     const order = PERSONA_TRACKS[persona] || [];
     return [...list].sort((a, b) => {
       const ai = order.indexOf(a.id), bi = order.indexOf(b.id);
@@ -484,6 +520,8 @@
 
   // ── Track card ────────────────────────────────────────────────────────────
   function renderTrackCard(track, containerId, opts = {}) {
+    if (!track) return;
+    
     const lt   = localizedTrack(track);
     const prog = getTrackProgress(track);
     const container = document.getElementById(containerId);
@@ -580,8 +618,12 @@
     }
 
     const grid = document.getElementById("home-tracks-grid");
-    grid.innerHTML = "";
-    filtered.forEach((tr) => renderTrackCard(tr, "home-tracks-grid", { showRecommend: true }));
+    if (grid) {
+      grid.innerHTML = "";
+      if (filtered && filtered.length > 0) {
+        filtered.forEach((tr) => renderTrackCard(tr, "home-tracks-grid", { showRecommend: true }));
+      }
+    }
     renderContinueBanner();
   }
 
@@ -604,17 +646,21 @@
   function renderTracksPage() {
     renderFilterBar();
     const grid = document.getElementById("tracks-grid");
-    grid.innerHTML = "";
-    let filtered;
-    if (trackFilter === "all") {
-      filtered = sortTracksForPersona(tracks);
-    } else {
-      filtered = tracks.filter((tr) => {
-        const audience = TRACK_AUDIENCE[tr.id] || "intermediate"; // Default to intermediate if not found
-        return audience === trackFilter;
-      });
+    if (grid) {
+      grid.innerHTML = "";
+      let filtered;
+      if (trackFilter === "all") {
+        filtered = sortTracksForPersona(tracks);
+      } else {
+        filtered = tracks.filter((tr) => {
+          const audience = TRACK_AUDIENCE[tr.id] || "intermediate"; // Default to intermediate if not found
+          return audience === trackFilter;
+        });
+      }
+      if (filtered && filtered.length > 0) {
+        filtered.forEach((tr) => renderTrackCard(tr, "tracks-grid", { showRecommend: true }));
+      }
     }
-    filtered.forEach((tr) => renderTrackCard(tr, "tracks-grid", { showRecommend: true }));
   }
 
   // ── Roadmap ───────────────────────────────────────────────────────────────
@@ -1266,8 +1312,12 @@
     });
 
     const grid = document.getElementById("dashboard-tracks");
-    grid.innerHTML = "";
-    tracks.forEach((tr) => renderTrackCard(tr, "dashboard-tracks"));
+    if (grid) {
+      grid.innerHTML = "";
+      if (tracks && tracks.length > 0) {
+        tracks.forEach((tr) => renderTrackCard(tr, "dashboard-tracks"));
+      }
+    }
 
     // Bookmarks section
     const bmSection = document.getElementById("dashboard-bookmarks");
