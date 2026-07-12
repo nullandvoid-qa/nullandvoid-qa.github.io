@@ -489,7 +489,7 @@
     const container = document.getElementById(containerId);
     if (!container) return;
     const rec      = opts.showRecommend && isRecommended(track.id);
-    const audience = TRACK_AUDIENCE[track.id] || "intermediate";
+    const audience = TRACK_AUDIENCE[track.id] || "intermediate"; // Default to intermediate if not found
     const isComplete = prog.pct === 100;
 
     const card = document.createElement("article");
@@ -569,9 +569,15 @@
 
     renderHomeFilterBar();
 
-    const filtered = homeFilter === "all"
-      ? sortTracksForPersona(tracks)
-      : tracks.filter((tr) => TRACK_AUDIENCE[tr.id] === homeFilter);
+    let filtered;
+    if (homeFilter === "all") {
+      filtered = sortTracksForPersona(tracks);
+    } else {
+      filtered = tracks.filter((tr) => {
+        const audience = TRACK_AUDIENCE[tr.id] || "intermediate"; // Default to intermediate if not found
+        return audience === homeFilter;
+      });
+    }
 
     const grid = document.getElementById("home-tracks-grid");
     grid.innerHTML = "";
@@ -599,9 +605,15 @@
     renderFilterBar();
     const grid = document.getElementById("tracks-grid");
     grid.innerHTML = "";
-    const filtered = trackFilter === "all"
-      ? sortTracksForPersona(tracks)
-      : tracks.filter((tr) => TRACK_AUDIENCE[tr.id] === trackFilter);
+    let filtered;
+    if (trackFilter === "all") {
+      filtered = sortTracksForPersona(tracks);
+    } else {
+      filtered = tracks.filter((tr) => {
+        const audience = TRACK_AUDIENCE[tr.id] || "intermediate"; // Default to intermediate if not found
+        return audience === trackFilter;
+      });
+    }
     filtered.forEach((tr) => renderTrackCard(tr, "tracks-grid", { showRecommend: true }));
   }
 
@@ -930,7 +942,7 @@
         <div class="track-meta">
           <span>📦 ${raw.modules} ${t("track.modules")}</span>
           <span>⏱ ~${raw.hours} ${t("track.hoursLong")}</span>
-          <span class="tier-badge tier-${TRACK_AUDIENCE[raw.id]}">${tierLabel(TRACK_AUDIENCE[raw.id])}</span>
+          <span class="tier-badge tier-${TRACK_AUDIENCE[raw.id] || 'intermediate'}">${tierLabel(TRACK_AUDIENCE[raw.id] || 'intermediate')}</span>
         </div>
         <div class="progress-bar" style="margin-top:1rem;max-width:400px">
           <div class="progress-fill" style="width:${prog.pct}%;background:${raw.color}"></div>
