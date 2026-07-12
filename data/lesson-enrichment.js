@@ -1128,7 +1128,10 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "Uma pipeline de CI é a automação do processo de qualidade. Sem ela, qualidade depende de pessoas executando manualmente os mesmos passos toda vez — inconsistente e não escalável.",
       "en": "A CI pipeline is quality process automation. Without it, quality depends on people manually running the same steps every time — inconsistent and not scalable."
     },
-    "seniorNote": null
+    "seniorNote": {
+      "pt": "Como sênior, você entende que pipelines não são só sobre rodar testes — são sobre shift-left quality gates. Integre SAST, DAST, SCA, e linters antes mesmo dos testes unitários. Implemente quality gates em PRs que bloqueiam merges sem aprovação. Monitore flakiness percent e MTTR de bugs — dashboards de métricas de qualidade são vitais para time sênior de DevOps.",
+      "en": "As a senior, you understand that pipelines aren't just about running tests — they're about shift-left quality gates. Integrate SAST, DAST, SCA, and linters even before unit tests. Implement quality gates in PRs that block merges without approval. Monitor flakiness percent and bug MTTR — quality metrics dashboards are vital for senior DevOps teams."
+    }
   },
   "dev1-l2": {
     "tier": "intermediate",
