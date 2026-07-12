@@ -10,27 +10,20 @@
   const STORAGE_CHECKLISTS  = "testers-guild-checklists";
   const STORAGE_THEME       = "testers-guild-theme";
   const STORAGE_SENIOR_MODE = "testers-guild-senior-mode";
-  const STORAGE_DISCORD_BANNER = "testers-guild-discord-banner";
 
+  const tracks         = window.TG_QAWAY_TRACKS    || [];
   const enOverlay      = window.TG_QAWAY_EN        || { tracks: {}, courses: {}, lessons: {} };
   const enrichment     = window.TG_LESSON_ENRICHMENT || {};
   const quizzes        = window.TG_QUIZZES          || {};
   const checklists     = window.TG_CHECKLISTS       || {};
   const labsData       = window.TG_LABS             || {};
   const achievementsList = window.TG_ACHIEVEMENTS   || [];
-  
-  // Use getter function to always get latest tracks data
-  function getTracks() {
-    return window.TG_QAWAY_TRACKS || [];
-  }
 
   let lang        = getStorage(STORAGE_LANG, "tg-qaway-lang") || "pt";
-  // Expose lang globally for utils.js
-  window.lang = lang;
   let persona     = getStorage(STORAGE_PERSONA) || "experienced";
   let progress    = loadProgress();
-  let bookmarks   = loadJson(STORAGE_BOOKMARKS, [], window.validateBookmarksData);
-  let quizzesPassed = loadJson(STORAGE_QUIZZES, {}, window.validateQuizzesPassedData);
+  let bookmarks   = loadJson(STORAGE_BOOKMARKS, []);
+  let quizzesPassed = loadJson(STORAGE_QUIZZES, {});
   let checklistState = loadJson(STORAGE_CHECKLISTS, {});
   let theme       = getStorage(STORAGE_THEME) || "dark";
   let seniorMode  = getStorage(STORAGE_SENIOR_MODE) === "true";
@@ -65,17 +58,16 @@
     let val = localStorage.getItem(key);
     if (!val && legacyKey) {
       val = localStorage.getItem(legacyKey);
-      if (val) localStorage.setItem(key, val);
     }
     return val;
   }
 
-  // loadJson and saveJson are now in utils.js and shared across the app
+  function loadJson(key, fallback) {
+    try { return JSON.parse(localStorage.getItem(key)) || fallback; } catch { return fallback; }
+  }
 
-  /**
-   * Loads user progress from localStorage
-   * @returns {Object} Progress object
-   */
+  function saveJson(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
+
   function loadProgress() {
     try {
       const raw = getStorage(STORAGE_PROGRESS, "tg-qaway-progress");
@@ -83,15 +75,8 @@
     } catch { return {}; }
   }
 
-  /**
-   * Saves current progress to localStorage
-   */
-  function saveProgress() { window.saveJson(STORAGE_PROGRESS, progress); }
+  function saveProgress() { localStorage.setItem(STORAGE_PROGRESS, JSON.stringify(progress)); }
 
-  /**
-   * Saves last viewed lesson ID
-   * @param {string} id - Lesson identifier
-   */
   function saveLastLesson(id) { localStorage.setItem(STORAGE_LAST_LESSON, id); }
 
   // ── i18n ──────────────────────────────────────────────────────────────────
@@ -308,15 +293,12 @@
   }
 
   function getGlobalProgress() {
-    // Always get fresh tracks data
-    const tracksData = getTracks();
-    
-    // Only return 0 if tracks array is actually empty or invalid
-    if (!tracksData || !Array.isArray(tracksData) || tracksData.length === 0) {
-      return { done: 0, total: 0, pct: 0 };
-    }
-    
     try {
+      const tracksData = tracks;
+      if (!tracksData || !Array.isArray(tracksData) || tracksData.length === 0) {
+        return { done: 0, total: 0, pct: 0 };
+      }
+      
       const all  = tracksData.flatMap((tr) => {
         if (!tr.courses || !Array.isArray(tr.courses)) return [];
         return tr.courses.flatMap((c) => {
@@ -334,7 +316,7 @@
   }
 
   function getAllLessons() {
-    const tracksData = getTracks();
+    const tracksData = tracks;
     if (!tracksData || !Array.isArray(tracksData)) return [];
     
     const lessons = [];
@@ -380,13 +362,13 @@
   }
 
   function findTrack(id) { 
-    const tracksData = getTracks();
+    const tracksData = tracks;
     if (!tracksData || !Array.isArray(tracksData)) return null;
     return tracksData.find((tr) => tr.id === id); 
   }
 
   function findLesson(lessonId) {
-    const tracksData = getTracks();
+    const tracksData = tracks;
     if (!tracksData || !Array.isArray(tracksData)) return null;
     
     for (const track of tracksData) {
@@ -419,7 +401,7 @@
       { id: "first_lesson",    test: () => global.done >= 1 },
       { id: "ten_lessons",     test: () => global.done >= 10 },
       { id: "fifty_lessons",   test: () => global.done >= 50 },
-      { id: "track_complete",  test: () => getTracks().some((tr) => getTrackProgress(tr).pct === 100) },
+      { id: "track_complete",  test: () => tracks.some((tr) => getTrackProgress(tr).pct === 100) },
       { id: "quiz_pass",       test: () => passedAll >= 1 },
       { id: "all_quizzes",     test: () => passedAll >= 9 },
       { id: "recruit_route",   test: () => {
@@ -619,7 +601,7 @@
     const global = getGlobalProgress();
     
     // Update stats with actual values, showing loading text if data not ready
-    const tracksData = getTracks();
+    const tracksData = tracks;
     const tracksCount = tracksData.length;
     const lessonsCount = global.total;
     const loadingText = t("hero.loading");
@@ -672,7 +654,7 @@
     const grid = document.getElementById("tracks-grid");
     if (grid) {
       grid.innerHTML = "";
-      const tracksData = getTracks();
+      const tracksData = tracks;
       let filtered;
       if (trackFilter === "all") {
         filtered = sortTracksForPersona(tracksData);
@@ -1339,7 +1321,7 @@
     const grid = document.getElementById("dashboard-tracks");
     if (grid) {
       grid.innerHTML = "";
-      const tracksData = getTracks();
+      const tracksData = tracks;
       if (tracksData && tracksData.length > 0) {
         tracksData.forEach((tr) => renderTrackCard(tr, "dashboard-tracks"));
       }
