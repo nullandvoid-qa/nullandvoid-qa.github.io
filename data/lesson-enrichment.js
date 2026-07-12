@@ -5,7 +5,10 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "QA não é só 'testar'. Antes de continuar, anote: qual produto você usa todo dia que tem bugs que te irritam? Esse produto precisava de um QA melhor. É esse problema que você vai aprender a resolver.",
       "en": "QA isn't just 'testing'. Before continuing, note: what product do you use daily that has bugs that annoy you? That product needed a better QA. That's the problem you'll learn to solve."
     },
-    "seniorNote": null
+    "seniorNote": {
+      "pt": "Em nível sênior, o conceito de QA evolui de 'encontrar bugs' para 'gestão de risco de qualidade'. Você não é mais apenas um gatekeeper — é um consultor que ajuda o time a tomar decisões informadas sobre onde investir esforço de teste. A pergunta muda de 'como testar isso?' para 'devemos testar isso e com que profundidade?'. Essa mudança de mindset é o que separa QAs júnior de sênior.",
+      "en": "At senior level, the concept of QA evolves from 'finding bugs' to 'quality risk management'. You're no longer just a gatekeeper — you're a consultant helping the team make informed decisions about where to invest testing effort. The question shifts from 'how do I test this?' to 'should we test this and at what depth?'. This mindset shift is what separates junior from senior QAs."
+    }
   },
   "s1-l2": {
     "tier": "beginner",
@@ -13,7 +16,10 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "Na entrevista, quando perguntarem 'qual a diferença entre QA e Tester?', a resposta esperada é: QA é proativo (previne), Tester é reativo (verifica). Use os exemplos desta aula para ilustrar.",
       "en": "In interviews, when asked 'what's the difference between QA and Tester?', the expected answer is: QA is proactive (prevents), Tester is reactive (verifies). Use examples from this lesson to illustrate."
     },
-    "seniorNote": null
+    "seniorNote": {
+      "pt": "Na prática, a linha entre QA e QC frequentemente se mistura em times modernos. O valor real está em saber quando atuar em cada modo. Em empresas com maturidade de qualidade, você vê menos 'QA vs Dev' e mais 'qualidade como responsabilidade compartilhada'. Seu papel como sênior é facilitar essa transição, não reforçar silos.",
+      "en": "In practice, the line between QA and QC often blurs in modern teams. Real value lies in knowing when to operate in each mode. In quality-mature companies, you see less 'QA vs Dev' and more 'quality as shared responsibility'. Your role as senior is to facilitate this transition, not reinforce silos."
+    }
   },
   "s1-l3": {
     "tier": "beginner",
@@ -45,7 +51,10 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "A pirâmide de testes responde: 'onde testar esse comportamento?'. Antes de escrever qualquer teste, pergunte: isso é lógica isolada (unitário), integração entre partes (integração) ou jornada de usuário (E2E)?",
       "en": "The test pyramid answers: 'where should this behavior be tested?'. Before writing any test, ask: is this isolated logic (unit), interaction between parts (integration), or user journey (E2E)?"
     },
-    "seniorNote": null
+    "seniorNote": {
+      "pt": "A pirâmide de testes é um modelo, não uma regra absoluta. Em microserviços, a base pode ser mais teste de contrato do que unitário puro. Em monolitos legados, E2E pode ter peso maior. Como sênior, você adapta o modelo ao contexto da arquitetura e maturidade do time, não segue cegamente.",
+      "en": "The test pyramid is a model, not an absolute rule. In microservices, the base might be more contract testing than pure unit. In legacy monoliths, E2E might carry more weight. As senior, you adapt the model to architecture context and team maturity, not follow blindly."
+    }
   },
   "s3-l1": {
     "tier": "beginner",
@@ -53,7 +62,10 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "Exercício mental antes de ler: pense em um campo de CEP. Quais valores você testaria? Depois compare com as partições e limites da aula. Você cobriu os mesmos casos?",
       "en": "Mental exercise before reading: think about a ZIP code field. What values would you test? Then compare with the partitions and boundaries in the lesson. Did you cover the same cases?"
     },
-    "seniorNote": null
+    "seniorNote": {
+      "pt": "Partição de equivalência e análise de valor limite são técnicas fundamentais, mas sêniores as combinam com outras técnicas como pairwise e orthogonal arrays para reduzir ainda mais o número de casos. Além disso, essas técnicas são usadas não só em teste manual, mas também para gerar dados de teste automatizados e fuzzing.",
+      "en": "Equivalence partitioning and boundary analysis are fundamental techniques, but seniors combine them with others like pairwise and orthogonal arrays to further reduce case count. Additionally, these techniques are used not just in manual testing, but also to generate automated test data and fuzzing."
+    }
   },
   "s3-l2": {
     "tier": "beginner",
@@ -61,7 +73,10 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "Tabela de decisão parece complexa, mas é simples: cada coluna é um caso de teste. Se você tem 3 condições booleanas, são no máximo 8 combinações (2³). A tabela te ajuda a não esquecer nenhuma.",
       "en": "Decision table looks complex, but it's simple: each column is a test case. With 3 boolean conditions, you have at most 8 combinations (2³). The table helps you not miss any."
     },
-    "seniorNote": null
+    "seniorNote": {
+      "pt": "Pairwise testing é especialmente valioso em configurações de software, testes de compatibilidade e formulários complexos. Ferramentas como PICT, AllPairs e Hexawise automatizam a geração de casos pairwise. Em sistemas com muitas variáveis, isso reduz testes exponenciais para lineares sem perda significativa de cobertura.",
+      "en": "Pairwise testing is especially valuable in software configurations, compatibility testing, and complex forms. Tools like PICT, AllPairs, and Hexawise automate pairwise case generation. In systems with many variables, this reduces exponential tests to linear without significant coverage loss."
+    }
   },
   "s3-l3": {
     "tier": "beginner",
@@ -313,7 +328,10 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "Instale Cypress e rode 'npx cypress open'. Não leia mais nada — explore a interface primeiro. A UI do Cypress é intuitiva o suficiente para entender 80% do funcionamento só olhando.",
       "en": "Install Cypress and run 'npx cypress open'. Don't read more — explore the interface first. Cypress UI is intuitive enough to understand 80% of how it works just by looking."
     },
-    "seniorNote": null
+    "seniorNote": {
+      "pt": "Cypress tem trade-offs importantes que sêniores consideram: execução mais lenta que Playwright, paralelização limitada sem plano pago, e ecossistema mais fechado. Para novos projetos, Playwright geralmente vence em velocidade e features modernas. Cypress ainda brilha em migrações de projetos legados e times que preferem abordagem mais guiada.",
+      "en": "Cypress has important trade-offs seniors consider: slower execution than Playwright, limited parallelization without paid plan, and more closed ecosystem. For new projects, Playwright generally wins on speed and modern features. Cypress still shines in legacy project migrations and teams preferring more guided approach."
+    }
   },
   "w2-l2": {
     "tier": "intermediate",
@@ -546,7 +564,10 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "A feature mais poderosa do Postman não é fazer requests — é Environments com variáveis. {{base_url}}, {{token}}, {{user_id}} tornam a collection reutilizável em qualquer ambiente sem alterar uma linha.",
       "en": "Postman's most powerful feature isn't making requests — it's Environments with variables. {{base_url}}, {{token}}, {{user_id}} make the collection reusable in any environment without changing a line."
     },
-    "seniorNote": null
+    "seniorNote": {
+      "pt": "Em projetos de escala, Postman collections tornam-se parte do contrato da API. Versione suas collections no Git, integre com CI via Newman, e considere migrar para ferramentas como Bruno ou Insomnia se precisar de mais controle sobre configuração e colaboração. Collections também podem ser usadas para gerar automaticamente documentação de API.",
+      "en": "In scale projects, Postman collections become part of the API contract. Version your collections in Git, integrate with CI via Newman, and consider migrating to tools like Bruno or Insomnia if you need more control over configuration and collaboration. Collections can also be used to automatically generate API documentation."
+    }
   },
   "a2-l2": {
     "tier": "intermediate",
