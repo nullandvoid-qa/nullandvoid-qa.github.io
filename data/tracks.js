@@ -1,6 +1,5 @@
 window.TG_QAWAY_TRACKS = [
-
-{
+  {
     id: "starter",
     slug: "guild-initiation",
     title: "Iniciação da Guilda",
@@ -176,7 +175,7 @@ const [usuario, produtos, carrinho] = await Promise.all([
       }
     ]
   },
-{
+  {
     id: "web",
     slug: "frontend-forge",
     title: "Forja Frontend",
@@ -236,7 +235,8 @@ copia.push(4); // não afeta original
 // Passar array como argumentos
 const numeros = [1, 5, 3];
 console.log(Math.max(...numeros)); // 5
-// equivale a Math.max(1, 5, 3. 
+// equivale a Math.max(1, 5, 3)
+
 // Combinar objetos
 const dadosBase = { nome: 'Test', timeout: 5000 };
 const config = { ...dadosBase, timeout: 10000 };
@@ -413,7 +413,7 @@ cy.criarUsuario('admin').then((usuario) => {
       ]}
     ]
   },
-{
+  {
     id: "api",
     slug: "integration-workshop",
     title: "Oficina de Integração",
@@ -431,7 +431,7 @@ cy.criarUsuario('admin').then((usuario) => {
         { id: "a1-l3", title: "OpenAPI/Swagger", duration: "40 min", content: "<p>OpenAPI e Swagger transformam a API em uma documentação viva e testável. Em vez de depender apenas de um documento escrito à mão, o time consegue usar o contrato como referência para desenvolvimento, testes e validação de integração.</p><h3>Por que isso ajuda o QA</h3><ul><li>Mostra os endpoints, métodos e payloads esperados</li><li>Ajuda a identificar campos obrigatórios e formatos</li><li>Facilita a criação de testes manuais e automatizados</li><li>Reduz mal-entendidos entre backend, frontend e QA</li></ul><h3>O que observar</h3><ul><li>Campos obrigatórios e opcionais</li><li>Tipos de dados e limites</li><li>Exemplos de request e response</li><li>Códigos de erro esperados</li></ul><h3>Exemplo prático</h3><p>Se a especificação define que um campo de e-mail é obrigatório, o QA deve validar tanto o fluxo feliz quanto os cenários em que ele está ausente ou em formato inválido. Isso reduz retrabalho e melhora a comunicação com o time.</p><blockquote><strong>Guild Master:</strong> Um contrato bem definido não elimina bugs, mas reduz muito a chance de interpretar mal o comportamento da API.</blockquote><h3>Perguntas de revisão</h3><ul><li>Como o contrato de API ajuda a planejar testes?</li><li>Que tipo de informação um QA deve procurar no Swagger?</li><li>Como um contrato desatualizado pode gerar falso positivo em teste?</li></ul><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve conseguir usar um contrato de API como base para testar com mais clareza e menos suposição.</p>", resources: [{ label: "OpenAPI Spec", url: "https://swagger.io/specification/" }] }
       ]},
         },
-{
+  {
     id: "mobile",
     slug: "mobile-lab",
     title: "Laboratório Mobile",
@@ -475,8 +475,258 @@ cy.criarUsuario('admin').then((usuario) => {
         { id: "m8-l1", title: "Automatizar app demo", duration: "90 min", content: "<p>Use app de demo (ApiDemos, WDIO native demo). 5 fluxos automatizados + README.</p>", resources: [{ label: "Appium Sample Apps", url: "https://github.com/appium/appium/tree/master/packages/appium/sample-code" }] }
       ]}
     ]
+  }{ id: "a2", title: "Postman Profissional", lessons: [
+        { id: "a2-l1", title: "Collections e environments", duration: "40 min", content: "<p>Collections e environments são a base de um trabalho profissional com APIs em ferramentas como Postman. Eles deixam o fluxo de teste organizado, reutilizável e mais fácil de manter quando o time cresce.</p><h3>Collections</h3><p>Uma collection agrupa requests relacionados, como auth, usuários, pedidos ou pagamentos. Isso ajuda a organizar cenários de teste por contexto e por funcionalidade.</p><h3>Environments</h3><p>Environments permitem alternar entre ambientes sem mudar manualmente cada request. Exemplo: base URL diferente para dev, staging e produção, além de variáveis como token, usuário e versão do app.</p><h3>Exemplo prático</h3><p>Em vez de copiar a URL em cada request, o QA pode usar uma variável como <strong>{{baseUrl}}</strong> e trocar o valor conforme o ambiente. Isso reduz erro humano e acelera a execução de testes.</p><blockquote><strong>Guild Master:</strong> Dados bem organizados fazem a diferença entre testes repetíveis e testes que dependem da memória do QA.</blockquote><h3>Perguntas de revisão</h3><ul><li>Por que collections ajudam na organização de testes?</li><li>Como um environment melhora a execução entre diferentes ambientes?</li><li>Que tipo de variável você usaria em um fluxo de login?</li></ul><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve conseguir montar uma estrutura simples e profissional para testar APIs com mais consistência.</p>", resources: [{ label: "Postman Learning", url: "https://learning.postman.com/" }] },
+        { id: "a2-l2", title: "Tests tab e Newman CLI", duration: "45 min", content: "<p>A aba Tests no Postman transforma uma request comum em uma validação automatizada. Em vez de olhar manualmente a resposta, o QA pode deixar o próprio tool verificar status code, corpo, headers e tempo de resposta.</p><h3>O que você pode validar</h3><ul><li>Status code esperado</li><li>Campos obrigatórios no body</li><li>Valores específicos de resposta</li><li>Tempo de resposta e comportamento de erro</li></ul><h3>Newman</h3><p>Newman é a versão de linha de comando do Postman. Ele permite rodar collections em CI, em pipelines e em ambientes headless, o que é essencial para integrar testes de API no fluxo de entrega.</p><h3>Exemplo prático</h3><p>Uma coleção de autenticação pode validar que um login com credenciais válidas retorna 200, enquanto um login inválido retorna 401. Com Newman, isso roda automaticamente em cada mudança de código.</p><blockquote><strong>Guild Master:</strong> Quando o teste de API roda sozinho em cada pipeline, a equipe ganha confiança sem depender de validação manual no final.</blockquote><h3>Perguntas de revisão</h3><ul><li>Por que usar assertions em requests de API?</li><li>Qual a vantagem de rodar collections via Newman?</li><li>Como você usaria isso para proteger uma release?</li></ul><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve conseguir transformar requests em testes automatizados e integrá-los em um fluxo de CI com mais segurança.</p>", resources: [] },
+        { id: "a2-l3", title: "Mock servers e monitoramento", duration: "35 min", content: "<p>Mock servers são muito úteis quando o backend ainda não está pronto ou quando você quer isolar o frontend de dependências externas. Eles permitem testar o comportamento esperado da aplicação antes da integração completa existir.</p><h3>Quando usar mock server</h3><ul><li>Frontend precisa de uma API para continuar evoluindo</li><li>O time quer testar cenários de erro sem depender de um serviço real</li><li>É necessário simular latência, falhas e respostas diferentes</li></ul><h3>Monitoramento</h3><p>Já em ambiente real, QA também precisa acompanhar o comportamento das APIs em produção. Monitoramento ajuda a identificar quedas, respostas lentas, erros recorrentes e mudanças que impactam usuários.</p><h3>Exemplo prático</h3><p>Um QA pode usar um mock para validar a tela de checkout em desenvolvimento e, depois, repetir o teste com o backend real para garantir que o contrato continua correto.</p><blockquote><strong>Guild Master:</strong> O melhor mock não é o que imita tudo — é o que ajuda o time a testar o que importa com rapidez.</blockquote><h3>Perguntas de revisão</h3><ul><li>Quando um mock server entrega mais valor do que um backend real?</li><li>Qual a diferença entre testar com mock e testar com serviço real?</li><li>Como monitoramento ajuda a detectar problemas que não aparecem em testes locais?</li></ul><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve conseguir escolher entre mock e ambiente real com mais critério e entender o papel do monitoramento na garantia de qualidade.</p>", resources: [] }
+      ]},
+      { id: "a3", title: "Automação API com JavaScript", lessons: [
+        { id: "a3-l1", title: "fetch e axios", duration: "40 min", content: "<p>Em JavaScript, o QA precisa entender o básico de requisições de rede porque automação e testes de interface frequentemente dependem de APIs. O principal ponto é saber quando usar fetch, quando usar axios e como lidar com falhas de forma previsível.</p><h3>fetch</h3><p>Fetch é a API nativa do navegador e do Node. É simples, mas exige mais cuidado para tratar erros e headers. Excelente para cenários pequenos e para quem quer usar o que já vem com a linguagem.</p><h3>axios</h3><p>Axios é uma biblioteca popular porque traz uma sintaxe mais prática, suporte a interceptors, timeout e tratamento consistente. Em projetos maiores, isso costuma reduzir boilerplate e deixar o código mais legível.</p><h3>O que observar em testes</h3><ul><li>Timeout e retry</li><li>Headers e autenticação</li><li>Erros de rede e status inesperados</li><li>Respostas com payloads incompletos</li></ul><h3>Exemplo prático</h3><p>Se uma chamada de login demora demais, o QA deve verificar se a aplicação mostra feedback claro, tenta novamente ou bloqueia o fluxo com uma mensagem útil. Isso é tão importante quanto validar se o endpoint respondeu 200.</p><blockquote><strong>Guild Master:</strong> Uma API pode estar tecnicamente correta e ainda assim oferecer uma experiência ruim se não tratar falha com clareza.</blockquote><h3>Perguntas de revisão</h3><ul><li>Quando fetch é suficiente e quando axios traz mais valor?</li><li>Por que timeout e retry merecem atenção em testes?</li><li>Como você validaria a experiência do usuário quando a API falha?</li></ul><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve conseguir comparar abordagens de requisição HTTP e identificar cenários de teste que envolvem comportamento de rede e tratamento de erro.</p>", resources: [] },
+        { id: "a3-l2", title: "Supertest + Jest/Mocha", duration: "50 min", content: "<p>Supertest\ é\ uma\ forma\ prática\ de\ testar\ APIs\ no\ backend\ com\ JavaScript\.\ Ele\ permite\ validar\ endpoints\ reais\ com\ uma\ sintaxe\ simples\ e\ combinar\ essa\ validação\ com\ Jest\ ou\ Mocha\ em\ uma\ suíte\ objetiva\.</p><h3>Por\ que\ usar</h3><ul><li>Testa\ rotas\ diretamente</li><li>Ajuda\ a\ validar\ regras\ de\ negócio</li><li>Fica\ mais\ rápido\ do\ que\ abrir\ a\ UI\ para\ cada\ cenário</li><li>Facilita\ a\ cobertura\ de\ sucesso\ e\ falha</li></ul><h3>Exemplo\ prático</h3><p>Um\ teste\ pode\ verificar\ que\ um\ cadastro\ com\ dados\ válidos\ retorna\ 201,\ enquanto\ outro\ valida\ que\ campos\ obrigatórios\ ausentes\ retornam\ 400\ com\ mensagem\ apropriada\.\ Esse\ tipo\ de\ checagem\ pega\ regressões\ cedo\.</p><blockquote><strong>Guild\ Master:</strong>\ Testes\ de\ API\ não\ substituem\ testes\ de\ interface,\ mas\ frequentemente\ encontram\ falhas\ antes\ que\ o\ usuário\ as\ veja\.</blockquote><h3>Perguntas\ de\ revisão</h3><ul><li>Qual\ a\ vantagem\ de\ testar\ o\ endpoint\ diretamente\?</li><li>Como\ você\ estruturaria\ cenários\ de\ sucesso\ e\ erro\?</li><li>Por\ que\ combinar\ Supertest\ com\ Jest\ ou\ Mocha\ é\ uma\ prática\ sólida\?</li></ul><h3>Resumo\ prático</h3><p>Ao\ concluir\ esta\ aula,\ você\ deve\ conseguir\ criar\ testes\ de\ API\ automatizados\ em\ JavaScript\ para\ validar\ comportamento\ e\ regras\ de\ negócio\ com\ mais\ confiança\.</p>", resources: [{ label: "Supertest", url: "https://github.com/ladjs/supertest" }] }
+      ]},
+      { id: "a4", title: "Cypress e Playwright API", lessons: [
+        { id: "a4-l1", title: "cy.request no Cypress", duration: "40 min", content: "<p>O Cypress permite testar APIs diretamente com <strong>cy.request</strong>, o que é muito útil para criar dados de teste, validar integrações e preparar cenários antes de rodar uma suíte E2E completa. Essa abordagem deixa o fluxo mais rápido e mais previsível.</p><h3>Quando usar</h3><ul><li>Para setup de dados antes do teste UI</li><li>Para validar endpoints sem depender da interface</li><li>Para testar cenários de erro e autenticação com mais precisão</li></ul><h3>Vantagens práticas</h3><p>Usar API requests no Cypress reduz tempo de execução, evita dependência de telas intermediárias e ajuda o QA a isolar falhas: a interface ou a API?</p><h3>Exemplo prático</h3><p>Antes de testar um fluxo de checkout, o QA pode criar um usuário e um carrinho via API, então abrir a tela e validar o comportamento da interface com dados já preparados. Isso torna o teste mais estável e menos frágil.</p><blockquote><strong>Guild Master:</strong> Quando a automação usa API para preparar o estado, a suíte passa a refletir melhor o que importa ao usuário.</blockquote><h3>Perguntas de revisão</h3><ul><li>Quando usar request em vez de interação manual na UI?</li><li>Como isso melhora a confiabilidade de um teste E2E?</li><li>Quais casos de teste ganham mais com esse tipo de setup?</li></ul><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve conseguir usar chamadas de API dentro de testes Cypress para preparar ambientes, validar integrações e reduzir fragilidade.</p>", resources: [] },
+        { id: "a4-l2", title: "Playwright request context", duration: "40 min", content: "<p>O <strong>APIRequestContext</strong> do Playwright permite criar uma camada de testes de API dentro do mesmo projeto de automação. Isso é especialmente útil quando o QA precisa combinar setup via API com validação de UI em um único fluxo, sem depender de ferramentas separadas.</p><h3>Vantagens</h3><ul><li>Cria dados com mais rapidez</li><li>Evita duplicação de lógica entre test suites</li><li>Pode validar CRUD completo antes ou durante o teste de interface</li><li>Facilita o uso de autenticação e headers em cenários reais</li></ul><h3>Exemplo prático</h3><p>Um teste pode criar um pedido via API, abrir a tela do pedido no navegador e verificar se o estado é exibido corretamente. Isso ajuda a testar integração entre frontend e backend de forma muito mais realista.</p><blockquote><strong>Guild Master:</strong> Quando API e UI vivem no mesmo fluxo, a automação fica mais próxima da realidade do usuário.</blockquote><h3>Perguntas de revisão</h3><ul><li>Como o request context melhora a organização de testes?</li><li>Quando vale combinar testes de API e UI no mesmo cenário?</li><li>Que risco você evita ao não depender só da interface para criar estado?</li></ul><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve conseguir usar o request context do Playwright para montar cenários mais completos, rápidos e alinhados com o comportamento real do sistema.</p>", resources: [] }
+      ]},
+      { id: "a5", title: "Rest Assured (Java)", lessons: [
+        { id: "a5-l1", title: "Given-When-Then com Rest Assured", duration: "55 min", content: "<p>Rest Assured é uma biblioteca Java para testar APIs REST de forma fluida e legível. O ponto mais importante para QA é entender que a mesma API pode ser validada em diferentes camadas: unit, integration, contract.</p><h3>Por que isso importa</h3><ul><li>Testes de API em Java sem boilerplate</li><li>DSL fluida: given().when().then()</li><li>Validação de status, body, headers, schema</li><li>Integração nativa com JUnit/TestNG</li></ul><h3>Exemplo completo</h3><pre><code>// Dependencies (Maven)
+<dependency>
+    <groupId>io.rest-assured</groupId>
+    <artifactId>rest-assured</artifactId>
+    <version>5.4.0</version>
+    <scope>test</scope>
+</dependency>
+<dependency>
+    <groupId>org.hamcrest</groupId>
+    <artifactId>hamcrest</artifactId>
+    <version>2.2</version>
+    <scope>test</scope>
+</dependency>
+
+// Test class
+@Test
+void deveCriarUsuarioComSucesso() {
+    given()
+        .contentType(ContentType.JSON)
+        .body("{"name": "John", "email": "john@test.com"}")
+    .when()
+        .post("/api/users")
+    .then()
+        .statusCode(201)
+        .body("id", notNullValue())
+        .body("name", equalTo("John"))
+        .body("email", equalTo("john@test.com"));
+
+// Schema validation
+@Test
+void deveValidarSchemaResposta() {
+    given()
+        .get("/api/users/1")
+    .then()
+        .statusCode(200)
+        .body(matchesJsonSchemaInClasspath("schemas/user.json"));
+}</code></pre><h3>Dicas para QA</h3><ul><li>Use <code>RequestSpecification</code> e <code>ResponseSpecification</code> para reutilizar config comum</li><li>Valide schema JSON para pegar regressões de contrato</li><li>Combine com WireMock para testes de contract isolados</li><li>Rest Assured + Pact = Consumer Driven Contracts em Java</li></ul><h3>Perguntas de revisão</h3><ul><li>Como Rest Assured ajuda a reduzir flakiness em testes de API?</li><li>Qual a diferença entre validar campo a campo vs schema validation?</li><li>Como integrar Rest Assured no pipeline CI/CD?</li></ul><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve conseguir escrever testes de API em Java com Rest Assured, validar schemas e integrar no pipeline de CI.
+</p>, resources: [] }
+      ]},
+      { id: "m6", title: "Performance e Battery Mobile", lessons: [
+        { id: "m6-l1", title: "Métricas mobile", duration: "35 min", content: "<p>Startup time, memory leaks, ANR, crash rate. Firebase Crashlytics.
+</p><h3>Métricas essenciais de performance mobile</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;border:1px solid var(--border)">Métrica</th><th style="padding:0.5rem;border:1px solid var(--border)">Definição</th><th style="padding:0.5rem;border:1px solid var(--border)">Target típico</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>App Startup Time</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Tempo do lançamento até UI interativa</td><td style="padding:0.5rem;border:1px solid var(--border)">< 2s (cold), < 500ms (warm)</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Memory Usage</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Heap, RSS, GC pauses, OOM kills</td><td style="padding:0.5rem;border:1px solid var(--border)">< 150MB (Android), < 200MB (iOS)</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>ANR (Application Not Responding)</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">UI thread bloqueado > 5s</td><td style="padding:0.5rem;border:1px solid var(--border)">0 ANRs</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Crash Rate</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">% de sessões com crash</td><td style="padding:0.5rem;border:1px solid var(--border)">< 0.1%</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Frame Rendering (Jank)</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Frames > 16ms (60fps) ou > 8ms (120fps)</td><td style="padding:0.5rem;border:1px solid var(--border)">0% jank</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Battery Drain</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Consumo anômalo de bateria</td><td style="padding:0.5rem;border:1px solid var(--border)">Dentro do top 25% da categoria</td></tr></table><h3>Ferramentas de monitoramento</h3><ul><li><strong>Firebase Crashlytics:</strong> crashes, non-fatal, ANRs, logs automáticos</li><li><strong>Android Vitals / Play Console:</strong> ANR rate, crash rate, startup time, stuck partial wake locks</li><li><strong>Xcode Metrics / App Store Connect:</strong> crash rate, memory, CPU, disk writes</li><li><strong>Perfetto / Systrace / Android Studio Profiler:</strong> traces detalhados</li></ul><h3>Como medir startup time</h3><pre><code># Android: adb shell am start -W com.exemplo/.MainActivity
+# Output inclui:
+# ThisTime: 1245    (tempo total cold start)
+# WaitTime: 1250
+
+# Para medir programaticamente (Appium)
+const startTime = Date.now();
+await driver.activateApp('com.exemplo.app');
+const launchTime = Date.now() - startTime;
+console.log(`Startup: ${launchTime}ms`);</code></pre><h3>Memory leaks — como detectar</h3><ul><li><strong>Android:</strong> <code>adb shell dumpsys meminfo com.exemplo.app</code> — procure por "Leaked" ou crescimento contínuo</li><li><strong>iOS:</strong> Xcode → Debug Memory Graph → procura por objetos que não deveriam estar vivos</li><li><strong>Automatizado:</strong> rode suite de testes em loop 10x, meça memória antes/depois</li></ul><h3>Firebase Crashlytics — setup básico</h3><pre><code>// Android (build.gradle)
+dependencies {
+    implementation 'com.google.firebase:firebase-crashlytics:18.4.0'
+    implementation 'com.google.firebase:firebase-analytics:21.3.0'
+}
+
+// iOS (Podfile)
+pod 'FirebaseCrashlytics'
+pod 'FirebaseAnalytics'
+
+// Log customizado
+FirebaseCrashlytics.getInstance().log("Usuário abriu checkout");
+FirebaseCrashlytics.getInstance().setCustomKey("user_id", "12345");
+try {
+    // código arriscado
+} catch (e) {
+    FirebaseCrashlytics.getInstance().recordException(e);
+}</code></pre><h3>Exercício prático</h3><ol><li>Configure Crashlytics em um app demo</li><li>Force um crash: <code>throw new RuntimeException("Test crash")</code></li><li>Veja o crash no console Firebase</li><li>Adicione logs customizados e chaves personalizadas</li></ol>", resources: [] }
+      ]},
+      { id: "m7", title: "CI/CD Mobile", lessons: [
+        { id: "m7-l1", title: "Pipeline com emulador headless", duration: "50 min", content: "<p>GitHub Actions + Android emulator. Upload APK, roda Appium, artefatos de screenshot.
+</p><h3>GitHub Actions — Mobile CI completo</h3><pre><code># .github/workflows/mobile.yml
+name: Mobile Tests
+
+on: [push, pull_request]
+
+jobs:
+  android-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        avd: [pixel_7_api_33, pixel_6_api_33]  # 2 emuladores paralelos
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('package-lock.json') }}
+      
+      - run: npm ci
+      
+      - name: Start Android Emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 33
+          target: google_apis
+          arch: x86_64
+          avd-name: ${{ matrix.avd }}
+          emulator-options: -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect
+          force-avd-creation: false
+      
+      - name: Run WDIO Tests
+        run: npx wdio run wdio.conf.js
+        env:
+          APPIUM_SERVER_URL: http://localhost:4723
+      
+      - name: Upload Screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-${{ matrix.avd }}
+          path: screenshots/
+          retention-days: 7
+      
+      - name: Upload Allure Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-${{ matrix.avd }}
+          path: allure-results/
+          retention-days: 7</code></pre><h3>Configuração avançada — com build step</h3><pre><code>name: E2E Tests
+
+on: [push, pull_request]
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build application
+        run: npm run build
+      
+      - name: Start Android Emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 33
+          target: google_apis
+          arch: x86_64
+          avd-name: pixel_7
+          emulator-options: -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect
+          force-avd-creation: false
+      
+      - name: Run WDIO Tests
+        run: npx wdio run wdio.conf.js
+        env:
+          APPIUM_SERVER_URL: http://localhost:4723
+      
+      - name: Upload Screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-${{ matrix.avd }}
+          path: screenshots/
+          retention-days: 7</code></pre><h3>Paralelização inteligente</h3><pre><code>strategy:
+  fail-fast: false
+  matrix:
+    shardIndex: [1, 2, 3, 4]
+    shardTotal: [4]
+    # ou para múltiplos browsers/OS
+    os: [ubuntu-latest, windows-latest, macos-latest]
+    browser: [chromium, firefox, webkit]</code></pre><h3>Playwright em container</h3><pre><code># .github/workflows/playwright.yml
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: 'npm' }
+      - run: npm ci
+      - run: npx playwright install chromium --with-deps
+      - name: Start app and run E2E
+        run: npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+        env:
+          APPIUM_SERVER_URL: http://localhost:4723</code></pre><h3>Exercício prático</h3><ol><li>Crie <code>.github/workflows/mobile.yml</code> com pipeline completa</li><li>Configure paralelização em 2 emuladores</li><li>Adicione upload de artefatos (screenshots, Allure</li><li>Teste: force um fail intencional (adicione <code>sleep(100)</code> no código) — o gate deve bloquear</li></ol>", resources: [] }
+      ]},
+      { id: "m8", title: "Projeto Final Mobile", lessons: [
+        { id: "m8-l1", title: "Automatizar app demo", duration: "90 min", content: "<p>Use app de demo (ApiDemos, WDIO native demo). 5 fluxos automatizados + README.
+</p><h3>A aplicação</h3><p>Recomendamos <strong>Sauce Demo (Swag Labs)</strong> — e-commerce fictício público com:</p><ul><li><strong>URL:</strong> <a href="https://www.saucedemo.com/" target="_blank">saucedemo.com</a> (versão web mobile responsiva)</li><li><strong>App nativo Android:</strong> <a href="https://github.com/saucelabs/sample-app-mobile" target="_blank">saucelabs/sample-app-mobile</a></li><li><strong>Credenciais:</strong> <code>standard_user</code> / <code>secret_sauce</code></li><li><strong>Usuários extras:</strong> locked_out_user, problem_user, performance_glitch_user</li></ul><h3>Escopo do projeto</h3><p>Crie uma suite completa cobrindo:</p><h4>1. Autenticação</h4><ul><li>Login válido (standard_user)</li><li>Login bloqueado (locked_out_user)</li><li>Credenciais inválidas</li><li>Logout</li></ul><h4>2. Catálogo</h4><ul><li>Listagem de produtos</li><li>Filtro/ordenação (A-Z, Z-A, preço)</li><li>Detalhe do produto</li></ul><h4>3. Carrinho</h4><ul><li>Adicionar/remover itens</li><li>Badge do carrinho</li><li>Persistência entre navegação</li></ul><h4>4. Checkout</h4><ul><li>Informações do cliente (first name, last name, zip)</li><li>Validação de campos obrigatórios</li><li>Overview do pedido</li><li>Finalização</li></ul><h3>Estrutura do projeto</h3><pre><code>swag-mobile-tests/
+├── tests/
+│   ├── smoke/              # 5-10 testes críticos, < 3 min
+│   │   └── critical-paths.smoke.spec.js
+│   └── e2e/                # Suite completa de regressão
+│       ├── auth.spec.js
+│       ├── catalog.spec.js
+│       ├── cart.spec.js
+│       └── checkout.spec.js
+├── pageobjects/
+│   ├── base/
+│   │   └── BaseScreen.js
+│   ├── common/
+│   │   ├── LoginScreen.js
+│   │   ├── ProductsScreen.js
+│   │   ├── CartScreen.js
+│   │   └── CheckoutScreen.js
+│   └── android/
+│       └── AndroidHomeScreen.js
+├── fixtures/
+│   ├── users.json
+│   └── products.json
+├── .github/workflows/
+│   └── mobile.yml
+├── wdio.conf.js
+├── package.json
+└── README.md</code></pre><h3>Checklist de qualidade</h3><h4>✅ Testes</h4><ul><li>Todos passam em 3+ execuções consecutivas (estabilidade)</li><li>Independentes — ordem de execução não importa</li><li>Assertions específicas (<code>expect(x).toBe(y)</code>, não <code>toBeTruthy()</code>)</li><li>Waits explícitos onde necessário, zero <code>sleep()</code> hardcoded</li><li>Cenários negativos incluídos (não só happy path)</li></ul><h4>✅ Organização</h4><ul><li>Page Object Model implementado corretamente (seletores centralizados)</li><li>Estrutura de pastas clara (<code>tests/</code>, <code>pageobjects/</code>, <code>fixtures/</code>)</li><li>Nomenclatura consistente (camelCase para JS, kebab-case para arquivos)</li><li>Código sem duplicação excessiva (DRY)</li><li>Comentários onde a lógica não é óbvia</li></ul><h4>✅ Segurança</h4><ul><li><code>.gitignore</code> correto:
+<pre>node_modules/
+test-results/
+allure-results/
+.env
+*.log</pre>
+</li><li>Zero credenciais no código — use variáveis de ambiente ou fixtures públicas</li><li>Nenhum token, API key ou informação sensível commitada</li></ul><h3>Checklist de documentação</h3><h4>✅ README.md obrigatório</h4><p>Deve conter no mínimo:</p><ul><li><strong>Título e descrição</strong> do projeto</li><li><strong>Tecnologias utilizadas</strong> (WDIO, Appium, Node.js, etc)</li><li><strong>Como instalar:</strong> <code>npm install</code>, <code>appium driver install uiautomator2</code></li><li><strong>Como rodar:</strong> <code>npm test</code>, <code>npm run test:headed</code></li><li><strong>Como rodar em CI:</strong> link para workflow GitHub Actions</li><li><strong>Badges de status</strong> (build passing, coverage, etc)</li></ul><h3>Entrega</h3><p>Ao concluir, você terá:</p><ul><li>Repositório GitHub público com CI/CD verde</li><li>Suite rodando em <strong>paralelo</strong> (mínimo 2 devices)</li><li>Relatório Allure publicado automaticamente</li><li>README profissional documentando tudo</li><li>Base sólida para seu portfólio de QA Mobile</li></ul><p><strong>Boa automação!</strong> 🚀</p>", resources: [{ label: "Appium Sample Apps", url: "https://github.com/appium/appium/tree/master/packages/appium/sample-code" }] }
+      ]}
+    ]
   },
-{
+  {
     id: "performance",
     slug: "load-arena",
     title: "Arena de Carga",
@@ -514,7 +764,8 @@ antes do lançamento da Black Friday 2024.
 
 ## 3. Perfil de Carga (Workload Model)
 - Usuários simultâneos (VUs): 500
-- Ramp-up: 5 min (0 → 500. - Carga sustentada: 20 min
+- Ramp-up: 5 min (0 → 500)
+- Carga sustentada: 20 min
 - Ramp-down: 2 min
 - Think time: 2-5s entre requests (distribuição log-normal)
 
@@ -1093,7 +1344,9 @@ import pandas as pd
 current = pd.read_csv('results.jtl')
 baseline = pd.read_csv('baseline.jtl')
 
-p95_current = current['elapsed'].quantile(0.95. p95_baseline = baseline['elapsed'].quantile(0.95. regression = (p95_current - p95_baseline) / p95_baseline * 100
+p95_current = current['elapsed'].quantile(0.95)
+p95_baseline = baseline['elapsed'].quantile(0.95)
+regression = (p95_current - p95_baseline) / p95_baseline * 100
 
 if regression > 10:
     print(f"⚠️ REGRESSÃO: p95 aumentou {regression:.1f}%")
@@ -1379,14 +1632,39 @@ node --require @opentelemetry/auto-instrumentations-node/server.js
 # k6 adiciona trace-id no header → rastrear request completo no Jaeger</code></pre><h3>Metodologia de debugging</h3><ol><li><strong>Reproduza:</strong> teste de carga que falha consistentemente</li><li><strong>Meça:</strong> p95, CPU, Memory, GC, DB, Network</li><li><strong>Hipótese:</strong> "CPU bound na serialização JSON"</li><li><strong>Profile:</strong> flame graph durante teste</li><li><strong>Identifique:</strong> função no plateau (ex: JSON.stringify)</li><li><strong>Valide:</strong> otimize (ex: uso de buffer, streaming) → reteste</li><li><strong>Documente:</strong> achado, evidência, fix, regression test</li></ol><h3>Exercício prático</h3><ol><li>Crie API Node.js/Python/Go com endpoint lento (loop CPU intensivo)</li><li>Rode teste k6/JMeter que satura o endpoint</li><li>Capture flame graph (clinic.js / py-spy / async-profiler)</li><li>Identifique o hot spot e otimize</li><li>Reteste — p95 deve melhorar</li></ol>, resources: [{ label: "Locust", url: "https://locust.io/" }] }
       ]},
       { id: "p8", title: "Projeto Final Performance", lessons: [
-        
+        { id: "p8-l1", title: "Plano de teste completo", duration: "120 min", content: "<p>Projeto final — execute teste de carga completo em app real, documente achados, gere relatório executivo + técnico com recomendações priorizadas.</p><h3>Aplicação alvo (escolha uma)</h3><ol><li><strong>Sua própria app:</strong> se tem acesso a staging/prod-like</li><li><strong>Demo apps:</strong> <a href="https://github.com/k6io/k6" target="_blank">k6 test-api</a>, <a href="https://juice-shop.herokuapp.com" target="_blank">Juice Shop</a>, <a href="https://github.com/spring-petclinic" target="_blank">Spring PetClinic</a></li><li><strong>E-commerce local:</strong> instale Magento/Opencart/WooCommerce local</li></ol><h3>Escopo obrigatório</h3><ol><li><strong>Smoke test:</strong> validação básica (5 VUs, 2 min) — CI gate</li><li><strong>Load test:</strong> carga esperada produção (50-100 VUs, 15 min)</li><li><strong>Stress test:</strong> além da capacidade (2x carga, 10 min) — breakpoint</li><li><strong>Soak test:</strong> 1h carga sustentada — memory leaks, degradation</li><li><strong>Spike test:</strong> 10x carga súbita — recuperação, circuit breaker</li></ol><h3>Entregáveis</h3><h4>1. Relatório Executivo (1-2 páginas)</h4><pre><code># Performance Test Report — [App Name]
+
+## Resumo
+- **App:** [Nome + versão + URL]
+- **Período:** [Datas]
+- **Ambiente:** [Staging/Prod-like specs]
+- **Ferramenta:** k6 / JMeter + Grafana
+
+## Resultados por Tipo de Teste
+| Teste | VUs | Duração | p95 | Throughput | Error Rate | Status |
+|-------|-----|---------|-----|------------|------------|--------|
+| Smoke | 5 | 2min | 180ms | 45 RPS | 0% | ✅ PASS |
+| Load  | 100 | 15min | 420ms | 950 RPS | 0.02% | ✅ PASS |
+| Stress | 200 | 10min | 1.2s | 1100 RPS | 0.5% | ⚠️ WARN |
+| Soak  | 100 | 1h | 380ms | 920 RPS | 0.01% | ✅ PASS |
+| Spike | 1000 | 5min | 3.5s | 800 RPS | 2.1% | ❌ FAIL |
+
+## Top 3 Gargalos
+1. **Database connection pool exhaustion** — Stress test: pool 20 → 100% usado, queries queued
+2. **JSON serialization CPU bound** — Spike test: 85% CPU em response formatting
+3. **Missing cache on product listing** — Load test: 90% requests hit DB, cacheable
+
+## Recomendações Priorizadas
+| Prioridade | Ação | Esforço | Impacto | Owner |
+|------------|------|---------|---------|-------|
+| P0 | Aumentar DB pool 20→50 + HPA | Baixo | Alto (resolve Stress) | DevOps |
+| P1 | Implementar response streaming / buffer | Médio | Alto (resolve Spike CPU) | Backend |
+| P2 | Redis cache product listing (TTL 5min) | Baixo | Médio (reduz Load DB 90%) | Backend |
+| P3 | Circuit breaker downstream APIs | Médio | Baixo (resiliência) | Platform |</code></pre><h4>2. Relatório Técnico Detalhado</h4><ul><li>Metodologia (ferramentas, ambiente, cenários, dados de teste)</li><li>Resultados completos por teste (tabelas, gráficos, percentis)</li><li>Análise de gargalos com evidências (flame graphs, DB metrics, logs)</li><li>Correlação k6 + infra (Grafana/Prometheus screenshots)</li><li>Comparação com baseline (regressão/progressão)</li></ul><h4>3. Artefatos (repositório GitHub)</h4><ul><li>Scripts k6/JMeter versionados</li><li>Dados brutos (JSON, CSV, JTL)</li><li>Dashboards Grafana exportados (JSON)</li><li>Baseline files para comparação futura</li><li>CI/CD workflow com gates</li></ul><h3>Critérios de avaliação</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;border:1px solid var(--border)">Critério</th><th style="padding:0.5rem;border:1px solid var(--border)">Peso</th><th style="padding:0.5rem;border:1px solid var(--border)">Excepcional</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Cobertura de tipos de teste</td><td style="padding:0.5rem;border:1px solid var(--border)">20%</td><td style="padding:0.5rem;border:1px solid var(--border)">5/5 tipos executados com resultados válidos</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Qualidade da análise</td><td style="padding:0.5rem;border:1px solid var(--border)">25%</td><td style="padding:0.5rem;border:1px solid var(--border)">Root cause identificado, evidências técnicas, correlação app+infra</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Recomendações acionáveis</td><td style="padding:0.5rem;border:1px solid var(--border)">20%</td><td style="padding:0.5rem;border:1px solid var(--border)">Priorizadas, com esforço/impacto/owner, prontas para sprint</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Relatório executivo</td><td style="padding:0.5rem;border:1px solid var(--border)">15%</td><td style="padding:0.5rem;border:1px solid var(--border)">Claro para não-técnico, decisões baseadas em dados</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Repositório profissional</td><td style="padding:0.5rem;border:1px solid var(--border)">10%</td><td style="padding:0.5rem;border:1px solid var(--border)">README, CI/CD, versionado, reproduzível</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Apresentação</td><td style="padding:0.5rem;border:1px solid var(--border)">10%</td><td style="padding:0.5rem;border:1px solid var(--border)">Storytelling, responde perguntas, inspira confiança</td></tr></table><h3>Próximos passos na carreira</h3><p>Com este projeto no portfólio (GitHub público), você tem:</p><ul><li>Artefato para entrevistas de Performance Engineer / SDET / QA Lead</li><li>Demonstração de skill full-cycle: planejar → executar → analisar → comunicar</li><li>Base para certificações: k6 Certified, Performance Testing certifications</li><li>Diferencial: a maioria QAs não faz performance testing profundo</li></ul><p><strong>Parabéns por completar a trilha de Performance! 🎉</strong></p>, resources: [{ label: "BlazeDemo (JMeter demo)", url: "https://blazedemo.com/" }] }
       ]}
     ]
   },
-  
-    ]
-  },
-{
+  {
     id: "security",
     slug: "security-sentinel",
     title: "Sentinela de Segurança",
@@ -1780,8 +2058,10 @@ HTTP/1.1 200 OK
 
 ## Finding 2: [Título]...
 [mesmo formato]</code></pre><h4>3. Evidências (anexos)</h4><ul><li>Screenshots de Burp/ZAP com request/response</li><li>Exports de ZAP report (.html, .json)</li><li>Logs de ferramentas (sqlmap output, nuclei results)</li><li>Vídeo curto (2-3 min) demonstrando exploração</li></ul><h4>4. Repositório GitHub Profissional</h4><ul><li>README com badges, descrição, como rodar</li><li>Pasta <code>/reports</code> com executivo + técnico + evidências</li><li>Pasta <code>/scripts</code> com automações usadas</li><li>GitHub Actions rodando SAST/DAST</li><li>Release v1.0 com relatórios anexados</li></ul><h3>Critérios de avaliação</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;border:1px solid var(--border)">Critério</th><th style="padding:0.5rem;border:1px solid var(--border)">Peso</th><th style="padding:0.5rem;border:1px solid var(--border)">Excepcional</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Cobertura OWASP Top 10</td><td style="padding:0.5rem;border:1px solid var(--border)">20%</td><td style="padding:0.5rem;border:1px solid var(--border)">3+ categorias, 5+ vulns únicas</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Qualidade da evidência</td><td style="padding:0.5rem;border:1px solid var(--border)">20%</td><td style="padding:0.5rem;border:1px solid var(--border)">Request/response claro, steps reproduzíveis</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Análise de causa raiz</td><td style="padding:0.5rem;border:1px solid var(--border)">20%</td><td style="padding:0.5rem;border:1px solid var(--border)">Identifica código/padrão vulnerável, não só sintoma</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Recomendações acionáveis</td><td style="padding:0.5rem;border:1px solid var(--border)">20%</td><td style="padding:0.5rem;border:1px solid var(--border)">Fix específico com exemplo de código seguro</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Qualidade do relatório executivo</td><td style="padding:0.5rem;border:1px solid var(--border)">10%</td><td style="padding:0.5rem;border:1px solid var(--border)">Claro para não-técnico, priorizado, estratégico</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Profissionalismo do repo</td><td style="padding:0.5rem;border:1px solid var(--border)">10%</td><td style="padding:0.5rem;border:1px solid var(--border)">README, CI/CD, organização, versionamento</td></tr></table><h3>Próximos passos na carreira</h3><p>Com este projeto no GitHub, você tem:</p><ul><li>Portfólio técnico demonstrando skill de AppSec</li><li>Artefato para discutir em entrevistas ("olha, eu encontrei isso, causei assim, fixei assim")</li><li>Base para certificações: eJPT, OSCP, OSWE, CEH</li><li>Diferencial: maioria dos QAs não faz security testing profundo</li></ul><p><strong>Parabéns por completar a trilha de Security! 🎉</strong></p>", resources: [{ label: "OWASP Juice Shop", url: "https://owasp.org/www-project-juice-shop/" }] }
-      ]},
-{
+      ]}
+    ]
+  },
+  {
     id: "devops",
     slug: "pipeline-craft",
     title: "Artesanato de Pipeline",
@@ -2090,7 +2370,7 @@ for (const { name, flags } of FLAG_STATES) {
       ]}
     ]
   },
-{
+  {
     id: "accessibility",
     slug: "inclusive-testing",
     title: "Testes Inclusivos",
@@ -2125,7 +2405,7 @@ for (const { name, flags } of FLAG_STATES) {
       ]}
     ]
   },
-{
+  {
     id: "leadership",
     slug: "guild-mastery",
     title: "Maestria da Guilda",
@@ -2168,7 +2448,7 @@ for (const { name, flags } of FLAG_STATES) {
       ]},
       { id: "lead2", title: "Liderança e Mentoria", lessons: [
         { id: "lead2-l1", title: "Construindo cultura de qualidade", duration: "40 min", content: "<p>\"Quality is everyone's job\" é um clichê. A pergunta real é: como você passa de um time onde QA é o gatekeeper solitário para um time onde qualidade é responsabilidade compartilhada de verdade? Essa transição é a principal missão de um QA sênior/lead.</p><h3>O modelo errado vs o modelo certo</h3><h4>Modelo errado (QA como portão)</h4><pre>Dev termina feature → joga para QA → QA testa → aprova ou reprova\n\nResultados:\n- QA vira gargalo do sprint\n- Devs não se sentem donos da qualidade\n- Bugs tardios são caros\n- Time vs QA (nós vs eles)</pre><h4>Modelo certo (QA como enabler)</h4><pre>QA entra no refinamento → define critérios de aceite com PO e dev\n→ dev escreve código com testes → QA faz exploratório e valida edge cases\n→ automação protege regressão → qualidade é responsabilidade de todos\n\nResultados:\n- QA amplifica capacidade do time\n- Devs escrevem código mais testável\n- Bugs encontrados mais cedo\n- Time junto, não dividido</pre><h3>Guild meetings — comunidade de prática</h3><p>Crie encontros regulares do capítulo de QA:</p><ul><li><strong>Frequência:</strong> quinzenal ou mensal</li><li><strong>Formato:</strong> 45-60 min, sem hierarquia</li><li><strong>Agenda típica:</strong><ol><li>Demo: alguém mostra uma técnica nova (15 min)</li><li>Retrospectiva rápida: o que funcionou, o que não funcionou (10 min)</li><li>Tópico principal: flaky tests, nova ferramenta, processo (20 min)</li><li>Action items e próximos passos (10 min)</li></ol></li></ul><h3>Bug Bashes</h3><p>Sessão coletiva de teste exploratório. Todo o time (devs, POs, designers) testa junto durante 1-2 horas.</p><pre>Como organizar um Bug Bash:\n1. Escolha o momento: antes de release major, nova feature grande\n2. Defina escopo: qual área será testada\n3. Prepare ambiente estável (staging atualizado, dados de teste)\n4. Crie template de bug report (Jira, Notion, planilha)\n5. Conduza a sessão: QA facilita, todos executam\n6. Debrief: revise bugs encontrados ao final\n7. Priorize e distribua correções</pre><p>Bug Bashes criam empatia: devs entendem como é encontrar bugs, POs entendem complexidade de testar.</p><h3>Blameless Postmortems</h3><p>Quando um bug chega em produção, a resposta errada é punir. A resposta certa é aprender sistematicamente.</p><pre>Template de Postmortem:\n\n## Incidente: [Nome do bug em prod]\n**Data:** [quando aconteceu]\n**Impacto:** [usuários afetados, duração, tipo de impacto]\n\n## Linha do tempo\n- HH:MM — commit feito\n- HH:MM — deploy em staging\n- HH:MM — deploy em prod\n- HH:MM — primeiro reporte de usuário\n- HH:MM — identificação da causa\n- HH:MM — rollback/fix\n\n## O que aconteceu\n[Explicação técnica sem julgamento de valor]\n\n## Root cause\n[A causa raiz sistêmica, não o culpado humano]\n\n## O que funcionou bem\n[Exemplo: monitoring detectou rápido]\n\n## O que não funcionou\n[Exemplo: não havia teste cobrindo esse caso]\n\n## Ações de melhoria\n| Ação | Responsável | Prazo |\n|------|-------------|-------|\n| Adicionar teste para esse cenário | QA Ana | Sprint 42 |\n| Melhorar alerta de monitoring | Dev Carlos | Sprint 42 |\n| Revisar processo de deploy | Tech Lead | Sprint 43 |</pre><p><strong>Regra blameless:</strong> a resposta à pergunta \"por que aconteceu\" nunca pode ser \"porque João não testou\". Sempre é um problema de processo, não de pessoa.</p><h3>QA como enabler, não gatekeeper</h3><ul><li>✅ QA define os critérios de aceite, não só valida</li><li>✅ QA pair-testa com devs em features novas</li><li>✅ QA treina devs em técnicas de teste</li><li>✅ QA automatiza para devs poderem avançar mais rápido</li><li>❌ QA não é o único responsável por encontrar bugs</li><li>❌ QA não bloqueia deploy por processo, mas por risco real</li></ul><h3>Métricas de cultura de qualidade</h3><ul><li><strong>Escape rate:</strong> % bugs encontrados em prod vs QA. Cai quando devs abraçam qualidade.</li><li><strong>Time-to-detect:</strong> quanto tempo para encontrar bugs. Cai com shift-left.</li><li><strong>Test coverage por dev:</strong> acompanhe se devs estão escrevendo testes unitários.</li><li><strong>Bugs by phase:</strong> quantos bugs encontrados em cada fase — requisitos, dev, QA, prod.</li></ul><h3>Por que isso importa?</h3><p>Este assunto é importante porque conecta conhecimento técnico a decisões reais de qualidade, produtividade e confiança no produto.</p><h3>Exemplo concreto</h3><p>Na prática, compreender esse tema ajuda o time a agir com mais clareza quando um cenário muda, um bug aparece ou uma decisão precisa ser tomada.</p><blockquote><strong>Guild Master:</strong> Guild Master: aprender o conceito certo no momento certo transforma conhecimento em prática útil para o dia a dia de QA.</blockquote><h3>Perguntas de revisão</h3><ul><li>Por que esse tema merece atenção no seu contexto de teste?</li><li>Como você aplicaria esse conceito em um cenário real?</li><li>Que benefício concreto ele traz para a qualidade do produto?</li></ul><h3>Resumo prático</h3><p>Ao fechar esta aula, você deve ser capaz de transformar esse conceito em uma prática útil no dia a dia, aplicando o aprendizado a cenários reais de teste e validação.</p>", resources: [{ label: "Google — Blameless Postmortems", url: "https://sre.google/sre-book/postmortem-culture/" }] },
-        { id: "lead2-l2", title: "Mentoria de QAs júnior", duration: "35 min", content: "<p>Mentorar bem é uma habilidade, não um instinto. QAs sêniors que mentoram bem multiplicam o impacto do time — um sênior que forma dois plenos vale muito mais do que um sênior trabalhando sozinho.</p><h3>Pair testing — aprender fazendo</h3><p>A forma mais eficaz de mentorar é testar junto em tempo real:</p><pre>Formato de pair testing:\n1. Defina a sessão: 45-90 min, escopo claro\n2. Rotação de papel:\n   - Mentor navega/testa, júnior observa e faz anotações\n   - Júnior testa, mentor observa e comenta ao vivo\n3. Debrief ao final: o que aprendemos, o que faria diferente\n\nCoisas que o mentor demonstra:\n- Como fazer perguntas para entender o contexto\n- Como estruturar um charter de exploratório\n- Como tomar notas enquanto testa\n- Como decidir quando parar e reportar\n- Como priorizar edge cases</pre><h3>Code review de automação — educativo, não punitivo</h3><p>Code review é uma das melhores ferramentas de mentoria. Não é sobre encontrar erros — é sobre crescimento:</p><pre>// Pull Request de um QA júnior\n// Tests/login.spec.js\n\ntest('test 1', async ({ page }) => {\n  await page.goto('/login');\n  await page.click('#email');\n  await page.fill('#email', 'user@test.com');\n  await page.waitForTimeout(2000);  // sleep hardcoded\n  await page.click('#password');\n  await page.fill('#password', 'Pass123');\n  await page.click('.btn-submit');\n  await page.waitForTimeout(3000);  // outro sleep\n  // sem assertion!\n});\n\n// Review educativo:\n// 💡 Ótima estrutura de navegação! Algumas sugestões:\n// 1. Renomeie o teste para descrever o comportamento:\n//    'login com credenciais válidas redireciona ao dashboard'\n// 2. Substitua waitForTimeout(2000. por assertion explícito:\n//    await expect(page.locator('.dashboard')).toBeVisible();\n//    Assim o teste é mais rápido E mais confiável.\n// 3. Adicione assertion no final — o que deve ser verdadeiro após o login?\n// Exemplo completo:\ntest('login com credenciais válidas redireciona ao dashboard', async ({ page }) => {\n  await page.goto('/login');\n  await page.fill('#email', 'user@test.com');\n  await page.fill('#password', 'Pass123');\n  await page.click('.btn-submit');\n  await expect(page).toHaveURL('/dashboard');\n  await expect(page.locator('h1')).toContainText('Dashboard');\n});</pre><h3>Growth plans — plano de desenvolvimento individual</h3><pre>// Reunião 1:1 mensal — estrutura\nTópicos:\n1. O que está indo bem? (5 min)\n2. O que está difícil ou frustrante? (5 min)\n3. Progress no plano de desenvolvimento (10 min)\n4. Próximos passos e metas (10 min)\n\n// Exemplo de plano de desenvolvimento (QA Júnior → Pleno)\nMeta: Em 6 meses, ser capaz de liderar automação de uma feature do início ao fim\n\nMês 1-2: Fundamentos de automação\n  - Entrega: Suite de 10 testes do Sauce Demo no GitHub com CI\n  - Skill: Playwright básico, Page Objects, async/await\n\nMês 3: Testes de API\n  - Entrega: 15 testes de API para o projeto principal\n  - Skill: Postman, Playwright request, JSON schema\n\nMês 4-5: Projeto real\n  - Entrega: Automatiza uma feature completa no projeto da empresa\n  - Skill: Trabalho em PR, code review, CI/CD\n\nMês 6: Avaliação e próximo nível\n  - Revisão: Alcançou as metas?\n  - Próximo desafio: Começa a fazer code review em PRs de outros</pre><h3>Feedback construtivo — o modelo SBI</h3><p><strong>S</strong>ituação → <strong>B</strong>ehavior → <strong>I</strong>mpact</p><pre>// ❌ Feedback vago\n\"Seus bug reports são ruins.\"\n\n// ✅ Feedback SBI\nS: \"No bug report de ontem sobre o checkout\"\nB: \"você descreveu o erro como 'não funciona' sem passos de reprodução\"\nI: \"o dev levou 2h tentando reproduzir, e teve que pedir ajuda — impacto direto no sprint\"\n\n// Completo:\n\"No bug report de ontem (situação), você descreveu como 'não funciona' sem passos (behavior) — \nisto fez o dev gastar 2h tentando reproduzir, atrasando o sprint (impact). Posso te mostrar \ncomo o template de bug report da s4-l2 teria resolvido isso em 5 minutos?\"\n</pre><h3>Quando o júnior trava</h3><p>Sinais de que o júnior precisa de apoio ativo:</p><ul><li>Trabalhou mais de 30 min sem progresso sem pedir ajuda</li><li>O mesmo erro aparece em PRs consecutivos</li><li>Evita fazer perguntas (medo de parecer burro)</li><li>Começa a fazer commits frequentes mas vazios</li></ul><p><strong>Resposta:</strong> Crie segurança psicológica. \"Perguntas são bem-vindas aqui. Demorar para pedir ajuda é o que realmente atrasa o time.\"</p><h3>Por que isso importa?</h3><p>Este assunto é importante porque conecta conhecimento técnico a decisões reais de qualidade, produtividade e confiança no produto.</p><h3>Exemplo concreto</h3><p>Na prática, compreender esse tema ajuda o time a agir com mais clareza quando um cenário muda, um bug aparece ou uma decisão precisa ser tomada.</p><blockquote><strong>Guild Master:</strong> Guild Master: aprender o conceito certo no momento certo transforma conhecimento em prática útil para o dia a dia de QA.</blockquote><h3>Perguntas de revisão</h3><ul><li>Por que esse tema merece atenção no seu contexto de teste?</li><li>Como você aplicaria esse conceito em um cenário real?</li><li>Que benefício concreto ele traz para a qualidade do produto?</li></ul><h3>Resumo prático</h3><p>Ao fechar esta aula, você deve ser capaz de transformar esse conceito em uma prática útil no dia a dia, aplicando o aprendizado a cenários reais de teste e validação.</p>", resources: [{ label: "The Manager's Path — Camille Fournier", url: "https://www.oreilly.com/library/view/the-managers-path/9781491973882/" }] }
+        { id: "lead2-l2", title: "Mentoria de QAs júnior", duration: "35 min", content: "<p>Mentorar bem é uma habilidade, não um instinto. QAs sêniors que mentoram bem multiplicam o impacto do time — um sênior que forma dois plenos vale muito mais do que um sênior trabalhando sozinho.</p><h3>Pair testing — aprender fazendo</h3><p>A forma mais eficaz de mentorar é testar junto em tempo real:</p><pre>Formato de pair testing:\n1. Defina a sessão: 45-90 min, escopo claro\n2. Rotação de papel:\n   - Mentor navega/testa, júnior observa e faz anotações\n   - Júnior testa, mentor observa e comenta ao vivo\n3. Debrief ao final: o que aprendemos, o que faria diferente\n\nCoisas que o mentor demonstra:\n- Como fazer perguntas para entender o contexto\n- Como estruturar um charter de exploratório\n- Como tomar notas enquanto testa\n- Como decidir quando parar e reportar\n- Como priorizar edge cases</pre><h3>Code review de automação — educativo, não punitivo</h3><p>Code review é uma das melhores ferramentas de mentoria. Não é sobre encontrar erros — é sobre crescimento:</p><pre>// Pull Request de um QA júnior\n// Tests/login.spec.js\n\ntest('test 1', async ({ page }) => {\n  await page.goto('/login');\n  await page.click('#email');\n  await page.fill('#email', 'user@test.com');\n  await page.waitForTimeout(2000);  // sleep hardcoded\n  await page.click('#password');\n  await page.fill('#password', 'Pass123');\n  await page.click('.btn-submit');\n  await page.waitForTimeout(3000);  // outro sleep\n  // sem assertion!\n});\n\n// Review educativo:\n// 💡 Ótima estrutura de navegação! Algumas sugestões:\n// 1. Renomeie o teste para descrever o comportamento:\n//    'login com credenciais válidas redireciona ao dashboard'\n// 2. Substitua waitForTimeout(2000) por assertion explícito:\n//    await expect(page.locator('.dashboard')).toBeVisible();\n//    Assim o teste é mais rápido E mais confiável.\n// 3. Adicione assertion no final — o que deve ser verdadeiro após o login?\n// Exemplo completo:\ntest('login com credenciais válidas redireciona ao dashboard', async ({ page }) => {\n  await page.goto('/login');\n  await page.fill('#email', 'user@test.com');\n  await page.fill('#password', 'Pass123');\n  await page.click('.btn-submit');\n  await expect(page).toHaveURL('/dashboard');\n  await expect(page.locator('h1')).toContainText('Dashboard');\n});</pre><h3>Growth plans — plano de desenvolvimento individual</h3><pre>// Reunião 1:1 mensal — estrutura\nTópicos:\n1. O que está indo bem? (5 min)\n2. O que está difícil ou frustrante? (5 min)\n3. Progress no plano de desenvolvimento (10 min)\n4. Próximos passos e metas (10 min)\n\n// Exemplo de plano de desenvolvimento (QA Júnior → Pleno)\nMeta: Em 6 meses, ser capaz de liderar automação de uma feature do início ao fim\n\nMês 1-2: Fundamentos de automação\n  - Entrega: Suite de 10 testes do Sauce Demo no GitHub com CI\n  - Skill: Playwright básico, Page Objects, async/await\n\nMês 3: Testes de API\n  - Entrega: 15 testes de API para o projeto principal\n  - Skill: Postman, Playwright request, JSON schema\n\nMês 4-5: Projeto real\n  - Entrega: Automatiza uma feature completa no projeto da empresa\n  - Skill: Trabalho em PR, code review, CI/CD\n\nMês 6: Avaliação e próximo nível\n  - Revisão: Alcançou as metas?\n  - Próximo desafio: Começa a fazer code review em PRs de outros</pre><h3>Feedback construtivo — o modelo SBI</h3><p><strong>S</strong>ituação → <strong>B</strong>ehavior → <strong>I</strong>mpact</p><pre>// ❌ Feedback vago\n\"Seus bug reports são ruins.\"\n\n// ✅ Feedback SBI\nS: \"No bug report de ontem sobre o checkout\"\nB: \"você descreveu o erro como 'não funciona' sem passos de reprodução\"\nI: \"o dev levou 2h tentando reproduzir, e teve que pedir ajuda — impacto direto no sprint\"\n\n// Completo:\n\"No bug report de ontem (situação), você descreveu como 'não funciona' sem passos (behavior) — \nisto fez o dev gastar 2h tentando reproduzir, atrasando o sprint (impact). Posso te mostrar \ncomo o template de bug report da s4-l2 teria resolvido isso em 5 minutos?\"\n</pre><h3>Quando o júnior trava</h3><p>Sinais de que o júnior precisa de apoio ativo:</p><ul><li>Trabalhou mais de 30 min sem progresso sem pedir ajuda</li><li>O mesmo erro aparece em PRs consecutivos</li><li>Evita fazer perguntas (medo de parecer burro)</li><li>Começa a fazer commits frequentes mas vazios</li></ul><p><strong>Resposta:</strong> Crie segurança psicológica. \"Perguntas são bem-vindas aqui. Demorar para pedir ajuda é o que realmente atrasa o time.\"</p><h3>Por que isso importa?</h3><p>Este assunto é importante porque conecta conhecimento técnico a decisões reais de qualidade, produtividade e confiança no produto.</p><h3>Exemplo concreto</h3><p>Na prática, compreender esse tema ajuda o time a agir com mais clareza quando um cenário muda, um bug aparece ou uma decisão precisa ser tomada.</p><blockquote><strong>Guild Master:</strong> Guild Master: aprender o conceito certo no momento certo transforma conhecimento em prática útil para o dia a dia de QA.</blockquote><h3>Perguntas de revisão</h3><ul><li>Por que esse tema merece atenção no seu contexto de teste?</li><li>Como você aplicaria esse conceito em um cenário real?</li><li>Que benefício concreto ele traz para a qualidade do produto?</li></ul><h3>Resumo prático</h3><p>Ao fechar esta aula, você deve ser capaz de transformar esse conceito em uma prática útil no dia a dia, aplicando o aprendizado a cenários reais de teste e validação.</p>", resources: [{ label: "The Manager's Path — Camille Fournier", url: "https://www.oreilly.com/library/view/the-managers-path/9781491973882/" }] }
       ]},
       { id: "lead3", title: "Arquitetura de Automação em Escala", lessons: [
         { id: "lead3-l1", title: "Framework decisions", duration: "45 min", content: "<p>Escolher (ou mudar) o framework de automação de um time é uma decisão arquitetural que afeta meses de trabalho. Aqui está como tomar essa decisão de forma estruturada, e como estruturar um projeto que escala de 10 para 1000 testes sem se tornar ingerenciável.</p><h3>Build vs Buy</h3><p>A primeira decisão: construir framework customizado ou usar solução pronta?</p><pre>Build próprio:\n✅ Controle total sobre arquitetura\n✅ Adaptado ao contexto específico da empresa\n❌ Manutenção é responsabilidade interna (custa caro)\n❌ Onboarding mais difícil (devs externos não conhecem)\n❌ Tempo de desenvolvimento inicial alto\n\nUsar Playwright/Cypress/Selenium:\n✅ Comunidade imensa, documentação rica\n✅ Updates regulares com novas funcionalidades\n✅ Devs externos conhecem\n❌ Menos customização\n❌ Pode ter limitações em casos de uso muito específicos\n\nRecomendação: use framework maduro como base. Construa abstrações\nPOR CIMA (Page Objects, helpers, utilities) — não do zero.</pre><h3>Matriz de decisão de framework</h3><table style=\"width:100%;border-collapse:collapse;margin:1rem 0\"><tr style=\"background:rgba(0,229,255,0.1)\"><th style=\"padding:0.5rem;border:1px solid var(--border)\">Critério</th><th style=\"padding:0.5rem;border:1px solid var(--border)\">Playwright</th><th style=\"padding:0.5rem;border:1px solid var(--border)\">Cypress</th><th style=\"padding:0.5rem;border:1px solid var(--border)\">Selenium</th></tr><tr><td style=\"padding:0.5rem;border:1px solid var(--border)\">Maturidade</td><td style=\"padding:0.5rem;border:1px solid var(--border)\">Alta (Microsoft)</td><td style=\"padding:0.5rem;border:1px solid var(--border)\">Alta</td><td style=\"padding:0.5rem;border:1px solid var(--border)\">Muito alta</td></tr><tr><td style=\"padding:0.5rem;border:1px solid var(--border)\">Multi-browser</td><td style=\"padding:0.5rem;border:1px solid var(--border)\">✅ Nativo</td><td style=\"padding:0.5rem;border:1px solid var(--border)\">Limitado</td><td style=\"padding:0.5rem;border:1px solid var(--border)\">✅ Com Grid</td></tr><tr><td style=\"padding:0.5rem;border:1px solid var(--border)\">API testing</td><td style=\"padding:0.5rem;border:1px solid var(--border)\">✅ Nativo</td><td style=\"padding:0.5rem;border:1px solid var(--border)\">Parcial</td><td style=\"padding:0.5rem;border:1px solid var(--border)\">Não</td></tr><tr><td style=\"padding:0.5rem;border:1px solid var(--border)\">DX (debug)</td><td style=\"padding:0.5rem;border:1px solid var(--border)\">Trace viewer</td><td style=\"padding:0.5rem;border:1px solid var(--border)\">Time-travel</td><td style=\"padding:0.5rem;border:1px solid var(--border)\">Básico</td></tr><tr><td style=\"padding:0.5rem;border:1px solid var(--border)\">Curva de aprendizado</td><td style=\"padding:0.5rem;border:1px solid var(--border)\">Baixa-Média</td><td style=\"padding:0.5rem;border:1px solid var(--border)\">Baixa</td><td style=\"padding:0.5rem;border:1px solid var(--border)\">Alta</td></tr><tr><td style=\"padding:0.5rem;border:1px solid var(--border)\">Velocidade de execução</td><td style=\"padding:0.5rem;border:1px solid var(--border)\">Muito rápido</td><td style=\"padding:0.5rem;border:1px solid var(--border)\">Rápido</td><td style=\"padding:0.5rem;border:1px solid var(--border)\">Médio</td></tr></table><h3>Mono-repo vs Multi-repo de testes</h3><pre>// Opção 1: Testes junto com o produto (recomendado)\nbff-service/\n├── src/\n├── tests/          ← testes dentro do mesmo repo\n│   ├── unit/\n│   └── integration/\n└── package.json\n\nfrontend-app/\n├── src/\n├── tests/          ← testes de E2E aqui\n│   ├── e2e/\n│   └── a11y/\n└── package.json\n\nVantagem: testes evoluem junto com o código, PR inclui código + testes\nDesvantagem: times diferentes podem ter padrões inconsistentes\n\n// Opção 2: Repositório dedicado de testes\nqa-automation/\n├── e2e/\n├── api-tests/\n├── performance/\n└── shared/\n\nVantagem: padronização centralizada, ownership claro\nDesvantagem: pode ficar desatualizado em relação ao produto</pre><h3>Estruturar para 1000+ testes</h3><pre>// playwright.config.js — configuração para escala\nexport default defineConfig({\n  // Workers baseados em CPU disponível\n  workers: process.env.CI ? '50%' : '25%',\n  fullyParallel: true,\n  \n  // Projetos separados por tipo e velocidade\n  projects: [\n    // Smoke: < 5 min, roda em todo PR\n    {\n      name: 'smoke-chrome',\n      testMatch: '**/*.smoke.spec.ts',\n      use: { browserName: 'chromium' }\n    },\n    // Regressão: < 20 min, roda em merge\n    {\n      name: 'regression-chrome',\n      testMatch: '**/e2e/**/*.spec.ts',\n      use: { browserName: 'chromium' }\n    },\n    // Cross-browser: nightly\n    {\n      name: 'firefox',\n      testMatch: '**/e2e/**/*.spec.ts',\n      use: { browserName: 'firefox' }\n    },\n    {\n      name: 'webkit',\n      testMatch: '**/e2e/**/*.spec.ts',\n      use: { browserName: 'webkit' }\n    }\n  ],\n  \n  retries: process.env.CI ? 2 : 0,\n  reporter: process.env.CI ? [\n    ['allure-playwright'],\n    ['github']  // Annotations no GitHub Actions\n  ] : [['html']]\n});</pre><h3>Decisão de migração de framework</h3><pre>Quando considerar migração (ex: Selenium → Playwright):\n✅ Velocity de teste está caindo (manutenção alta)\n✅ Muitos flaky tests por limitações do framework\n✅ Novas features que o framework não suporta bem\n✅ Time novo não quer aprender o framework antigo\n\nComo migrar sem parar tudo:\n1. Novos testes em Playwright, manutenção mínima no Selenium\n2. Migre módulo por módulo ao refatorar (não big bang)\n3. Rode ambos em paralelo até atingir paridade de cobertura\n4. Documente padrões novos para onboarding\n5. Treine o time gradualmente</pre><h3>Por que isso importa?</h3><p>Este assunto é importante porque conecta conhecimento técnico a decisões reais de qualidade, produtividade e confiança no produto.</p><h3>Exemplo concreto</h3><p>Na prática, compreender esse tema ajuda o time a agir com mais clareza quando um cenário muda, um bug aparece ou uma decisão precisa ser tomada.</p><blockquote><strong>Guild Master:</strong> Guild Master: aprender o conceito certo no momento certo transforma conhecimento em prática útil para o dia a dia de QA.</blockquote><h3>Perguntas de revisão</h3><ul><li>Por que esse tema merece atenção no seu contexto de teste?</li><li>Como você aplicaria esse conceito em um cenário real?</li><li>Que benefício concreto ele traz para a qualidade do produto?</li></ul><h3>Resumo prático</h3><p>Ao fechar esta aula, você deve ser capaz de transformar esse conceito em uma prática útil no dia a dia, aplicando o aprendizado a cenários reais de teste e validação.</p>", resources: [{ label: "Playwright — Large Scale Testing", url: "https://playwright.dev/docs/test-configuration" }] },
