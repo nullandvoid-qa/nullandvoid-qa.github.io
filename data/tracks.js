@@ -1,5 +1,5 @@
 window.TG_QAWAY_TRACKS = [
-  {
+{
     id: "starter",
     slug: "guild-initiation",
     title: "Iniciação da Guilda",
@@ -175,7 +175,7 @@ const [usuario, produtos, carrinho] = await Promise.all([
       }
     ]
   },
-  {
+{
     id: "web",
     slug: "frontend-forge",
     title: "Forja Frontend",
@@ -413,7 +413,7 @@ cy.criarUsuario('admin').then((usuario) => {
       ]}
     ]
   },
-  {
+{
     id: "api",
     slug: "integration-workshop",
     title: "Oficina de Integração",
@@ -431,7 +431,7 @@ cy.criarUsuario('admin').then((usuario) => {
         { id: "a1-l3", title: "OpenAPI/Swagger", duration: "40 min", content: "<p>OpenAPI e Swagger transformam a API em uma documentação viva e testável. Em vez de depender apenas de um documento escrito à mão, o time consegue usar o contrato como referência para desenvolvimento, testes e validação de integração.</p><h3>Por que isso ajuda o QA</h3><ul><li>Mostra os endpoints, métodos e payloads esperados</li><li>Ajuda a identificar campos obrigatórios e formatos</li><li>Facilita a criação de testes manuais e automatizados</li><li>Reduz mal-entendidos entre backend, frontend e QA</li></ul><h3>O que observar</h3><ul><li>Campos obrigatórios e opcionais</li><li>Tipos de dados e limites</li><li>Exemplos de request e response</li><li>Códigos de erro esperados</li></ul><h3>Exemplo prático</h3><p>Se a especificação define que um campo de e-mail é obrigatório, o QA deve validar tanto o fluxo feliz quanto os cenários em que ele está ausente ou em formato inválido. Isso reduz retrabalho e melhora a comunicação com o time.</p><blockquote><strong>Guild Master:</strong> Um contrato bem definido não elimina bugs, mas reduz muito a chance de interpretar mal o comportamento da API.</blockquote><h3>Perguntas de revisão</h3><ul><li>Como o contrato de API ajuda a planejar testes?</li><li>Que tipo de informação um QA deve procurar no Swagger?</li><li>Como um contrato desatualizado pode gerar falso positivo em teste?</li></ul><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve conseguir usar um contrato de API como base para testar com mais clareza e menos suposição.</p>", resources: [{ label: "OpenAPI Spec", url: "https://swagger.io/specification/" }] }
       ]},
         },
-  {
+{
     id: "mobile",
     slug: "mobile-lab",
     title: "Laboratório Mobile",
@@ -476,7 +476,7 @@ cy.criarUsuario('admin').then((usuario) => {
       ]}
     ]
   },
-  {
+{
     id: "performance",
     slug: "load-arena",
     title: "Arena de Carga",
@@ -1811,7 +1811,7 @@ HTTP/1.1 200 OK
       ]}
     ]
   },
-  {
+{
     id: "security",
     slug: "security-sentinel",
     title: "Sentinela de Segurança",
@@ -2206,7 +2206,7 @@ HTTP/1.1 200 OK
 ## Finding 2: [Título]...
 [mesmo formato]</code></pre><h4>3. Evidências (anexos)</h4><ul><li>Screenshots de Burp/ZAP com request/response</li><li>Exports de ZAP report (.html, .json)</li><li>Logs de ferramentas (sqlmap output, nuclei results)</li><li>Vídeo curto (2-3 min) demonstrando exploração</li></ul><h4>4. Repositório GitHub Profissional</h4><ul><li>README com badges, descrição, como rodar</li><li>Pasta <code>/reports</code> com executivo + técnico + evidências</li><li>Pasta <code>/scripts</code> com automações usadas</li><li>GitHub Actions rodando SAST/DAST</li><li>Release v1.0 com relatórios anexados</li></ul><h3>Critérios de avaliação</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;border:1px solid var(--border)">Critério</th><th style="padding:0.5rem;border:1px solid var(--border)">Peso</th><th style="padding:0.5rem;border:1px solid var(--border)">Excepcional</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Cobertura OWASP Top 10</td><td style="padding:0.5rem;border:1px solid var(--border)">20%</td><td style="padding:0.5rem;border:1px solid var(--border)">3+ categorias, 5+ vulns únicas</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Qualidade da evidência</td><td style="padding:0.5rem;border:1px solid var(--border)">20%</td><td style="padding:0.5rem;border:1px solid var(--border)">Request/response claro, steps reproduzíveis</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Análise de causa raiz</td><td style="padding:0.5rem;border:1px solid var(--border)">20%</td><td style="padding:0.5rem;border:1px solid var(--border)">Identifica código/padrão vulnerável, não só sintoma</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Recomendações acionáveis</td><td style="padding:0.5rem;border:1px solid var(--border)">20%</td><td style="padding:0.5rem;border:1px solid var(--border)">Fix específico com exemplo de código seguro</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Qualidade do relatório executivo</td><td style="padding:0.5rem;border:1px solid var(--border)">10%</td><td style="padding:0.5rem;border:1px solid var(--border)">Claro para não-técnico, priorizado, estratégico</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Profissionalismo do repo</td><td style="padding:0.5rem;border:1px solid var(--border)">10%</td><td style="padding:0.5rem;border:1px solid var(--border)">README, CI/CD, organização, versionamento</td></tr></table><h3>Próximos passos na carreira</h3><p>Com este projeto no GitHub, você tem:</p><ul><li>Portfólio técnico demonstrando skill de AppSec</li><li>Artefato para discutir em entrevistas ("olha, eu encontrei isso, causei assim, fixei assim")</li><li>Base para certificações: eJPT, OSCP, OSWE, CEH</li><li>Diferencial: maioria dos QAs não faz security testing profundo</li></ul><p><strong>Parabéns por completar a trilha de Security! 🎉</strong></p>", resources: [{ label: "OWASP Juice Shop", url: "https://owasp.org/www-project-juice-shop/" }] }
       ]},
-  {
+{
     id: "devops",
     slug: "pipeline-craft",
     title: "Artesanato de Pipeline",
@@ -2515,7 +2515,7 @@ for (const { name, flags } of FLAG_STATES) {
       ]}
     ]
   },
-  {
+{
     id: "accessibility",
     slug: "inclusive-testing",
     title: "Testes Inclusivos",
@@ -2550,7 +2550,7 @@ for (const { name, flags } of FLAG_STATES) {
       ]}
     ]
   },
-  {
+{
     id: "leadership",
     slug: "guild-mastery",
     title: "Maestria da Guilda",
