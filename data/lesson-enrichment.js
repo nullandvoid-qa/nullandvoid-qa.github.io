@@ -5,10 +5,7 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "QA não é só 'testar'. Antes de continuar, anote: qual produto você usa todo dia que tem bugs que te irritam? Esse produto precisava de um QA melhor. É esse problema que você vai aprender a resolver.",
       "en": "QA isn't just 'testing'. Before continuing, note: what product do you use daily that has bugs that annoy you? That product needed a better QA. That's the problem you'll learn to solve."
     },
-    "seniorNote": {
-      "pt": "Em nível sênior, o conceito de QA evolui de 'encontrar bugs' para 'gestão de risco de qualidade'. Você não é mais apenas um gatekeeper — é um consultor que ajuda o time a tomar decisões informadas sobre onde investir esforço de teste. A pergunta muda de 'como testar isso?' para 'devemos testar isso e com que profundidade?'. Essa mudança de mindset é o que separa QAs júnior de sênior.",
-      "en": "At senior level, the concept of QA evolves from 'finding bugs' to 'quality risk management'. You're no longer just a gatekeeper — you're a consultant helping the team make informed decisions about where to invest testing effort. The question shifts from 'how do I test this?' to 'should we test this and at what depth?'. This mindset shift is what separates junior from senior QAs."
-    }
+    "seniorNote": null
   },
   "s1-l2": {
     "tier": "beginner",
@@ -16,10 +13,7 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "Na entrevista, quando perguntarem 'qual a diferença entre QA e Tester?', a resposta esperada é: QA é proativo (previne), Tester é reativo (verifica). Use os exemplos desta aula para ilustrar.",
       "en": "In interviews, when asked 'what's the difference between QA and Tester?', the expected answer is: QA is proactive (prevents), Tester is reactive (verifies). Use examples from this lesson to illustrate."
     },
-    "seniorNote": {
-      "pt": "Na prática, a linha entre QA e QC frequentemente se mistura em times modernos. O valor real está em saber quando atuar em cada modo. Em empresas com maturidade de qualidade, você vê menos 'QA vs Dev' e mais 'qualidade como responsabilidade compartilhada'. Seu papel como sênior é facilitar essa transição, não reforçar silos.",
-      "en": "In practice, the line between QA and QC often blurs in modern teams. Real value lies in knowing when to operate in each mode. In quality-mature companies, you see less 'QA vs Dev' and more 'quality as shared responsibility'. Your role as senior is to facilitate this transition, not reinforce silos."
-    }
+    "seniorNote": null
   },
   "s1-l3": {
     "tier": "beginner",
@@ -51,10 +45,7 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "A pirâmide de testes responde: 'onde testar esse comportamento?'. Antes de escrever qualquer teste, pergunte: isso é lógica isolada (unitário), integração entre partes (integração) ou jornada de usuário (E2E)?",
       "en": "The test pyramid answers: 'where should this behavior be tested?'. Before writing any test, ask: is this isolated logic (unit), interaction between parts (integration), or user journey (E2E)?"
     },
-    "seniorNote": {
-      "pt": "A pirâmide de testes é um modelo, não uma regra absoluta. Em microserviços, a base pode ser mais teste de contrato do que unitário puro. Em monolitos legados, E2E pode ter peso maior. Como sênior, você adapta o modelo ao contexto da arquitetura e maturidade do time, não segue cegamente.",
-      "en": "The test pyramid is a model, not an absolute rule. In microservices, the base might be more contract testing than pure unit. In legacy monoliths, E2E might carry more weight. As senior, you adapt the model to architecture context and team maturity, not follow blindly."
-    }
+    "seniorNote": null
   },
   "s3-l1": {
     "tier": "beginner",
@@ -62,10 +53,7 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "Exercício mental antes de ler: pense em um campo de CEP. Quais valores você testaria? Depois compare com as partições e limites da aula. Você cobriu os mesmos casos?",
       "en": "Mental exercise before reading: think about a ZIP code field. What values would you test? Then compare with the partitions and boundaries in the lesson. Did you cover the same cases?"
     },
-    "seniorNote": {
-      "pt": "Partição de equivalência e análise de valor limite são técnicas fundamentais, mas sêniores as combinam com outras técnicas como pairwise e orthogonal arrays para reduzir ainda mais o número de casos. Além disso, essas técnicas são usadas não só em teste manual, mas também para gerar dados de teste automatizados e fuzzing.",
-      "en": "Equivalence partitioning and boundary analysis are fundamental techniques, but seniors combine them with others like pairwise and orthogonal arrays to further reduce case count. Additionally, these techniques are used not just in manual testing, but also to generate automated test data and fuzzing."
-    }
+    "seniorNote": null
   },
   "s3-l2": {
     "tier": "beginner",
@@ -73,10 +61,7 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "Tabela de decisão parece complexa, mas é simples: cada coluna é um caso de teste. Se você tem 3 condições booleanas, são no máximo 8 combinações (2³). A tabela te ajuda a não esquecer nenhuma.",
       "en": "Decision table looks complex, but it's simple: each column is a test case. With 3 boolean conditions, you have at most 8 combinations (2³). The table helps you not miss any."
     },
-    "seniorNote": {
-      "pt": "Pairwise testing é especialmente valioso em configurações de software, testes de compatibilidade e formulários complexos. Ferramentas como PICT, AllPairs e Hexawise automatizam a geração de casos pairwise. Em sistemas com muitas variáveis, isso reduz testes exponenciais para lineares sem perda significativa de cobertura.",
-      "en": "Pairwise testing is especially valuable in software configurations, compatibility testing, and complex forms. Tools like PICT, AllPairs, and Hexawise automate pairwise case generation. In systems with many variables, this reduces exponential tests to linear without significant coverage loss."
-    }
+    "seniorNote": null
   },
   "s3-l3": {
     "tier": "beginner",
@@ -84,10 +69,7 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "Antes de ler, tente 15 minutos de teste exploratório em qualquer site. Não planeje — só explore. Depois leia a aula e veja se você usou charters, SFDIPOT ou SBTM sem saber.",
       "en": "Before reading, try 15 minutes of exploratory testing on any site. Don't plan — just explore. Then read the lesson and see if you used charters, SFDIPOT or SBTM without knowing it."
     },
-    "seniorNote": {
-      "pt": "Teste exploratório como sênior não é 'brincar com o app'. É investigação estruturada com objetivos de negócio. Cada sessão deve ter um charter claro, notas de bugs reais, e preferencialmente um debrief com desenvolvedores. O valor está em descobrir edge cases que scripts jamais encontrariam — bugs de integração, problemas de performance, comportamentos inesperados de estado.",
-      "en": "Exploratory testing as a senior isn't 'playing with the app'. It's structured investigation with business objectives. Each session should have a clear charter, real bug notes, and preferably a debrief with developers. The value lies in discovering edge cases scripts would never find — integration bugs, performance issues, unexpected state behaviors."
-    }
+    "seniorNote": null
   },
   "s4-l1": {
     "tier": "beginner",
@@ -95,10 +77,7 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "Um caso de teste mal escrito é um caso de teste inútil. O teste do título é: outro QA consegue executar seu caso sem te perguntar nada? Se não, ele está incompleto.",
       "en": "A poorly written test case is a useless one. The title test: can another QA execute your case without asking you anything? If not, it's incomplete."
     },
-    "seniorNote": {
-      "pt": "Documentação de testes como sênior é sobre equilíbrio: documentar o suficiente para rastreabilidade e compliance, mas não tanto que vira overhead. Em times ágeis, considere Behavior-Driven Development (BDD) como documentação viva — specs em Gherkin servem como casos de teste e documentação simultaneamente. Para compliance (ISO, FDA), RTM é obrigatório; para startups, checklists e áudio em vídeos de bug podem ser suficientes.",
-      "en": "Test documentation as a senior is about balance: document enough for traceability and compliance, but not so much it becomes overhead. In agile teams, consider Behavior-Driven Development (BDD) as living documentation — Gherkin specs serve as test cases and documentation simultaneously. For compliance (ISO, FDA), RTM is mandatory; for startups, checklists and audio in bug videos may be sufficient."
-    }
+    "seniorNote": null
   },
   "s4-l2": {
     "tier": "beginner",
@@ -106,10 +85,7 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "Pratique agora: escreva um bug report para qualquer problema que você viu hoje (num site, app, qualquer coisa). Use a estrutura da aula. Mostre para alguém — eles conseguiram reproduzir?",
       "en": "Practice now: write a bug report for any problem you saw today (on a site, app, anything). Use the lesson structure. Show it to someone — could they reproduce it?"
     },
-    "seniorNote": {
-      "pt": "Bug reports como sênior são sobre influência e priorização. Um bug bem documentado com impacto de negócio claro é corrigido mais rápido. Inclua contexto: 'Isso afeta 20% dos usuários mobile' ou 'Bloqueia campanha de Black Friday'. Como sênior, você triage bugs como Product Manager — não só registra, mas influencia roadmap de correções.",
-      "en": "Bug reports as a senior are about influence and prioritization. A well-documented bug with clear business impact gets fixed faster. Include context: 'This affects 20% of mobile users' or 'Blocks Black Friday campaign'. As a senior, you triage bugs like a Product Manager — not just recording, but influencing fix roadmap."
-    }
+    "seniorNote": null
   },
   "s4-l3": {
     "tier": "beginner",
@@ -318,10 +294,7 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "Destructuring e spread são os recursos JS mais usados em código de testes modernos. Se você ver '{ page }' em um teste Playwright e não souber o que significa, esta aula explica exatamente isso.",
       "en": "Destructuring and spread are the most-used JS features in modern test code. If you see '{ page }' in a Playwright test and don't know what it means, this lesson explains exactly that."
     },
-    "seniorNote": {
-      "pt": "JavaScript moderno é essencial para automação web moderna. Conhecer async/await, Promises, e métodos de array (map, filter, reduce) permite escrever testes mais limpos e poderosos. Como sênior, você também deve entender o que acontece sob o capô: event loop, hoisting, e closure — bugs sutis de async geralmente vêm de mal-entender esses conceitos.",
-      "en": "Modern JavaScript is essential for modern web automation. Knowing async/await, Promises, and array methods (map, filter, reduce) allows writing cleaner, more powerful tests. As a senior, you should also understand what's under the hood: event loop, hoisting, and closure — subtle async bugs usually come from misunderstanding these concepts."
-    }
+    "seniorNote": null
   },
   "w1-l2": {
     "tier": "intermediate",
@@ -340,10 +313,7 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "Instale Cypress e rode 'npx cypress open'. Não leia mais nada — explore a interface primeiro. A UI do Cypress é intuitiva o suficiente para entender 80% do funcionamento só olhando.",
       "en": "Install Cypress and run 'npx cypress open'. Don't read more — explore the interface first. Cypress UI is intuitive enough to understand 80% of how it works just by looking."
     },
-    "seniorNote": {
-      "pt": "Cypress tem trade-offs importantes que sêniores consideram: execução mais lenta que Playwright, paralelização limitada sem plano pago, e ecossistema mais fechado. Para novos projetos, Playwright geralmente vence em velocidade e features modernas. Cypress ainda brilha em migrações de projetos legados e times que preferem abordagem mais guiada.",
-      "en": "Cypress has important trade-offs seniors consider: slower execution than Playwright, limited parallelization without paid plan, and more closed ecosystem. For new projects, Playwright generally wins on speed and modern features. Cypress still shines in legacy project migrations and teams preferring more guided approach."
-    }
+    "seniorNote": null
   },
   "w2-l2": {
     "tier": "intermediate",
@@ -351,10 +321,7 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "Custom commands são o equivalente Cypress dos Page Objects: centraliza lógica repetida. Crie cy.login() como primeiro custom command — você vai usar em 90% dos outros testes.",
       "en": "Custom commands are Cypress's equivalent of Page Objects: centralizes repeated logic. Create cy.login() as your first custom command — you'll use it in 90% of other tests."
     },
-    "seniorNote": {
-      "pt": "Custom commands são poderosos, mas abuse leva a testes mágicos difíceis de debugar. Como sênior, mantenha commands simples e documentados. Se um command faz mais de 3 coisas, provavelmente está fazendo demais. Considere Page Objects para ações complexas, commands para helpers simples. Commands que abstraem demais podem esconder problemas reais — mantenha testes legíveis.",
-      "en": "Custom commands are powerful, but overuse leads to magical tests hard to debug. As a senior, keep commands simple and documented. If a command does more than 3 things, it's probably doing too much. Consider Page Objects for complex actions, commands for simple helpers. Commands that abstract too much can hide real problems — keep tests readable."
-    }
+    "seniorNote": null
   },
   "w2-l3": {
     "tier": "intermediate",
@@ -579,10 +546,7 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "A feature mais poderosa do Postman não é fazer requests — é Environments com variáveis. {{base_url}}, {{token}}, {{user_id}} tornam a collection reutilizável em qualquer ambiente sem alterar uma linha.",
       "en": "Postman's most powerful feature isn't making requests — it's Environments with variables. {{base_url}}, {{token}}, {{user_id}} make the collection reusable in any environment without changing a line."
     },
-    "seniorNote": {
-      "pt": "Em projetos de escala, Postman collections tornam-se parte do contrato da API. Versione suas collections no Git, integre com CI via Newman, e considere migrar para ferramentas como Bruno ou Insomnia se precisar de mais controle sobre configuração e colaboração. Collections também podem ser usadas para gerar automaticamente documentação de API.",
-      "en": "In scale projects, Postman collections become part of the API contract. Version your collections in Git, integrate with CI via Newman, and consider migrating to tools like Bruno or Insomnia if you need more control over configuration and collaboration. Collections can also be used to automatically generate API documentation."
-    }
+    "seniorNote": null
   },
   "a2-l2": {
     "tier": "intermediate",
@@ -590,10 +554,7 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "Newman é o que transforma Postman de ferramenta manual em ferramenta de CI. O comando 'newman run collection.json -e environment.json' é tudo que você precisa para integrar na pipeline.",
       "en": "Newman is what transforms Postman from a manual tool into a CI tool. The command 'newman run collection.json -e environment.json' is all you need to integrate into the pipeline."
     },
-    "seniorNote": {
-      "pt": "Como sênior, você deve questionar se Postman/Newman é a solução certa ou se deve migrar para automação nativa (Jest, Supertest, REST Assured). Postman é ótimo para time não-técnico, mas para escala de longo prazo, código versionado com framework de teste oferece mais controle, paralelização e integração com outras ferramentas. Avalie trade-offs: Postman para início rápido, frameworks para escala e manutenção.",
-      "en": "As a senior, you should question if Postman/Newman is the right solution or if you should migrate to native automation (Jest, Supertest, REST Assured). Postman is great for non-technical teams, but for long-term scale, versioned code with test framework offers more control, parallelization, and integration with other tools. Evaluate trade-offs: Postman for quick start, frameworks for scale and maintenance."
-    }
+    "seniorNote": null
   },
   "a2-l3": {
     "tier": "intermediate",
@@ -1012,10 +973,7 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "QA de segurança não é Security Engineer — você não precisa saber explorar vulnerabilidades. Precisa saber testá-las: verificar se os controles de segurança implementados pelos devs funcionam.",
       "en": "Security QA isn't a Security Engineer — you don't need to know how to exploit vulnerabilities. You need to test them: verify if security controls implemented by devs actually work."
     },
-    "seniorNote": {
-      "pt": "QA de segurança como sênior envolve shift-left security integrando verificações em CI/CD (SAST, DAST, SCA). Você não precisa ser pentester, mas deve saber identificar controles críticos (auth, authz, input validation, encryption) e garantir que eles estão sendo testados automaticamente. Colabore com Security Engineers para entender threat modeling e validar que mitigações estão implementadas corretamente.",
-      "en": "Security QA as a senior involves shift-left security integrating checks in CI/CD (SAST, DAST, SCA). You don't need to be a pentester, but should know how to identify critical controls (auth, authz, input validation, encryption) and ensure they're being tested automatically. Collaborate with Security Engineers to understand threat modeling and validate that mitigations are correctly implemented."
-    }
+    "seniorNote": null
   },
   "sec1-l2": {
     "tier": "intermediate",
@@ -1140,10 +1098,7 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "Uma pipeline de CI é a automação do processo de qualidade. Sem ela, qualidade depende de pessoas executando manualmente os mesmos passos toda vez — inconsistente e não escalável.",
       "en": "A CI pipeline is quality process automation. Without it, quality depends on people manually running the same steps every time — inconsistent and not scalable."
     },
-    "seniorNote": {
-      "pt": "Como sênior, você entende que pipelines não são só sobre rodar testes — são sobre shift-left quality gates. Integre SAST, DAST, SCA, e linters antes mesmo dos testes unitários. Implemente quality gates em PRs que bloqueiam merges sem aprovação. Monitore flakiness percent e MTTR de bugs — dashboards de métricas de qualidade são vitais para time sênior de DevOps.",
-      "en": "As a senior, you understand that pipelines aren't just about running tests — they're about shift-left quality gates. Integrate SAST, DAST, SCA, and linters even before unit tests. Implement quality gates in PRs that block merges without approval. Monitor flakiness percent and bug MTTR — quality metrics dashboards are vital for senior DevOps teams."
-    }
+    "seniorNote": null
   },
   "dev1-l2": {
     "tier": "intermediate",
@@ -1238,10 +1193,7 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "Passe 5 minutos navegando em qualquer site APENAS com o teclado (Tab, Shift+Tab, Enter, Space). Você vai encontrar mais barreiras de acessibilidade em 5 minutos do que qualquer ferramenta automática revelaria.",
       "en": "Spend 5 minutes navigating any website using ONLY the keyboard (Tab, Shift+Tab, Enter, Space). You'll find more accessibility barriers in 5 minutes than any automated tool would reveal."
     },
-    "seniorNote": {
-      "pt": "Acessibilidade como sênior não é só testar com axe-core — é shift-left a11y. Integre a11y no lint (eslint-plugin-jsx-a11y), em PR reviews (checklist de semântica HTML), e em testes E2E (validar keyboard navigation). Colabore com UX/design desde o wireframe — a11y deve ser considerada no design, não remediada no final. Consulte usuários reais com deficiência em sessões de teste.",
-      "en": "Accessibility as a senior isn't just testing with axe-core — it's shift-left a11y. Integrate a11y in lint (eslint-plugin-jsx-a11y), in PR reviews (HTML semantics checklist), and in E2E tests (validate keyboard navigation). Collaborate with UX/design from wireframe — a11y should be considered in design, not remediated at the end. Consult real users with disabilities in testing sessions."
-    }
+    "seniorNote": null
   },
   "a11y1-l2": {
     "tier": "intermediate",
@@ -1344,10 +1296,7 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "Um test strategy document de 1 página é mais útil que 10 páginas de plano de teste. Deve responder: O que testamos? Como testamos? Quem é responsável? Quais são os critérios de aceite? Quando paramos?",
       "en": "A 1-page test strategy document is more useful than a 10-page test plan. It should answer: What do we test? How do we test? Who is responsible? What are the acceptance criteria? When do we stop?"
     },
-    "seniorNote": {
-      "pt": "Test strategy como sênior é um documento vivo, não shelfware. Revisite trimestralmente ou quando a arquitetura mudar significativamente. O valor está na alinhamento entre time e negócio, não no documento em si. Se ninguém lê ou usa sua strategy, ela precisa ser repensada — talvez esteja longa demais ou desconectada da realidade do dia a dia.",
-      "en": "Test strategy as a senior is a living document, not shelfware. Revisit quarterly or when architecture changes significantly. The value lies in alignment between team and business, not the document itself. If no one reads or uses your strategy, it needs rethinking — perhaps it's too long or disconnected from daily reality."
-    }
+    "seniorNote": null
   },
   "lead1-l2": {
     "tier": "senior",
