@@ -402,14 +402,184 @@ cy.criarUsuario('admin').then((usuario) => {
         { id: "w7-l3", title: "Pipeline completo", duration: "45 min", content: "<p>Agora que você domina Cypress, Playwright, Selenium e CI/CD, é hora de montar a pipeline perfeita que integra todos esses elementos. Esta aula mostra uma arquitetura real de pipeline para equipes de QA web.</p><h3>A pipeline ideal para QA web</h3><pre>PR aberto\n│\n├── Lint (2 min)\n│   └── ESLint + Prettier check\n│\n├── Unit Tests (3 min)\n│   └── Jest/Vitest unit tests\n│\n├── Build (5 min)\n│   └── Compila a aplicação\n│\n├── E2E Tests (10 min — paralelo em 4 shards)\n│   ├── Shard 1: auth, login, logout\n│   ├── Shard 2: catálogo, busca, filtros\n│   ├── Shard 3: carrinho, checkout\n│   └── Shard 4: admin, usuários, relatórios\n│\n├── A11y Tests (5 min)\n│   └── axe-core em páginas críticas\n│\n├── Quality Gate\n│   └── Bloqueia merge se falhar\n│\nMerge aprovado → Deploy staging → Smoke em staging → Deploy prod</pre><h3>GitHub Actions — pipeline completa</h3><pre>name: QA Pipeline\n\non:\n  pull_request:\n  push:\n    branches: [main]\n\njobs:\n  lint:\n    name: Lint\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with: { node-version: 20, cache: 'npm' }\n      - run: npm ci\n      - run: npm run lint\n\n  build:\n    name: Build\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n      - run: npm ci && npm run build\n      - uses: actions/upload-artifact@v4\n        with: { name: build, path: dist/ }\n\n  e2e:\n    name: E2E Tests\n    needs: build\n    runs-on: ubuntu-latest\n    strategy:\n      fail-fast: false\n      matrix:\n        shard: [1, 2, 3, 4]\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n      - run: npm ci\n      - run: npx playwright install chromium --with-deps\n      - uses: actions/download-artifact@v4\n        with: { name: build, path: dist/ }\n      - name: Start app and run E2E\n        run: |\n          npm run serve &\n          npx wait-on http://localhost:3000\n          npx playwright test \\\n            --shard=${{ matrix.shard }}/4\n      - uses: actions/upload-artifact@v4\n        if: always()\n        with:\n          name: allure-results-${{ matrix.shard }}\n          path: allure-results/\n\n  allure-report:\n    name: Allure Report\n    needs: e2e\n    runs-on: ubuntu-latest\n    if: always()\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/download-artifact@v4\n        with: { path: all-results/ }\n      - name: Merge and generate Allure\n        run: |\n          find all-results -name \"*.json\" -exec cp {} merged-results/ \\;\n          npm install -g allure-commandline\n          allure generate merged-results --clean\n      - uses: peaceiris/actions-gh-pages@v3\n        with:\n          github_token: ${{ secrets.GITHUB_TOKEN }}\n          publish_dir: allure-report</pre><h3>Quality gates que bloqueiam merge</h3><pre># Branch protection rules no GitHub:\n# Settings → Branches → Add rule → main\n# ✅ Require status checks:\n#   - Lint\n#   - Build\n#   - E2E Tests (1/4, 2/4, 3/4, 4/4)\n# ✅ Require branches to be up to date\n# ✅ Do not allow bypassing</pre><h3>Smoke em produção pós-deploy</h3><pre># .github/workflows/smoke-prod.yml\nname: Smoke Production\n\non:\n  deployment_status:\n\njobs:\n  smoke:\n    if: github.event.deployment_status.state == 'success'\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - run: npm ci\n      - run: npx playwright install chromium --with-deps\n      - name: Run smoke tests in production\n        run: npx playwright test --grep @smoke\n        env:\n          BASE_URL: ${{ github.event.deployment_status.environment_url }}</pre><h3>Métricas que a pipeline deve gerar</h3><ul><li><strong>Pass rate:</strong> % de testes que passaram</li><li><strong>Duration:</strong> tempo total da pipeline</li><li><strong>Flakiness:</strong> % de testes que precisaram de retry</li><li><strong>Coverage:</strong> linhas de código cobertas</li></ul><h3>Por que isso importa?</h3><p>Este assunto é importante porque conecta conhecimento técnico a decisões reais de qualidade, produtividade e confiança no produto.</p><h3>Exemplo concreto</h3><p>Na prática, compreender esse tema ajuda o time a agir com mais clareza quando um cenário muda, um bug aparece ou uma decisão precisa ser tomada.</p><blockquote><strong>Guild Master:</strong> Guild Master: aprender o conceito certo no momento certo transforma conhecimento em prática útil para o dia a dia de QA.</blockquote><h3>Perguntas de revisão</h3><ul><li>Por que esse tema merece atenção no seu contexto de teste?</li><li>Como você aplicaria esse conceito em um cenário real?</li><li>Que benefício concreto ele traz para a qualidade do produto?</li></ul><h3>Resumo prático</h3><p>Ao fechar esta aula, você deve ser capaz de transformar esse conceito em uma prática útil no dia a dia, aplicando o aprendizado a cenários reais de teste e validação.</p>", resources: [{ label: "Playwright Sharding", url: "https://playwright.dev/docs/test-sharding" }] }
       ]},
       { id: "w8", title: "Padrões e Anti-patterns", lessons: [
-        { id: "w8-l1", title: "Flaky tests: causas e soluções", duration: "40 min", content: "<p>Testes flaky são testes que passam e falham de forma intermitente sem nenhuma mudança de código. São o maior inimigo da confiança em pipelines de CI. Quando o time começa a ignorar falhas de CI porque \"é só flaky\", o sistema de proteção colapsa.</p><h3>Categorias de causas de flakiness</h3><h4>1. Timing e race conditions (causa mais comum)</h4><pre>// ❌ Hard-coded sleep — nunca confiável\nawait page.click('#submit');\nawait page.waitForTimeout(3000); // esperando API responder\nawait expect(page.locator('.success')).toBeVisible();\n\n// ✅ Wait explícito\nawait page.click('#submit');\nawait expect(page.locator('.success')).toBeVisible(); // auto-retry até 30s\n\n// ✅ Wait por network request completar\nawait Promise.all([\n  page.waitForResponse(r => r.url().includes('/api/checkout')),\n  page.click('#submit')\n]);\nawait expect(page.locator('.success')).toBeVisible();</pre><h4>2. Dados compartilhados entre testes</h4><pre>// ❌ Testes dependem do mesmo usuário\ntest('verifica saldo', async () => {\n  // Usa user@test.com que pode estar sendo usado por outro teste\n  await loginAs('user@test.com');\n});\n\n// ✅ Cada teste cria seus próprios dados\ntest('verifica saldo', async ({ request }) => {\n  const user = await request.post('/api/users', {\n    data: { email: `user${Date.now()}@test.com` }\n  });\n  await loginAs(user.email);\n});</pre><h4>3. Ordem de execução</h4><pre>// ❌ Teste B depende de estado criado pelo teste A\ntest('criar produto', async ({ page }) => {\n  // Cria produto 'Laptop Pro'\n});\n\ntest('editar produto', async ({ page }) => {\n  // Assume que 'Laptop Pro' existe — só funciona se A rodou antes!\n  await page.click('text=Laptop Pro');\n});\n\n// ✅ Cada teste é independente\ntest.beforeEach(async ({ request }) => {\n  // Setup limpo para cada teste\n  testData.productId = await createProduct('Laptop Pro');\n});\n\ntest.afterEach(async ({ request }) => {\n  await deleteProduct(testData.productId); // cleanup\n});</pre><h4>4. Ambiente instável</h4><pre>// ❌ Teste depende de serviço externo lento\ntest('importa dados do ERP', async () => {\n  await page.click('#import-from-erp');\n  await expect('.import-success').toBeVisible(); // ERP pode estar lento\n});\n\n// ✅ Mock do serviço externo\ntest('importa dados do ERP', async ({ page }) => {\n  await page.route('**/api/erp/import', route => {\n    route.fulfill({ status: 200, body: JSON.stringify({ success: true }) });\n  });\n  await page.click('#import-from-erp');\n  await expect(page.locator('.import-success')).toBeVisible();\n});</pre><h4>5. Animações CSS</h4><pre>// playwright.config.js — desabilita animações globalmente\nexport default defineConfig({\n  use: {\n    // Remove transições e animações CSS\n    // Isso elimina flakiness de elementos \"em movimento\"\n    timezoneId: 'America/Sao_Paulo'\n  }\n});\n\n// Ou no teste específico:\nawait page.emulateMedia({ reducedMotion: 'reduce' });</pre><h3>Estratégia de gestão de flaky tests</h3><h4>1. Detectar — métricas de flakiness</h4><pre>// playwright.config.js — retry para detectar\nexport default defineConfig({\n  retries: process.env.CI ? 2 : 0,\n  reporter: [\n    ['html'],\n    ['json', { outputFile: 'results.json' }]\n  ]\n});\n\n// Após execuções, analise os retries:\n// Se um teste passou só no 2° ou 3° retry → é flaky</pre><h4>2. Quarentena — isole o problema</h4><pre>// Marcar teste como flaky temporariamente\ntest.fixme('checkout flaky - investigando', async ({ page }) => {\n  // Teste pausado até investigação\n});\n\n// Ou tag @flaky para monitoramento\ntest('@flaky valida timeout de sessão', async ({ page }) => {\n  // Sabe que é flaky, monitorando causa raiz\n});</pre><h4>3. SLA de resolução</h4><ul><li>Flaky detectado → cria issue no Jira/GitHub</li><li>SLA: 48h para investigar, 1 semana para fix ou delete</li><li>Se não corrigir em 1 semana → delete o teste</li><li>Um teste que não pode ser confiado é pior que sem teste</li></ul><h4>4. Root cause analysis</h4><pre># Para cada flaky test, investigue:\n1. Nos logs de CI, quando passou e quando falhou?\n2. Tem padrão? Sempre falha no shard 3? Às 3am?\n3. O trace do Playwright mostra o que aconteceu?\n4. Está usando sleep() em algum lugar?\n5. Depende de dados que outro teste pode modificar?\n6. Há animações ou carregamentos lentos?\n\nnpx playwright test --trace on tests/checkout.spec.js\nnpx playwright show-trace trace.zip</pre><h3>Checklist anti-flakiness</h3><ul><li>✅ Zero sleeps hardcoded — use waits explícitos</li><li>✅ Cada teste cria e limpa seus próprios dados</li><li>✅ Testes funcionam em qualquer ordem</li><li>✅ Serviços externos são mockados ou têm retry</li><li>✅ Animações desabilitadas nos testes</li><li>✅ Locators estáveis (data-testid > classes > XPath)</li><li>✅ Retry configurado no CI (2x)</li><li>✅ Pipeline falha se retry foi necessário (detecta flakes)</li></ul><h3>Por que isso importa?</h3><p>Este assunto é importante porque conecta conhecimento técnico a decisões reais de qualidade, produtividade e confiança no produto.</p><h3>Exemplo concreto</h3><p>Na prática, compreender esse tema ajuda o time a agir com mais clareza quando um cenário muda, um bug aparece ou uma decisão precisa ser tomada.</p><blockquote><strong>Guild Master:</strong> Guild Master: aprender o conceito certo no momento certo transforma conhecimento em prática útil para o dia a dia de QA.</blockquote><h3>Perguntas de revisão</h3><ul><li>Por que esse tema merece atenção no seu contexto de teste?</li><li>Como você aplicaria esse conceito em um cenário real?</li><li>Que benefício concreto ele traz para a qualidade do produto?</li></ul><h3>Resumo prático</h3><p>Ao fechar esta aula, você deve ser capaz de transformar esse conceito em uma prática útil no dia a dia, aplicando o aprendizado a cenários reais de teste e validação.</p>", resources: [{ label: "Playwright — Debugging Flakiness", url: "https://playwright.dev/docs/trace-viewer" }] },
+        {
+        id: "w8-l1",
+        title: "Testes flaky: causas e soluções",
+        duration: "40 min",
+        content: "<p>Testes flaky são testes que passam e falham de forma intermitente sem nenhuma mudança no código. Eles minam a confiança no pipeline, desperdiçam tempo de investigação e levam o time a ignorar falhas reais.</p><h3>Causas principais</h3><ul><li><strong>Timing/race conditions:</strong> testar antes do elemento estar pronto, animações, async operations</li><li><strong>Estado compartilhado:</strong> dados de teste não isolados, cache, localStorage, cookies</li><li><strong>Dependência externa:</strong> API instável, banco de dados, rede, serviços terceiros</li><li><strong>Seletores frágeis:</strong> XPath por posição, classes CSS geradas, nth-child</li><li><strong>Dados não determinísticos:</strong> random(), Date.now(), UUID, ordenação não garantida</li><li><strong>Ambiente instável:</strong> containers subindo/desconectando, CI com recursos limitados</li></ul><h3>Estratégias de prevenção</h3><ol><li><strong>Waits inteligentes:</strong> sempre espere condições específicas, nunca <code>sleep()</code> fixo</li><li><strong>Isolamento de dados:</strong> cada teste cria/limpa seus próprios dados (factories, fixtures)</li><li><strong>Mocks determinísticos:</strong> substitua dependências externas por mocks controlados</li><li><strong>Seletores resilientes:</strong> data-testid, roles, texto visível — evite implementação</li><li><strong>Limpeza garantida:</strong> <code>afterEach</code> com try/finally para garantir teardown</li></ol><h3>Quando já existem flakies</h3><ul><li><strong>Quarentena:</strong> mova para suite separada, não bloqueie deploy</li><li><strong>Retry policy:</strong> configure retry automático (ex: 2 retries no CI)</li><li><strong>Root cause analysis:</strong> dedique tempo para corrigir a causa raiz, não só o sintoma</li><li><strong>Delete se não vale a pena:</strong> se o custo de fix > valor do teste, delete</li></ul><h3>Configuração de retry no Playwright</h3><pre>// playwright.config.ts
+export default defineConfig({
+  retries: process.env.CI ? 2 : 0,
+  // ou por arquivo:
+  // test.describe.configure({ retries: 2 })
+});</pre><h3>Configuração de retry no Cypress</h3><pre>// cypress.config.js
+export default defineConfig({
+  retries: {
+    runMode: 2,
+    openMode: 0
+  }
+});</pre><h3>Métricas de flakiness</h3><p>Monitore: % de testes flaky por sprint, tempo gasto investigando, % de builds bloqueados por flaky. Meta: < 1% de testes flaky.</p>", resources: [{ label: "Google — Flaky Tests", url: "https://testing.googleblog.com/2016/05/flaky-tests.html" }] },
         { id: "w8-l2", title: "Arquitetura de projeto de automação", duration: "45 min", content: "<p>Um projeto de automação mal organizado começa pequeno e vira um pesadelo de manutenção. Esta aula mostra como estruturar um projeto de automação que escala — de 10 a 1000 testes — sem perder velocidade.</p><h3>Estrutura de pastas ideal</h3><pre>projeto-testes/\n├── tests/\n│   ├── smoke/              # 5-10 testes críticos, < 3 min\n│   │   ├── login.smoke.spec.js\n│   │   └── checkout.smoke.spec.js\n│   ├── e2e/                # Suite completa de regressão\n│   │   ├── auth/\n│   │   │   ├── login.spec.js\n│   │   │   └── logout.spec.js\n│   │   ├── products/\n│   │   │   ├── catalog.spec.js\n│   │   │   └── search.spec.js\n│   │   ├── cart/\n│   │   └── checkout/\n│   └── api/               # Testes de API\n│       ├── auth.spec.js\n│       └── products.spec.js\n├── pages/                 # Page Objects\n│   ├── BasePage.js        # Métodos comuns (wait, scroll)\n│   ├── LoginPage.js\n│   ├── ProductPage.js\n│   └── CheckoutPage.js\n├── components/            # Componentes reutilizáveis\n│   ├── HeaderComponent.js\n│   ├── ModalComponent.js\n│   └── TableComponent.js\n├── fixtures/\n│   ├── users.json         # Dados de usuários\n│   ├── products.json      # Dados de produtos\n│   └── test.setup.js      # Fixtures de setup (autenticação)\n├── helpers/\n│   ├── api-helper.js      # Chamadas API para setup/teardown\n│   ├── data-factory.js    # Factories de dados\n│   └── date-helper.js     # Utilitários de data\n├── .github/workflows/\n│   └── e2e.yml\n├── playwright.config.js\n├── package.json\n├── .env.example           # Variáveis de ambiente (template)\n├── .gitignore\n└── README.md</pre><h3>Configuração por ambiente</h3><pre>// playwright.config.js\nimport { defineConfig } from '@playwright/test';\n\nconst ENV = process.env.ENV || 'staging';\n\nconst environments = {\n  local: {\n    baseURL: 'http://localhost:3000',\n    timeout: 60000,\n    workers: 2\n  },\n  staging: {\n    baseURL: 'https://staging.app.com',\n    timeout: 30000,\n    workers: 4\n  },\n  production: {\n    baseURL: 'https://app.com',\n    timeout: 20000,\n    workers: 1  // cuidado com prod!\n  }\n};\n\nexport default defineConfig({\n  ...environments[ENV],\n  retries: process.env.CI ? 2 : 0,\n  fullyParallel: true,\n  reporter: [\n    ['html'],\n    process.env.CI ? ['allure-playwright'] : ['line']\n  ],\n  use: {\n    screenshot: 'only-on-failure',\n    video: 'retain-on-failure',\n    trace: 'on-first-retry'\n  }\n});</pre><h3>Tags para separar suites</h3><pre>// login.spec.js\ntest('@smoke login válido', async ({ page }) => { ... });\ntest('@regression login com 2FA', async ({ page }) => { ... });\ntest('@regression login após bloqueio', async ({ page }) => { ... });\n\n// package.json\n\"scripts\": {\n  \"test:smoke\": \"playwright test --grep @smoke\",\n  \"test:regression\": \"playwright test --grep @regression\",\n  \"test:api\": \"playwright test tests/api/\",\n  \"test\": \"playwright test\"\n}\n\n// Rodar só smoke\nnpm run test:smoke  # < 3 min\n\n// Regressão completa (CI nightly)\nnpm test  # 10-20 min</pre><h3>Fixtures de autenticação compartilhada</h3><pre>// fixtures/test.setup.js\nimport { test as setup } from '@playwright/test';\n\nsetup('autenticar admin', async ({ page }) => {\n  await page.goto('/login');\n  await page.fill('[data-testid=email]', process.env.ADMIN_EMAIL);\n  await page.fill('[data-testid=password]', process.env.ADMIN_PASS);\n  await page.click('[data-testid=submit]');\n  await page.waitForURL('**/dashboard');\n  await page.context().storageState({ path: '.auth/admin.json' });\n});\n\n// playwright.config.js\nexport default defineConfig({\n  projects: [\n    { name: 'setup', testMatch: /.*\\.setup\\.js/ },\n    {\n      name: 'authenticated tests',\n      use: { storageState: '.auth/admin.json' },\n      dependencies: ['setup']\n    }\n  ]\n});</pre><h3>Data Factory — gerar dados únicos</h3><pre>// helpers/data-factory.js\nimport { faker } from '@faker-js/faker';\n\nexport function createUser(overrides = {}) {\n  return {\n    name: faker.person.fullName(),\n    email: faker.internet.email(),\n    password: 'Test@123!',\n    phone: faker.phone.number('(##) #####-####'),\n    ...overrides\n  };\n}\n\nexport function createProduct(overrides = {}) {\n  return {\n    name: faker.commerce.productName(),\n    price: parseFloat(faker.commerce.price(10, 1000)),\n    category: faker.commerce.department(),\n    ...overrides\n  };\n}\n\n// Uso em testes\nconst user = createUser({ role: 'admin' });\nconst product = createProduct({ price: 99.90 });</pre><h3>Anti-patterns de arquitetura</h3><ul><li>❌ <strong>God test file</strong>: 200 testes em um arquivo</li><li>❌ <strong>Seletores hardcoded</strong> espalhados por 50 testes</li><li>❌ <strong>Sem Page Objects</strong>: mudança de seletor quebra 30 arquivos</li><li>❌ <strong>Dados hardcoded</strong>: email igual em todos os testes causa conflito</li><li>❌ <strong>Sem tags</strong>: não dá para rodar só smoke em 2 min</li><li>❌ <strong>node_modules commitado</strong>: repositório gigante</li></ul><h3>Regras de ouro</h3><ul><li>✅ Smoke < 5 minutos, regressão < 20 minutos</li><li>✅ Cada teste independente (cria e limpa seus dados)</li><li>✅ Seletores centralizados em Page Objects</li><li>✅ Configuração por variável de ambiente, nunca hardcoded</li><li>✅ Credenciais em .env, nunca no código</li><li>✅ CI badge no README para visibilidade do time</li></ul><h3>Por que isso importa?</h3><p>Este assunto é importante porque conecta conhecimento técnico a decisões reais de qualidade, produtividade e confiança no produto.</p><h3>Exemplo concreto</h3><p>Na prática, compreender esse tema ajuda o time a agir com mais clareza quando um cenário muda, um bug aparece ou uma decisão precisa ser tomada.</p><blockquote><strong>Guild Master:</strong> Guild Master: aprender o conceito certo no momento certo transforma conhecimento em prática útil para o dia a dia de QA.</blockquote><h3>Perguntas de revisão</h3><ul><li>Por que esse tema merece atenção no seu contexto de teste?</li><li>Como você aplicaria esse conceito em um cenário real?</li><li>Que benefício concreto ele traz para a qualidade do produto?</li></ul><h3>Resumo prático</h3><p>Ao fechar esta aula, você deve ser capaz de transformar esse conceito em uma prática útil no dia a dia, aplicando o aprendizado a cenários reais de teste e validação.</p>", resources: [{ label: "Playwright — Project Structure", url: "https://playwright.dev/docs/best-practices" }] }
       ]},
       { id: "w9", title: "Acessibilidade Web", lessons: [
         { id: "w9-l1", title: "axe-core e Lighthouse", duration: "40 min", content: "<p>Integrar acessibilidade na pipeline web é responsabilidade do QA frontend. axe-core e Lighthouse permitem detectar violações WCAG automaticamente em cada PR, antes que cheguem ao usuário.</p><h3>axe-core com Playwright (web)</h3><pre>npm install -D @axe-core/playwright\n\n// tests/a11y/homepage.spec.js\nimport { test, expect } from '@playwright/test';\nimport AxeBuilder from '@axe-core/playwright';\n\ntest.describe('Acessibilidade — Homepage', () => {\n  test('não deve ter violações WCAG AA', async ({ page }) => {\n    await page.goto('/');\n    \n    const results = await new AxeBuilder({ page })\n      .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])\n      .analyze();\n    \n    expect(results.violations).toEqual([]);\n  });\n\n  test('modal de login sem violações', async ({ page }) => {\n    await page.goto('/');\n    await page.click('[data-testid=open-login]');\n    await page.waitForSelector('[role=dialog]');\n    \n    const results = await new AxeBuilder({ page })\n      .include('[role=dialog]')\n      .analyze();\n    \n    expect(results.violations).toEqual([]);\n  });\n});</pre><h3>axe-core com Cypress (web)</h3><pre>npm install -D cypress-axe axe-core\n\n// cypress/support/e2e.js\nimport 'cypress-axe';\n\n// cypress/e2e/a11y.cy.js\ndescribe('Acessibilidade', () => {\n  beforeEach(() => {\n    cy.visit('/');\n    cy.injectAxe();\n  });\n\n  it('homepage passa WCAG AA', () => {\n    cy.checkA11y(null, {\n      runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa'] }\n    });\n  });\n\n  it('formulário de contato sem violações', () => {\n    cy.visit('/contato');\n    cy.injectAxe();\n    cy.checkA11y('form');\n  });\n});</pre><h3>Lighthouse na pipeline</h3><pre>npm install -D @lhci/cli\n\n// lighthouserc.json\n{\n  \"ci\": {\n    \"collect\": {\n      \"url\": [\n        \"http://localhost:3000/\",\n        \"http://localhost:3000/login\",\n        \"http://localhost:3000/checkout\"\n      ],\n      \"numberOfRuns\": 3\n    },\n    \"assert\": {\n      \"assertions\": {\n        \"categories:accessibility\": [\"error\", { \"minScore\": 0.9 }],\n        \"categories:performance\": [\"warn\", { \"minScore\": 0.8 }]\n      }\n    }\n  }\n}\n\n# GitHub Actions\n- name: Lighthouse CI\n  run: |\n    npm run build && npm run serve &\n    npx wait-on http://localhost:3000\n    npx lhci autorun</pre><h3>Combinando axe + Lighthouse</h3><pre>// playwright.config.js — projeto dedicado para a11y\nexport default defineConfig({\n  projects: [\n    {\n      name: 'a11y',\n      testMatch: /.*\\.a11y\\.spec\\.js/,\n      use: { baseURL: process.env.BASE_URL }\n    }\n  ]\n});\n\n// package.json\n\"test:a11y\": \"playwright test --project=a11y\"</pre><h3>Integrando no PR</h3><p>Configure o GitHub Actions para comentar no PR quando acessibilidade quebrar:</p><pre>- name: Run a11y tests\n  run: npm run test:a11y\n  \n- name: Comment on failure\n  if: failure()\n  uses: actions/github-script@v6\n  with:\n    script: |\n      github.rest.issues.createComment({\n        issue_number: context.issue.number,\n        body: '❌ Falha de acessibilidade detectada. Verifique o relatório.'\n      })</pre><h3>Boas práticas</h3><ul><li>✅ Rode axe em cada página crítica (login, checkout, perfil)</li><li>✅ Configure score mínimo 90 no Lighthouse CI</li><li>✅ Separe testes de a11y em projeto dedicado</li><li>✅ Falha de a11y deve bloquear merge como qualquer outro bug</li><li>✅ Documente exceções com justificativa</li></ul><h3>Por que isso importa?</h3><p>Este assunto é importante porque conecta conhecimento técnico a decisões reais de qualidade, produtividade e confiança no produto.</p><h3>Exemplo concreto</h3><p>Na prática, compreender esse tema ajuda o time a agir com mais clareza quando um cenário muda, um bug aparece ou uma decisão precisa ser tomada.</p><blockquote><strong>Guild Master:</strong> Guild Master: aprender o conceito certo no momento certo transforma conhecimento em prática útil para o dia a dia de QA.</blockquote><h3>Perguntas de revisão</h3><ul><li>Por que esse tema merece atenção no seu contexto de teste?</li><li>Como você aplicaria esse conceito em um cenário real?</li><li>Que benefício concreto ele traz para a qualidade do produto?</li></ul><h3>Resumo prático</h3><p>Ao fechar esta aula, você deve ser capaz de transformar esse conceito em uma prática útil no dia a dia, aplicando o aprendizado a cenários reais de teste e validação.</p>", resources: [{ label: "axe-core/playwright", url: "https://www.npmjs.com/package/@axe-core/playwright" }, { label: "Lighthouse CI", url: "https://github.com/GoogleChrome/lighthouse-ci" }] }
       ]},
       { id: "w10", title: "Projeto Final Web", lessons: [
-        { id: "w10-l1", title: "Suite completa Swag Labs", duration: "90 min", content: "<p>Este é o projeto final da trilha Frontend. Você vai construir uma suite completa de automação para o Swag Labs (Sauce Demo), aplicando todos os conceitos aprendidos: Page Objects, CI/CD, Allure Reports, e zero flaky tests.</p><h3>A aplicação</h3><p><strong>URL:</strong> <a href=\"https://www.saucedemo.com/\" target=\"_blank\">saucedemo.com</a></p><p>Usuários de teste disponíveis (todos com senha <code>secret_sauce</code>):</p><ul><li><code>standard_user</code> — usuário normal</li><li><code>locked_out_user</code> — conta bloqueada (para teste negativo)</li><li><code>problem_user</code> — imagens quebradas intencionalmente</li><li><code>performance_glitch_user</code> — lentidão intencional</li><li><code>error_user</code> — erros em operações específicas</li></ul><h3>Estrutura do projeto</h3><pre>swag-labs-tests/\n├── tests/\n│   ├── smoke/\n│   │   └── critical-paths.smoke.spec.js\n│   └── e2e/\n│       ├── auth.spec.js\n│       ├── catalog.spec.js\n│       ├── cart.spec.js\n│       └── checkout.spec.js\n├── pages/\n│   ├── LoginPage.js\n│   ├── InventoryPage.js\n│   ├── CartPage.js\n│   └── CheckoutPage.js\n├── fixtures/\n│   ├── users.json\n│   └── products.json\n├── .github/workflows/\n│   └── e2e.yml\n├── playwright.config.js\n├── package.json\n└── README.md</pre><h3>Page Objects essenciais</h3><pre>// pages/LoginPage.js\nexport class LoginPage {\n  constructor(page) {\n    this.page = page;\n    this.username = '[data-test=\"username\"]';\n    this.password = '[data-test=\"password\"]';\n    this.loginBtn = '[data-test=\"login-button\"]';\n    this.errorMsg = '[data-test=\"error\"]';\n  }\n\n  async goto() { await this.page.goto('https://www.saucedemo.com'); }\n\n  async login(user, pass) {\n    await this.page.fill(this.username, user);\n    await this.page.fill(this.password, pass);\n    await this.page.click(this.loginBtn);\n  }\n\n  async getError() {\n    return await this.page.textContent(this.errorMsg);\n  }\n}\n\n// pages/InventoryPage.js\nexport class InventoryPage {\n  constructor(page) {\n    this.page = page;\n    this.productList = '.inventory_list';\n    this.cartBadge = '.shopping_cart_badge';\n  }\n\n  async addToCartByName(name) {\n    const product = this.page\n      .locator('.inventory_item')\n      .filter({ hasText: name });\n    await product.locator('[data-test^=\"add-to-cart\"]').click();\n  }\n\n  async getCartCount() {\n    const badge = this.page.locator(this.cartBadge);\n    if (await badge.isVisible()) {\n      return parseInt(await badge.textContent());\n    }\n    return 0;\n  }\n\n  async sortBy(option) {\n    await this.page.selectOption('.product_sort_container', option);\n  }\n}</pre><h3>Testes — cobertura mínima obrigatória</h3><pre>// tests/e2e/auth.spec.js\nimport { test, expect } from '@playwright/test';\nimport { LoginPage } from '../../pages/LoginPage';\n\ntest.describe('Autenticação', () => {\n  let loginPage;\n\n  test.beforeEach(async ({ page }) => {\n    loginPage = new LoginPage(page);\n    await loginPage.goto();\n  });\n\n  test('@smoke login com standard_user', async ({ page }) => {\n    await loginPage.login('standard_user', 'secret_sauce');\n    await expect(page).toHaveURL(/inventory/);\n    await expect(page.locator('.inventory_list')).toBeVisible();\n  });\n\n  test('usuário bloqueado exibe mensagem', async () => {\n    await loginPage.login('locked_out_user', 'secret_sauce');\n    expect(await loginPage.getError()).toContain('locked out');\n  });\n\n  test('senha errada exibe mensagem', async () => {\n    await loginPage.login('standard_user', 'senha_errada');\n    expect(await loginPage.getError()).toContain('do not match');\n  });\n\n  test('campos vazios bloqueiam envio', async ({ page }) => {\n    await page.click('[data-test=\"login-button\"]');\n    expect(await loginPage.getError()).toContain('Username is required');\n  });\n});</pre><pre>// tests/e2e/checkout.spec.js\ntest('@smoke fluxo completo de compra', async ({ page }) => {\n  const login = new LoginPage(page);\n  await login.goto();\n  await login.login('standard_user', 'secret_sauce');\n\n  const inventory = new InventoryPage(page);\n  await inventory.addToCartByName('Sauce Labs Backpack');\n  expect(await inventory.getCartCount()).toBe(1);\n\n  await page.click('.shopping_cart_link');\n  await page.click('[data-test=\"checkout\"]');\n\n  await page.fill('[data-test=\"firstName\"]', 'João');\n  await page.fill('[data-test=\"lastName\"]', 'Silva');\n  await page.fill('[data-test=\"postalCode\"]', '12345-678');\n  await page.click('[data-test=\"continue\"]');\n\n  await page.click('[data-test=\"finish\"]');\n\n  await expect(page.locator('.complete-header')).toContainText('Thank you');\n});</pre><h3>CI/CD com Allure</h3><pre># .github/workflows/e2e.yml\nname: Swag Labs E2E\n\non: [push, pull_request]\n\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with: { node-version: 20 }\n      - run: npm ci\n      - run: npx playwright install chromium --with-deps\n      - run: npx playwright test\n      - uses: actions/upload-artifact@v4\n        if: always()\n        with:\n          name: test-results\n          path: |\n            playwright-report/\n            allure-results/</pre><h3>Critérios de entrega</h3><ul><li>✅ 15+ testes cobrindo os 4 fluxos</li><li>✅ Page Objects para todas as páginas testadas</li><li>✅ CI rodando em verde</li><li>✅ Allure Report ou HTML report publicado</li><li>✅ Tags @smoke separando smoke de regressão</li><li>✅ README com instruções de execução</li><li>✅ Zero credenciais no código (.env)</li></ul><h3>Por que isso importa?</h3><p>Este assunto é importante porque conecta conhecimento técnico a decisões reais de qualidade, produtividade e confiança no produto.</p><h3>Exemplo concreto</h3><p>Na prática, compreender esse tema ajuda o time a agir com mais clareza quando um cenário muda, um bug aparece ou uma decisão precisa ser tomada.</p><blockquote><strong>Guild Master:</strong> Guild Master: aprender o conceito certo no momento certo transforma conhecimento em prática útil para o dia a dia de QA.</blockquote><h3>Perguntas de revisão</h3><ul><li>Por que esse tema merece atenção no seu contexto de teste?</li><li>Como você aplicaria esse conceito em um cenário real?</li><li>Que benefício concreto ele traz para a qualidade do produto?</li></ul><h3>Resumo prático</h3><p>Ao fechar esta aula, você deve ser capaz de transformar esse conceito em uma prática útil no dia a dia, aplicando o aprendizado a cenários reais de teste e validação.</p>", resources: [{ label: "Sauce Demo", url: "https://www.saucedemo.com/" }, { label: "Playwright Best Practices", url: "https://playwright.dev/docs/best-practices" }] }
+        {
+        id: "w10-l1",
+        title: "Suite completa Swag Labs",
+        duration: "90 min",
+        content: "<p>Este e o projeto final da trilha Frontend. Voce vai construir uma suite completa de automacao para o Swag Labs (Sauce Demo), aplicando todos os conceitos aprendidos: Page Objects, CI/CD, Allure Reports, e zero flaky tests.</p><h3>A aplicacao</h3><p><strong>URL:</strong> <a href="https://www.saucedemo.com/" target="_blank">saucedemo.com</a></p><p>Usuarios de teste disponiveis (todos com senha <code>secret_sauce</code>):</p><ul><li><code>standard_user</code> - usuario normal</li><li><code>locked_out_user</code> - conta bloqueada (para teste negativo)</li><li><code>problem_user</code> - imagens quebradas intencionalmente</li><li><code>performance_glitch_user</code> - lentidao intencional</li><li><code>error_user</code> - erros em operacoes especificas</li></ul><h3>Estrutura do projeto</h3><pre>swag-labs-tests/
+├── tests/
+│   ├── smoke/
+│   │   └── critical-paths.smoke.spec.js
+│   └── e2e/
+│       ├── auth.spec.js
+│       ├── catalog.spec.js
+│       ├── cart.spec.js
+│       └── checkout.spec.js
+├── pages/
+│   ├── LoginPage.js
+│   ├── InventoryPage.js
+│   ├── CartPage.js
+│   └── CheckoutPage.js
+├── fixtures/
+│   ├── users.json
+│   └── products.json
+├── .github/workflows/
+│   └── e2e.yml
+├── playwright.config.js
+├── package.json
+└── README.md</pre><h3>Page Objects essenciais</h3><pre>// pages/LoginPage.js
+export class LoginPage {
+  constructor(page) {
+    this.page = page;
+    this.username = '[data-test="username"]';
+    this.password = '[data-test="password"]';
+    this.loginBtn = '[data-test="login-button"]';
+    this.errorMsg = '[data-test="error"]';
+  }
+
+  async goto() { await this.page.goto('https://www.saucedemo.com'); }
+
+  async login(user, pass) {
+    await this.page.fill(this.username, user);
+    await this.page.fill(this.password, pass);
+    await this.page.click(this.loginBtn);
+  }
+
+  async getError() {
+    return await this.page.locator(this.errorMsg).textContent();
+  }
+}</pre><pre>// pages/InventoryPage.js
+export class InventoryPage {
+  constructor(page) {
+    this.page = page;
+    this.inventory = '.inventory_container';
+    this.addToCartBtn = '[data-test^="add-to-cart"]';
+    this.cartBadge = '[data-test="shopping-cart-badge"]';
+    this.cartLink = '[data-test="shopping-cart-link"]';
+    this.sortDropdown = '[data-test="product-sort-container"]';
+  }
+
+  async addToCart(productName) {
+    const btn = this.page.locator(`[data-test="add-to-cart-${productName.toLowerCase().replace(/\s+/g, '-')}"]`);
+    await btn.click();
+  }
+
+  async goToCart() { await this.page.click(this.cartLink); }
+
+  async getCartCount() { return await this.page.locator(this.cartBadge).textContent(); }
+
+  async sortBy(option) { await this.page.selectOption(this.sortDropdown, option); }
+}</pre><pre>// pages/CartPage.js
+export class CartPage {
+  constructor(page) {
+    this.page = page;
+    this.cartItems = '.cart_item';
+    this.removeBtn = '[data-test^="remove"]';
+    this.checkoutBtn = '[data-test="checkout"]';
+    this.continueShoppingBtn = '[data-test="continue-shopping"]';
+  }
+
+  async getItems() { return await this.page.locator(this.cartItems).count(); }
+
+  async removeItem(productName) {
+    const btn = this.page.locator(`[data-test="remove-${productName.toLowerCase().replace(/\s+/g, '-')}"]`);
+    await btn.click();
+  }
+
+  async checkout() { await this.page.click(this.checkoutBtn); }
+
+  async continueShopping() { await this.page.click(this.continueShoppingBtn); }
+}</pre><pre>// pages/CheckoutPage.js
+export class CheckoutPage {
+  constructor(page) {
+    this.page = page;
+    this.firstName = '[data-test="firstName"]';
+    this.lastName = '[data-test="lastName"]';
+    this.postalCode = '[data-test="postalCode"]';
+    this.continueBtn = '[data-test="continue"]';
+    this.finishBtn = '[data-test="finish"]';
+    this.completeHeader = '.complete-header';
+  }
+
+  async fillInfo(first, last, zip) {
+    await this.page.fill(this.firstName, first);
+    await this.page.fill(this.lastName, last);
+    await this.page.fill(this.postalCode, zip);
+    await this.page.click(this.continueBtn);
+  }
+
+  async finish() { await this.page.click(this.finishBtn); }
+
+  async getCompleteMessage() { return await this.page.locator(this.completeHeader).textContent(); }
+}</pre><h3>Testes recomendados</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;border:1px solid var(--border)">Categoria</th><th style="padding:0.5rem;border:1px solid var(--border)">Testes</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Smoke (criticos)</td><td style="padding:0.5rem;border:1px solid var(--border)">login valido, add-to-cart, checkout completo</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Auth</td><td style="padding:0.5rem;border:1px solid var(--border)">locked_out_user, problem_user, error_user, performance_glitch_user, logout</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Catalogo</td><td style="padding:0.5rem;border:1px solid var(--border)">ordenacao (A-Z, Z-A, low-high, high-low), detalhes produto, voltar</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Carrinho</td><td style="padding:0.5rem;border:1px solid var(--border)">add/remove multiplo, persistencia, badge count, continue shopping</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Checkout</td><td style="padding:0.5rem;border:1px solid var(--border)">info valida, campos obrigatorios, cancelar, finish, thank you page</td></tr></table><h3>CI/CD - GitHub Actions</h3><pre># .github/workflows/e2e.yml
+name: E2E Swag Labs
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm' }
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-results
+          path: allure-results/
+          retention-days: 7</pre><h3>Playwright config essencial</h3><pre>// playwright.config.js
+import { defineConfig, devices } from '@playwright/test';
+export default defineConfig({
+  testDir: './tests',
+  fullyParallel: true,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 2 : undefined,
+  reporter: [
+    ['html', { outputFolder: 'playwright-report' }],
+    ['allure-playwright', { outputFolder: 'allure-results' }]
+  ],
+  use: {
+    baseURL: 'https://www.saucedemo.com',
+    trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure'
+  },
+  projects: [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+    { name: 'webkit', use: { ...devices['Desktop Safari'] } }
+  ]
+});</pre><h3>Checklist de qualidade - zero flaky</h3><ul><li>Todos os seletores usam data-testid (ex: [data-test="username"])</li><li>Zero sleeps hardcoded - apenas waits explicitos (expect, waitFor)</li><li>Testes independentes - cada um cria/limpa seus dados via fixtures</li><li>Retries configurado no CI (2x) e detecta flakiness</li><li>Page Objects seguem padrao consistente (metodos async, getters)</li><li>Allure report gerado com screenshots/trace em falhas</li><li>Pipeline roda em < 10 min (paralelismo configurado)</li><li>README com instrucoes execucao local e debug</li></ul>", resources: [{ label: "Sauce Demo", url: "https://www.saucedemo.com" }, { label: "Playwright Page Objects", url: "https://playwright.dev/docs/page-objects" }] }
       ]}
     ]
   },
@@ -444,35 +614,991 @@ cy.criarUsuario('admin').then((usuario) => {
     topics: ["Appium", "WebdriverIO", "Android", "iOS", "Emuladores", "CI mobile"],
     courses: [
       { id: "m1", title: "Fundamentos Mobile QA", lessons: [
-        { id: "m1-l1", title: "Diferenças web vs mobile", duration: "35 min", content: "<p>Gestos, orientação, offline, push, permissões, fragmentação de devices. Matriz de testes.</p>", resources: [] },
-        { id: "m1-l2", title: "Emuladores vs devices reais", duration: "40 min", content: "<p>Android Studio AVD, Xcode Simulator. BrowserStack/Sauce Labs para cloud devices.</p>", resources: [{ label: "Android Emulator", url: "https://developer.android.com/studio/run/emulator" }] },
-        { id: "m1-l3", title: "Tipos de app: native, hybrid, PWA", duration: "30 min", content: "<p>Native: Swift/Kotlin. Hybrid: WebView + bridge. PWA: web instalável. Estratégia de teste muda por tipo.</p>", resources: [] }
+        {
+        id: "m1-l1",
+        title: "Diferenças web vs mobile",
+        duration: "35 min",
+        content: "<p>Gestos, orientação, offline, push, permissões, fragmentação de devices/OS (Android: milhares de modelos, iOS: versões/device sizes).</p><h3>Matriz de priorização de testes</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;text-align:left;border:1px solid var(--border)">Critério</th><th style="padding:0.5rem;text-align:left;border:1px solid var(--border)">Prioridade</th><th style="padding:0.5rem;text-align:left;border:1px solid var(--border)">Estratégia</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">OS versions (últimas 2-3)</td><td style="padding:0.5rem;border:1px solid var(--border)">Crítico</td><td style="padding:0.5rem;border:1px solid var(--border)">Testar em cada versão suportada</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Screen sizes (small, medium, large)</td><td style="padding:0.5rem;border:1px solid var(--border)">Alto</td><td style="padding:0.5rem;border:1px solid var(--border)">Breakpoints de layout</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Densidades (ldpi, mdpi, hdpi, xhdpi, etc)</td><td style="padding:0.5rem;border:1px solid var(--border)">Médio</td><td style="padding:0.5rem;border:1px solid var(--border)">Assets escaláveis, testar mdpi + xhdpi</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">OEM skins (Samsung OneUI, Xiaomi MIUI, etc)</td><td style="padding:0.5rem;border:1px solid var(--border)">Médio</td><td style="padding:0.5rem;border:1px solid var(--border)">Testar 1-2 representativos</td></tr></table><h3>Por que isso importa?</h3><p>Este assunto é importante porque conecta conhecimento técnico a decisões reais de qualidade, produtividade e confiança no produto.</p><h3>Exemplo concreto</h3><p>Na prática, compreender esse tema ajuda o time a agir com mais clareza quando um cenário muda, um bug aparece ou uma decisão precisa ser tomada.</p><blockquote><strong>Guild Master:</strong> Guild Master: aprender o conceito certo no momento certo transforma conhecimento em prática útil para o dia a dia de QA.</</blockquote><h3>Perguntas de revisão</h3><ul><li>Por que esse tema merece atenção no seu contexto de teste?</li><li>Como você aplicaria esse conceito em um cenário real?</li><li>Que benefício concreto ele traz para a qualidade do produto?</li></ul><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve ser capaz de transformar esse conceito em uma prática útil no dia a dia, aplicando o aprendizado a cenários reais de teste e validação.
+</p>", resources: [] },
+        {
+        id: "m1-l2",
+        title: "Emuladores vs devices reais",
+        duration: "40 min",
+        content: "<p>Android Studio AVD, Xcode Simulator. BrowserStack/Sauce Labs para cloud devices.</p><h3>Emuladores/Simuladores</h3><ul><li><strong>Android Studio AVD:</strong> rápido, integração com IDE, bom para dev/debug</li><li><strong>Xcode Simulator:</strong> nativo no Mac, rápido, bom para iOS</li><li><strong>Limitações:</strong> não replicam hardware real (GPU, sensores, rede, bateria)</li></ul><h3>Devices reais</h3><ul><li><strong>Vantagens:</strong> hardware real, performance real, sensores reais, rede real</li><li><strong>Desafios:</strong> custo, manutenção, fragmentação, provisioning (iOS)</li></ul><h3>Cloud device farms</h3><ul><li><strong>BrowserStack:</strong> 3000+ devices, Appium/Espresso/XCUITest, debug remoto</li><li><strong>Sauce Labs:</strong> similar, forte em enterprise</li><li><strong>Firebase Test Lab:</strong> gratuito para começar, integração Firebase</li></ul><h3>Estratégia recomendada</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;text-align:left;border:1px solid var(--border)">Fase</th><th style="padding:0.5rem;text-align:left;border:1px solid var(--border)">Device</th><th style="padding:0.5rem;text-align:left;border:1px solid var(--border)">Motivo</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Desenvolvimento</td><td style="padding:0.5rem;border:1px solid var(--border)">Emulador/Simulador</td><td style="padding:0.5rem;border:1px solid var(--border)">Rápido, barato, feedback rápido</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Pull Request / CI</td><td style="padding:0.5rem;border:1px solid var(--border)">Emulador (paralelo)</td><td style="padding:0.5rem;border:1px solid var(--border)">Validação rápida em múltiplos OS</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Release candidate</td><td style="padding:0.5rem;border:1px solid var(--border)">Cloud devices reais</td><td style="padding:0.5rem;border:1px solid var(--border)">Validação em devices críticos</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Performance</td><td style="padding:0.5rem;border:1px solid var(--border)">Device real local</td><td style="padding:0.5rem;border:1px solid var(--border)">Performance real requer hardware real</td></tr></table><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve conseguir tomar decisões informadas sobre quando usar emuladores vs devices reais baseado no tipo de teste, orçamento e fase do projeto.</p>", resources: [{ label: "Android Emulator", url: "https://developer.android.com/studio/run/emulator" }, { label: "iOS Simulator", url: "https://developer.apple.com/documentation/xcode/running-your-app-in-the-simulator-or-on-a-device" }, { label: "BrowserStack Mobile", url: "https://www.browserstack.com/app-live" }, { label: "AWS Device Farm", url: "https://aws.amazon.com/device-farm/" }] },
+        {
+        id: "m1-l3",
+        title: "Tipos de app: native, hybrid, PWA",
+        duration: "30 min",
+        content: "<p>Antes de escolher ferramentas de automação, você precisa saber que tipo de app vai testar. A arquitetura do app define o que é possível automatizar e com quais ferramentas.
+</p><h3>App Nativo</h3><p>Desenvolvido especificamente para cada plataforma usando a linguagem/tecnologia nativa:</p><ul><li><strong>Android:</strong> Kotlin ou Java</li><li><strong>iOS:</strong> Swift ou Objective-C</li></ul><p><strong>Características:</strong></p><ul><li>Máxima performance e acesso total ao hardware (GPS, câmera, sensores)</li><li>Experiência de usuário melhor e mais fluida</li><li>Ocupa espaço na loja (App Store, Google Play)</li><li>Custo maior: dois codebases separados</li></ul><p><strong>Automação:</strong> Appium com driver uiautomator2 (Android) ou xcuitest (iOS). Locators por accessibility id, resource-id, class name.</p><pre>// Características do locator nativo
+// Android
+
+driver.findElement(By.id('com.exemplo.app:id/btn_login'));
+driver.findElement(By.accessibilityId('Botão de login'));
+driver.findElement(By.className('android.widget.Button'));
+
+// iOS
+
+driver.findElement(By.accessibilityId('loginButton'));
+driver.findElement(By.iOSNsPredicateString('label == \"Entrar\"'));</pre><h3>App Híbrido (Hybrid)</h3><p>Usa um WebView (browser embutido) para renderizar conteúdo HTML/CSS/JS dentro de um container nativo:</p><ul><li><strong>Frameworks:</strong> Ionic, Capacitor, Cordova, React Native WebView</li></ul><p><strong>Características:</strong></p><ul><li>Um codebase para Android e iOS</li><li>Performance inferior ao nativo</li><li>Acesso a APIs nativas via bridge</li><li>Layout baseado em HTML/CSS</li></ul><p><strong>Automação:</strong> Requer alternar contexto entre NATIVE_APP e WEBVIEW:</p><pre>// Detectar e trocar contextos
+const contexts = await driver.getContexts();
+console.log(contexts);
+// ['NATIVE_APP', 'WEBVIEW_com.exemplo.app']
+
+// Entrar no WebView para usar locators web
+
+await driver.switchContext('WEBVIEW_com.exemplo.app');
+await driver.findElement(By.css('[data-testid=login-form]'));
+
+// Voltar ao contexto nativo
+
+await driver.switchContext('NATIVE_APP');
+await driver.findElement(By.accessibilityId('menu nativo'));</pre><h3>React Native</h3><p>Categoria especial — compila para componentes nativos reais, não WebView:</p><ul><li>Performance próxima ao nativo</li><li>Um codebase para ambas as plataformas</li><li>Usa bridge JavaScript ↔ componentes nativos</li></ul><p><strong>Automação:</strong> Appium funciona bem. Também existe Detox (desenvolvido pelo Wix) para React Native especificamente — mais rápido que Appium.</p><pre>// Detox — mais rápido para React Native
+
+describe('Login', () => {
+  it('should login with valid credentials', async () => {
+    await element(by.id('emailInput')).typeText('user@test.com');
+    await element(by.id('passwordInput')).typeText('Pass123');
+    await element(by.text('Sign In')).tap();
+    await expect(element(by.text('Dashboard'))).toBeVisible();
+  });
+});</pre><h3>PWA — Progressive Web App</h3><p>Site web com características de app: instalável, funciona offline, push notifications, acesso a câmera.
+</p><ul><li>Tecnologia: HTML/CSS/JS com Service Workers</li><li>Distribuído via URL (não na loja)</li><li>Funciona em qualquer browser moderno</li></ul><p><strong>Automação:</strong> Playwright e Cypress funcionam normalmente — é um site web. Mas teste também:</p><ul><li>Instalação (Add to home screen)</li><li>Funcionamento offline (Service Worker cache)</li><li>Push notifications</li><li>Ícone correto após instalação</li></ul><pre>// Playwright — testar comportamento offline da PWA
+
+test('funciona offline após cache', async ({ page, context }) => {
+  await page.goto('https://minha-pwa.com');
+  // Carrega a página para cachear
+  await page.waitForLoadState('networkidle');
+  
+  // Simula offline
+  await context.setOffline(true);
+  
+  // Página ainda funciona (dados em cache)
+  await page.reload();
+  await expect(page.locator('h1')).toBeVisible();
+  
+  await context.setOffline(false);
+});</pre><h3>Escolhendo a estratégia de automação</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;border:1px solid var(--border)">Tipo</th><th style="padding:0.5rem;border:1px solid var(--border)">Ferramenta Principal</th><th style="padding:0.5rem;border:1px solid var(--border)">Dificuldade</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Nativo Android</td><td style="padding:0.5rem;border:1px solid var(--border)">Appium / Espresso</td><td style="padding:0.5rem;border:1px solid var(--border)">Alta</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Nativo iOS</td><td style="padding:0.5rem;border:1px solid var(--border)">Appium / XCUITest</td><td style="padding:0.5rem;border:1px solid var(--border)">Alta (requer Mac)</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">React Native</td><td style="padding:0.5rem;border:1px solid var(--border)">Detox / Appium</td><td style="padding:0.5rem;border:1px solid var(--border)">Média-Alta</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Híbrido (WebView)</td><td style="padding:0.5rem;border:1px solid var(--border)">Appium</td><td style="padding:0.5rem;border:1px solid var(--border)">Média</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">PWA</td><td style="padding:0.5rem;border:1px solid var(--border)">Playwright / Cypress</td><td style="padding:0.5rem;border:1px solid var(--border)">Baixa-Média</td></tr></table><h3>Por que isso importa?</h3><p>Este assunto é importante porque conecta conhecimento técnico a decisões reais de qualidade, produtividade e confiança no produto.</p><h3>Exemplo concreto</h3><p>Na prática, compreender esse tema ajuda o time a agir com mais clareza quando um cenário muda, um bug aparece ou uma decisão precisa ser tomada.</p><blockquote><strong>Guild Master:</strong> Guild Master: aprender o conceito certo no momento certo transforma conhecimento em prática útil para o dia a dia de QA.
+</blockquote><h3>Perguntas de revisão</h3><ul><li>Por que esse tema merece atenção no seu contexto de teste?</li><li>Como você aplicaria esse conceito em um cenário real?</li><li>Que benefício concreto ele traz para a qualidade do produto?</li></ul><h3>Resumo prático</h3><p>Ao fechar esta aula, você deve ser capaz de transformar esse conceito em uma prática útil no dia a dia, aplicando o aprendizado a cenários reais de teste e validação.
+</p>", resources: [{ label: "Detox — React Native testing", url: "https://wix.github.io/Detox/" }] }
       ]},
       { id: "m2", title: "Appium — Setup e Conceitos", lessons: [
-        { id: "m2-l1", title: "Instalação Appium 2", duration: "50 min", content: "<p>appium server, drivers uiautomator2/xcuitest. Desired capabilities: platformName, deviceName, app.</p>", resources: [{ label: "Appium Docs", url: "https://appium.io/docs/en/latest/" }] },
-        { id: "m2-l2", title: "Inspecionando elementos", duration: "45 min", content: "<p>Appium Inspector, UI Automator Viewer, Xcode Accessibility Inspector. accessibility id preferido.</p>", resources: [] },
-        { id: "m2-l3", title: "Gestos: swipe, scroll, tap", duration: "40 min", content: "<p>TouchAction, W3C Actions. Scroll até elemento visível. Handle alerts nativos.</p>", resources: [] }
+        {
+        id: "m2-l1",
+        title: "Instalação Appium 2",
+        duration: "50 min",
+        content: "<p>Appium 2 traz arquitetura baseada em drivers: <code>appium driver install uiautomator2@2.30.0 xcuitest@4.10.0 espresso@2.15.0</code>. Capabilities essenciais: platformName, automationName, deviceName, udid, app, appPackage/appActivity (Android), bundleId (iOS), autoGrantPermissions, noReset.</p><h3>Instalação completa</h3><pre># Node.js 18+
+npm install -g appium
+appium driver install uiautomator2@2.30.0
+appium driver install xcuitest@4.10.0
+appium driver install espresso@2.15.0
+
+# Verificar instalação
+appium doctor
+appium --version</pre><h3>Capabilities essenciais</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;border:1px solid var(--border)">Capability</th><th style="padding:0.5rem;border:1px solid var(--border)">Android</th><th style="padding:0.5rem;border:1px solid var(--border)">iOS</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">platformName</td><td style="padding:0.5rem;border:1px solid var(--border)">Android</td><td style="padding:0.5rem;border:1px solid var(--border)">iOS</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">automationName</td><td style="padding:0.5rem;border:1px solid var(--border)">UiAutomator2</td><td style="padding:0.5rem;border:1px solid var(--border)">XCUITest</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">deviceName</td><td style="padding:0.5rem;border:1px solid var(--border)">Pixel 6 / emulator-5554</td><td style="padding:0.5rem;border:1px solid var(--border)">iPhone 14 / simulador</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">udid</td><td style="padding:0.5rem;border:1px solid var(--border)">adb devices</td><td style="padding:0.5rem;border:1px solid var(--border)">xcrun simctl list</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">app</td><td style="padding:0.5rem;border:1px solid var(--border)">.apk / .aab path</td><td style="padding:0.5rem;border:1px solid var(--border)">.app / .ipa path</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">appPackage/appActivity</td><td style="padding:0.5rem;border:1px solid var(--border)">com.exemplo/.MainActivity</td><td style="padding:0.5rem;border:1px solid var(--border)">N/A</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">bundleId</td><td style="padding:0.5rem;border:1px solid var(--border)">N/A</td><td style="padding:0.5rem;border:1px solid var(--border)">com.exemplo.app</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">autoGrantPermissions</td><td style="padding:0.5rem;border:1px solid var(--border)">true</td><td style="padding:0.5rem;border:1px solid var(--border)">N/A</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">noReset</td><td style="padding:0.5rem;border:1px solid var(--border)">true/false</td><td style="padding:0.5rem;border:1px solid var(--border)">true/false</td></tr></table><h3>Appium Server flags úteis</h3><pre><code>appium --allow-insecure=adb_shell,chromedriver_autodownload
+appium --relaxed-security
+appium --base-path /wd/hub</code></pre><h3>Version pinning recomendado</h3><pre># package.json
+"devDependencies": {
+  "appium": "^2.3.0",
+  "@appium/doctor": "^2.0.0"
+}</pre><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve conseguir instalar Appium 2, instalar drivers necessários, configurar capabilities corretas para Android/iOS, e diagnosticar problemas comuns com <code>appium doctor</code>.
+</p>", resources: [{ label: "Appium Docs", url: "https://appium.io/docs/en/latest/" }] },
+        {
+        id: "m2-l2",
+        title: "Inspecionando elementos",
+        duration: "45 min",
+        content: "<p>Appium Inspector, UI Automator Viewer, Xcode Accessibility Inspector. accessibility id preferido.</p><h3>Appium Inspector</h3><p>Ferramenta oficial do Appium para inspecionar elementos do app. Funciona como o DevTools do browser, mas para apps móveis.
+</p><ul><li><strong>Instalação:</strong> <code>npm install -g appium-inspector</code> ou baixar do GitHub</li><li><strong>Conexão:</strong> aponta para o Appium server (localhost:4723), passa capabilities</li><li><strong>Recursos:</strong> árvore de elementos, screenshot, busca por seletor, gravação de ações</li></ul><h3>UI Automator Viewer (Android)</h3><p><strong>Deprecated</strong> — substituído pelo Layout Inspector do Android Studio (API 29+). Para versões antigas:</p><pre># SDK tools
+$ANDROID_HOME/tools/bin/uiautomatorviewer</pre><h3>Xcode Accessibility Inspector (iOS)</h3><p>Nativo no Xcode. Menu: Xcode > Open Developer Tool > Accessibility Inspector.
+</p><ul><li>Inspeciona hierarquia de acessibilidade</li><li>Mostra labels, traits, values, identifiers</li><li>Testa VoiceOver diretamente</li></ul><h3>Estratégia de locators — ordem de preferência</h3><ol><li><strong>accessibility id</strong> — estável, semântico, cross-platform</li><li><strong>resource-id (Android) / accessibility identifier (iOS)</strong> — único por tela</li><li><strong>class name / XCUIElementType</strong> — genérico, use com outros atributos</li><li><strong>xpath / predicate string</strong> — último recurso, frágil</li></ol><h3>Exemplo prático</h3><pre>// Android
+
+driver.findElement(By.id('com.exemplo.app:id/btn_login'));
+driver.findElement(By.accessibilityId('Botão de login'));
+driver.findElement(By.className('android.widget.Button'));
+
+// iOS
+
+driver.findElement(By.accessibilityId('loginButton'));
+driver.findElement(By.iOSNsPredicateString('label == \"Entrar\"'));</pre><h3>Inspecionando Apps Híbridos</h3><p>Para apps híbridos, você precisa alternar entre contexto nativo e WebView:</p><pre>// 1. Listar contextos disponíveis
+const contexts = await driver.getContexts();
+console.log(contexts);
+// ['NATIVE_APP', 'WEBVIEW_com.exemplo.app']
+
+// 2. Mudar para WebView
+
+await driver.switchContext('WEBVIEW_com.exemplo.app');
+await driver.findElement(By.css('[data-testid=login-form]'));
+
+// 3. Voltar ao contexto nativo
+
+await driver.switchContext('NATIVE_APP');
+await driver.findElement(By.accessibilityId('menu nativo'));</pre><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve conseguir usar ferramentas de inspeção (Appium Inspector, UI Automator Viewer, Xcode Accessibility Inspector), escolher os locators mais estáveis (priorizando accessibility ID), e colaborar com desenvolvedores para melhorar a testabilidade do app.
+</p>", resources: [{ label: "Appium Inspector", url: "https://github.com/appium/appium-inspector" }, { label: "UI Automator Viewer", url: "https://developer.android.com/studio/debug/layout-inspector" }, { label: "Accessibility Inspector iOS", url: "https://developer.apple.com/documentation/xcode/accessibility-inspector" }] },
+        {
+        id: "m2-l3",
+        title: "Gestos: swipe, scroll, tap",
+        duration: "40 min",
+        content: "<p>Mobile testing requer interações específicas como swipe, scroll, pinch-to-zoom e long press. Appium suporta esses gestos através da API W3C Actions.</p><h3>Gestos básicos</h3><h4>Tap (toque simples)</h4><pre>// WebDriverIO
+
+await $('~btn-login').click();
+
+// Selenium WebDriver
+
+await driver.findElement(By.accessibilityId('btn-login')).click();</pre><h4>Long Press (toque longo)</h4><pre>// WebDriverIO com W3C Actions
+
+await $('~elemento').performActions([
+  { action: 'press', x: 100, y: 200 },
+  { action: 'wait', ms: 1000 },  // espera 1 segundo
+  { action: 'release' }
+]);</pre><h4>Swipe (deslizar)</h4><pre>// WebDriverIO - swipe horizontal (esquerda para direita)
+
+await driver.performActions([
+  { action: 'press', x: 500, y: 1000 },
+  { action: 'moveTo', x: 100, y: 1000 },
+  { action: 'release' }
+]);
+
+// Swipe vertical (para baixo)
+
+await driver.performActions([
+  { action: 'press', x: 500, y: 500 },
+  { action: 'moveTo', x: 500, y: 1500 },
+  { action: 'release' }
+]);</pre><h4>Scroll até elemento</h4><pre>// WebDriverIO - scroll até elemento estar visível
+const elemento = await $('~texto-que-queremos-encontrar');
+await elemento.scrollIntoView();
+
+// Swipe até elemento aparecer
+while (!(await elemento.isDisplayed())) {
+  await driver.performActions([
+    { action: 'press', x: 500, y: 1500 },
+    { action: 'moveTo', x: 500, y: 500 },
+    { action: 'release' }
+  ]);
+}</pre><h4>Pinch-to-zoom (zoom com dois dedos)</h4><pre>// Zoom in (aproximar)
+
+await driver.performActions([
+  { action: 'press', x: 300, y: 500 },
+  { action: 'press', x: 500, y: 500 },
+  { action: 'moveTo', x: 200, y: 500 },
+  { action: 'moveTo', x: 600, y: 500 },
+  { action: 'release' }
+]);</pre><h3>Alertas e Dialogs Nativos</h3><h4>Alertas do sistema (permissões, confirmações)</h4><pre>// Aceitar alerta
+
+await driver.acceptAlert();
+
+// Rejeitar alerta
+
+await driver.dismissAlert();
+
+// Obter texto do alerta
+const alertText = await driver.getAlertText();</pre><h4>Permissões (Android)</h4><pre>// Conceder permissão antes do teste
+
+await driver.setPermission('com.exemplo.app', 'camera', 'grant');
+
+// Ou conceder automaticamente via desired capabilities
+const capabilities = {
+  // ...
+  autoGrantPermissions: true
+};</pre><h3>Gestos complexos com WebDriverIO</h3><p>WebDriverIO simplifica gestos com métodos dedicados:</p><pre>// Swipe
+
+await $('~scrollable-area').swipeDown();
+await $('~scrollable-area').swipeUp();
+await $('~scrollable-area').swipeLeft();
+await $('~scrollable-area').swipeRight();
+
+// Pinch e zoom
+
+await $('~imagem').pinchToZoom(2.0);  // zoom 2x
+await $('~imagem').zoom(0.5);  // zoom out</pre><h3>Wait strategies para mobile</h3><p>Mobile apps têm performance variável. Use waits inteligentes:</p><pre>// ❌ EVITE - sleep fixo
+
+await driver.sleep(5000);  // nunca use isso
+
+// ✅ USE - esperar elemento aparecer
+
+await $('~btn-login').waitForDisplayed({ timeout: 5000 });
+
+// ✅ USE - esperar elemento ser clicável
+
+await $('~btn-login').waitForClickable({ timeout: 5000 });
+
+// ✅ USE - esperar condição customizada
+
+await browser.waitUntil(async () => {
+  const texto = await $('~status').getText();
+  return texto === 'Carregado';
+}, { timeout: 10000 });</pre><h3>Exemplo prático completo</h3><pre>// Fluxo de login com gesture
+
+describe('Login com gesture', () => {
+  it('should login and swipe to clear field', async () => {
+    // 1. Abrir app
+    await driver.activateApp('com.exemplo.app');
+    
+    // 2. Preencher email com erro proposital
+    await $('~email-input').setValue('email@errado.com');
+    
+    // 3. Long press no campo para mostrar opção de limpar
+    await $('~email-input').performActions([
+      { action: 'press', x: 300, y: 500 },
+      { action: 'wait', ms: 1000 },
+      { action: 'release' }
+    ]);
+    
+    // 4. Clicar em limpar
+    await $('~clear-button').click();
+    
+    // 5. Preencher corretamente
+    await $('~email-input').setValue('user@test.com');
+    await $('~password-input').setValue('Senha123!');
+    
+    // 6. Tap no botão de login
+    await $('~btn-login').click();
+    
+    // 7. Esperar dashboard
+    await $('~dashboard').waitForDisplayed({ timeout: 5000 });
+  });
+});</pre><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve conseguir implementar gestos mobile comuns (tap, swipe, scroll, long press), lidar com alerts nativos e permissões, e usar estratégias de wait adequadas para performance variável de mobile.
+</p>", resources: [{ label: "Appium Gestures", url: "https://appium.io/docs/en/latest/guides/gestures/" }, { label: "WebDriverIO Mobile Gestures", url: "https://webdriver.io/docs/api/mobile/" }] }
       ]},
       { id: "m3", title: "WebdriverIO Mobile", lessons: [
-        { id: "m3-l1", title: "Config wdio + Appium", duration: "45 min", content: "<p>wdio.conf.js com services Appium. Specs paralelos em múltiplos devices.</p>", resources: [{ label: "WebdriverIO", url: "https://webdriver.io/" }] },
-        { id: "m3-l2", title: "Page Objects mobile", duration: "40 min", content: "<p>Screens como classes. Reutilize login em todos os fluxos.</p>", resources: [] }
+        {
+        id: "m3-l1",
+        title: "Config wdio + Appium",
+        duration: "45 min",
+        content: "<p>WebdriverIO é um framework que simplifica muito a configuração do Appium. Em vez de gerenciar Desired Capabilities manualmente, você usa um arquivo de configuração (wdio.conf.js) e services que automatizam o setup.
+</p><h3>Instalação do WebDriverIO</h3><pre># Instalar WebDriverIO CLI
+npm install --save-dev @wdio/cli
+npm install --save-dev @wdio/local-runner
+npm install --save-dev @wdio/appium-service
+
+# Iniciar o wizard de configuração
+npx wdio config</pre><p>O wizard faz perguntas sobre:</p><ul><li>Qual framework usar (Mocha, Jasmine, Cucumber)</li><li>Quais services (Appium, etc.)</li><li>Reporter (Allure, Spec, etc.)</li><li>Localização do projeto</li></ul><h3>Arquivo wdio.conf.js</h3><p>O arquivo gerado define toda a configuração:</p><pre>export const config = {
+  // ===================================
+  // Where are your test specs located?
+  // ===================================
+  specs: [
+    './test/specs/**/*.js'
+  ],
+  
+  // ===================================
+  // Capabilities for Android
+  // ===================================
+  capabilities: [{
+    platformName: 'Android',
+    'appium:deviceName': 'Pixel_6',
+    'appium:automationName': 'UiAutomator2',
+    'appium:app': './android/app/build/outputs/apk/debug/app.apk',
+    'appium:autoGrantPermissions': true,
+    'appium:noReset': true
+  }],
+  
+  // ===================================
+  // Test Framework
+  // ===================================
+  framework: 'mocha',
+  
+  // ===================================
+  // Test Reporters
+  // ===================================
+  reporters: ['spec'],
+  
+  // ===================================
+  // Services
+  // ===================================
+  services: [
+    ['appium', {
+      command: 'appium',
+      args: {
+        // Argumentos do Appium server
+      }
+    }]
+  ],
+  
+  // ===================================
+  // Timeout settings
+  // ===================================
+  waitforTimeout: 10000,
+  connectionRetryTimeout: 120000,
+  
+  // ===================================
+  // Hooks
+  // ===================================
+  before: function () {
+    // Antes de todos os testes
+  },
+  beforeTest: function (test, context) {
+    // Antes de cada teste
+  },
+  afterTest: function (test, context, { error, result, duration, passed, retries }) {
+    // Após cada teste
+  }
+};</pre><h3>Configuração para múltiplos devices</h3><p>WebDriverIO facilita rodar testes em paralelo em vários devices:</p><pre>export const config = {
+  capabilities: [
+    {
+      platformName: 'Android',
+      'appium:deviceName': 'Pixel_6',
+      'appium:automationName': 'UiAutomator2',
+      'appium:app': './android/app-debug.apk'
+    },
+    {
+      platformName: 'Android',
+      'appium:deviceName': 'Samsung_Galaxy_S22',
+      'appium:automationName': 'UiAutomator2',
+      'appium:app': './android/app-debug.apk'
+    },
+    {
+      platformName: 'iOS',
+      'appium:deviceName': 'iPhone_14',
+      'appium:automationName': 'XCUITest',
+      'appium:app': './ios/app.app'
+    }
+  ],
+  
+  maxInstances: 3,  // Rodar 3 em paralelo
+  
+  services: [['appium', { maxInstances: 3 }]]
+};</pre><h3>Escrevendo testes com WebDriverIO</h3><pre>// test/specs/login.spec.js
+
+describe('Login flow', () => {
+  it('should login with valid credentials', async () => {
+    await $('~email-input').setValue('user@test.com');
+    await $('~password-input').setValue('Senha123!');
+    await $('~btn-login').click();
+    
+    // Espera dashboard aparecer
+    await $('~dashboard').waitForDisplayed({ timeout: 5000 });
+  });
+  
+  it('should show error with invalid credentials', async () => {
+    await $('~email-input').setValue('user@test.com');
+    await $('~password-input').setValue('SenhaErrada');
+    await $('~btn-login').click();
+    
+    // Espera mensagem de erro
+    await $('~error-message').waitForDisplayed({ timeout: 5000 });
+    await expect($('~error-message')).toHaveText('Email ou senha incorretos');
+  });
+});</pre><h3>Hooks e Setup</h3><pre>// wdio.conf.js
+
+before: async function () {
+  // Setup antes de todos os testes
+  // Por exemplo: carregar dados de teste
+};
+
+beforeEach: async function () {
+  // Setup antes de cada teste
+  // Por exemplo: garantir que está na tela inicial
+  await driver.reset();
+};
+
+afterEach: async function () {
+  // Cleanup após cada teste
+  // Por exemplo: tirar screenshot se falhou
+  if (!this.wdioRetries) {
+    const screenshot = await driver.takeScreenshot();
+    // Salvar ou enviar para report
+  }
+};</pre><h3>Executando testes</h3><pre># Rodar todos os testes
+npx wdio run
+
+# Rodar apenas um spec
+npx wdio run ./test/specs/login.spec.js
+
+# Rodar em modo headed (ver device em tempo real)
+npx wdio run --show
+
+# Rodar em paralelo
+npx wdio run --workers 3</pre><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve conseguir configurar WebDriverIO com Appium, criar um arquivo wdio.conf.js completo, configurar testes em múltiplos devices em paralelo, e escrever testes usando a sintaxe simplificada do WebDriverIO.
+</p>", resources: [{ label: "WebDriverIO Docs", url: "https://webdriver.io/docs/appium/" }, { label: "WDIO Configuration", url: "https://webdriver.io/docs/configurationfile/" }] },
+        {
+        id: "m3-l2",
+        title: "Page Objects mobile",
+        duration: "40 min",
+        content: "<p>Page Objects (ou Screens em mobile) encapsulam a lógica de cada tela do app em classes reutilizáveis.</p><h3>Estrutura de Screen/Page Object</h3><p>Em mobile, chamamos de \"Screen\" em vez de \"Page Object\", mas o conceito é o mesmo:</p><pre>// screens/LoginScreen.js
+
+class LoginScreen {
+  constructor() {
+    // Locators
+    this.emailInput = $('~email-input');
+    this.passwordInput = $('~password-input');
+    this.loginButton = $('~btn-login');
+    this.errorMessage = $('~error-message');
+  }
+  
+  // Ações
+  async login(email, password) {
+    await this.emailInput.setValue(email);
+    await this.passwordInput.setValue(password);
+    await this.loginButton.click();
+  }
+  
+  async getErrorMessage() {
+    await this.errorMessage.waitForDisplayed();
+    return await this.errorMessage.getText();
+  }
+  
+  async isLoginButtonDisplayed() {
+    return await this.loginButton.isDisplayed();
+  }
+}
+
+module.exports = new LoginScreen();</pre><h3>Screen com navegação</h3><pre>// screens/DashboardScreen.js
+
+class DashboardScreen {
+  constructor() {
+    this.logoutButton = $('~btn-logout');
+    this.profileButton = $('~btn-profile');
+    this.welcomeMessage = $('~welcome-message');
+  }
+  
+  async logout() {
+    await this.logoutButton.click();
+    // Espera voltar para tela de login
+    await $('~email-input').waitForDisplayed({ timeout: 5000 });
+  }
+  
+  async navigateToProfile() {
+    await this.profileButton.click();
+    await $('~profile-screen').waitForDisplayed();
+  }
+  
+  async getWelcomeMessage() {
+    return await this.welcomeMessage.getText();
+  }
+}
+
+module.exports = new DashboardScreen();</pre><h3>Teste usando Screens</h3><pre>// test/specs/login.spec.js
+
+const LoginScreen = require('../../screens/LoginScreen');
+const DashboardScreen = require('../../screens/DashboardScreen');
+
+describe('Login flow', () => {
+  it('should login successfully', async () => {
+    await LoginScreen.login('user@test.com', 'Senha123!');
+    
+    // Verifica que chegou no dashboard
+    await DashboardScreen.getWelcomeMessage();
+  });
+  
+  it('should show error with invalid credentials', async () => {
+    await LoginScreen.login('user@test.com', 'SenhaErrada');
+    
+    const error = await LoginScreen.getErrorMessage();
+    expect(error).toBe('Email ou senha incorretos');
+  });
+  
+  it('should logout successfully', async () => {
+    await LoginScreen.login('user@test.com', 'Senha123!');
+    await DashboardScreen.logout();
+    
+    // Verifica que voltou para login
+    await expect(LoginScreen.isLoginButtonDisplayed()).toBe(true);
+  });
+});</pre><h3>Boas práticas de Screens</h3><ul><li><strong>Use await em métodos async:</strong> Mobile apps podem ter delays, não esqueça await</li><li><strong>Screen não deve ter assertions:</strong> Deixe assertions nos specs, screens só fornecem dados</li><li><strong>Uma screen por tela:</strong> LoginScreen, DashboardScreen, ProfileScreen, etc.
+<li><li><strong>Evite lógica de negócio:</strong> Screens só devem ter interações com UI, não regras complexas</li><li><strong>Retorne dados: métodos podem retornar texto, visibilidade, etc.
+</ul><h3>Base Screen com utilitários</h3><pre>// screens/BaseScreen.js
+
+class BaseScreen {
+  async waitForElement(element, timeout = 5000) {
+    await element.waitForDisplayed({ timeout });
+  }
+  
+  async waitForElementClickable(element, timeout = 5000) {
+    await element.waitForClickable({ timeout });
+  }
+  
+  async tap(element) {
+    await element.click();
+  }
+  
+  async typeText(element, text) {
+    await element.setValue(text);
+  }
+  
+  async swipeDown() {
+    await $('~scrollable-area').swipeDown();
+  }
+}
+
+// Outras screens estendem BaseScreen
+class LoginScreen extends BaseScreen {
+  constructor() {
+    super();
+    this.emailInput = $('~email-input');
+    // ...
+  }
+  
+  async login(email, password) {
+    await this.typeText(this.emailInput, email);
+    await this.typeText(this.passwordInput, password);
+    await this.tap(this.loginButton);
+  }
+}
+
+module.exports = new LoginScreen();</pre><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve conseguir criar Screen/Page Objects para apps mobile, estruturar o projeto com screens reutilizáveis, e escrever testes mais limpos e manuteníveis usando essa arquitetura.
+</p>", resources: [{ label: "WebDriverIO Page Objects", url: "https://webdriver.io/docs/pageobjects/" }] }
       ]},
       { id: "m4", title: "Android Específico", lessons: [
-        { id: "m4-l1", title: "Espresso (intro para devs)", duration: "40 min", content: "<p>Testes instrumentados Android. QA entende para colaborar com devs.</p>", resources: [{ label: "Espresso", url: "https://developer.android.com/training/testing/espresso" }] },
-        { id: "m4-l2", title: "ADB commands úteis", duration: "35 min", content: "<p>adb install, logcat, shell pm clear. Debug sem UI.</p>", resources: [] }
+        {
+        id: "m4-l1",
+        title: "Espresso (intro para devs)",
+        duration: "40 min",
+        content: "<p>Testes instrumentados Android. QA entende para colaborar com devs.</p><h3>O que é Espresso</h3><p>Espresso é o framework de testes de UI nativo do Android, desenvolvido pelo Google. Roda no mesmo processo do app (instrumentado), o que o torna extremamente rápido e confiável.
+</p><h3>Estrutura básica</h3><pre>// Exemplo de teste Espresso
+@RunWith(AndroidJUnit4.class)
+public class LoginTest {
+    @Rule
+    public ActivityScenarioRule<MainActivity> activityRule = 
+        new ActivityScenarioRule<>(MainActivity.class);
+    
+    @Test
+    public void loginSuccess() {
+        // Clica no campo email
+        onView(withId(R.id.etEmail)).perform(click());
+        // Digita email
+        onView(withId(R.id.etEmail)).perform(typeText("user@test.com"));
+        
+        // Clica no campo senha
+        onView(withId(R.id.etPassword)).perform(click());
+        onView(withId(R.id.etPassword)).perform(typeText("Senha123!"));
+        
+        // Clica em login
+        onView(withId(R.id.btnLogin)).perform(click());
+        
+        // Verifica que chegou no dashboard
+        onView(withId(R.id.tvWelcome)).check(matches(isDisplayed()));
+    }
+}</pre><h3>Matchers principais</h3><ul><li><code>withId(R.id.id)</code> — encontra por ID</li><li><code>withText("texto")</code> — encontra por texto</li><li><code>withHint("hint")</code> — encontra por hint</li><li><code>isDisplayed()</code> — verifica visibilidade</li><li><code>matches(...)</code> — combina matchers</li></ul><h3>Ações principais</h3><ul><li><code>perform(click())</code> — clica</li><li><code>perform(typeText(...))</code> — digita</li><li><code>perform(scrollTo())</code> — scroll até elemento</li><li><code>perform(swipeLeft())</code> — swipe</li></ul><h3>Idling Resources</h3><p>Espresso sincroniza automaticamente com a UI thread. Para operações assíncronas (network, DB), use IdlingResource:</p><pre>// Registrar IdlingResource para operações async
+IdlingRegistry.getInstance().register(idlingResource);
+// ... teste que espera network ...
+IdlingRegistry.getInstance().unregister(idlingResource);</pre><h3>Por que QA deve conhecer?</h3><ul><li>Colaboração: devs escrevem testes unitários/instrumentados, QA foca em E2E</li><li>Debugging: entender stack traces de testes falhando</li><li>CI/CD: ambos rodam no mesmo pipeline</li><li>Cobertura: Espresso cobre unit/integration, Appium cobre E2E cross-platform</li></ul><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve conseguir ler testes Espresso, entender a sintaxe básica, e colaborar com devs Android para melhorar a pirâmide de testes.
+</p>", resources: [{ label: "Espresso", url: "https://developer.android.com/training/testing/espresso" }] },
+        {
+        id: "m4-l2",
+        title: "ADB commands úteis",
+        duration: "35 min",
+        content: "<p>adb install, logcat, shell pm clear. Debug sem UI.</p><h3>Instalação e gerenciamento de apps</h3><pre><code># Instalar APK
+adb install app.apk
+
+# Instalar com substituição (mantém dados)
+adb install -r app.apk
+
+# Instalar múltiplos APKs (split APKs)
+adb install-multiple base.apk feature1.apk feature2.apk
+
+# Desinstalar mantendo dados
+adb uninstall -k com.exemplo.app
+
+# Desinstalar completamente
+adb uninstall com.exemplo.app</code></pre><h3>Logs e debug</h3><pre><code># Ver logs em tempo real
+adb logcat
+
+# Filtrar por tag
+adb logcat -s MinhaTag
+
+# Filtrar por nível (V,D,I,W,E,F)
+adb logcat *:E
+
+# Salvar logs em arquivo
+adb logcat -d > logs.txt
+
+# Limpar buffer de logs
+adb logcat -c</code></pre><h3>Informações do dispositivo/app</h3><pre><code># Listar dispositivos
+adb devices
+adb devices -l  # com detalhes
+
+# Info do package
+adb shell dumpsys package com.exemplo.app
+
+# Versão do Android
+adb shell getprop ro.build.version.release
+
+# Modelo do device
+adb shell getprop ro.product.model
+
+# Resolução de tela
+adb shell wm size
+
+# Densidade
+adb shell wm density</code></pre><h3>Gerenciamento de app e dados</h3><pre><code># Limpar dados do app (equivale a "Clear Storage")
+adb shell pm clear com.exemplo.app
+
+# Forçar parada
+adb shell am force-stop com.exemplo.app
+
+# Iniciar activity
+adb shell am start -n com.exemplo.app/.MainActivity
+
+# Iniciar com intent extra
+adb shell am start -n com.exemplo.app/.MainActivity -e user_id 123
+
+# Permissões
+adb shell pm grant com.exemplo.app android.permission.CAMERA
+adb shell pm revoke com.exemplo.app android.permission.CAMERA
+adb shell pm list permissions -d -g</code></pre><h3>Screenshots e gravação</h3><pre><code># Screenshot
+adb shell screencap -p /sdcard/screen.png
+adb pull /sdcard/screen.png
+
+# Gravação de tela
+adb shell screenrecord /sdcard/demo.mp4
+# Ctrl+C para parar
+adb pull /sdcard/demo.mp4</code></pre><h3>Arquivos e backup</h3><pre><code># Copiar arquivo do device
+adb pull /sdcard/arquivo.txt .
+
+# Enviar arquivo para device
+adb push arquivo.txt /sdcard/
+
+# Backup do app (apk + dados)
+adb backup -f backup.ab -apk com.exemplo.app
+
+# Restore
+adb restore backup.ab</code></pre><h3>Network e conectividade</h3><pre><code># Port forwarding (ex: Appium)
+adb forward tcp:4723 tcp:4723
+
+# Reverse port forwarding (device -> host)
+adb reverse tcp:8080 tcp:8080
+
+# Captura de pacotes (requer root)
+adb shell tcpdump -i any -s 0 -w /sdcard/capture.pcap</code></pre><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve conseguir usar ADB para instalar/debugar apps, capturar logs, tirar screenshots, gerenciar permissões e dados, e configurar port forwarding para automação.
+</p>", resources: [] }
       ]},
       { id: "m5", title: "iOS Específico", lessons: [
-        { id: "m5-l1", title: "XCUITest e limitações", duration: "40 min", content: "<p>Requer Mac para iOS real. Simulador vs device. Provisioning profiles.</p>", resources: [] },
-        { id: "m5-l2", title: "TestFlight e distribuição", duration: "30 min", content: "<p>Beta testing antes da loja. Feedback de QAs internos e externos.</p>", resources: [] }
+        {
+        id: "m5-l1",
+        title: "XCUITest e limitações",
+        duration: "40 min",
+        content: "<p>Requer Mac para iOS real. Simulador vs device. Provisioning profiles.</p><h3>O que é XCUITest</h3><p>XCUITest é o framework nativo de testes de UI da Apple para iOS. Escrito em Swift/Objective-C, roda no Xcode, usa Accessibility para interagir com a UI.
+</p><h3>Configuração básica</h3><pre><code>// XCUITest example
+import XCTest
+
+class LoginTests: XCTestCase {
+    let app = XCUIApplication()
+    
+    override func setUp() {
+        continueAfterFailure = false
+        app.launch()
+    }
+    
+    func testLoginSuccess() {
+        // Encontrar elementos via accessibility
+        let emailField = app.textFields["email-field"]
+        let passwordField = app.secureTextFields["password-field"]
+        let loginButton = app.buttons["login-button"]
+        
+        emailField.tap()
+        emailField.typeText("user@test.com")
+        
+        passwordField.tap()
+        passwordField.typeText("Senha123!")
+        
+        loginButton.tap()
+        
+        // Verificar dashboard
+        let welcomeLabel = app.staticTexts["welcome-label"]
+        XCTAssertTrue(welcomeLabel.waitForExistence(timeout: 5))
+    }
+}</code></pre><h3>Limitações importantes</h3><ul><li><strong>Requer Mac:</strong> Não roda em Linux/Windows (exceto via cloud)</li><li><strong>Provisioning Profiles:</strong> Para device real, precisa de certificado de desenvolvimento válido</li><li><strong>Simulador vs Device:</strong> Simulador não tem hardware real (câmera, GPS, biometria, performance)</li><li><strong>App assinado:</strong> App precisa ser assinado com perfil de desenvolvimento (não distribuição)</li><li><strong>Single device por Mac:</strong> Só pode conectar 1 device físico por Mac para testes</li></ul><h3>XCUITest + Appium</h3><p>Appium usa XCUITest como driver para iOS. Vantagens:</p><ul><li>Cross-platform: mesmo script roda Android+iOS</li><li>Linguagem à escolha: JS, Python, Java, etc.</li><li>Pode rodar em cloud (BrowserStack, Sauce Labs) sem Mac local</li></ul><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve entender as limitações do XCUITest, saber quando usar simulador vs device real, e como o Appium abstrai o XCUITest para cross-platform testing.
+</p>", resources: [] },
+        {
+        id: "m5-l2",
+        title: "TestFlight e distribuição",
+        duration: "30 min",
+        content: "<p>Beta testing antes da loja. Feedback de QAs internos e externos.</p><h3>O que é TestFlight</h3><p>TestFlight é a plataforma oficial da Apple para distribuição beta de apps iOS. Permite testar com até 10.000 testadores externos e 100 internos.
+</p><h3>Fluxo de distribuição</h3><ol><li><strong>Build no Xcode:</strong> Product > Archive > Distribute App > TestFlight</li><li><strong>Upload:</strong> Xcode faz upload para App Store Connect</li><li><strong>Processamento:</strong> 10-30 min para processar</li><li><strong>Grupos internos:</strong> Adiciona emails da equipe (acesso imediato)</li><li><strong>Grupos externos:</strong> Submete para revisão da Apple (1-2 dias), depois convida testadores</li></ol><h3>Testadores internos vs externos</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;border:1px solid var(--border)">Tipo</th><th style="padding:0.5rem;border:1px solid var(--border)">Limite</th><th style="padding:0.5rem;border:1px solid var(--border)">Revisão Apple</th><th style="padding:0.5rem;border:1px solid var(--border)">Acesso</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Internos</td><td style="padding:0.5rem;border:1px solid var(--border)">100</td><td style="padding:0.5rem;border:1px solid var(--border)">Não</td><td style="padding:0.5rem;border:1px solid var(--border)">Imediato</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)">Externos</td><td style="padding:0.5rem;border:1px solid var(--border)">10.000</td><td style="padding:0.5rem;border:1px solid var(--border)">Sim (Beta App Review)</td><td style="padding:0.5rem;border:1px solid var(--border)">Após aprovação</td></tr></table><h3>Boas práticas para QA</h3><ul><li><strong>Build numbers:</strong> Use version code incremental a cada build (ex: 1.0.0 build 42)</li><li><strong>Changelog no TestFlight:</strong> Adicione "What's new" para testadores saberem o que testar</li><li><strong>Groups:</strong> Crie grupos por feature (ex: "Login", "Checkout", "Performance")</li><li><strong>Feedback:</strong> Testadores podem enviar screenshots + logs via TestFlight app</li><li><strong>Expiração:</strong> Builds expiram em 90 dias — planeje ciclos de teste</li></ul><h3>Automação de upload</h3><pre><code># Fastlane para upload automático
+def upload_to_testflight
+  upload_to_testflight(
+    skip_waiting_for_build_processing: true,
+    groups: ["QA Team", "External Beta"],
+    changelog: "Fix login bug #123",
+    distribute_external: true,
+    notify_external_testers: true
+  )
+end</code></pre><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve conseguir configurar TestFlight, gerenciar grupos de testadores, automatizar uploads via Fastlane, e coletar feedback estruturado de beta testing.
+</p>", resources: [] }
       ]},
       { id: "m6", title: "Performance e Battery Mobile", lessons: [
-        { id: "m6-l1", title: "Métricas mobile", duration: "35 min", content: "<p>Startup time, memory leaks, ANR, crash rate. Firebase Crashlytics.</p>", resources: [] }
+        {
+        id: "m6-l1",
+        title: "Métricas mobile",
+        duration: "35 min",
+        content: "<p>Startup time, memory leaks, ANR, crash rate. Firebase Crashlytics.</p><h3>Métricas essenciais de performance mobile</h3><table style="width:100%;border-collapse:collapse;margin:1rem 0"><tr style="background:rgba(0,229,255,0.1)"><th style="padding:0.5rem;border:1px solid var(--border)">Métrica</th><th style="padding:0.5rem;border:1px solid var(--border)">Definição</th><th style="padding:0.5rem;border:1px solid var(--border)">Target típico</th></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>App Startup Time</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Tempo do lançamento até UI interativa</td><td style="padding:0.5rem;border:1px solid var(--border)">< 2s (cold), < 500ms (warm)</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Memory Usage</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Heap, RSS, GC pauses, OOM kills</td><td style="padding:0.5rem;border:1px solid var(--border)">< 150MB (Android), < 200MB (iOS)</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>ANR (Application Not Responding)</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">UI thread bloqueado > 5s</td><td style="padding:0.5rem;border:1px solid var(--border)">0 ANRs</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Crash Rate</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">% de sessões com crash</td><td style="padding:0.5rem;border:1px solid var(--border)">< 0.1%</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Frame Rendering (Jank)</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Frames > 16ms (60fps) ou > 8ms (120fps)</td><td style="padding:0.5rem;border:1px solid var(--border)">0% jank</td></tr><tr><td style="padding:0.5rem;border:1px solid var(--border)"><strong>Battery Drain</strong></td><td style="padding:0.5rem;border:1px solid var(--border)">Consumo anômalo de bateria</td><td style="padding:0.5rem;border:1px solid var(--border)">Dentro do top 25% da categoria</td></tr></table><h3>Ferramentas de monitoramento</h3><ul><li><strong>Firebase Crashlytics:</strong> crashes, non-fatal, ANRs, logs automáticos</li><li><strong>Android Vitals / Play Console:</strong> ANR rate, crash rate, startup time, stuck partial wake locks</li><li><strong>Xcode Metrics / App Store Connect:</strong> crash rate, memory, CPU, disk writes</li><li><strong>Perfetto / Systrace / Android Studio Profiler:</strong> traces detalhados</li></ul><h3>Como medir startup time</h3><pre><code># Android: adb shell am start -W com.exemplo/.MainActivity
+# Output inclui:
+# ThisTime: 1245    (tempo total cold start)
+# WaitTime: 1250
+
+# Para medir programaticamente (Appium)
+const startTime = Date.now();
+await driver.activateApp('com.exemplo.app');
+const launchTime = Date.now() - startTime;
+console.log(`Startup: ${launchTime}ms`);</code></pre><h3>Memory leaks — como detectar</h3><ul><li><strong>Android:</strong> <code>adb shell dumpsys meminfo com.exemplo.app</code> — procure por "Leaked" ou crescimento contínuo</li><li><strong>iOS:</strong> Xcode → Debug Memory Graph → procura por objetos que não deveriam estar vivos</li><li><strong>Automatizado:</strong> rode suite de testes em loop 10x, meça memória antes/depois</li></ul><h3>Firebase Crashlytics — setup básico</h3><pre><code>// Android (build.gradle)
+dependencies {
+    implementation 'com.google.firebase:firebase-crashlytics:18.4.0'
+    implementation 'com.google.firebase:firebase-analytics:21.3.0'
+}
+
+// iOS (Podfile)
+pod 'FirebaseCrashlytics'
+pod 'FirebaseAnalytics'
+
+// Log customizado
+FirebaseCrashlytics.getInstance().log("Usuário abriu checkout");
+FirebaseCrashlytics.getInstance().setCustomKey("user_id", "12345");
+try {
+    // código arriscado
+} catch (e) {
+    FirebaseCrashlytics.getInstance().recordException(e);
+}</code></pre><h3>Exercício prático</h3><ol><li>Configure Crashlytics em um app demo</li><li>Force um crash: <code>throw new RuntimeException("Test crash")</code></li><li>Veja o crash no console Firebase</li><li>Adicione logs customizados e chaves personalizadas</li></ol>", resources: [] }
       ]},
       { id: "m7", title: "CI/CD Mobile", lessons: [
-        { id: "m7-l1", title: "Pipeline com emulador headless", duration: "50 min", content: "<p>GitHub Actions + Android emulator. Upload APK, roda Appium, artefatos de screenshot.</p>", resources: [] }
+        {
+        id: "m7-l1",
+        title: "Pipeline com emulador headless",
+        duration: "50 min",
+        content: "<p>GitHub Actions + Android emulator. Upload APK, roda Appium, artefatos de screenshot.
+</p><h3>GitHub Actions — Mobile CI completo</h3><pre><code># .github/workflows/mobile.yml
+
+name: Mobile Tests
+
+on: [push, pull_request]
+
+jobs:
+  android-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        avd: [pixel_7_api_33, pixel_6_api_33]  # 2 emuladores paralelos
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('package-lock.json') }}
+      
+      - run: npm ci
+      
+      - name: Start Android Emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 33
+          target: google_apis
+          arch: x86_64
+          avd-name: ${{ matrix.avd }}
+          emulator-options: -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect
+          force-avd-creation: false
+      
+      - name: Run WDIO Tests
+        run: npx wdio run wdio.conf.js
+        env:
+          APPIUM_SERVER_URL: http://localhost:4723
+      
+      - name: Upload Screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-${{ matrix.avd }}
+          path: screenshots/
+          retention-days: 7
+      
+      - name: Upload Allure Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-${{ matrix.avd }}
+          path: allure-results/
+          retention-days: 7</code></pre><h3>Configuração avançada — com build step</h3><pre><code>name: E2E Tests
+
+on: [push, pull_request]
+
+jobs:
+  android-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        avd: [pixel_7_api_33, pixel_6_api_33]  # 2 emuladores paralelos
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('package-lock.json') }}
+      
+      - run: npm ci
+      
+      - name: Start Android Emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 33
+          target: google_apis
+          arch: x86_64
+          avd-name: ${{ matrix.avd }}
+          emulator-options: -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect
+          force-avd-creation: false
+      
+      - name: Run WDIO Tests
+        run: npx wdio run wdio.conf.js
+        env:
+          APPIUM_SERVER_URL: http://localhost:4723
+      
+      - name: Upload Screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-${{ matrix.avd }}
+          path: screenshots/
+          retention-days: 7
+      
+      - name: Upload Allure Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-${{ matrix.avd }}
+          path: allure-results/
+          retention-days: 7</code></pre><h3>Resumo prático</h3><p>Ao concluir esta aula, você deve conseguir configurar WebDriverIO com Appium, criar um arquivo wdio.conf.js completo, configurar testes em múltiplos devices em paralelo, e escrever testes usando a sintaxe simplificada do WebDriverIO.
+</p>", resources: [{ label: "WebDriverIO Docs", url: "https://webdriver.io/docs/appium/" }, { label: "WDIO Configuration", url: "https://webdriver.io/docs/configurationfile/" }] }
       ]},
       { id: "m8", title: "Projeto Final Mobile", lessons: [
-        { id: "m8-l1", title: "Automatizar app demo", duration: "90 min", content: "<p>Use app de demo (ApiDemos, WDIO native demo). 5 fluxos automatizados + README.</p>", resources: [{ label: "Appium Sample Apps", url: "https://github.com/appium/appium/tree/master/packages/appium/sample-code" }] }
+        {
+        id: "m8-l1",
+        title: "Projeto final: suite completa Appium",
+        duration: "90 min",
+        content: "<p>Este e o projeto final da trilha Mobile. Voce vai construir uma suite completa de automação mobile usando Appium + WebDriverIO, aplicando todos os conceitos aprendidos: Screen Objects, gestures, CI/CD com emuladores, relatorios Allure.</p><h3>Aplicacoes demo recomendadas</h3><ul><li><strong>Android:</strong> <a href=\"https://github.com/appium/appium/tree/master/packages/appium/sample-code\" target=\"_blank\">ApiDemos</a> ou <a href=\"https://github.com/webdriverio/native-demo-app\" target=\"_blank\">WDIO Native Demo</a></li><li><strong>iOS:</strong> <a href=\"https://github.com/appium/appium/tree/master/packages/appium/sample-code\" target=\"_blank\">UIKitCatalog</a> ou <a href=\"https://github.com/webdriverio/ios-demo-app\" target=\"_blank\">WDIO iOS Demo</a></li></ul><h3>Entregaveis</h3><ol><li><strong>Screen Objects:</strong> LoginScreen, HomeScreen, SettingsScreen, FormsScreen</li><li><strong>Testes (minimo 5 fluxos):</strong> login valido, login invalido, navegacao por tabs, preenchimento de formularios, gestures (swipe, scroll, long press)</li><li><strong>CI/CD:</strong> GitHub Actions com emulador Android headless, upload de screenshots/videos em falhas</li><li><strong>Relatorios:</strong> Allure com screenshots, traces, videos de falhas</li><li><strong>README:</strong> Instrucoes execucao local, setup device farm (BrowserStack/Sauce Labs)</li></ol><h3>Estrutura do projeto</h3><pre><code>mobile-automation-suite/
+├── .github/workflows/mobile.yml
+├── package.json
+├── wdio.conf.js
+├── screens/
+│   ├── LoginScreen.js
+│   ├── HomeScreen.js
+│   ├── SettingsScreen.js
+│   └── FormsScreen.js
+├── tests/
+│   ├── login.spec.js
+│   ├── navigation.spec.js
+│   ├── forms.spec.js
+│   └── gestures.spec.js
+├── fixtures/
+│   └── test-data.js
+└── utils/
+    └── helpers.js</code></pre><h3>Exemplo - LoginScreen</h3><pre><code>// screens/LoginScreen.js
+class LoginScreen {
+  constructor() {
+    this.usernameInput = $('~username-input');
+    this.passwordInput = $('~password-input');
+    this.loginButton = $('~login-button');
+    this.errorMessage = $('~error-message');
+  }
+  
+  async login(username, password) {
+    await this.usernameInput.setValue(username);
+    await this.passwordInput.setValue(password);
+    await this.loginButton.click();
+  }
+  
+  async getError() {
+    return await this.errorMessage.getText();
+  }
+}
+module.exports = new LoginScreen();</code></pre><h3>Exemplo - Gestures</h3><pre><code>// tests/gestures.spec.js
+const HomeScreen = require('../screens/HomeScreen');
+
+describe('Gestures', () => {
+  it('swipe horizontal', async () => {
+    await HomeScreen.swipeCarousel('left');
+    await expect(HomeScreen.secondCard).toBeDisplayed();
+  });
+  
+  it('scroll to element', async () => {
+    await HomeScreen.scrollToElement('~bottom-item');
+    await expect($('~bottom-item')).toBeDisplayed();
+  });
+  
+  it('long press', async () => {
+    await $('~long-pressable').performActions([
+      { action: 'press', x: 200, y: 300 },
+      { action: 'wait', ms: 1000 },
+      { action: 'release' }
+    ]);
+    await expect($('~context-menu')).toBeDisplayed();
+  });
+});</code></pre><h3>CI/CD - GitHub Actions com Emulador</h3><pre><code># .github/workflows/mobile.yml
+name: Mobile E2E
+
+on: [push, pull_request]
+
+jobs:
+  android-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        avd: [pixel_7_api_33, pixel_6_api_33]
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - run: npm ci
+      
+      - name: Start Android Emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 33
+          target: google_apis
+          arch: x86_64
+          avd-name: ${{ matrix.avd }}
+          emulator-options: -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect
+          force-avd-creation: false
+      
+      - name: Run WDIO Tests
+        run: npx wdio run wdio.conf.js
+        env:
+          APPIUM_SERVER_URL: http://localhost:4723
+      
+      - name: Upload Screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-${{ matrix.avd }}
+          path: screenshots/
+          retention-days: 7
+      
+      - name: Upload Allure Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-${{ matrix.avd }}
+          path: allure-results/
+          retention-days: 7</code></pre><h3>Checklist de qualidade</h3><ul><li>☐ Screen Objects cobrem todas as telas testadas</li><li>☐ Zero sleeps hardcoded - apenas waits explicitos (waitForDisplayed, waitForClickable)</li><li>☐ Testes independentes - cada um reseta app (driver.reset()) ou reinstala</li><li>☐ Locators priorizam accessibility id (~id) > resource-id > xpath</li><li>☐ Retries configurado no CI (2x) - detecta flakiness</li><li>☐ Allure report com screenshots/videos/traces em falhas</li><li>☐ Pipeline roda em < 15 min (paralelismo 2 emuladores)</li><li>☐ README com: setup local, device farm config, troubleshooting comum</li></ul>", resources: [{ label: "Appium Sample Apps", url: "https://github.com/appium/appium/tree/master/packages/appium/sample-code" }, { label: "WDIO Native Demo", url: "https://github.com/webdriverio/native-demo-app" }, { label: "Android Emulator Runner", url: "https://github.com/reactivecircus/android-emulator-runner" }] }
       ]}
     ]
   }{ id: "a2", title: "Postman Profissional", lessons: [
