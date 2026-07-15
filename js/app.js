@@ -1,50 +1,71 @@
 (function () {
   "use strict";
 
-  const STORAGE_PROGRESS    = "testers-guild-progress";
-  const STORAGE_LANG        = "testers-guild-lang";
+  const STORAGE_PROGRESS = "testers-guild-progress";
+  const STORAGE_LANG = "testers-guild-lang";
   const STORAGE_LAST_LESSON = "testers-guild-last-lesson";
-  const STORAGE_PERSONA     = "testers-guild-persona";
-  const STORAGE_BOOKMARKS   = "testers-guild-bookmarks";
-  const STORAGE_QUIZZES     = "testers-guild-quizzes";
-  const STORAGE_CHECKLISTS  = "testers-guild-checklists";
-  const STORAGE_THEME       = "testers-guild-theme";
+  const STORAGE_PERSONA = "testers-guild-persona";
+  const STORAGE_BOOKMARKS = "testers-guild-bookmarks";
+  const STORAGE_QUIZZES = "testers-guild-quizzes";
+  const STORAGE_CHECKLISTS = "testers-guild-checklists";
+  const STORAGE_THEME = "testers-guild-theme";
   const STORAGE_SENIOR_MODE = "testers-guild-senior-mode";
 
-  const tracks         = window.TG_QAWAY_TRACKS    || [];
-  const enOverlay      = window.TG_QAWAY_EN        || { tracks: {}, courses: {}, lessons: {} };
-  const enrichment     = window.TG_LESSON_ENRICHMENT || {};
-  const quizzes        = window.TG_QUIZZES          || {};
-  const checklists     = window.TG_CHECKLISTS       || {};
-  const labsData       = window.TG_LABS             || {};
-  const achievementsList = window.TG_ACHIEVEMENTS   || [];
+  let tracks = [];
+  const enOverlay = window.TG_QAWAY_EN || {
+    tracks: {},
+    courses: {},
+    lessons: {},
+  };
+  const enrichment = window.TG_LESSON_ENRICHMENT || {};
+  const quizzes = window.TG_QUIZZES || {};
+  const checklists = window.TG_CHECKLISTS || {};
+  const labsData = window.TG_LABS || {};
+  const achievementsList = window.TG_ACHIEVEMENTS || [];
 
-  let lang        = getStorage(STORAGE_LANG, "tg-qaway-lang") || "pt";
-  let persona     = getStorage(STORAGE_PERSONA) || "experienced";
-  let progress    = loadProgress();
-  let bookmarks   = loadJson(STORAGE_BOOKMARKS, []);
-  let quizzesPassed = loadJson(STORAGE_QUIZZES, {});
-  let checklistState = loadJson(STORAGE_CHECKLISTS, {});
-  let theme       = getStorage(STORAGE_THEME) || "dark";
-  let seniorMode  = getStorage(STORAGE_SENIOR_MODE) === "true";
+  let lang = getStorage(STORAGE_LANG, "tg-qaway-lang") || "pt";
+  window.lang = lang; // Sync with global
+  let persona = getStorage(STORAGE_PERSONA) || "experienced";
+  let progress = loadProgress();
+  const bookmarks = loadJson(STORAGE_BOOKMARKS, [], validateBookmarksData);
+  const quizzesPassed = loadJson(
+    STORAGE_QUIZZES,
+    {},
+    validateQuizzesPassedData,
+  );
+  const checklistState = loadJson(STORAGE_CHECKLISTS, {});
+  let theme = getStorage(STORAGE_THEME) || "dark";
+  let seniorMode = getStorage(STORAGE_SENIOR_MODE) === "true";
   let currentView = "home";
-  let viewParams  = {};
-  let trackFilter     = "all";
-  let homeFilter      = "all";
+  let viewParams = {};
+  let trackFilter = "all";
+  let homeFilter = "all";
   let searchTimeout = null;
-  let quizState   = {};
-
+  let quizState = {};
 
   const PERSONA_TRACKS = {
-    beginner:   ["starter", "web", "api", "accessibility", "mobile"],
-    experienced:["web", "api", "mobile", "devops", "accessibility", "security"],
-    senior:     ["leadership", "performance", "security", "devops", "web", "api"],
+    beginner: ["starter", "web", "api", "accessibility", "mobile"],
+    experienced: [
+      "web",
+      "api",
+      "mobile",
+      "devops",
+      "accessibility",
+      "security",
+    ],
+    senior: ["leadership", "performance", "security", "devops", "web", "api"],
   };
 
   const TRACK_AUDIENCE = {
-    starter: "beginner", web: "intermediate", api: "intermediate", mobile: "intermediate",
-    performance: "senior", security: "intermediate", devops: "intermediate",
-    accessibility: "intermediate", leadership: "senior",
+    starter: "beginner",
+    web: "intermediate",
+    api: "intermediate",
+    mobile: "intermediate",
+    performance: "senior",
+    security: "intermediate",
+    devops: "intermediate",
+    accessibility: "intermediate",
+    leadership: "senior",
   };
 
   // ── Storage helpers ───────────────────────────────────────────────────────
@@ -57,21 +78,23 @@
     return val;
   }
 
-  function loadJson(key, fallback) {
-    try { return JSON.parse(localStorage.getItem(key)) || fallback; } catch { return fallback; }
-  }
-
-  function saveJson(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
-
   function loadProgress() {
     try {
       const raw = getStorage(STORAGE_PROGRESS, "tg-qaway-progress");
-      return raw ? JSON.parse(raw) : {};
-    } catch { return {}; }
+      if (!raw) return {};
+      const parsed = JSON.parse(raw);
+      return validateProgressData(parsed) ? parsed : {};
+    } catch {
+      return {};
+    }
   }
 
-  function saveProgress() { localStorage.setItem(STORAGE_PROGRESS, JSON.stringify(progress)); }
-  function saveLastLesson(id) { localStorage.setItem(STORAGE_LAST_LESSON, id); }
+  function saveProgress() {
+    localStorage.setItem(STORAGE_PROGRESS, JSON.stringify(progress));
+  }
+  function saveLastLesson(id) {
+    localStorage.setItem(STORAGE_LAST_LESSON, id);
+  }
 
   // ── i18n ──────────────────────────────────────────────────────────────────
   function t(key) {
@@ -87,7 +110,13 @@
   function localizedTrack(track) {
     if (lang === "en" && enOverlay.tracks[track.id]) {
       const o = enOverlay.tracks[track.id];
-      return { ...track, title: o.title, description: o.description, level: o.level, topics: o.topics || track.topics };
+      return {
+        ...track,
+        title: o.title,
+        description: o.description,
+        level: o.level,
+        topics: o.topics || track.topics,
+      };
     }
     return track;
   }
@@ -101,20 +130,33 @@
   function localizedLesson(lesson) {
     if (lang === "en" && enOverlay.lessons[lesson.id]) {
       const o = enOverlay.lessons[lesson.id];
-      return { ...lesson, title: o.title, content: o.content || lesson.content };
+      return {
+        ...lesson,
+        title: o.title,
+        content: o.content || lesson.content,
+      };
     }
     return lesson;
   }
 
   function getEnrichment(lessonId) {
-    return enrichment[lessonId] || { tier: "intermediate", primer: null, seniorNote: null };
+    return (
+      enrichment[lessonId] || {
+        tier: "intermediate",
+        primer: null,
+        seniorNote: null,
+      }
+    );
   }
 
   function tierLabel(tier) {
-    const map = { beginner: "lesson.tierBeginner", intermediate: "lesson.tierIntermediate", senior: "lesson.tierSenior" };
+    const map = {
+      beginner: "lesson.tierBeginner",
+      intermediate: "lesson.tierIntermediate",
+      senior: "lesson.tierSenior",
+    };
     return t(map[tier] || "lesson.tierIntermediate");
   }
-
 
   // ── Theme ─────────────────────────────────────────────────────────────────
   function applyTheme() {
@@ -136,7 +178,13 @@
     const btn = document.getElementById("senior-mode-toggle");
     if (btn) {
       btn.classList.toggle("active-toggle", seniorMode);
-      btn.title = seniorMode ? (lang === "en" ? "Senior Mode ON" : "Modo Sênior ATIVO") : (lang === "en" ? "Senior Mode" : "Modo Sênior");
+      btn.title = seniorMode
+        ? lang === "en"
+          ? "Senior Mode ON"
+          : "Modo Sênior ATIVO"
+        : lang === "en"
+          ? "Senior Mode"
+          : "Modo Sênior";
     }
     localStorage.setItem(STORAGE_SENIOR_MODE, String(seniorMode));
   }
@@ -144,49 +192,57 @@
   function toggleSeniorMode() {
     seniorMode = !seniorMode;
     applySeniorMode();
-    showToast(seniorMode
-      ? (lang === "en" ? "👑 Senior Mode ON — beginner tips hidden" : "👑 Modo Sênior ativado — dicas iniciante ocultas")
-      : (lang === "en" ? "👑 Senior Mode OFF" : "👑 Modo Sênior desativado"));
+    showToast(
+      seniorMode
+        ? lang === "en"
+          ? "👑 Senior Mode ON — beginner tips hidden"
+          : "👑 Modo Sênior ativado — dicas iniciante ocultas"
+        : lang === "en"
+          ? "👑 Senior Mode OFF"
+          : "👑 Modo Sênior desativado",
+    );
     if (currentView === "lesson") renderLesson(viewParams.lessonId);
   }
 
   // ── Language ──────────────────────────────────────────────────────────────
   function setLang(newLang) {
     lang = newLang === "en" ? "en" : "pt";
+    window.lang = lang; // Sync with global
     localStorage.setItem(STORAGE_LANG, lang);
     document.documentElement.lang = lang === "en" ? "en" : "pt-BR";
     document.title = t("meta.title");
-    document.querySelector('meta[name="description"]').content = t("meta.description");
+    document.querySelector('meta[name="description"]').content =
+      t("meta.description");
     applyStaticI18n();
     updateLangToggle();
     refreshCurrentView();
     showToast(t("toast.langChanged"));
   }
 
-  function toggleLang() { setLang(lang === "pt" ? "en" : "pt"); }
+  function toggleLang() {
+    setLang(lang === "pt" ? "en" : "pt");
+  }
 
   function applyStaticI18n() {
-    document.querySelectorAll("[data-i18n]").forEach((el) => { el.textContent = t(el.dataset.i18n); });
-    document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => { el.placeholder = t(el.dataset.i18nPlaceholder); });
+    document.querySelectorAll("[data-i18n]").forEach((el) => {
+      el.textContent = t(el.dataset.i18n);
+    });
+    document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+      el.placeholder = t(el.dataset.i18nPlaceholder);
+    });
     const priceEl = document.getElementById("stat-price");
     if (priceEl) priceEl.textContent = t("price");
   }
 
   function updateLangToggle() {
-    const btn   = document.getElementById("lang-toggle");
+    const btn = document.getElementById("lang-toggle");
     const label = document.getElementById("lang-label");
-    const flag  = btn?.querySelector(".lang-flag");
+    const flag = btn?.querySelector(".lang-flag");
     if (label) label.textContent = t("lang.toggle");
     if (flag) flag.textContent = lang === "pt" ? "🇧🇷" : "🇺🇸";
   }
 
-
   // ── Utilities ─────────────────────────────────────────────────────────────
-  function escapeHtml(str) {
-    return String(str)
-      .replace(/&/g, "&amp;").replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-  }
 
   function showToast(msg) {
     const el = document.getElementById("toast");
@@ -211,13 +267,20 @@
     container.querySelectorAll(".code-copy-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
         const pre = btn.nextElementSibling;
-        navigator.clipboard.writeText(pre.textContent).then(() => {
-          btn.textContent = "✅";
-          setTimeout(() => { btn.textContent = "📋"; }, 1500);
-        }).catch(() => {
-          btn.textContent = "❌";
-          setTimeout(() => { btn.textContent = "📋"; }, 1500);
-        });
+        navigator.clipboard
+          .writeText(pre.textContent)
+          .then(() => {
+            btn.textContent = "✅";
+            setTimeout(() => {
+              btn.textContent = "📋";
+            }, 1500);
+          })
+          .catch(() => {
+            btn.textContent = "❌";
+            setTimeout(() => {
+              btn.textContent = "📋";
+            }, 1500);
+          });
       });
     });
   }
@@ -229,14 +292,21 @@
 
   function getTrackProgress(track) {
     const total = countLessons(track);
-    const done  = track.courses.reduce((s, c) => s + c.lessons.filter((l) => progress[l.id]).length, 0);
+    const done = track.courses.reduce(
+      (s, c) => s + c.lessons.filter((l) => progress[l.id]).length,
+      0,
+    );
     return { done, total, pct: total ? Math.round((done / total) * 100) : 0 };
   }
 
   function getGlobalProgress() {
-    const all  = tracks.flatMap((tr) => tr.courses.flatMap((c) => c.lessons));
+    const all = tracks.flatMap((tr) => tr.courses.flatMap((c) => c.lessons));
     const done = all.filter((l) => progress[l.id]).length;
-    return { done, total: all.length, pct: all.length ? Math.round((done / all.length) * 100) : 0 };
+    return {
+      done,
+      total: all.length,
+      pct: all.length ? Math.round((done / all.length) * 100) : 0,
+    };
   }
 
   function getAllLessons() {
@@ -246,14 +316,21 @@
       track.courses.forEach((course) => {
         const lc = localizedCourse(course);
         course.lessons.forEach((lesson) => {
-          lessons.push({ ...localizedLesson(lesson), trackId: track.id, trackTitle: lt.title, courseTitle: lc.title });
+          lessons.push({
+            ...localizedLesson(lesson),
+            trackId: track.id,
+            trackTitle: lt.title,
+            courseTitle: lc.title,
+          });
         });
       });
     });
     return lessons;
   }
 
-  function findTrack(id) { return tracks.find((tr) => tr.id === id); }
+  function findTrack(id) {
+    return tracks.find((tr) => tr.id === id);
+  }
 
   function findLesson(lessonId) {
     for (const track of tracks) {
@@ -261,8 +338,12 @@
         const lesson = course.lessons.find((l) => l.id === lessonId);
         if (lesson) {
           return {
-            track: localizedTrack(track), course: localizedCourse(course), lesson: localizedLesson(lesson),
-            rawTrack: track, rawCourse: course, rawLesson: lesson,
+            track: localizedTrack(track),
+            course: localizedCourse(course),
+            lesson: localizedLesson(lesson),
+            rawTrack: track,
+            rawCourse: course,
+            rawLesson: lesson,
           };
         }
       }
@@ -270,33 +351,48 @@
     return null;
   }
 
-
   // ── Achievements ──────────────────────────────────────────────────────────
   function checkAchievements() {
-    const global     = getGlobalProgress();
-    const passedAll  = Object.keys(quizzesPassed).length;
+    const global = getGlobalProgress();
+    const passedAll = Object.keys(quizzesPassed).length;
     const bookmarkCount = bookmarks.length;
     const unlockedIds = [];
 
     const rules = [
-      { id: "first_lesson",    test: () => global.done >= 1 },
-      { id: "ten_lessons",     test: () => global.done >= 10 },
-      { id: "fifty_lessons",   test: () => global.done >= 50 },
-      { id: "track_complete",  test: () => tracks.some((tr) => getTrackProgress(tr).pct === 100) },
-      { id: "quiz_pass",       test: () => passedAll >= 1 },
-      { id: "all_quizzes",     test: () => passedAll >= 9 },
-      { id: "recruit_route",   test: () => {
-        const starterTrack = findTrack("starter");
-        return starterTrack ? getTrackProgress(starterTrack).pct === 100 : false;
-      }},
-      { id: "master_route",    test: () => {
-        const leadTrack = findTrack("leadership");
-        return leadTrack ? getTrackProgress(leadTrack).pct === 100 : false;
-      }},
-      { id: "bookworm",        test: () => bookmarkCount >= 5 },
-      { id: "checklist_done",  test: () => {
-        return Object.values(checklistState).some((arr) => Array.isArray(arr) && arr.length > 0);
-      }},
+      { id: "first_lesson", test: () => global.done >= 1 },
+      { id: "ten_lessons", test: () => global.done >= 10 },
+      { id: "fifty_lessons", test: () => global.done >= 50 },
+      {
+        id: "track_complete",
+        test: () => tracks.some((tr) => getTrackProgress(tr).pct === 100),
+      },
+      { id: "quiz_pass", test: () => passedAll >= 1 },
+      { id: "all_quizzes", test: () => passedAll >= 9 },
+      {
+        id: "recruit_route",
+        test: () => {
+          const starterTrack = findTrack("starter");
+          return starterTrack
+            ? getTrackProgress(starterTrack).pct === 100
+            : false;
+        },
+      },
+      {
+        id: "master_route",
+        test: () => {
+          const leadTrack = findTrack("leadership");
+          return leadTrack ? getTrackProgress(leadTrack).pct === 100 : false;
+        },
+      },
+      { id: "bookworm", test: () => bookmarkCount >= 5 },
+      {
+        id: "checklist_done",
+        test: () => {
+          return Object.values(checklistState).some(
+            (arr) => Array.isArray(arr) && arr.length > 0,
+          );
+        },
+      },
     ];
 
     const prev = loadJson("testers-guild-unlocked-achievements", []);
@@ -310,7 +406,10 @@
       saveJson("testers-guild-unlocked-achievements", prev);
       unlockedIds.forEach((id) => {
         const ach = achievementsList.find((a) => a.id === id);
-        if (ach) showToast(`${ach.icon} ${t("toast.achievementUnlocked")}: ${ach[lang]?.title || ach.pt.title}`);
+        if (ach)
+          showToast(
+            `${ach.icon} ${t("toast.achievementUnlocked")}: ${ach[lang]?.title || ach.pt.title}`,
+          );
       });
     }
     return prev;
@@ -320,24 +419,25 @@
     const grid = document.getElementById("achievements-grid");
     if (!grid) return;
     const unlocked = loadJson("testers-guild-unlocked-achievements", []);
-    grid.innerHTML = achievementsList.map((ach) => {
-      const isUnlocked = unlocked.includes(ach.id);
-      const data = ach[lang] || ach.pt;
-      return `<div class="achievement-card ${isUnlocked ? "unlocked" : "locked"}" title="${isUnlocked ? data.desc : "?"}">
+    grid.innerHTML = achievementsList
+      .map((ach) => {
+        const isUnlocked = unlocked.includes(ach.id);
+        const data = ach[lang] || ach.pt;
+        return `<div class="achievement-card ${isUnlocked ? "unlocked" : "locked"}" title="${isUnlocked ? data.desc : "?"}">
         <div class="ach-icon">${isUnlocked ? ach.icon : "🔒"}</div>
         <div class="ach-title">${isUnlocked ? escapeHtml(data.title) : "???"}</div>
-        <div class="ach-desc">${isUnlocked ? escapeHtml(data.desc) : (lang === "en" ? "Keep learning to unlock" : "Continue estudando para desbloquear")}</div>
+        <div class="ach-desc">${isUnlocked ? escapeHtml(data.desc) : lang === "en" ? "Keep learning to unlock" : "Continue estudando para desbloquear"}</div>
       </div>`;
-    }).join("");
+      })
+      .join("");
   }
-
 
   // ── Persona & filters ─────────────────────────────────────────────────────
   // Map persona → audience filter
   const PERSONA_FILTER = {
-    beginner:   "beginner",
+    beginner: "beginner",
     experienced: "intermediate",
-    senior:     "senior",
+    senior: "senior",
   };
 
   function setPersona(p) {
@@ -356,15 +456,11 @@
     return (PERSONA_TRACKS[persona] || []).includes(trackId);
   }
 
-  function filterTracks(list) {
-    if (trackFilter === "all") return list;
-    return list.filter((tr) => TRACK_AUDIENCE[tr.id] === trackFilter);
-  }
-
   function sortTracksForPersona(list) {
     const order = PERSONA_TRACKS[persona] || [];
     return [...list].sort((a, b) => {
-      const ai = order.indexOf(a.id), bi = order.indexOf(b.id);
+      const ai = order.indexOf(a.id),
+        bi = order.indexOf(b.id);
       if (ai === -1 && bi === -1) return 0;
       if (ai === -1) return 1;
       if (bi === -1) return -1;
@@ -375,43 +471,56 @@
   // ── Navigation ────────────────────────────────────────────────────────────
   function navigate(view, params = {}) {
     currentView = view;
-    viewParams  = params;
-    document.querySelectorAll(".view").forEach((v) => v.classList.remove("active"));
+    viewParams = params;
+    document
+      .querySelectorAll(".view")
+      .forEach((v) => v.classList.remove("active"));
     const viewEl = document.getElementById("view-" + view);
     if (viewEl) viewEl.classList.add("active");
     document.querySelectorAll(".nav-links a[data-nav]").forEach((a) => {
       const nav = a.dataset.nav;
-      a.classList.toggle("active", nav === view || ((view === "track" || view === "lesson" || view === "quiz") && nav === "tracks"));
+      a.classList.toggle(
+        "active",
+        nav === view ||
+          ((view === "track" || view === "lesson" || view === "quiz") &&
+            nav === "tracks"),
+      );
     });
 
-    if      (view === "home")       renderHome();
-    else if (view === "tracks")     renderTracksPage();
-    else if (view === "roadmap")    renderRoadmap();
-    else if (view === "glossary")   renderGlossary();
-    else if (view === "labs")       renderLabs();
-    else if (view === "track"  && params.trackId)  renderTrackDetail(params.trackId);
-    else if (view === "lesson" && params.lessonId) renderLesson(params.lessonId);
-    else if (view === "quiz"   && params.trackId)  renderQuiz(params.trackId);
-    else if (view === "dashboard")  renderDashboard();
+    if (view === "home") renderHome();
+    else if (view === "tracks") renderTracksPage();
+    else if (view === "roadmap") renderRoadmap();
+    else if (view === "glossary") renderGlossary();
+    else if (view === "labs") renderLabs();
+    else if (view === "track" && params.trackId)
+      renderTrackDetail(params.trackId);
+    else if (view === "lesson" && params.lessonId)
+      renderLesson(params.lessonId);
+    else if (view === "quiz" && params.trackId) renderQuiz(params.trackId);
+    else if (view === "dashboard") renderDashboard();
 
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  function refreshCurrentView() { navigate(currentView, viewParams); }
-
+  function refreshCurrentView() {
+    navigate(currentView, viewParams);
+  }
 
   // ── Track card ────────────────────────────────────────────────────────────
   function renderTrackCard(track, containerId, opts = {}) {
-    const lt   = localizedTrack(track);
+    const lt = localizedTrack(track);
     const prog = getTrackProgress(track);
     const container = document.getElementById(containerId);
     if (!container) return;
-    const rec      = opts.showRecommend && isRecommended(track.id);
+    const rec = opts.showRecommend && isRecommended(track.id);
     const audience = TRACK_AUDIENCE[track.id] || "intermediate";
     const isComplete = prog.pct === 100;
 
     const card = document.createElement("article");
-    card.className = "track-card" + (rec ? " track-recommended" : "") + (isComplete ? " track-complete" : "");
+    card.className =
+      "track-card" +
+      (rec ? " track-recommended" : "") +
+      (isComplete ? " track-complete" : "");
     card.style.setProperty("--track-color", track.color);
     card.setAttribute("role", "button");
     card.setAttribute("tabindex", "0");
@@ -430,7 +539,10 @@
         <span>📦 ${track.modules} ${t("track.modules")}</span>
         <span>⏱ ~${track.hours}${t("track.hours")}</span>
       </div>
-      <div class="track-tags">${lt.topics.slice(0, 3).map((topic) => `<span class="tag">${escapeHtml(topic)}</span>`).join("")}</div>
+      <div class="track-tags">${lt.topics
+        .slice(0, 3)
+        .map((topic) => `<span class="tag">${escapeHtml(topic)}</span>`)
+        .join("")}</div>
       <div class="track-progress">
         <div class="progress-bar"><div class="progress-fill" style="width:${prog.pct}%"></div></div>
         <div class="progress-text">${prog.done}/${prog.total} ${t("track.lessonsProgress")} ${isComplete ? "🎉" : ""}</div>
@@ -438,7 +550,12 @@
 
     const open = () => navigate("track", { trackId: track.id });
     card.addEventListener("click", open);
-    card.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
+    card.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        open();
+      }
+    });
     container.appendChild(card);
   }
 
@@ -446,9 +563,15 @@
   function renderContinueBanner() {
     const banner = document.getElementById("continue-banner");
     const lastId = getStorage(STORAGE_LAST_LESSON, "tg-qaway-last-lesson");
-    if (!lastId) { banner.classList.add("hidden"); return; }
+    if (!lastId) {
+      banner.classList.add("hidden");
+      return;
+    }
     const found = findLesson(lastId);
-    if (!found) { banner.classList.add("hidden"); return; }
+    if (!found) {
+      banner.classList.add("hidden");
+      return;
+    }
     banner.classList.remove("hidden");
     banner.innerHTML = `
       <div class="continue-inner">
@@ -459,18 +582,24 @@
         </div>
         <button class="btn btn-primary" id="btn-continue">${t("dashboard.continueBtn")}</button>
       </div>`;
-    document.getElementById("btn-continue").addEventListener("click", () => navigate("lesson", { lessonId: lastId }));
+    document
+      .getElementById("btn-continue")
+      .addEventListener("click", () =>
+        navigate("lesson", { lessonId: lastId }),
+      );
   }
-
 
   // ── Home ──────────────────────────────────────────────────────────────────
   function renderHomeFilterBar() {
     const bar = document.getElementById("home-filter-bar");
     if (!bar) return;
     const filters = ["all", "beginner", "intermediate", "senior"];
-    bar.innerHTML = filters.map((f) =>
-      `<button type="button" class="filter-chip ${homeFilter === f ? "active" : ""}" data-filter="${f}">${t("filter." + f)}</button>`
-    ).join("");
+    bar.innerHTML = filters
+      .map(
+        (f) =>
+          `<button type="button" class="filter-chip ${homeFilter === f ? "active" : ""}" data-filter="${f}">${t("filter." + f)}</button>`,
+      )
+      .join("");
     bar.querySelectorAll(".filter-chip").forEach((btn) => {
       btn.addEventListener("click", () => {
         homeFilter = btn.dataset.filter;
@@ -482,18 +611,25 @@
   function renderHome() {
     const global = getGlobalProgress();
     document.getElementById("stat-lessons").textContent = global.total;
-    document.getElementById("stat-tracks").textContent  = tracks.length;
-    document.querySelectorAll(".persona-card").forEach((el) => el.classList.toggle("active", el.dataset.persona === persona));
+    document.getElementById("stat-tracks").textContent = tracks.length;
+    document
+      .querySelectorAll(".persona-card")
+      .forEach((el) =>
+        el.classList.toggle("active", el.dataset.persona === persona),
+      );
 
     renderHomeFilterBar();
 
-    const filtered = homeFilter === "all"
-      ? sortTracksForPersona(tracks)
-      : tracks.filter((tr) => TRACK_AUDIENCE[tr.id] === homeFilter);
+    const filtered =
+      homeFilter === "all"
+        ? sortTracksForPersona(tracks)
+        : tracks.filter((tr) => TRACK_AUDIENCE[tr.id] === homeFilter);
 
     const grid = document.getElementById("home-tracks-grid");
     grid.innerHTML = "";
-    filtered.forEach((tr) => renderTrackCard(tr, "home-tracks-grid", { showRecommend: true }));
+    filtered.forEach((tr) =>
+      renderTrackCard(tr, "home-tracks-grid", { showRecommend: true }),
+    );
     renderContinueBanner();
   }
 
@@ -502,9 +638,12 @@
     const bar = document.getElementById("track-filter-bar");
     if (!bar) return;
     const filters = ["all", "beginner", "intermediate", "senior"];
-    bar.innerHTML = filters.map((f) =>
-      `<button type="button" class="filter-chip ${trackFilter === f ? "active" : ""}" data-filter="${f}">${t("filter." + f)}</button>`
-    ).join("");
+    bar.innerHTML = filters
+      .map(
+        (f) =>
+          `<button type="button" class="filter-chip ${trackFilter === f ? "active" : ""}" data-filter="${f}">${t("filter." + f)}</button>`,
+      )
+      .join("");
     bar.querySelectorAll(".filter-chip").forEach((btn) => {
       btn.addEventListener("click", () => {
         trackFilter = btn.dataset.filter;
@@ -517,21 +656,31 @@
     renderFilterBar();
     const grid = document.getElementById("tracks-grid");
     grid.innerHTML = "";
-    const filtered = trackFilter === "all"
-      ? sortTracksForPersona(tracks)
-      : tracks.filter((tr) => TRACK_AUDIENCE[tr.id] === trackFilter);
-    filtered.forEach((tr) => renderTrackCard(tr, "tracks-grid", { showRecommend: true }));
+    const filtered =
+      trackFilter === "all"
+        ? sortTracksForPersona(tracks)
+        : tracks.filter((tr) => TRACK_AUDIENCE[tr.id] === trackFilter);
+    filtered.forEach((tr) =>
+      renderTrackCard(tr, "tracks-grid", { showRecommend: true }),
+    );
   }
 
   // ── Roadmap ───────────────────────────────────────────────────────────────
   function renderRoadmap() {
     const container = document.getElementById("roadmap-content");
-    const roadmaps  = window.TG_ROADMAPS || {};
-    const routes    = [{ key: "beginner", icon: "🌱" }, { key: "senior", icon: "👑" }];
-    container.innerHTML = routes.map(({ key, icon }) => {
-      const data = roadmaps[key]?.[lang === "en" ? "en" : "pt"] || roadmaps[key]?.pt;
-      if (!data) return "";
-      const steps = data.steps.map((step, i) => `
+    const roadmaps = window.TG_ROADMAPS || {};
+    const routes = [
+      { key: "beginner", icon: "🌱" },
+      { key: "senior", icon: "👑" },
+    ];
+    container.innerHTML = routes
+      .map(({ key, icon }) => {
+        const data =
+          roadmaps[key]?.[lang === "en" ? "en" : "pt"] || roadmaps[key]?.pt;
+        if (!data) return "";
+        const steps = data.steps
+          .map(
+            (step, i) => `
         <div class="roadmap-step">
           <div class="roadmap-step-num">${i + 1}</div>
           <div class="roadmap-step-body">
@@ -539,17 +688,21 @@
             <p class="roadmap-why"><em>${t("roadmap.why")}:</em> ${escapeHtml(step.why)}</p>
             <button type="button" class="btn btn-secondary btn-sm roadmap-go" data-track="${step.trackId}" data-lesson="${step.lessonId || ""}">${t("roadmap.start")}</button>
           </div>
-        </div>`).join("");
-      return `<article class="roadmap-card">
+        </div>`,
+          )
+          .join("");
+        return `<article class="roadmap-card">
         <h3>${icon} ${escapeHtml(data.title)}</h3>
         <p>${escapeHtml(data.desc)}</p>
         <div class="roadmap-steps">${steps}</div>
       </article>`;
-    }).join("");
+      })
+      .join("");
 
     container.querySelectorAll(".roadmap-go").forEach((btn) => {
       btn.addEventListener("click", () => {
-        if (btn.dataset.lesson) navigate("lesson", { lessonId: btn.dataset.lesson });
+        if (btn.dataset.lesson)
+          navigate("lesson", { lessonId: btn.dataset.lesson });
         else navigate("track", { trackId: btn.dataset.track });
       });
     });
@@ -557,14 +710,17 @@
 
   // ── Glossary ──────────────────────────────────────────────────────────────
   function renderGlossary() {
-    const items = (window.TG_GLOSSARY?.[lang === "en" ? "en" : "pt"]) || [];
-    document.getElementById("glossary-content").innerHTML = items.map((item) => `
+    const items = window.TG_GLOSSARY?.[lang === "en" ? "en" : "pt"] || [];
+    document.getElementById("glossary-content").innerHTML = items
+      .map(
+        (item) => `
       <article class="glossary-card">
         <h3>${escapeHtml(item.term)}</h3>
         <p>${escapeHtml(item.def)}</p>
-      </article>`).join("");
+      </article>`,
+      )
+      .join("");
   }
-
 
   // ── Labs ──────────────────────────────────────────────────────────────────
   function renderLabs() {
@@ -586,28 +742,40 @@
     });
 
     const typeColors = {
-      "Web E2E": "#3b82f6", "Web": "#3b82f6", "API": "#8b5cf6",
-      "Security": "#6366f1", "Performance": "#ef4444",
-      "A11y": "#a855f7", "Mobile": "#f59e0b", "Web + API": "#10b981",
+      "Web E2E": "#3b82f6",
+      Web: "#3b82f6",
+      API: "#8b5cf6",
+      Security: "#6366f1",
+      Performance: "#ef4444",
+      A11y: "#a855f7",
+      Mobile: "#f59e0b",
+      "Web + API": "#10b981",
     };
 
-    container.innerHTML = `<div class="labs-grid">${labs.map((lab) => `
+    container.innerHTML = `<div class="labs-grid">${labs
+      .map(
+        (lab) => `
       <article class="lab-card">
         <div class="lab-header">
           <span class="lab-type-badge" style="background:${typeColors[lab.type] || "#10b981"}22;color:${typeColors[lab.type] || "#10b981"};border-color:${typeColors[lab.type] || "#10b981"}44">${escapeHtml(lab.type)}</span>
-          <div class="lab-track-tags">${(lab.tracks || []).map((tid) => {
-            const tr = findTrack(tid);
-            return tr ? `<span class="tag">${tr.icon} ${escapeHtml(localizedTrack(tr).title)}</span>` : "";
-          }).join("")}</div>
+          <div class="lab-track-tags">${(lab.tracks || [])
+            .map((tid) => {
+              const tr = findTrack(tid);
+              return tr
+                ? `<span class="tag">${tr.icon} ${escapeHtml(localizedTrack(tr).title)}</span>`
+                : "";
+            })
+            .join("")}</div>
         </div>
         <h3><a href="${escapeHtml(lab.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(lab.name)}</a></h3>
         <p>${escapeHtml(lab.desc)}</p>
         <a href="${escapeHtml(lab.url)}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm lab-open-btn">
           ${lang === "en" ? "Open lab ↗" : "Abrir lab ↗"}
         </a>
-      </article>`).join("")}</div>`;
+      </article>`,
+      )
+      .join("")}</div>`;
   }
-
 
   // ── Quiz ──────────────────────────────────────────────────────────────────
   function renderQuiz(trackId) {
@@ -617,14 +785,14 @@
     const track = findTrack(trackId);
     if (!track) return;
 
-    const langKey  = lang === "en" ? "en" : "pt";
+    const langKey = lang === "en" ? "en" : "pt";
     const quizData = quizzes[trackId]?.[langKey] || quizzes[trackId]?.pt;
     if (!quizData) {
       container.innerHTML = `<p class="empty-state">${lang === "en" ? "No quiz available for this track yet." : "Nenhum quiz disponível para esta trilha ainda."}</p>`;
       return;
     }
 
-    const lt        = localizedTrack(track);
+    const lt = localizedTrack(track);
     const alreadyPassed = !!quizzesPassed[trackId];
 
     // Set breadcrumb
@@ -634,18 +802,26 @@
     // Reset quiz state for this track
     quizState = { trackId, answers: {}, submitted: false };
 
-    const questionsHtml = quizData.questions.map((q, qi) => `
+    const questionsHtml = quizData.questions
+      .map(
+        (q, qi) => `
       <div class="quiz-question" data-qi="${qi}">
         <p class="quiz-q-text"><strong>${qi + 1}.</strong> ${escapeHtml(q.q)}</p>
         <div class="quiz-options">
-          ${q.options.map((opt, oi) => `
+          ${q.options
+            .map(
+              (opt, oi) => `
             <label class="quiz-option" data-qi="${qi}" data-oi="${oi}">
               <input type="radio" name="q${qi}" value="${oi}" class="quiz-radio">
               <span class="quiz-option-text">${escapeHtml(opt)}</span>
-            </label>`).join("")}
+            </label>`,
+            )
+            .join("")}
         </div>
         <div class="quiz-explain hidden" id="explain-${qi}"></div>
-      </div>`).join("");
+      </div>`,
+      )
+      .join("");
 
     container.innerHTML = `
       <div class="quiz-card">
@@ -667,7 +843,9 @@
         <div id="quiz-result" class="quiz-result hidden"></div>
       </div>`;
 
-    document.getElementById("btn-quiz-back").addEventListener("click", () => navigate("track", { trackId }));
+    document
+      .getElementById("btn-quiz-back")
+      .addEventListener("click", () => navigate("track", { trackId }));
 
     document.getElementById("quiz-form").addEventListener("submit", (e) => {
       e.preventDefault();
@@ -678,7 +856,9 @@
       quizData.questions.forEach((q, qi) => {
         const selected = quizState.answers[qi];
         const explainEl = document.getElementById(`explain-${qi}`);
-        const qBlock    = container.querySelector(`.quiz-question[data-qi="${qi}"]`);
+        const qBlock = container.querySelector(
+          `.quiz-question[data-qi="${qi}"]`,
+        );
 
         // Highlight options
         qBlock.querySelectorAll(".quiz-option").forEach((lbl) => {
@@ -686,7 +866,9 @@
           lbl.classList.add(oi === q.correct ? "correct" : "wrong-opt");
           if (oi === selected) lbl.classList.add("selected-opt");
         });
-        qBlock.querySelectorAll("input[type=radio]").forEach((r) => r.disabled = true);
+        qBlock
+          .querySelectorAll("input[type=radio]")
+          .forEach((r) => (r.disabled = true));
 
         if (selected === q.correct) correct++;
         if (explainEl && q.explain) {
@@ -697,7 +879,10 @@
 
       const passed = correct >= quizData.passScore;
       if (passed && !quizzesPassed[trackId]) {
-        quizzesPassed[trackId] = { passedAt: new Date().toISOString(), score: correct };
+        quizzesPassed[trackId] = {
+          passedAt: new Date().toISOString(),
+          score: correct,
+        };
         saveJson(STORAGE_QUIZZES, quizzesPassed);
         checkAchievements();
         showToast(t("toast.quizPassed"));
@@ -713,7 +898,9 @@
       resultEl.classList.remove("hidden");
 
       if (!passed) {
-        document.getElementById("btn-quiz-retry")?.addEventListener("click", () => renderQuiz(trackId));
+        document
+          .getElementById("btn-quiz-retry")
+          ?.addEventListener("click", () => renderQuiz(trackId));
       }
     });
 
@@ -726,23 +913,24 @@
     });
   }
 
-
   // ── Checklist ─────────────────────────────────────────────────────────────
   function renderChecklist(trackId, container) {
     const langKey = lang === "en" ? "en" : "pt";
-    const data    = checklists[trackId]?.[langKey] || checklists[trackId]?.pt;
+    const data = checklists[trackId]?.[langKey] || checklists[trackId]?.pt;
     if (!data) return "";
 
     const savedItems = checklistState[trackId] || [];
-    const allDone    = savedItems.length >= data.items.length;
+    const allDone = savedItems.length >= data.items.length;
 
-    const itemsHtml = data.items.map((item, i) => {
-      const checked = savedItems.includes(i);
-      return `<label class="checklist-item ${checked ? "checked" : ""}">
+    const itemsHtml = data.items
+      .map((item, i) => {
+        const checked = savedItems.includes(i);
+        return `<label class="checklist-item ${checked ? "checked" : ""}">
         <input type="checkbox" class="checklist-check" data-track="${trackId}" data-idx="${i}" ${checked ? "checked" : ""}>
         <span>${escapeHtml(item)}</span>
       </label>`;
-    }).join("");
+      })
+      .join("");
 
     const html = `<div class="checklist-box" id="checklist-${trackId}">
       <div class="checklist-header">
@@ -755,26 +943,43 @@
 
     if (container) {
       container.insertAdjacentHTML("beforeend", html);
-      container.querySelectorAll(`.checklist-check[data-track="${trackId}"]`).forEach((cb) => {
-        cb.addEventListener("change", () => {
-          const idx = parseInt(cb.dataset.idx);
-          if (!checklistState[trackId]) checklistState[trackId] = [];
-          if (cb.checked) { if (!checklistState[trackId].includes(idx)) checklistState[trackId].push(idx); }
-          else            { checklistState[trackId] = checklistState[trackId].filter((x) => x !== idx); }
-          saveJson(STORAGE_CHECKLISTS, checklistState);
-          const progressEl = document.getElementById(`ck-progress-${trackId}`);
-          if (progressEl) progressEl.textContent = `${checklistState[trackId].length}/${data.items.length} ${t("checklist.progress")}`;
-          cb.closest(".checklist-item").classList.toggle("checked", cb.checked);
-          if (checklistState[trackId].length >= data.items.length) {
-            checkAchievements();
-            showToast(lang === "en" ? "✅ Project checklist complete!" : "✅ Checklist do projeto completo!");
-          }
+      container
+        .querySelectorAll(`.checklist-check[data-track="${trackId}"]`)
+        .forEach((cb) => {
+          cb.addEventListener("change", () => {
+            const idx = parseInt(cb.dataset.idx);
+            if (!checklistState[trackId]) checklistState[trackId] = [];
+            if (cb.checked) {
+              if (!checklistState[trackId].includes(idx))
+                checklistState[trackId].push(idx);
+            } else {
+              checklistState[trackId] = checklistState[trackId].filter(
+                (x) => x !== idx,
+              );
+            }
+            saveJson(STORAGE_CHECKLISTS, checklistState);
+            const progressEl = document.getElementById(
+              `ck-progress-${trackId}`,
+            );
+            if (progressEl)
+              progressEl.textContent = `${checklistState[trackId].length}/${data.items.length} ${t("checklist.progress")}`;
+            cb.closest(".checklist-item").classList.toggle(
+              "checked",
+              cb.checked,
+            );
+            if (checklistState[trackId].length >= data.items.length) {
+              checkAchievements();
+              showToast(
+                lang === "en"
+                  ? "✅ Project checklist complete!"
+                  : "✅ Checklist do projeto completo!",
+              );
+            }
+          });
         });
-      });
     }
     return html;
   }
-
 
   // ── Track Detail ──────────────────────────────────────────────────────────
   function renderTrackDetail(trackId) {
@@ -787,13 +992,13 @@
 
     let coursesHtml = "";
     raw.courses.forEach((rawCourse, idx) => {
-      const course      = localizedCourse(rawCourse);
-      const isLastCourse = idx === raw.courses.length - 1;
-      const lessonsHtml  = rawCourse.lessons.map((rawLesson) => {
-        const lesson = localizedLesson(rawLesson);
-        const enr    = getEnrichment(rawLesson.id);
-        const done   = progress[rawLesson.id];
-        return `<li class="lesson-item ${done ? "completed" : ""}" data-lesson="${rawLesson.id}" tabindex="0" role="button" aria-label="${escapeHtml(lesson.title)}">
+      const course = localizedCourse(rawCourse);
+      const lessonsHtml = rawCourse.lessons
+        .map((rawLesson) => {
+          const lesson = localizedLesson(rawLesson);
+          const enr = getEnrichment(rawLesson.id);
+          const done = progress[rawLesson.id];
+          return `<li class="lesson-item ${done ? "completed" : ""}" data-lesson="${rawLesson.id}" tabindex="0" role="button" aria-label="${escapeHtml(lesson.title)}">
           <div class="lesson-check">${done ? "✓" : ""}</div>
           <div class="lesson-info">
             <div class="lesson-title">${escapeHtml(lesson.title)}</div>
@@ -801,7 +1006,8 @@
           </div>
           <span class="lesson-unlock">${t("track.free")}</span>
         </li>`;
-      }).join("");
+        })
+        .join("");
       coursesHtml += `<div class="course-block"><div class="course-header"><span class="course-num">${idx + 1}</span>${escapeHtml(course.title)}</div><ul class="lesson-list">${lessonsHtml}</ul></div>`;
     });
 
@@ -831,12 +1037,18 @@
     document.querySelectorAll(".lesson-item").forEach((el) => {
       const open = () => navigate("lesson", { lessonId: el.dataset.lesson });
       el.addEventListener("click", open);
-      el.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
+      el.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          open();
+        }
+      });
     });
 
-    document.getElementById("btn-take-quiz")?.addEventListener("click", () => navigate("quiz", { trackId }));
+    document
+      .getElementById("btn-take-quiz")
+      ?.addEventListener("click", () => navigate("quiz", { trackId }));
   }
-
 
   // ── Bookmarks ─────────────────────────────────────────────────────────────
   function toggleBookmark(lessonId) {
@@ -857,45 +1069,64 @@
     const found = findLesson(lessonId);
     if (!found) return;
     const { track, course, lesson, rawTrack, rawCourse, rawLesson } = found;
-    const done     = !!progress[rawLesson.id];
-    const enr      = getEnrichment(rawLesson.id);
+    const done = !!progress[rawLesson.id];
+    const enr = getEnrichment(rawLesson.id);
     const isBookmarked = bookmarks.includes(rawLesson.id);
-    const langKey  = lang === "en" ? "en" : "pt";
-    const isProjectLesson = rawLesson.id.includes("-l") && course.title.toLowerCase().includes("project" || "projeto");
+    const langKey = lang === "en" ? "en" : "pt";
     saveLastLesson(lessonId);
 
     document.getElementById("lesson-track-link").textContent = track.title;
-    document.getElementById("lesson-track-link").onclick = (e) => { e.preventDefault(); navigate("track", { trackId: rawTrack.id }); };
+    document.getElementById("lesson-track-link").onclick = (e) => {
+      e.preventDefault();
+      navigate("track", { trackId: rawTrack.id });
+    };
     document.getElementById("lesson-breadcrumb").textContent = lesson.title;
 
-    const primerText = !seniorMode ? (enr.primer?.[langKey] || enr.primer?.pt) : null;
+    const primerText = !seniorMode
+      ? enr.primer?.[langKey] || enr.primer?.pt
+      : null;
     const seniorText = enr.seniorNote?.[langKey] || enr.seniorNote?.pt;
 
     const primerHtml = primerText
-      ? `<aside class="lesson-box lesson-box-beginner"><h3>${t("lesson.primerTitle")}</h3><p>${escapeHtml(primerText)}</p></aside>` : "";
+      ? `<aside class="lesson-box lesson-box-beginner"><h3>${t("lesson.primerTitle")}</h3><p>${escapeHtml(primerText)}</p></aside>`
+      : "";
     const seniorHtml = seniorText
-      ? `<aside class="lesson-box lesson-box-senior"><h3>${t("lesson.seniorTitle")}</h3><p>${escapeHtml(seniorText)}</p></aside>` : "";
+      ? `<aside class="lesson-box lesson-box-senior"><h3>${t("lesson.seniorTitle")}</h3><p>${escapeHtml(seniorText)}</p></aside>`
+      : "";
 
-    const sidebarLessons = rawCourse.lessons.map((rl) => {
-      const ll = localizedLesson(rl);
-      return `<li class="sidebar-lesson ${rl.id === rawLesson.id ? "active" : ""} ${progress[rl.id] ? "done" : ""}" data-lesson="${rl.id}" tabindex="0" role="button">${escapeHtml(ll.title)}</li>`;
-    }).join("");
+    const sidebarLessons = rawCourse.lessons
+      .map((rl) => {
+        const ll = localizedLesson(rl);
+        return `<li class="sidebar-lesson ${rl.id === rawLesson.id ? "active" : ""} ${progress[rl.id] ? "done" : ""}" data-lesson="${rl.id}" tabindex="0" role="button">${escapeHtml(ll.title)}</li>`;
+      })
+      .join("");
 
     const resourcesHtml = rawLesson.resources?.length
-      ? `<div class="lesson-resources"><h3>📎 ${t("lesson.resources")}</h3>${rawLesson.resources.map((r) =>
-          `<a class="resource-link" href="${escapeHtml(r.url)}" target="_blank" rel="noopener noreferrer">↗ ${escapeHtml(r.label)}</a>`
-        ).join("")}</div>` : "";
+      ? `<div class="lesson-resources"><h3>📎 ${t("lesson.resources")}</h3>${rawLesson.resources
+          .map(
+            (r) =>
+              `<a class="resource-link" href="${escapeHtml(r.url)}" target="_blank" rel="noopener noreferrer">↗ ${escapeHtml(r.label)}</a>`,
+          )
+          .join("")}</div>`
+      : "";
 
     const allLessons = rawTrack.courses.flatMap((c) => c.lessons);
-    const idx   = allLessons.findIndex((l) => l.id === rawLesson.id);
-    const prev  = allLessons[idx - 1];
-    const next  = allLessons[idx + 1];
+    const idx = allLessons.findIndex((l) => l.id === rawLesson.id);
+    const prev = allLessons[idx - 1];
+    const next = allLessons[idx + 1];
 
     // Detect if this is a final project lesson — show checklist
-    const isFinalProject = rawLesson.id.endsWith("-l1") &&
-      (rawCourse.id === "s12" || rawCourse.id === "w10" || rawCourse.id === "a9" ||
-       rawCourse.id === "m8"  || rawCourse.id === "p8"  || rawCourse.id === "sec6" ||
-       rawCourse.id === "dev5"|| rawCourse.id === "a11y5"|| rawCourse.id === "lead4");
+    const isFinalProject =
+      rawLesson.id.endsWith("-l1") &&
+      (rawCourse.id === "s12" ||
+        rawCourse.id === "w10" ||
+        rawCourse.id === "a9" ||
+        rawCourse.id === "m8" ||
+        rawCourse.id === "p8" ||
+        rawCourse.id === "sec6" ||
+        rawCourse.id === "dev5" ||
+        rawCourse.id === "a11y5" ||
+        rawCourse.id === "lead4");
 
     const processedContent = highlightCode(lesson.content);
 
@@ -948,23 +1179,42 @@
     });
 
     document.getElementById("btn-complete").addEventListener("click", () => {
-      if (progress[rawLesson.id]) { delete progress[rawLesson.id]; showToast(t("toast.lessonUndone")); }
-      else { progress[rawLesson.id] = { completedAt: new Date().toISOString() }; showToast(t("toast.lessonDone")); }
+      if (progress[rawLesson.id]) {
+        delete progress[rawLesson.id];
+        showToast(t("toast.lessonUndone"));
+      } else {
+        progress[rawLesson.id] = { completedAt: new Date().toISOString() };
+        showToast(t("toast.lessonDone"));
+      }
       saveProgress();
       checkAchievements();
       renderLesson(lessonId);
     });
 
-    if (prev) document.getElementById("btn-prev").addEventListener("click", () => navigate("lesson", { lessonId: prev.id }));
-    if (next) document.getElementById("btn-next").addEventListener("click", () => navigate("lesson", { lessonId: next.id }));
+    if (prev)
+      document
+        .getElementById("btn-prev")
+        .addEventListener("click", () =>
+          navigate("lesson", { lessonId: prev.id }),
+        );
+    if (next)
+      document
+        .getElementById("btn-next")
+        .addEventListener("click", () =>
+          navigate("lesson", { lessonId: next.id }),
+        );
 
     document.querySelectorAll(".sidebar-lesson").forEach((el) => {
       const open = () => navigate("lesson", { lessonId: el.dataset.lesson });
       el.addEventListener("click", open);
-      el.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
+      el.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          open();
+        }
+      });
     });
   }
-
 
   // ── Dashboard ─────────────────────────────────────────────────────────────
   function renderDashboard() {
@@ -992,17 +1242,23 @@
       if (!bookmarks.length) {
         bmSection.innerHTML = `<p class="empty-state" style="padding:1rem;color:var(--text-muted)">${lang === "en" ? "No bookmarked lessons yet." : "Nenhuma aula favoritada ainda."}</p>`;
       } else {
-        bmSection.innerHTML = bookmarks.map((lid) => {
-          const found = findLesson(lid);
-          if (!found) return "";
-          return `<button class="search-result-item" data-lesson="${lid}">
+        bmSection.innerHTML = bookmarks
+          .map((lid) => {
+            const found = findLesson(lid);
+            if (!found) return "";
+            return `<button class="search-result-item" data-lesson="${lid}">
             <span class="search-result-title">⭐ ${escapeHtml(found.lesson.title)}</span>
             <span class="search-result-meta">${found.track.icon} ${escapeHtml(found.track.title)}</span>
           </button>`;
-        }).join("");
-        bmSection.querySelectorAll("[data-lesson]").forEach((btn) =>
-          btn.addEventListener("click", () => navigate("lesson", { lessonId: btn.dataset.lesson }))
-        );
+          })
+          .join("");
+        bmSection
+          .querySelectorAll("[data-lesson]")
+          .forEach((btn) =>
+            btn.addEventListener("click", () =>
+              navigate("lesson", { lessonId: btn.dataset.lesson }),
+            ),
+          );
       }
     }
   }
@@ -1011,17 +1267,24 @@
   function handleSearch(query) {
     const resultsEl = document.getElementById("search-results");
     const q = query.trim().toLowerCase();
-    if (!q) { resultsEl.classList.add("hidden"); resultsEl.innerHTML = ""; return; }
+    if (!q) {
+      resultsEl.classList.add("hidden");
+      resultsEl.innerHTML = "";
+      return;
+    }
 
-    const lessonMatches = getAllLessons().filter((l) =>
-      l.title.toLowerCase().includes(q) ||
-      l.trackTitle.toLowerCase().includes(q) ||
-      l.courseTitle.toLowerCase().includes(q)
+    const lessonMatches = getAllLessons().filter(
+      (l) =>
+        l.title.toLowerCase().includes(q) ||
+        l.trackTitle.toLowerCase().includes(q) ||
+        l.courseTitle.toLowerCase().includes(q),
     );
 
-    const glossaryItems = (window.TG_GLOSSARY?.[lang === "en" ? "en" : "pt"]) || [];
-    const glossaryMatches = glossaryItems.filter((g) =>
-      g.term.toLowerCase().includes(q) || g.def.toLowerCase().includes(q)
+    const glossaryItems =
+      window.TG_GLOSSARY?.[lang === "en" ? "en" : "pt"] || [];
+    const glossaryMatches = glossaryItems.filter(
+      (g) =>
+        g.term.toLowerCase().includes(q) || g.def.toLowerCase().includes(q),
     );
 
     if (!lessonMatches.length && !glossaryMatches.length) {
@@ -1030,28 +1293,40 @@
       return;
     }
 
-    const lessonHtml = lessonMatches.slice(0, 8).map((l) => `
+    const lessonHtml = lessonMatches
+      .slice(0, 8)
+      .map(
+        (l) => `
       <button type="button" class="search-result-item" data-lesson="${l.id}">
         <span class="search-result-title">${escapeHtml(l.title)}</span>
         <span class="search-result-meta">${escapeHtml(l.trackTitle)} · ${escapeHtml(l.courseTitle)}</span>
-      </button>`).join("");
+      </button>`,
+      )
+      .join("");
 
-    const glossaryHtml = glossaryMatches.slice(0, 3).map((g) => `
+    const glossaryHtml = glossaryMatches
+      .slice(0, 3)
+      .map(
+        (g) => `
       <button type="button" class="search-result-item search-glossary-item" data-glossary="1">
         <span class="search-result-title">📖 ${escapeHtml(g.term)}</span>
         <span class="search-result-meta">${escapeHtml(g.def.substring(0, 80))}…</span>
-      </button>`).join("");
+      </button>`,
+      )
+      .join("");
 
     resultsEl.innerHTML = lessonHtml + glossaryHtml;
     resultsEl.classList.remove("hidden");
 
-    resultsEl.querySelectorAll(".search-result-item[data-lesson]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        document.getElementById("global-search").value = "";
-        resultsEl.classList.add("hidden");
-        navigate("lesson", { lessonId: btn.dataset.lesson });
+    resultsEl
+      .querySelectorAll(".search-result-item[data-lesson]")
+      .forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.getElementById("global-search").value = "";
+          resultsEl.classList.add("hidden");
+          navigate("lesson", { lessonId: btn.dataset.lesson });
+        });
       });
-    });
 
     resultsEl.querySelectorAll(".search-glossary-item").forEach((btn) => {
       btn.addEventListener("click", () => {
@@ -1062,10 +1337,12 @@
     });
   }
 
-
   // ── Event Listeners ───────────────────────────────────────────────────────
   document.querySelectorAll("[data-nav]").forEach((el) => {
-    el.addEventListener("click", (e) => { e.preventDefault(); navigate(el.dataset.nav); });
+    el.addEventListener("click", (e) => {
+      e.preventDefault();
+      navigate(el.dataset.nav);
+    });
   });
 
   document.querySelectorAll(".persona-card").forEach((el) => {
@@ -1073,12 +1350,19 @@
   });
 
   document.getElementById("lang-toggle").addEventListener("click", toggleLang);
-  document.getElementById("theme-toggle").addEventListener("click", toggleTheme);
-  document.getElementById("senior-mode-toggle").addEventListener("click", toggleSeniorMode);
+  document
+    .getElementById("theme-toggle")
+    .addEventListener("click", toggleTheme);
+  document
+    .getElementById("senior-mode-toggle")
+    .addEventListener("click", toggleSeniorMode);
 
   document.getElementById("global-search").addEventListener("input", () => {
     clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(() => handleSearch(document.getElementById("global-search").value), 200);
+    searchTimeout = setTimeout(
+      () => handleSearch(document.getElementById("global-search").value),
+      200,
+    );
   });
 
   document.addEventListener("click", (e) => {
@@ -1086,16 +1370,18 @@
       document.getElementById("search-results").classList.add("hidden");
   });
 
-  document.getElementById("btn-reset-progress")?.addEventListener("click", () => {
-    if (confirm(t("dashboard.resetConfirm"))) {
-      progress = {};
-      saveProgress();
-      localStorage.removeItem(STORAGE_LAST_LESSON);
-      showToast(t("toast.progressReset"));
-      refreshCurrentView();
-      renderContinueBanner();
-    }
-  });
+  document
+    .getElementById("btn-reset-progress")
+    ?.addEventListener("click", () => {
+      if (confirm(t("dashboard.resetConfirm"))) {
+        progress = {};
+        saveProgress();
+        localStorage.removeItem(STORAGE_LAST_LESSON);
+        showToast(t("toast.progressReset"));
+        refreshCurrentView();
+        renderContinueBanner();
+      }
+    });
 
   // Keyboard shortcuts: ArrowLeft / ArrowRight to navigate lessons
   document.addEventListener("keydown", (e) => {
@@ -1105,19 +1391,27 @@
     if (!found) return;
     const allLessons = found.rawTrack.courses.flatMap((c) => c.lessons);
     const idx = allLessons.findIndex((l) => l.id === viewParams.lessonId);
-    if (e.key === "ArrowRight" && allLessons[idx + 1]) navigate("lesson", { lessonId: allLessons[idx + 1].id });
-    if (e.key === "ArrowLeft"  && allLessons[idx - 1]) navigate("lesson", { lessonId: allLessons[idx - 1].id });
+    if (e.key === "ArrowRight" && allLessons[idx + 1])
+      navigate("lesson", { lessonId: allLessons[idx + 1].id });
+    if (e.key === "ArrowLeft" && allLessons[idx - 1])
+      navigate("lesson", { lessonId: allLessons[idx - 1].id });
   });
 
   // ── Init ──────────────────────────────────────────────────────────────────
-  document.documentElement.lang = lang === "en" ? "en" : "pt-BR";
-  // sync homeFilter with saved persona on load
-  homeFilter = PERSONA_FILTER[persona] || "all";
-  applyTheme();
-  applySeniorMode();
-  applyStaticI18n();
-  updateLangToggle();
-  checkAchievements();
-  renderHome();
+  function init() {
+    tracks = window.TG_QAWAY_TRACKS || [];
 
+    window.lang = lang; // Sync with global for utility functions
+    document.documentElement.lang = lang === "en" ? "en" : "pt-BR";
+    // sync homeFilter with saved persona on load
+    homeFilter = PERSONA_FILTER[persona] || "all";
+    applyTheme();
+    applySeniorMode();
+    applyStaticI18n();
+    updateLangToggle();
+    checkAchievements();
+    renderHome();
+  }
+
+  init();
 })();
