@@ -926,5 +926,11 @@ window.TG_QAWAY_EN = {
       "title": "Quality plan for a fictional product",
       "content": "<p>This lesson covers: <strong>Quality plan for a fictional product</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
     }
+  },
+  "filter": {
+    "all": "All levels",
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "senior": "Senior"
   }
 };

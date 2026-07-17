@@ -606,13 +606,14 @@
 
   // ── Home Lessons ──────────────────────────────────────────────────────────
   let homeLessonTrackFilter = "all";
+  let homeLessonLevelFilter = "all"; // Filter by lesson level (beginner/intermediate/senior)
 
   function renderHomeLessonsFilterBar() {
     const bar = document.getElementById("home-lessons-filter-row");
     if (!bar) return;
 
     // Build track options from loaded tracks
-    const allOption = `<button type="button" class="filter-chip ${homeLessonTrackFilter === "all" ? "active" : ""}" data-ltf="all">Todas as trilhas</button>`;
+    const allTrackOption = `<button type="button" class="filter-chip ${homeLessonTrackFilter === "all" ? "active" : ""}" data-ltf="all">Todas as trilhas</button>`;
     const trackOptions = tracks
       .map(
         (tr) =>
@@ -620,7 +621,17 @@
       )
       .join("");
 
-    bar.innerHTML = allOption + trackOptions;
+    // Build level filter options
+    const levelOptions = ["all", "beginner", "intermediate", "senior"]
+      .map(
+        (level) =>
+          `<button type="button" class="filter-chip ${homeLessonLevelFilter === level ? "active" : ""}" data-llf="${level}" style="margin-left: 1rem">${t("filter." + level)}</button>`,
+      )
+      .join("");
+
+    bar.innerHTML = allTrackOption + trackOptions + levelOptions;
+    
+    // Track filter listeners
     bar.querySelectorAll(".filter-chip[data-ltf]").forEach((btn) => {
       btn.addEventListener("click", () => {
         homeLessonTrackFilter = btn.dataset.ltf;
@@ -628,6 +639,18 @@
         // sync chip active state
         bar
           .querySelectorAll(".filter-chip[data-ltf]")
+          .forEach((b) => b.classList.toggle("active", b === btn));
+      });
+    });
+
+    // Level filter listeners
+    bar.querySelectorAll(".filter-chip[data-llf]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        homeLessonLevelFilter = btn.dataset.llf;
+        renderHomeLessons();
+        // sync chip active state
+        bar
+          .querySelectorAll(".filter-chip[data-llf]")
           .forEach((b) => b.classList.toggle("active", b === btn));
       });
     });
@@ -657,14 +680,23 @@
       });
     });
 
-    if (!allLessonsFlat.length) {
+    // Filter by level if selected
+    let filtered = allLessonsFlat;
+    if (homeLessonLevelFilter !== "all") {
+      filtered = allLessonsFlat.filter(({ rawLesson }) => {
+        const enr = getEnrichment(rawLesson.id);
+        return enr.tier === homeLessonLevelFilter;
+      });
+    }
+
+    if (!filtered.length) {
       grid.innerHTML = "";
       empty?.classList.remove("hidden");
       return;
     }
 
     empty?.classList.add("hidden");
-    grid.innerHTML = allLessonsFlat
+    grid.innerHTML = filtered
       .map(({ lesson, rawLesson, track, rawTrack, course }) => {
         const done = !!progress[rawLesson.id];
         const enr = getEnrichment(rawLesson.id);
@@ -753,6 +785,10 @@
     }
     
     renderContinueBanner();
+    
+    // Render lessons section
+    renderHomeLessonsFilterBar();
+    renderHomeLessons();
   }
 
   // ── Tracks page ───────────────────────────────────────────────────────────
