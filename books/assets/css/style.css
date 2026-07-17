@@ -658,11 +658,10 @@ a:hover { text-decoration: underline; }
 }
 
 .book-cover-title {
-  font-size: clamp(0.85rem, 2.2vw, 1.05rem);
-  font-weight: 800;
+  font-size: clamp(1rem, 3vw, 1.35rem);
+  font-weight: 900;
   text-align: center;
-  line-height: 1.25;
-  /* alternating neon pink / cyan per book via CSS var */
+  line-height: 1.1;
   background: var(--book-title-gradient, linear-gradient(135deg, #00e5ff, #ff2d78));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -672,14 +671,15 @@ a:hover { text-decoration: underline; }
 }
 
 .book-cover-author {
-  font-size: 0.7rem;
-  font-weight: 500;
+  font-size: 0.78rem;
+  font-weight: 600;
   color: var(--text-muted);
   text-align: center;
   font-family: var(--font-mono);
   letter-spacing: 0.04em;
   position: relative;
   z-index: 1;
+  line-height: 1.2;
 }
 
 .book-cover-divider {
@@ -772,8 +772,92 @@ a:hover { text-decoration: underline; }
   font-family: var(--font-mono);
 }
 
-/* Empty state */
-.empty-state { text-align: center; padding: 3rem; color: var(--text-muted); }
+/* ─── Markdown Content Styles ──────────────────── */
+.lesson-body h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 1.5rem 0 1rem;
+  color: var(--text);
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 0.5rem;
+}
+
+.lesson-body h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 1.2rem 0 0.8rem;
+  color: var(--text);
+}
+
+.lesson-body p {
+  font-size: 1rem;
+  line-height: 1.8;
+  margin: 1rem 0;
+  color: var(--text);
+}
+
+.lesson-body strong {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.lesson-body em {
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+.lesson-body ul, .lesson-body ol {
+  margin: 1rem 0 1rem 2rem;
+  line-height: 1.8;
+}
+
+.lesson-body li {
+  margin: 0.6rem 0;
+  color: var(--text);
+}
+
+.lesson-body blockquote {
+  border-left: 4px solid var(--accent);
+  padding-left: 1.5rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: var(--text-muted);
+  background: rgba(var(--book-accent-rgb, 0,229,255), 0.05);
+  padding: 1rem 1rem 1rem 1.5rem;
+  border-radius: 4px;
+}
+
+.lesson-body code {
+  background: var(--bg-elevated);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--accent);
+}
+
+.lesson-body pre {
+  background: var(--bg-elevated);
+  padding: 1.25rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border: 1px solid var(--border);
+}
+
+.lesson-body pre code {
+  background: none;
+  padding: 0;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.lesson-body hr {
+  border: none;
+  height: 1px;
+  background: var(--border);
+  margin: 2rem 0;
+}
 
 /* Footer */
 .footer {

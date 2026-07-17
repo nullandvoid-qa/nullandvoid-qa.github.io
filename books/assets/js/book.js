@@ -96,7 +96,7 @@ function renderBook(meta, markdown) {
   document.getElementById('sidebar-lessons').innerHTML = `<li><strong>${meta.autor}</strong></li>`;
 
   // Render markdown content
-  const html = markdown.replace(/<h1[^>]*>/g, '<h2>').replace(/<\/h1>/g, '</h2>');
+  const html = marked.parse(markdown);
   document.getElementById('book-content').innerHTML = html;
 
   // Add copy buttons to code blocks
