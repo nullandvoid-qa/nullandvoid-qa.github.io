@@ -1419,6 +1419,53 @@
           );
       }
     }
+
+    // Certificates section
+    const certSection = document.getElementById("dashboard-certificates");
+    if (certSection && window.TG_CERTIFICATES) {
+      const userCerts = window.TG_CERTIFICATES.getUserCertificates();
+      const completedTracks = tracks.filter((tr) => getTrackProgress(tr).pct === 100);
+      
+      if (!completedTracks.length) {
+        certSection.innerHTML = `<p class="empty-state" style="padding:1rem;color:var(--text-muted)">${lang === "en" ? "Complete a track to earn a certificate." : "Conclua uma trilha para ganhar um certificado."}</p>`;
+      } else {
+        certSection.innerHTML = completedTracks
+          .map((tr) => {
+            const existingCert = userCerts.find(c => c.trackId === tr.id);
+            const lt = localizedTrack(tr);
+            return `<div class="cert-card" style="border-left: 4px solid ${tr.color}; padding: 1rem; background: var(--surface-2); border-radius: 8px;">
+              <div style="display: flex; justify-content: space-between; align-items: start;">
+                <div>
+                  <h4 style="margin: 0 0 0.5rem 0;">${tr.icon} ${escapeHtml(lt.title)}</h4>
+                  <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">${existingCert ? `Gerado em ${new Date(existingCert.generatedAt).toLocaleDateString("pt-BR")}` : "Certificado disponível"}</p>
+                </div>
+                <button class="btn btn-primary btn-sm" id="btn-cert-${tr.id}" data-track="${tr.id}">📄 ${lang === "en" ? "Download" : "Baixar"}</button>
+              </div>
+            </div>`;
+          })
+          .join("");
+        
+        completedTracks.forEach((tr) => {
+          const btn = document.getElementById(`btn-cert-${tr.id}`);
+          if (btn) {
+            btn.addEventListener("click", async () => {
+              try {
+                const userName = window.NVAuth?.getUserName?.() || "Learner";
+                await window.TG_CERTIFICATES.downloadCertificate(
+                  tr.id,
+                  userName,
+                  new Date()
+                );
+                window.TG_CERTIFICATES.saveCertificate(tr.id, userName, new Date());
+                showToast(lang === "en" ? "Certificate downloaded!" : "Certificado baixado!");
+              } catch (error) {
+                showToast(`Erro: ${error.message}`);
+              }
+            });
+          }
+        });
+      }
+    }
   }
 
   // ── Search ────────────────────────────────────────────────────────────────

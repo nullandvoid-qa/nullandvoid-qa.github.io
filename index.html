@@ -23,6 +23,8 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <!-- JWT Decode Library (for parsing tokens) -->
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/build/jwt-decode.js"></script>
+    <!-- jsPDF for Certificate Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   </head>
   <body>
     <a href="#main-content" class="skip-link">Skip to content</a>
@@ -423,6 +425,10 @@
         <div class="dashboard-bookmarks-wrap">
           <div id="dashboard-bookmarks"></div>
         </div>
+        <h3 class="section-title section-title-sm" style="margin-top: 2rem" data-i18n="dashboard.certificatesTitle">
+          Certificados
+        </h3>
+        <div id="dashboard-certificates" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;"></div>
         <h3 class="section-title section-title-sm" style="margin-top: 2rem">
           Trilhas
         </h3>
@@ -452,6 +458,7 @@
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
     <script src="js/utils.js"></script>
+    <script src="js/certificates.js"></script>
     <script src="data/tracks.js"></script>
     <script src="data/translations-en.js"></script>
     <script src="data/lesson-enrichment.js"></script>

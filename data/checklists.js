@@ -3,21 +3,23 @@ window.TG_CHECKLISTS = {
     "pt": {
       "title": "Projeto Final — Checklist",
       "items": [
-        "10 casos de teste manuais documentados",
-        "3 cenários automatizados rodando",
-        "3+ bugs reportados com template profissional",
-        "README no GitHub com instruções",
-        "Evidências (prints ou vídeo)"
+        "10 casos de teste manuais documentados (com screenshots)",
+        "3 cenários automatizados rodando em Playwright ou Cypress",
+        "3+ bugs reportados com template profissional (título, passos, esperado, atual, evidência)",
+        "README no GitHub com instruções e setup",
+        "Vídeo demo (5 min max) mostrando os testes rodando",
+        "Exportar relatório HTML com cobertura de casos testados"
       ]
     },
     "en": {
       "title": "Final Project — Checklist",
       "items": [
-        "10 documented manual test cases",
-        "3 automated scenarios running",
-        "3+ bugs reported with pro template",
-        "GitHub README with instructions",
-        "Evidence (screenshots or video)"
+        "10 documented manual test cases (with screenshots)",
+        "3 automated scenarios running in Playwright or Cypress",
+        "3+ bugs reported with professional template (title, steps, expected, actual, evidence)",
+        "GitHub README with instructions and setup",
+        "Demo video (5 min max) showing tests running",
+        "Export HTML report with test case coverage"
       ]
     }
   },
