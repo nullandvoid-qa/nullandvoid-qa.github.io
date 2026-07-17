@@ -53,7 +53,7 @@ async function loadBook() {
 
   try {
     // First load the index to get metadata
-    const response = await fetch('data/livros.json');
+    const response = await fetch('./data/livros.json');
     if (!response.ok) throw new Error('Failed to load books index');
     const books = await response.json();
     
@@ -87,16 +87,16 @@ function renderBook(meta, markdown) {
   document.getElementById('breadcrumb-title').textContent = meta.titulo;
 
   // Update header info
-  document.getElementById('book-title-main').textContent = meta.titulo;
-  document.getElementById('book-title').textContent = meta.titulo;
-  document.getElementById('book-author').textContent = `por ${meta.autor}`;
-  document.getElementById('book-year').textContent = `${meta.ano} · ${meta.categoria} · ${meta.tempoLeitura} min`;
-  document.getElementById('book-category').textContent = meta.categoria;
-  document.getElementById('book-category').className = `tier-badge ${getTierClass(meta.categoria)}`;
-  document.getElementById('book-time').textContent = `${meta.tempoLeitura} min`;
+  document.getElementById('lesson-title').textContent = meta.titulo;
+  document.getElementById('lesson-meta').innerHTML = `<span>⏱ ${meta.tempoLeitura} min</span> · <span>${meta.categoria}</span> · <span>${meta.ano}</span>`;
+  
+  // Update sidebar
+  document.getElementById('sidebar-track').textContent = meta.categoria;
+  document.getElementById('sidebar-course').textContent = meta.titulo;
+  document.getElementById('sidebar-lessons').innerHTML = `<li><strong>${meta.autor}</strong></li>`;
 
   // Render markdown content
-  const html = marked.parse(markdown);
+  const html = markdown.replace(/<h1[^>]*>/g, '<h2>').replace(/<\/h1>/g, '</h2>');
   document.getElementById('book-content').innerHTML = html;
 
   // Add copy buttons to code blocks
@@ -106,28 +106,14 @@ function renderBook(meta, markdown) {
       pre.classList.add('code-block');
       const btn = document.createElement('button');
       btn.className = 'code-copy-btn';
-      btn.textContent = 'Copiar';
+      btn.textContent = '📋';
+      btn.style.cssText = 'position:absolute;top:0.5rem;right:0.5rem;padding:0.4rem 0.6rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;cursor:pointer;font-size:0.9rem;';
       btn.addEventListener('click', () => {
         navigator.clipboard.writeText(block.textContent).then(() => {
           showToast('Copiado!');
         });
       });
       pre.appendChild(btn);
-    }
-  });
-
-  // Add copy buttons to lesson boxes
-  document.querySelectorAll('.lesson-box').forEach(box => {
-    if (!box.querySelector('.lesson-copy-btn')) {
-      const btn = document.createElement('button');
-      btn.className = 'lesson-copy-btn';
-      btn.textContent = '📋 Copiar';
-      btn.style.cssText = 'margin-top:0.75rem;padding:0.4rem 0.8rem;font-size:0.8rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;cursor:pointer;color:var(--text-muted);transition:var(--transition)';
-      btn.addEventListener('click', () => {
-        const text = box.innerText;
-        navigator.clipboard.writeText(text).then(() => showToast('Copiado!'));
-      });
-      box.appendChild(btn);
     }
   });
 }
