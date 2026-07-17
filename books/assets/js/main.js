@@ -126,7 +126,7 @@ function createBookCard(book) {
 
   return `
     <article
-      class="book-card"
+      class="book-item"
       role="listitem"
       data-id="${book.id}"
       style="
@@ -136,34 +136,37 @@ function createBookCard(book) {
         --book-title-gradient: ${titleGrad};
       "
     >
-      <div class="book-cover">
-        <div class="book-3d" aria-hidden="true">
-          <div class="book-back"></div>
-          <div class="book-top-edge"></div>
-          <div class="book-spine">
-            <span class="book-spine-label">${spineLabel}</span>
-          </div>
-          <div class="book-front">
-            <div class="book-shine"></div>
-            <span class="book-cover-category">${escapeHtml(book.categoria)}</span>
-            <div class="book-cover-divider"></div>
-            <span class="book-cover-icon">${emoji}</span>
-            <div class="book-cover-divider"></div>
-            <span class="book-cover-title">${escapeHtml(book.titulo)}</span>
-            <span class="book-cover-author">${escapeHtml(book.autor)}</span>
-            <span class="book-cover-year">${book.ano}</span>
+      <div class="book-wrapper">
+        <div class="book-cover">
+          <div class="book-3d" aria-hidden="true">
+            <div class="book-back"></div>
+            <div class="book-top-edge"></div>
+            <div class="book-spine">
+              <span class="book-spine-label">${spineLabel}</span>
+            </div>
+            <div class="book-front">
+              <div class="book-shine"></div>
+              <span class="book-cover-category">${escapeHtml(book.categoria)}</span>
+              <div class="book-cover-divider"></div>
+              <span class="book-cover-icon">${emoji}</span>
+              <div class="book-cover-divider"></div>
+              <span class="book-cover-title">${escapeHtml(book.titulo)}</span>
+              <span class="book-cover-author">${escapeHtml(book.autor)}</span>
+              <span class="book-cover-year">${book.ano}</span>
+            </div>
           </div>
         </div>
-      </div>
-      <h3>${escapeHtml(book.titulo)}</h3>
-      <p class="book-author">${escapeHtml(book.autor)}</p>
-      <div class="book-meta">
-        <span>${book.ano}</span>
-        <span>·</span>
-        <span>${book.tempoLeitura} min</span>
-      </div>
-      <div class="book-tags">
-        ${book.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}
+        <div class="book-info">
+          <h3>${escapeHtml(book.titulo)}</h3>
+          <p class="book-author">${escapeHtml(book.autor)}</p>
+          <div class="book-meta">
+            <span>${book.tempoLeitura} min</span>
+            <span class="book-year-badge">${book.ano}</span>
+          </div>
+          <div class="book-tags">
+            ${book.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}
+          </div>
+        </div>
       </div>
     </article>
   `;

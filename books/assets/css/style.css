@@ -408,45 +408,35 @@ a:hover { text-decoration: underline; }
 .section-title { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem; }
 .section-sub { color: var(--text-muted); margin-bottom: 2rem; }
 
-/* Books grid */
+/* ─── Books Grid ────────────────────────────────────────────────── */
 .books-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
 }
 
-.book-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem;
+.book-item {
   cursor: pointer;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  transition: transform 0.3s ease;
   position: relative;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
-.book-card::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: var(--book-color, var(--accent));
+.book-item:hover {
+  transform: translateY(-8px);
 }
 
-.book-card:hover {
-  border-color: var(--book-color, var(--accent));
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--book-color, var(--accent));
+.book-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-/* ─── CSS Book Cover ────────────────────────────────────────────── */
+/* ─── CSS Book Cover (3D) ───────────────────────────────────────────── */
 
 .book-cover {
   aspect-ratio: 3/4;
-  margin-bottom: 1.25rem;
   perspective: 900px;
   display: flex;
   align-items: center;
@@ -676,44 +666,57 @@ a:hover { text-decoration: underline; }
   top: -60%;
 }
 
-/* ─── Book card text (below the 3D book) ──────────────────────── */
+/* ─── Card text (below the 3D book) ──────────────────────── */
 
-.book-card h3 {
-  font-size: 1.05rem;
-  margin-bottom: 0.35rem;
+.book-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.book-item h3 {
+  font-size: 1rem;
+  font-weight: 700;
   color: var(--text);
+  line-height: 1.3;
 }
 
 .book-author {
   color: var(--text-muted);
-  font-size: 0.88rem;
-  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+  margin: 0;
 }
 
 .book-meta {
   display: flex;
-  gap: 1rem;
-  font-size: 0.8rem;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.75rem;
   color: var(--text-muted);
-  margin-bottom: 1rem;
+  margin-top: 0.3rem;
+}
+
+.book-year-badge {
+  background: var(--bg-elevated);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid var(--border);
 }
 
 .book-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-top: auto;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--border);
+  gap: 0.35rem;
+  margin-top: 0.6rem;
 }
 
 .tag {
-  background: var(--bg-elevated);
-  padding: 0.2rem 0.55rem;
-  border-radius: 6px;
-  font-size: 0.75rem;
+  background: rgba(var(--book-accent-rgb, 0,229,255), 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
   color: var(--text-muted);
-  border: 1px solid var(--border);
+  border: 1px solid rgba(var(--book-accent-rgb, 0,229,255), 0.2);
 }
 
 /* Empty state */
@@ -811,48 +814,7 @@ a:hover { text-decoration: underline; }
    ─── CSS 3D Book Covers (Pure CSS, No Images) ──────────────────────
    ───────────────────────────────────────────────────────────────────── */
 
-.books-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
-}
 
-.book-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem;
-  cursor: pointer;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.book-card::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: var(--book-color, var(--accent));
-}
-
-.book-card:hover {
-  border-color: var(--book-color, var(--accent));
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--book-color, var(--accent));
-}
-
-/* Book Cover — 3D Perspective */
-.book-cover {
-  aspect-ratio: 3/4;
-  margin-bottom: 1.25rem;
-  perspective: 900px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
 .book-3d {
   width: 100%;
@@ -1049,19 +1011,13 @@ a:hover { text-decoration: underline; }
 }
 
 .book-card:hover .book-front .book-shine {
+
+.book-item:hover .book-3d {
+  transform: rotateY(-6deg) rotateX(2deg);
+  filter: drop-shadow(-4px 16px 36px rgba(0, 0, 0, 0.65));
+}
+
+.book-item:hover .book-front .book-shine {
   left: 130%;
   top: -60%;
-}
-
-/* Card text below cover */
-.book-card h3 {
-  font-size: 1.05rem;
-  margin-bottom: 0.35rem;
-  color: var(--text);
-}
-
-.book-author {
-  color: var(--text-muted);
-  font-size: 0.88rem;
-  margin-bottom: 0.75rem;
 }
