@@ -1992,6 +1992,44 @@ export default function () {
         });
       });
     }
+
+    // Portfolio Templates section
+    const templatesSection = document.querySelector('[id$="templates"]');
+    if (!templatesSection && global.pct >= 20) {  // Show after 20% progress
+      const templatesHtml = `
+        <h3 class="section-title section-title-sm" style="margin-top: 2rem;">📦 Projetos para Portfólio</h3>
+        <p class="section-sub">Templates prontos para você ganhar experiência prática</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+          <div style="padding: 1.5rem; background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.05)); border: 1px solid rgba(16,185,129,0.3); border-radius: 12px;">
+            <h4 style="margin-top: 0; color: #10b981;">🚀 Starter QA Project</h4>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">10 testes manuais + 3 automatizados. Perfeito para começar.</p>
+            <a href="https://github.com/nullandvoid-qa/qa-templates/tree/main/starter-qa-project" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="width: 100%;">
+              Acessar template →
+            </a>
+          </div>
+          
+          <div style="padding: 1.5rem; background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(245,158,11,0.05)); border: 1px solid rgba(245,158,11,0.3); border-radius: 12px;">
+            <h4 style="margin-top: 0; color: #f59e0b;">⚡ Web Automation Project</h4>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">20+ testes E2E com Page Object Model. Profissional.</p>
+            <a href="https://github.com/nullandvoid-qa/qa-templates/tree/main/web-automation-project" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="width: 100%;">
+              Acessar template →
+            </a>
+          </div>
+          
+          <div style="padding: 1.5rem; background: linear-gradient(135deg, rgba(139,92,246,0.1), rgba(139,92,246,0.05)); border: 1px solid rgba(139,92,246,0.3); border-radius: 12px;">
+            <h4 style="margin-top: 0; color: #8b5cf6;">🎓 Ver todos os templates</h4>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">API, Performance, Mobile, Security, e mais.</p>
+            <a href="https://github.com/nullandvoid-qa/qa-templates#-templates-dispon%C3%ADveis" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="width: 100%;">
+              Explorar →
+            </a>
+          </div>
+        </div>
+      `;
+      
+      if (recSection) {
+        recSection.insertAdjacentHTML('afterend', templatesHtml);
+      }
+    }
   }
 
   // ── Search ────────────────────────────────────────────────────────────────
