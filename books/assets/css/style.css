@@ -404,6 +404,45 @@ a:hover { text-decoration: underline; }
 .filter-chip:hover { border-color: var(--accent); color: var(--text); }
 .filter-chip.active { background: var(--accent); border-color: var(--accent); color: #1a1a1a; font-weight: 700; }
 
+/* Quote section */
+.quote-section {
+  margin: 3rem 0 2.5rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(0, 229, 255, 0.08) 0%, rgba(255, 45, 120, 0.06) 100%);
+  border: 1px solid rgba(0, 229, 255, 0.15);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(10px);
+}
+
+.featured-quote {
+  margin: 0;
+  padding: 0;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--text);
+  font-style: italic;
+  text-align: center;
+}
+
+.featured-quote p {
+  margin: 0 0 1rem;
+}
+
+.quote-author {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--accent);
+  font-weight: 600;
+  font-style: normal;
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+[data-theme="light"] .quote-section {
+  background: linear-gradient(135deg, rgba(0, 153, 187, 0.08) 0%, rgba(204, 0, 90, 0.06) 100%);
+  border-color: rgba(0, 153, 187, 0.15);
+}
+
 /* Section titles */
 .section-title { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem; }
 .section-sub { color: var(--text-muted); margin-bottom: 2rem; }
