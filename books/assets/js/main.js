@@ -123,12 +123,14 @@ function createBookCard(book) {
   const titleGrad   = getCategoryTitleGradient(book.categoria);
   const emoji       = getCategoryEmoji(book.categoria);
   const spineLabel  = escapeHtml(book.titulo);
+  const tagsHtml    = book.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('');
 
   return `
     <article
       class="book-item"
       role="listitem"
       data-id="${book.id}"
+      tabindex="0"
       style="
         --book-color: ${accent};
         --book-accent: ${accent};
@@ -152,19 +154,11 @@ function createBookCard(book) {
               <div class="book-cover-divider"></div>
               <span class="book-cover-title">${escapeHtml(book.titulo)}</span>
               <span class="book-cover-author">${escapeHtml(book.autor)}</span>
-              <span class="book-cover-year">${book.ano}</span>
+              <div class="book-cover-bottom">
+                <div class="book-tags-inside">${tagsHtml}</div>
+                <span class="book-cover-year">${book.ano} · ${book.tempoLeitura} min</span>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="book-info">
-          <h3>${escapeHtml(book.titulo)}</h3>
-          <p class="book-author">${escapeHtml(book.autor)}</p>
-          <div class="book-meta">
-            <span>${book.tempoLeitura} min</span>
-            <span class="book-year-badge">${book.ano}</span>
-          </div>
-          <div class="book-tags">
-            ${book.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}
           </div>
         </div>
       </div>
@@ -203,20 +197,20 @@ function renderBooks() {
   booksGrid.innerHTML = filtered.map(createBookCard).join('');
 
   // Add click listeners
-  booksGrid.querySelectorAll('.book-card').forEach(card => {
-    card.addEventListener('click', () => {
-      const id = card.dataset.id;
+  booksGrid.querySelectorAll('.book-item').forEach(item => {
+    const handleClick = () => {
+      const id = item.dataset.id;
       window.location.href = `livro.html?id=${encodeURIComponent(id)}`;
-    });
-    card.addEventListener('keydown', (e) => {
+    };
+    item.addEventListener('click', handleClick);
+    item.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        card.click();
+        handleClick();
       }
     });
-    card.setAttribute('tabindex', '0');
-    card.setAttribute('role', 'button');
-    card.setAttribute('aria-label', `Ler resumo de ${card.querySelector('h3').textContent}`);
+    item.setAttribute('role', 'button');
+    item.setAttribute('aria-label', `Ler resumo de ${item.querySelector('.book-cover-title')?.textContent || ''}`);
   });
 }
 
