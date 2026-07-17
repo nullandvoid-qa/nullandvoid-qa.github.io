@@ -80,6 +80,15 @@
 
   function loadProgress() {
     try {
+      // Se usuario está autenticado, carrega progresso dele
+      if (window.NVAuth && window.NVAuth.isAuthenticated) {
+        const userProgress = window.NVAuth.getProgress();
+        if (Object.keys(userProgress).length > 0) {
+          return validateProgressData(userProgress) ? userProgress : {};
+        }
+      }
+
+      // Fallback: carrega do storage padrão (compatibilidade)
       const raw = getStorage(STORAGE_PROGRESS, "tg-qaway-progress");
       if (!raw) return {};
       const parsed = JSON.parse(raw);
@@ -90,6 +99,12 @@
   }
 
   function saveProgress() {
+    // Se usuario está autenticado, salva progresso dele
+    if (window.NVAuth && window.NVAuth.isAuthenticated) {
+      window.NVAuth.setProgress(progress);
+    }
+
+    // Também salva no storage padrão como backup
     localStorage.setItem(STORAGE_PROGRESS, JSON.stringify(progress));
   }
   function saveLastLesson(id) {
@@ -589,6 +604,102 @@
       );
   }
 
+  // ── Home Lessons ──────────────────────────────────────────────────────────
+  let homeLessonTrackFilter = "all";
+
+  function renderHomeLessonsFilterBar() {
+    const bar = document.getElementById("home-lessons-filter-row");
+    if (!bar) return;
+
+    // Build track options from loaded tracks
+    const allOption = `<button type="button" class="filter-chip ${homeLessonTrackFilter === "all" ? "active" : ""}" data-ltf="all">Todas as trilhas</button>`;
+    const trackOptions = tracks
+      .map(
+        (tr) =>
+          `<button type="button" class="filter-chip ${homeLessonTrackFilter === tr.id ? "active" : ""}" data-ltf="${tr.id}">${tr.icon} ${escapeHtml(localizedTrack(tr).title)}</button>`,
+      )
+      .join("");
+
+    bar.innerHTML = allOption + trackOptions;
+    bar.querySelectorAll(".filter-chip[data-ltf]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        homeLessonTrackFilter = btn.dataset.ltf;
+        renderHomeLessons();
+        // sync chip active state
+        bar
+          .querySelectorAll(".filter-chip[data-ltf]")
+          .forEach((b) => b.classList.toggle("active", b === btn));
+      });
+    });
+  }
+
+  function renderHomeLessons() {
+    const grid = document.getElementById("home-lessons-grid");
+    const empty = document.getElementById("home-lessons-empty");
+    if (!grid) return;
+
+    const allLessonsFlat = [];
+    tracks.forEach((track) => {
+      if (homeLessonTrackFilter !== "all" && track.id !== homeLessonTrackFilter)
+        return;
+      const lt = localizedTrack(track);
+      track.courses.forEach((course) => {
+        const lc = localizedCourse(course);
+        course.lessons.forEach((lesson) => {
+          allLessonsFlat.push({
+            lesson: localizedLesson(lesson),
+            rawLesson: lesson,
+            track: lt,
+            rawTrack: track,
+            course: lc,
+          });
+        });
+      });
+    });
+
+    if (!allLessonsFlat.length) {
+      grid.innerHTML = "";
+      empty?.classList.remove("hidden");
+      return;
+    }
+
+    empty?.classList.add("hidden");
+    grid.innerHTML = allLessonsFlat
+      .map(({ lesson, rawLesson, track, rawTrack, course }) => {
+        const done = !!progress[rawLesson.id];
+        const enr = getEnrichment(rawLesson.id);
+        return `<article
+          class="lesson-card${done ? " lesson-card-done" : ""}"
+          role="listitem"
+          tabindex="0"
+          data-lesson="${rawLesson.id}"
+          style="--lc-color:${rawTrack.color}"
+          aria-label="${escapeHtml(lesson.title)}"
+        >
+          <div class="lesson-card-track">${rawTrack.icon} ${escapeHtml(track.title)}</div>
+          <div class="lesson-card-title">${escapeHtml(lesson.title)}</div>
+          <div class="lesson-card-course">${escapeHtml(course.title)}</div>
+          <div class="lesson-card-meta">
+            <span>⏱ ${escapeHtml(lesson.duration)}</span>
+            <span class="tier-badge tier-${enr.tier}">${tierLabel(enr.tier)}</span>
+          </div>
+        </article>`;
+      })
+      .join("");
+
+    grid.querySelectorAll(".lesson-card").forEach((card) => {
+      const open = () =>
+        navigate("lesson", { lessonId: card.dataset.lesson });
+      card.addEventListener("click", open);
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          open();
+        }
+      });
+    });
+  }
+
   // ── Home ──────────────────────────────────────────────────────────────────
   function renderHomeFilterBar() {
     const bar = document.getElementById("home-filter-bar");
@@ -626,10 +737,21 @@
         : tracks.filter((tr) => TRACK_AUDIENCE[tr.id] === homeFilter);
 
     const grid = document.getElementById("home-tracks-grid");
+    const emptyState = document.getElementById("home-tracks-empty");
+    
     grid.innerHTML = "";
-    filtered.forEach((tr) =>
-      renderTrackCard(tr, "home-tracks-grid", { showRecommend: true }),
-    );
+    
+    if (filtered.length === 0) {
+      grid.classList.add("hidden");
+      if (emptyState) emptyState.classList.remove("hidden");
+    } else {
+      grid.classList.remove("hidden");
+      if (emptyState) emptyState.classList.add("hidden");
+      filtered.forEach((tr) =>
+        renderTrackCard(tr, "home-tracks-grid", { showRecommend: true }),
+      );
+    }
+    
     renderContinueBanner();
   }
 
@@ -1395,6 +1517,26 @@
       navigate("lesson", { lessonId: allLessons[idx + 1].id });
     if (e.key === "ArrowLeft" && allLessons[idx - 1])
       navigate("lesson", { lessonId: allLessons[idx - 1].id });
+  });
+
+  // ── Auth Integration ──────────────────────────────────────────────────────
+  // Sincroniza progresso ao fazer login
+  document.addEventListener("nvauth:login", (e) => {
+    const userProgress = window.NVAuth.getProgress();
+    if (Object.keys(userProgress).length > 0) {
+      progress = userProgress;
+      showToast(`✅ Progresso restaurado para ${e.detail.name}`);
+    } else {
+      // Se não tem progresso salvo, salva o atual
+      window.NVAuth.setProgress(progress);
+    }
+    refreshCurrentView();
+  });
+
+  // Ao fazer logout, salva o progresso da sessão
+  document.addEventListener("nvauth:logout", () => {
+    saveProgress();
+    showToast("Progresso salvo localmente");
   });
 
   // ── Init ──────────────────────────────────────────────────────────────────
