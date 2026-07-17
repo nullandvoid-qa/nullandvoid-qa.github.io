@@ -118,13 +118,42 @@ function getCategoryFilterChips() {
 }
 
 function createBookCard(book) {
-  const color = getCategoryColor(book.categoria);
-  const coverEmoji = book.capa ? '' : getCategoryEmoji(book.categoria);
+  const accent      = getCategoryColor(book.categoria);
+  const accentRgb   = getCategoryColorRgb(book.categoria);
+  const titleGrad   = getCategoryTitleGradient(book.categoria);
+  const emoji       = getCategoryEmoji(book.categoria);
+  const spineLabel  = escapeHtml(book.titulo);
 
   return `
-    <article class="book-card" role="listitem" data-id="${book.id}" style="--book-color: ${color};">
-      <div class="book-cover" style="background: ${getCategoryGradient(book.categoria)};">
-        ${book.capa ? `<img src="${book.capa}" alt="${book.titulo}" loading="lazy" />` : `<span>${coverEmoji}</span>`}
+    <article
+      class="book-card"
+      role="listitem"
+      data-id="${book.id}"
+      style="
+        --book-color: ${accent};
+        --book-accent: ${accent};
+        --book-accent-rgb: ${accentRgb};
+        --book-title-gradient: ${titleGrad};
+      "
+    >
+      <div class="book-cover">
+        <div class="book-3d" aria-hidden="true">
+          <div class="book-back"></div>
+          <div class="book-top-edge"></div>
+          <div class="book-spine">
+            <span class="book-spine-label">${spineLabel}</span>
+          </div>
+          <div class="book-front">
+            <div class="book-shine"></div>
+            <span class="book-cover-category">${escapeHtml(book.categoria)}</span>
+            <div class="book-cover-divider"></div>
+            <span class="book-cover-icon">${emoji}</span>
+            <div class="book-cover-divider"></div>
+            <span class="book-cover-title">${escapeHtml(book.titulo)}</span>
+            <span class="book-cover-author">${escapeHtml(book.autor)}</span>
+            <span class="book-cover-year">${book.ano}</span>
+          </div>
+        </div>
       </div>
       <h3>${escapeHtml(book.titulo)}</h3>
       <p class="book-author">${escapeHtml(book.autor)}</p>
@@ -235,54 +264,99 @@ function escapeHtml(text) {
 
 function getCategoryColor(category) {
   const colors = {
-    'Psicologia': '#00e5ff',
-    'Negócios': '#ff2d78',
+    'Psicologia':    '#00e5ff',
+    'Negócios':      '#ff2d78',
     'Produtividade': '#00e5ff',
-    'Tecnologia': '#ff2d78',
-    'Filosofia': '#ff2d78',
-    'Ciência': '#00e5ff',
-    'História': '#ff2d78',
-    'Biografia': '#00e5ff',
-    'Autoajuda': '#ff2d78',
-    'Economia': '#00e5ff',
-    'Marketing': '#ff2d78',
-    'Liderança': '#00e5ff'
+    'Finanças':      '#ff2d78',
+    'Tecnologia':    '#ff2d78',
+    'Filosofia':     '#ff2d78',
+    'Ciência':       '#00e5ff',
+    'História':      '#ff2d78',
+    'Biografia':     '#00e5ff',
+    'Autoajuda':     '#ff2d78',
+    'Economia':      '#00e5ff',
+    'Marketing':     '#ff2d78',
+    'Liderança':     '#00e5ff',
   };
   return colors[category] || '#00e5ff';
 }
 
+function getCategoryColorRgb(category) {
+  const map = {
+    'Psicologia':    '0,229,255',
+    'Negócios':      '255,45,120',
+    'Produtividade': '0,229,255',
+    'Finanças':      '255,45,120',
+    'Tecnologia':    '255,45,120',
+    'Filosofia':     '255,45,120',
+    'Ciência':       '0,229,255',
+    'História':      '255,45,120',
+    'Biografia':     '0,229,255',
+    'Autoajuda':     '255,45,120',
+    'Economia':      '0,229,255',
+    'Marketing':     '255,45,120',
+    'Liderança':     '0,229,255',
+  };
+  return map[category] || '0,229,255';
+}
+
+function getCategoryTitleGradient(category) {
+  // Alternate direction: cyan-dominant categories go cyan→pink,
+  // pink-dominant go pink→cyan — keeps it visually varied.
+  const cyan  = 'linear-gradient(135deg, #00e5ff 20%, #ff2d78 90%)';
+  const pink  = 'linear-gradient(135deg, #ff2d78 20%, #00e5ff 90%)';
+  const map = {
+    'Psicologia':    cyan,
+    'Negócios':      pink,
+    'Produtividade': cyan,
+    'Finanças':      pink,
+    'Tecnologia':    pink,
+    'Filosofia':     pink,
+    'Ciência':       cyan,
+    'História':      pink,
+    'Biografia':     cyan,
+    'Autoajuda':     pink,
+    'Economia':      cyan,
+    'Marketing':     pink,
+    'Liderança':     cyan,
+  };
+  return map[category] || cyan;
+}
+
 function getCategoryEmoji(category) {
   const emojis = {
-    'Psicologia': '🧠',
-    'Negócios': '💼',
+    'Psicologia':    '🧠',
+    'Negócios':      '💼',
     'Produtividade': '⚡',
-    'Tecnologia': '💻',
-    'Filosofia': '📜',
-    'Ciência': '🔬',
-    'História': '📜',
-    'Biografia': '👤',
-    'Autoajuda': '🌱',
-    'Economia': '💰',
-    'Marketing': '📈',
-    'Liderança': '👑'
+    'Finanças':      '💰',
+    'Tecnologia':    '💻',
+    'Filosofia':     '📜',
+    'Ciência':       '🔬',
+    'História':      '🏛️',
+    'Biografia':     '👤',
+    'Autoajuda':     '🌱',
+    'Economia':      '📊',
+    'Marketing':     '📈',
+    'Liderança':     '👑',
   };
   return emojis[category] || '📖';
 }
 
 function getCategoryGradient(category) {
   const gradients = {
-    'Psicologia': 'linear-gradient(135deg, rgba(0,229,255,0.15), rgba(0,180,255,0.05))',
-    'Negócios': 'linear-gradient(135deg, rgba(255,45,120,0.15), rgba(224,0,92,0.05))',
+    'Psicologia':    'linear-gradient(135deg, rgba(0,229,255,0.15), rgba(0,180,255,0.05))',
+    'Negócios':      'linear-gradient(135deg, rgba(255,45,120,0.15), rgba(224,0,92,0.05))',
     'Produtividade': 'linear-gradient(135deg, rgba(0,229,255,0.15), rgba(0,180,255,0.05))',
-    'Tecnologia': 'linear-gradient(135deg, rgba(255,45,120,0.15), rgba(224,0,92,0.05))',
-    'Filosofia': 'linear-gradient(135deg, rgba(255,45,120,0.15), rgba(224,0,92,0.05))',
-    'Ciência': 'linear-gradient(135deg, rgba(0,229,255,0.15), rgba(0,180,255,0.05))',
-    'História': 'linear-gradient(135deg, rgba(255,45,120,0.15), rgba(224,0,92,0.05))',
-    'Biografia': 'linear-gradient(135deg, rgba(0,229,255,0.15), rgba(0,180,255,0.05))',
-    'Autoajuda': 'linear-gradient(135deg, rgba(255,45,120,0.15), rgba(224,0,92,0.05))',
-    'Economia': 'linear-gradient(135deg, rgba(0,229,255,0.15), rgba(0,180,255,0.05))',
-    'Marketing': 'linear-gradient(135deg, rgba(255,45,120,0.15), rgba(224,0,92,0.05))',
-    'Liderança': 'linear-gradient(135deg, rgba(0,229,255,0.15), rgba(0,180,255,0.05))'
+    'Finanças':      'linear-gradient(135deg, rgba(255,45,120,0.15), rgba(224,0,92,0.05))',
+    'Tecnologia':    'linear-gradient(135deg, rgba(255,45,120,0.15), rgba(224,0,92,0.05))',
+    'Filosofia':     'linear-gradient(135deg, rgba(255,45,120,0.15), rgba(224,0,92,0.05))',
+    'Ciência':       'linear-gradient(135deg, rgba(0,229,255,0.15), rgba(0,180,255,0.05))',
+    'História':      'linear-gradient(135deg, rgba(255,45,120,0.15), rgba(224,0,92,0.05))',
+    'Biografia':     'linear-gradient(135deg, rgba(0,229,255,0.15), rgba(0,180,255,0.05))',
+    'Autoajuda':     'linear-gradient(135deg, rgba(255,45,120,0.15), rgba(224,0,92,0.05))',
+    'Economia':      'linear-gradient(135deg, rgba(0,229,255,0.15), rgba(0,180,255,0.05))',
+    'Marketing':     'linear-gradient(135deg, rgba(255,45,120,0.15), rgba(224,0,92,0.05))',
+    'Liderança':     'linear-gradient(135deg, rgba(0,229,255,0.15), rgba(0,180,255,0.05))',
   };
   return gradients[category] || 'linear-gradient(135deg, rgba(0,229,255,0.15), rgba(0,180,255,0.05))';
 }

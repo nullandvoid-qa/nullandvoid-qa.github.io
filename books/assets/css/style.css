@@ -411,8 +411,8 @@ a:hover { text-decoration: underline; }
 /* Books grid */
 .books-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
 }
 
 .book-card {
@@ -421,7 +421,7 @@ a:hover { text-decoration: underline; }
   border-radius: var(--radius-lg);
   padding: 1.5rem;
   cursor: pointer;
-  transition: var(--transition);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -438,30 +438,257 @@ a:hover { text-decoration: underline; }
 
 .book-card:hover {
   border-color: var(--book-color, var(--accent));
-  transform: translateY(-3px);
-  box-shadow: var(--shadow);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--book-color, var(--accent));
 }
 
+/* ─── CSS Book Cover ────────────────────────────────────────────── */
+
 .book-cover {
-  aspect-ratio: 2/3;
-  border-radius: 8px;
-  background: linear-gradient(135deg, var(--bg-elevated), var(--bg-card));
+  aspect-ratio: 3/4;
+  margin-bottom: 1.25rem;
+  perspective: 900px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 3rem;
-  margin-bottom: 1rem;
+}
+
+.book-3d {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateY(-18deg) rotateX(3deg);
+  transition: transform 0.35s ease;
+  filter: drop-shadow(-8px 12px 28px rgba(0, 0, 0, 0.75));
+}
+
+.book-card:hover .book-3d {
+  transform: rotateY(-6deg) rotateX(2deg);
+  filter: drop-shadow(-4px 16px 36px rgba(0, 0, 0, 0.65));
+}
+
+/* Front face */
+.book-front {
+  position: absolute;
+  inset: 0;
+  border-radius: 2px 6px 6px 2px;
+  background:
+    linear-gradient(
+      160deg,
+      #2e2e2e 0%,
+      #252525 30%,
+      #1e1e1e 60%,
+      #191919 100%
+    );
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem 1rem;
+  gap: 0.6rem;
+  overflow: hidden;
+  backface-visibility: hidden;
+
+  /* subtle paper texture via layered gradients */
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255,255,255,0.015) 2px,
+      rgba(255,255,255,0.015) 3px
+    ),
+    linear-gradient(160deg, #2e2e2e 0%, #252525 30%, #1e1e1e 60%, #191919 100%);
+}
+
+/* Highlight strip at top of front cover */
+.book-front::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: var(--book-accent, var(--accent));
+  opacity: 0.9;
+  border-radius: 0 6px 0 0;
+}
+
+/* Inner glow from the accent color */
+.book-front::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 80% 60% at 50% 0%,
+    rgba(var(--book-accent-rgb, 0,229,255), 0.09),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* Spine face */
+.book-spine {
+  position: absolute;
+  top: 0;
+  left: -22px;
+  width: 22px;
+  height: 100%;
+  transform-origin: right center;
+  transform: rotateY(90deg);
+  border-radius: 4px 0 0 4px;
+  background: linear-gradient(
+    to right,
+    #111 0%,
+    #1a1a1a 40%,
+    #222 70%,
+    #1e1e1e 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
 }
 
-.book-cover img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+/* Spine label — rotated text */
+.book-spine-label {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--book-accent, var(--accent));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 90%;
+  padding: 0.25rem 0;
+  text-shadow: 0 0 8px rgba(var(--book-accent-rgb, 0,229,255), 0.6);
 }
 
-.book-card h3 { font-size: 1.1rem; margin-bottom: 0.4rem; }
-.book-author { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.75rem; }
+/* Back face (barely visible, adds depth illusion) */
+.book-back {
+  position: absolute;
+  inset: 0;
+  background: #111;
+  border-radius: 2px;
+  transform: translateZ(-2px);
+}
+
+/* Top edge */
+.book-top-edge {
+  position: absolute;
+  top: 0;
+  left: -22px;
+  right: 0;
+  height: 8px;
+  transform-origin: bottom center;
+  transform: rotateX(90deg) translateZ(-4px);
+  background: linear-gradient(to right, #1a1a1a, #2a2a2a 20%, #3a3a3a 60%, #2a2a2a);
+  border-radius: 0 2px 0 0;
+}
+
+/* Content inside .book-front */
+.book-cover-category {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--book-accent, var(--accent));
+  text-shadow: 0 0 10px rgba(var(--book-accent-rgb, 0,229,255), 0.7);
+  font-family: var(--font-mono);
+  opacity: 0.9;
+  position: relative;
+  z-index: 1;
+}
+
+.book-cover-title {
+  font-size: clamp(0.85rem, 2.2vw, 1.05rem);
+  font-weight: 800;
+  text-align: center;
+  line-height: 1.25;
+  /* alternating neon pink / cyan per book via CSS var */
+  background: var(--book-title-gradient, linear-gradient(135deg, #00e5ff, #ff2d78));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+  z-index: 1;
+}
+
+.book-cover-author {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-align: center;
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+  position: relative;
+  z-index: 1;
+}
+
+.book-cover-divider {
+  width: 36px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--book-accent, var(--accent)), transparent);
+  opacity: 0.5;
+  position: relative;
+  z-index: 1;
+}
+
+.book-cover-icon {
+  font-size: 1.6rem;
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 0 8px rgba(var(--book-accent-rgb, 0,229,255), 0.5));
+}
+
+/* Bottom year badge */
+.book-cover-year {
+  margin-top: auto;
+  font-size: 0.6rem;
+  font-family: var(--font-mono);
+  color: rgba(255,255,255,0.2);
+  position: relative;
+  z-index: 1;
+}
+
+/* Shine overlay on hover */
+.book-front .book-shine {
+  position: absolute;
+  top: -60%;
+  left: -60%;
+  width: 50%;
+  height: 220%;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255,255,255,0.055) 50%,
+    transparent 60%
+  );
+  transform: skewX(-15deg);
+  transition: left 0.5s ease, top 0.5s ease;
+  pointer-events: none;
+}
+
+.book-card:hover .book-front .book-shine {
+  left: 130%;
+  top: -60%;
+}
+
+/* ─── Book card text (below the 3D book) ──────────────────────── */
+
+.book-card h3 {
+  font-size: 1.05rem;
+  margin-bottom: 0.35rem;
+  color: var(--text);
+}
+
+.book-author {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  margin-bottom: 0.75rem;
+}
 
 .book-meta {
   display: flex;

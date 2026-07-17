@@ -144,19 +144,19 @@ function showError(message) {
 
 function getTierClass(category) {
   const tierMap = {
-    'Psicologia': 'tier-beginner',
+    'Psicologia':    'tier-beginner',
     'Produtividade': 'tier-beginner',
-    'Ciência': 'tier-beginner',
-    'Economia': 'tier-beginner',
-    'Biografia': 'tier-beginner',
-    'Negócios': 'tier-intermediate',
-    'Tecnologia': 'tier-intermediate',
-    'Filosofia': 'tier-intermediate',
-    'História': 'tier-intermediate',
-    'Autoajuda': 'tier-intermediate',
-    'Economia': 'tier-beginner',
-    'Marketing': 'tier-intermediate',
-    'Liderança': 'tier-intermediate'
+    'Ciência':       'tier-beginner',
+    'Economia':      'tier-beginner',
+    'Biografia':     'tier-beginner',
+    'Negócios':      'tier-intermediate',
+    'Finanças':      'tier-intermediate',
+    'Tecnologia':    'tier-intermediate',
+    'Filosofia':     'tier-intermediate',
+    'História':      'tier-intermediate',
+    'Autoajuda':     'tier-intermediate',
+    'Marketing':     'tier-intermediate',
+    'Liderança':     'tier-intermediate',
   };
   return tierMap[category] || 'tier-beginner';
 }
