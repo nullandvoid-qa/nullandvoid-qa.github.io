@@ -105,4 +105,4 @@ MIT — Use e compartilhe livremente!
 
 **Made with ❤ by Null and Void**
 
-Acredita
+Acredita que QA merece plataforma de primeira classe — e gratuita.

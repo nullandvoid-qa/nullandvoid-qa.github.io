@@ -1320,6 +1320,28 @@
             ${next ? `<button class="btn btn-secondary" id="btn-next">${t("lesson.next")}</button>` : ""}
             <button class="btn btn-outline" id="btn-feedback" style="margin-left: auto;">💬 ${lang === "en" ? "Feedback" : "Feedback"}</button>
           </div>
+          
+          <!-- Feedback Form -->
+          <div id="lesson-feedback-form" style="margin-top: 2rem; padding: 1.5rem; background: var(--surface-2); border-radius: 12px; display: none;">
+            <h3 style="margin-top: 0;">💡 ${lang === "en" ? "Feedback rápido" : "Feedback rápido"}</h3>
+            <p style="color: var(--text-muted); margin-bottom: 1rem;">Ajude a melhorar esta aula (30 segundos):</p>
+            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="radio" name="feedback-rating" value="helpful" /> ✅ Muito útil
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="radio" name="feedback-rating" value="ok" /> 😐 Mais ou menos
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="radio" name="feedback-rating" value="confusing" /> ❌ Confusa
+              </label>
+            </div>
+            <textarea id="feedback-text" placeholder="Alguma sugestão?" style="width: 100%; min-height: 80px; padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); font-family: inherit; resize: vertical;"></textarea>
+            <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+              <button class="btn btn-primary btn-sm" id="btn-feedback-submit">Enviar</button>
+              <button class="btn btn-secondary btn-sm" id="btn-feedback-cancel">Cancelar</button>
+            </div>
+          </div>
         </article>
       </div>`;
 
@@ -1365,14 +1387,37 @@
 
     // Feedback button
     const feedbackBtn = document.getElementById("btn-feedback");
+    const feedbackForm = document.getElementById("lesson-feedback-form");
+    const feedbackSubmitBtn = document.getElementById("btn-feedback-submit");
+    const feedbackCancelBtn = document.getElementById("btn-feedback-cancel");
+    
     if (feedbackBtn) {
       feedbackBtn.addEventListener("click", () => {
-        const subject = `Feedback: ${escapeHtml(lesson.title)}`;
-        const body = `Feedback for lesson: ${rawLesson.id}\n\nYour feedback here...`;
-        const issueUrl = `https://github.com/nullandvoid-qa/nullandvoid-qa.github.io/issues/new?title=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        feedbackForm.style.display = feedbackForm.style.display === "none" ? "block" : "none";
+      });
+      
+      feedbackSubmitBtn.addEventListener("click", () => {
+        const rating = document.querySelector('input[name="feedback-rating"]:checked')?.value || "unrated";
+        const text = document.getElementById("feedback-text").value;
         
-        showToast(lang === "en" ? "📝 Open GitHub to send feedback" : "📝 Abra GitHub para enviar feedback");
-        window.open(issueUrl, "_blank");
+        // Save feedback to localStorage
+        const feedbacks = JSON.parse(localStorage.getItem("nvqa_feedbacks") || "[]");
+        feedbacks.push({
+          lessonId: rawLesson.id,
+          rating,
+          text,
+          timestamp: new Date().toISOString()
+        });
+        localStorage.setItem("nvqa_feedbacks", JSON.stringify(feedbacks));
+        
+        showToast(lang === "en" ? "✅ Obrigado pelo feedback!" : "✅ Obrigado pelo feedback!");
+        feedbackForm.style.display = "none";
+        document.getElementById("feedback-text").value = "";
+        document.querySelectorAll('input[name="feedback-rating"]').forEach(r => r.checked = false);
+      });
+      
+      feedbackCancelBtn.addEventListener("click", () => {
+        feedbackForm.style.display = "none";
       });
     }
 
