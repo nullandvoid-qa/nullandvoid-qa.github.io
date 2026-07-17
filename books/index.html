@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Biblioteca de Resumos de 15 Minutos — Resumos de livros de não-ficção para ler em 15 minutos, mantendo a essência das ideias principais." />
+    <title>Biblioteca 15min — Resumos de Livros</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='70'>📚</text></svg>" />
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Pular para o conteúdo</a>
+
+    <header class="header">
+      <div class="header-inner">
+        <a href="index.html" class="logo" aria-label="Biblioteca 15min Home">
+          <div class="logo-icon">📚</div>
+          <span class="logo-text"
+            ><span>Biblioteca 15min</span>
+            <span class="logo-suffix">Resumos de 15 min</span></span
+          >
+        </a>
+        <div class="header-actions">
+          <nav class="nav-links" aria-label="Navegação principal">
+            <a href="index.html" class="active" data-i18n="nav.home">Início</a>
+            <a href="index.html#categorias" data-i18n="nav.categories">Categorias</a>
+            <a href="sobre.html" data-i18n="nav.about">Sobre</a>
+          </nav>
+          <div class="header-toggles">
+            <button type="button" id="theme-toggle" class="icon-toggle" title="Alternar tema" aria-label="Alternar tema">
+              🌙
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content" class="main">
+      <section class="hero">
+        <div class="hero-badge">
+          <span class="badge-free" data-i18n="hero.badge">100% Gratuito · Leia em 15 min</span>
+        </div>
+        <h1 data-i18n="hero.title">Biblioteca de Resumos de 15 Minutos</h1>
+        <p data-i18n="hero.subtitle">
+          Resumos de livros de não-ficção para ler em 15 minutos, mantendo a essência
+          das ideias principais. Sem fluff, sem enrolação — só o que importa.
+        </p>
+        <div class="hero-stats">
+          <div class="stat">
+            <div class="stat-value" id="stat-books">—</div>
+            <div class="stat-label" data-i18n="hero.statBooks">Livros</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value" id="stat-categories">—</div>
+            <div class="stat-label" data-i18n="hero.statCategories">Categorias</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value" id="stat-time">15</div>
+            <div class="stat-label" data-i18n="hero.statTime">min por livro</div>
+          </div>
+        </div>
+        <div class="cta-group">
+          <button class="btn btn-primary" data-i18n="hero.ctaExplore" onclick="document.getElementById('global-search').focus()">
+            Explorar Livros →
+          </button>
+        </div>
+      </section>
+
+      <div class="search-bar-wrap">
+        <input
+          type="search"
+          id="global-search"
+          class="search-input"
+          placeholder="Buscar por título, autor ou conceito..."
+          autocomplete="off"
+          aria-label="Buscar livros"
+        />
+        <div id="search-results" class="search-results hidden"></div>
+      </div>
+
+      <div class="filter-bar" id="filter-bar" role="group" aria-label="Filtros por categoria">
+        <button type="button" class="filter-chip active" data-filter="all" data-i18n="filter.all">Todos</button>
+      </div>
+
+      <section id="books-section" aria-labelledby="books-title">
+        <div class="section-header">
+          <h2 id="books-title" class="section-title" data-i18n="section.booksTitle">Nossos Resumos</h2>
+          <p class="section-sub" data-i18n="section.booksSub">Selecione um livro para começar a ler em 15 minutos</p>
+        </div>
+        <div class="books-grid" id="books-grid" role="list"></div>
+        <div id="empty-state" class="empty-state hidden">
+          <p data-i18n="empty.noResults">Nenhum livro encontrado com esses filtros.</p>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <p>
+          <strong data-i18n="footer.title">Biblioteca 15min</strong> — Resumos interpretativos
+          para estudo e referência.
+        </p>
+        <p class="footer-sub" data-i18n="footer.disclaimer">
+          Estes são resumos interpretativos e não substituem a leitura da obra original.
+          Todos os direitos pertencem aos respectivos autores e editoras.
+        </p>
+        <div class="footer-links">
+          <a href="sobre.html" data-i18n="footer.about">Sobre</a>
+          <a href="https://github.com/nullandvoid-qa/biblioteca-resumos" target="_blank" rel="noopener" data-i18n="footer.github">GitHub</a>
+        </div>
+      </footer>
+    </main>
+
+    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,57 @@
+[
+  {
+    "id": "habitos-atomicos",
+    "titulo": "Hábitos Atômicos",
+    "autor": "James Clear",
+    "ano": 2018,
+    "categoria": "Produtividade",
+    "tags": ["hábitos", "comportamento", "mudança", "pequenas-vitórias"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/habitos-atomicos.md",
+    "capa": "assets/img/capas/habitos-atomicos.jpg"
+  },
+  {
+    "id": "inteligencia-emocional",
+    "titulo": "Inteligência Emocional",
+    "autor": "Daniel Goleman",
+    "ano": 1995,
+    "categoria": "Psicologia",
+    "tags": ["emoções", "autoconhecimento", "relacionamentos", "liderança"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/inteligencia-emocional.md",
+    "capa": "assets/img/capas/inteligencia-emocional.jpg"
+  },
+  {
+    "id": "pai-rico-pai-pobre",
+    "titulo": "Pai Rico, Pai Pobre",
+    "autor": "Robert Kiyosaki",
+    "ano": 1997,
+    "categoria": "Finanças",
+    "tags": ["finanças-pessoais", "investimentos", "mentalidade-rica", "educação-financeira"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/pai-rico-pai-pobre.md",
+    "capa": "assets/img/capas/pai-rico-pai-pobre.jpg"
+  },
+  {
+    "id": "o-poder-do-habito",
+    "titulo": "O Poder do Hábito",
+    "autor": "Charles Duhigg",
+    "ano": 2012,
+    "categoria": "Produtividade",
+    "tags": ["hábitos", "produtividade", "psicologia", "mudança de comportamento"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/o-poder-do-habito.md",
+    "capa": "assets/img/capas/o-poder-do-habito.jpg"
+  },
+  {
+    "id": "essencialismo",
+    "titulo": "Essencialismo",
+    "autor": "Greg McKeown",
+    "ano": 2014,
+    "categoria": "Produtividade",
+    "tags": ["produtividade", "foco", "priorização", "minimalismo", "decisão"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/essencialismo.md",
+    "capa": "assets/img/capas/essencialismo.jpg"
+  }
+]
