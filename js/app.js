@@ -300,7 +300,261 @@
     });
   }
 
-  // ── Progress helpers ──────────────────────────────────────────────────────
+  // ── Sandbox Examples ──────────────────────────────────────────────────────
+  const SANDBOX_EXAMPLES = {
+    "playwright-basics": {
+      title: "Playwright: Seu primeiro teste",
+      description: "Login e validação básica em Sauce Demo",
+      language: "javascript",
+      code: `// Playwright - Login Test
+import { test, expect } from '@playwright/test';
+
+test('Login to Sauce Demo', async ({ page }) => {
+  // 1. Navega para a URL
+  await page.goto('https://www.saucedemo.com');
+  
+  // 2. Preenche credenciais
+  await page.fill('[data-test="username"]', 'standard_user');
+  await page.fill('[data-test="password"]', 'secret_sauce');
+  
+  // 3. Clica login
+  await page.click('[data-test="login-button"]');
+  
+  // 4. Valida que chegou na página de produtos
+  await expect(page).toHaveURL('**/inventory.html');
+  const title = await page.locator('.title').textContent();
+  expect(title).toBe('Products');
+});`,
+      explanation: {
+        pt: "Este teste demonstra os passos básicos: navegar, preencher campos, clicar e validar.",
+        en: "This test demonstrates basic steps: navigate, fill fields, click, and assert."
+      },
+      output: "✓ Login to Sauce Demo (2.3s)",
+      track: "web"
+    },
+    "api-rest-basics": {
+      title: "API Testing: CRUD com Postman",
+      description: "Testar endpoints REST com validação",
+      language: "javascript",
+      code: `// Postman Collection JSON - GET User
+{
+  "info": { "name": "ReqRes API Tests" },
+  "item": [
+    {
+      "name": "Get User #1",
+      "request": {
+        "method": "GET",
+        "url": "https://reqres.in/api/users/1"
+      },
+      "test": [
+        "pm.test('Status 200', function() {",
+        "  pm.response.to.have.status(200);",
+        "});",
+        "pm.test('Response has id', function() {",
+        "  var json = pm.response.json();",
+        "  pm.expect(json.data.id).to.equal(1);",
+        "  pm.expect(json.data.email).to.include('@reqres.in');",
+        "});"
+      ]
+    }
+  ]
+}`,
+      explanation: {
+        pt: "Testes de API verificam status, headers, body e validações de schema.",
+        en: "API tests check status, headers, body, and schema validations."
+      },
+      output: "✓ Status 200\n✓ Response has id",
+      track: "api"
+    },
+    "performance-k6": {
+      title: "Performance: Load Test com K6",
+      description: "Simular carga em API/aplicação",
+      language: "javascript",
+      code: `// K6 Load Test Script
+import http from 'k6/http';
+import { check } from 'k6';
+
+export const options = {
+  vus: 10,           // 10 usuários virtuais
+  duration: '30s',   // 30 segundos de carga
+  thresholds: {
+    http_req_duration: ['p(95)<200'],  // 95% < 200ms
+    http_req_failed: ['<1%']            // < 1% de falhas
+  }
+};
+
+export default function () {
+  const res = http.get('https://api.example.com/users');
+  check(res, {
+    'status is 200': (r) => r.status === 200,
+    'response time < 300ms': (r) => r.timings.duration < 300,
+  });
+}`,
+      explanation: {
+        pt: "K6 simula múltiplos usuários para encontrar gargalos antes da produção.",
+        en: "K6 simulates multiple users to find bottlenecks before production."
+      },
+      output: null,
+      track: "performance"
+    },
+    "security-owasp": {
+      title: "Segurança: OWASP Top 10",
+      description: "Testando vulnerabilidades comuns",
+      language: "text",
+      code: `OWASP Top 10 — Vulnerabilidades mais críticas
+
+1. SQL Injection
+   Teste: ' OR '1'='1
+   Lab: DVWA, OWASP Juice Shop
+
+2. Broken Authentication
+   Teste: Força bruta de senha
+   Lab: OWASP Juice Shop
+
+3. Sensitive Data Exposure
+   Teste: Dados em HTTPS? Senhas hasheadas?
+   Lab: Inspecionar localStorage
+
+4. Broken Access Control
+   Teste: Alterar URL de ID (user/1 → user/admin)
+   Lab: OWASP Juice Shop profile bypass`,
+      explanation: {
+        pt: "Entender vulnerabilidades é parte essencial do job de QA sênior.",
+        en: "Understanding vulnerabilities is essential for senior QA role."
+      },
+      output: null,
+      track: "security"
+    }
+  };
+
+  function renderSandbox() {
+    const container = document.getElementById("view-sandbox");
+    if (!container) return;
+
+    container.innerHTML = `
+      <div class="sandbox-view">
+        <div class="sandbox-header">
+          <h1>🧪 Interactive Sandbox</h1>
+          <p>Exemplos de código interativos — copie, estude, execute em seu ambiente</p>
+        </div>
+
+        <div class="sandbox-container">
+          <div class="sandbox-sidebar">
+            <h3>Exemplos por trilha</h3>
+            <div id="sandbox-menu" class="sandbox-menu"></div>
+          </div>
+
+          <div class="sandbox-main">
+            <div id="sandbox-example" class="sandbox-example"></div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    renderSandboxMenu();
+    // Carrega primeiro exemplo
+    const firstKey = Object.keys(SANDBOX_EXAMPLES)[0];
+    if (firstKey) loadSandboxExample(firstKey);
+  }
+
+  function renderSandboxMenu() {
+    const menu = document.getElementById("sandbox-menu");
+    if (!menu) return;
+
+    const byTrack = {};
+    Object.entries(SANDBOX_EXAMPLES).forEach(([key, ex]) => {
+      if (!byTrack[ex.track]) byTrack[ex.track] = [];
+      byTrack[ex.track].push({ key, ...ex });
+    });
+
+    const trackTitles = {
+      web: "⚡ Web Testing",
+      api: "🔧 API Testing",
+      performance: "📊 Performance",
+      security: "🔒 Segurança"
+    };
+
+    Object.entries(byTrack).forEach(([track, examples]) => {
+      const trackGroup = document.createElement("div");
+      trackGroup.className = "sandbox-track-group";
+      trackGroup.innerHTML = `<div class="sandbox-track-title">${trackTitles[track] || track}</div>`;
+      
+      examples.forEach(ex => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "sandbox-item";
+        btn.textContent = ex.title;
+        btn.onclick = () => loadSandboxExample(ex.key);
+        trackGroup.appendChild(btn);
+      });
+
+      menu.appendChild(trackGroup);
+    });
+  }
+
+  function loadSandboxExample(key) {
+    const example = SANDBOX_EXAMPLES[key];
+    if (!example) return;
+
+    const container = document.getElementById("sandbox-example");
+    if (!container) return;
+
+    const explanation = example.explanation[lang] || example.explanation.pt;
+
+    const escapeHtmlFunc = (text) => {
+      const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" };
+      return String(text).replace(/[&<>"']/g, m => map[m]);
+    };
+
+    container.innerHTML = `
+      <div class="sandbox-example-header">
+        <h2>${example.title}</h2>
+        <p class="sandbox-description">${example.description}</p>
+      </div>
+
+      <div class="sandbox-explanation">
+        <strong>💡 O que você aprende:</strong>
+        <p>${explanation}</p>
+      </div>
+
+      <div class="sandbox-code-block">
+        <div class="sandbox-code-header">
+          <span class="sandbox-language">${example.language}</span>
+          <button type="button" class="btn-copy-sandbox" onclick="window.copySandboxCode('${key}')">
+            📋 Copiar
+          </button>
+        </div>
+        <pre class="sandbox-code"><code>${escapeHtmlFunc(example.code)}</code></pre>
+      </div>
+
+      ${example.output ? `
+      <div class="sandbox-output">
+        <strong>📤 Output esperado:</strong>
+        <pre>${escapeHtmlFunc(example.output)}</pre>
+      </div>
+      ` : ""}
+
+      <div class="sandbox-cta">
+        <p><strong>🎯 Próximos passos:</strong></p>
+        <ul>
+          <li>1. Copie o código acima (botão 📋)</li>
+          <li>2. Cole em seu arquivo de teste local</li>
+          <li>3. Execute: <code>npm test</code> ou <code>k6 run</code></li>
+          <li>4. Observe o output e entenda cada linha</li>
+          <li>5. Modifique valores, experimente!</li>
+        </ul>
+      </div>
+    `;
+  }
+
+  window.copySandboxCode = function(key) {
+    const example = SANDBOX_EXAMPLES[key];
+    if (!example) return;
+    navigator.clipboard.writeText(example.code).then(() => {
+      showToast("✓ Código copiado! Cole em seu projeto.");
+    });
+  };
+
   function countLessons(track) {
     return track.courses.reduce((s, c) => s + c.lessons.length, 0);
   }
@@ -506,6 +760,7 @@
     else if (view === "tracks") renderTracksPage();
     else if (view === "roadmap") renderRoadmap();
     else if (view === "glossary") renderGlossary();
+    else if (view === "sandbox") renderSandbox();
     else if (view === "labs") renderLabs();
     else if (view === "track" && params.trackId)
       renderTrackDetail(params.trackId);
