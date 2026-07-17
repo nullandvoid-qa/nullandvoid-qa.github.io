@@ -613,11 +613,11 @@
     if (!bar) return;
 
     // Build track options from loaded tracks
-    const allTrackOption = `<button type="button" class="filter-chip ${homeLessonTrackFilter === "all" ? "active" : ""}" data-ltf="all">Todas as trilhas</button>`;
+    const allTrackOption = `<button type="button" class="filter-chip ${homeLessonTrackFilter === "all" ? "active" : ""}" data-ltf="all" title="Mostrar todas as trilhas">Todas as trilhas</button>`;
     const trackOptions = tracks
       .map(
         (tr) =>
-          `<button type="button" class="filter-chip ${homeLessonTrackFilter === tr.id ? "active" : ""}" data-ltf="${tr.id}">${tr.icon} ${escapeHtml(localizedTrack(tr).title)}</button>`,
+          `<button type="button" class="filter-chip ${homeLessonTrackFilter === tr.id ? "active" : ""}" data-ltf="${tr.id}" title="${escapeHtml(localizedTrack(tr).description)}">${tr.icon} ${escapeHtml(localizedTrack(tr).title)}</button>`,
       )
       .join("");
 
@@ -625,11 +625,20 @@
     const levelOptions = ["all", "beginner", "intermediate", "senior"]
       .map(
         (level) =>
-          `<button type="button" class="filter-chip ${homeLessonLevelFilter === level ? "active" : ""}" data-llf="${level}" style="margin-left: 1rem">${t("filter." + level)}</button>`,
+          `<button type="button" class="filter-chip ${homeLessonLevelFilter === level ? "active" : ""}" data-llf="${level}" title="${level === 'all' ? 'Todas as dificuldades' : level === 'beginner' ? 'Aulas para iniciantes' : level === 'intermediate' ? 'Aulas intermediárias' : 'Aulas sênior'}">${t("filter." + level)}</button>`,
       )
       .join("");
 
-    bar.innerHTML = allTrackOption + trackOptions + levelOptions;
+    bar.innerHTML = `
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+        <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-right: 0.5rem;">Trilha:</div>
+        ${allTrackOption}
+        ${trackOptions}
+        <div style="width: 1px; height: 24px; background: var(--border); margin: 0 0.5rem;"></div>
+        <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-right: 0.5rem;">Nível:</div>
+        ${levelOptions}
+      </div>
+    `;
     
     // Track filter listeners
     bar.querySelectorAll(".filter-chip[data-ltf]").forEach((btn) => {
