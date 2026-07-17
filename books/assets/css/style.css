@@ -407,25 +407,49 @@ a:hover { text-decoration: underline; }
 /* Quote section */
 .quote-section {
   margin: 3rem 0 2.5rem;
-  padding: 2rem;
+}
+
+.quote-card {
   background: linear-gradient(135deg, rgba(0, 229, 255, 0.08) 0%, rgba(255, 45, 120, 0.06) 100%);
   border: 1px solid rgba(0, 229, 255, 0.15);
   border-radius: var(--radius-lg);
   backdrop-filter: blur(10px);
+  padding: 2rem;
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  position: relative;
+  overflow: hidden;
+}
+
+.quote-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--accent), var(--pink));
+}
+
+.quote-icon {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 12px rgba(0, 229, 255, 0.4));
 }
 
 .featured-quote {
   margin: 0;
   padding: 0;
-  font-size: 1.1rem;
-  line-height: 1.7;
-  color: var(--text);
-  font-style: italic;
-  text-align: center;
+  flex: 1;
 }
 
 .featured-quote p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text);
+  font-style: italic;
   margin: 0 0 1rem;
+  font-weight: 500;
 }
 
 .quote-author {
@@ -434,11 +458,10 @@ a:hover { text-decoration: underline; }
   color: var(--accent);
   font-weight: 600;
   font-style: normal;
-  text-align: center;
   letter-spacing: 0.05em;
 }
 
-[data-theme="light"] .quote-section {
+[data-theme="light"] .quote-card {
   background: linear-gradient(135deg, rgba(0, 153, 187, 0.08) 0%, rgba(204, 0, 90, 0.06) 100%);
   border-color: rgba(0, 153, 187, 0.15);
 }
