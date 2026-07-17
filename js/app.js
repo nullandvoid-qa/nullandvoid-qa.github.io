@@ -1472,20 +1472,26 @@
   });
 
   document.getElementById("lang-toggle").addEventListener("click", toggleLang);
-  document
-    .getElementById("theme-toggle")
-    .addEventListener("click", toggleTheme);
-  document
-    .getElementById("senior-mode-toggle")
-    .addEventListener("click", toggleSeniorMode);
+  const themeToggle = document.getElementById("theme-toggle");
+  if (themeToggle) {
+    themeToggle.addEventListener("click", toggleTheme);
+  }
 
-  document.getElementById("global-search").addEventListener("input", () => {
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(
-      () => handleSearch(document.getElementById("global-search").value),
-      200,
-    );
-  });
+  const seniorModeToggle = document.getElementById("senior-mode-toggle");
+  if (seniorModeToggle) {
+    seniorModeToggle.addEventListener("click", toggleSeniorMode);
+  }
+
+  const globalSearch = document.getElementById("global-search");
+  if (globalSearch) {
+    globalSearch.addEventListener("input", () => {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(
+        () => handleSearch(document.getElementById("global-search").value),
+        200,
+      );
+    });
+  }
 
   document.addEventListener("click", (e) => {
     if (!e.target.closest(".search-bar-wrap"))
