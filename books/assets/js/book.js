@@ -99,6 +99,9 @@ function renderBook(meta, markdown) {
   const html = marked.parse(markdown);
   document.getElementById('book-content').innerHTML = html;
 
+  // Generate Table of Contents from H2/H3 headings
+  generateTableOfContents();
+
   // Add copy buttons to code blocks
   document.querySelectorAll('pre code').forEach(block => {
     const pre = block.parentElement;
@@ -115,6 +118,47 @@ function renderBook(meta, markdown) {
       });
       pre.appendChild(btn);
     }
+  });
+}
+
+function generateTableOfContents() {
+  const contentEl = document.getElementById('book-content');
+  const headings = contentEl.querySelectorAll('h2, h3');
+  
+  if (headings.length === 0) return;
+
+  // Add IDs to headings if they don't have them
+  headings.forEach((heading, index) => {
+    if (!heading.id) {
+      heading.id = `section-${index}`;
+    }
+  });
+
+  // Build TOC
+  let tocHTML = '<nav class="book-toc"><h4>Índice</h4><ul>';
+  headings.forEach((heading) => {
+    const level = heading.tagName === 'H2' ? 2 : 3;
+    const indent = level === 2 ? '' : 'style="margin-left:1.2rem;"';
+    tocHTML += `<li ${indent}><a href="#${heading.id}">${heading.textContent}</a></li>`;
+  });
+  tocHTML += '</ul></nav>';
+
+  // Insert at top of content
+  contentEl.insertAdjacentHTML('afterbegin', tocHTML);
+
+  // Add click handlers for TOC links
+  document.querySelectorAll('.book-toc a').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = link.getAttribute('href').substring(1);
+      const target = document.getElementById(targetId);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Highlight briefly
+        target.classList.add('highlight-section');
+        setTimeout(() => target.classList.remove('highlight-section'), 2000);
+      }
+    });
   });
 }
 
@@ -170,5 +214,20 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('theme-toggle').title = newTheme === 'dark' ? 'Modo claro' : 'Modo escuro';
   });
 
+  // Add reading progress bar
+  addReadingProgress();
+
   loadBook();
 });
+
+function addReadingProgress() {
+  const progressBar = document.createElement('div');
+  progressBar.className = 'reading-progress';
+  document.body.insertBefore(progressBar, document.body.firstChild);
+
+  window.addEventListener('scroll', () => {
+    const windowHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const scrolled = (window.scrollY / windowHeight) * 100;
+    progressBar.style.width = scrolled + '%';
+  });
+}

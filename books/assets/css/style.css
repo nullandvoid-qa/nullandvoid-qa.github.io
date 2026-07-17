@@ -1180,3 +1180,141 @@ a:hover { text-decoration: underline; }
   line-height: 1;
   font-family: var(--font-mono);
 }
+
+
+/* Table of Contents Styling */
+.book-toc {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border-left: 4px solid var(--accent);
+}
+
+.book-toc h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+
+.book-toc ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.book-toc li {
+  margin: 0.5rem 0;
+}
+
+.book-toc a {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  transition: var(--transition);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.book-toc a:hover {
+  color: var(--accent);
+  background: rgba(0, 229, 255, 0.08);
+  text-decoration: none;
+}
+
+/* Section highlight animation */
+#book-content h2.highlight-section,
+#book-content h3.highlight-section {
+  animation: highlight-pulse 0.6s ease-out;
+}
+
+@keyframes highlight-pulse {
+  0% {
+    background: rgba(0, 229, 255, 0.3);
+    padding-left: 1rem;
+  }
+  100% {
+    background: transparent;
+    padding-left: 0;
+  }
+}
+
+/* Reading progress indicator */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--pink));
+  z-index: 200;
+  transition: width 0.1s linear;
+}
+
+/* Improved typography for long-form reading */
+#book-content {
+  max-width: 800px;
+}
+
+#book-content h1 {
+  font-size: clamp(1.8rem, 5vw, 2.2rem);
+  margin-bottom: 0.5rem;
+}
+
+#book-content h2 {
+  font-size: clamp(1.35rem, 4vw, 1.75rem);
+  margin-top: 2rem;
+  margin-bottom: 1.2rem;
+  line-height: 1.3;
+}
+
+#book-content h3 {
+  font-size: clamp(1.1rem, 3vw, 1.3rem);
+  margin-top: 1.5rem;
+  margin-bottom: 0.8rem;
+}
+
+#book-content p {
+  font-size: clamp(0.95rem, 2vw, 1.05rem);
+  line-height: 1.85;
+  margin-bottom: 1.2rem;
+}
+
+#book-content li {
+  font-size: clamp(0.95rem, 2vw, 1.05rem);
+  line-height: 1.85;
+}
+
+#book-content blockquote {
+  font-size: clamp(0.9rem, 2vw, 1rem);
+  line-height: 1.8;
+  padding-left: 1.5rem;
+}
+
+/* Mobile optimization */
+@media (max-width: 640px) {
+  #book-content {
+    padding: 0;
+  }
+
+  .book-toc {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .lesson-layout {
+    flex-direction: column;
+  }
+
+  .lesson-sidebar {
+    order: 2;
+    margin-top: 2rem;
+  }
+
+  .lesson-content {
+    order: 1;
+  }
+}
