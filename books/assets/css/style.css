@@ -540,8 +540,8 @@ a:hover { text-decoration: underline; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 1.25rem 1rem;
-  gap: 0.6rem;
+  padding: 0.95rem 0.85rem;
+  gap: 0.35rem;
   overflow: hidden;
   backface-visibility: hidden;
 
@@ -733,10 +733,41 @@ a:hover { text-decoration: underline; }
   top: -60%;
 }
 
-/* ─── Card text (below the 3D book) ──────────────────────── */
+/* Bottom section of book cover (tags + year/time) */
+.book-cover-bottom {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(var(--book-accent-rgb, 0,229,255), 0.12);
+  flex-shrink: 0;
+}
 
-.book-info {
-  display: none;
+.book-tags-inside {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  justify-content: center;
+  width: 100%;
+}
+
+.book-tags-inside .tag {
+  background: rgba(var(--book-accent-rgb, 0,229,255), 0.1);
+  border: 0.5px solid rgba(var(--book-accent-rgb, 0,229,255), 0.2);
+  padding: 0.18rem 0.35rem;
+  border-radius: 2px;
+  font-size: 0.51rem;
+  color: rgba(var(--book-accent-rgb, 0,229,255), 0.75);
+  font-weight: 400;
+  text-transform: lowercase;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  line-height: 1;
+  font-family: var(--font-mono);
 }
 
 /* Empty state */
@@ -830,138 +861,30 @@ a:hover { text-decoration: underline; }
 }
 
 
-/* ─────────────────────────────────────────────────────────────────────
-   ─── CSS 3D Book Covers (Pure CSS, No Images) ──────────────────────
-   ───────────────────────────────────────────────────────────────────── */
-
-
-
-.book-3d {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  transform-style: preserve-3d;
-  transform: rotateY(-18deg) rotateX(3deg);
-  transition: transform 0.35s ease;
-  filter: drop-shadow(-8px 12px 28px rgba(0, 0, 0, 0.75));
-}
-
-.book-card:hover .book-3d {
-  transform: rotateY(-6deg) rotateX(2deg);
-  filter: drop-shadow(-4px 16px 36px rgba(0, 0, 0, 0.65));
-}
-
-/* Front face — charcoal gradient with paper texture */
+/* Front face */
 .book-front {
   position: absolute;
   inset: 0;
   border-radius: 2px 6px 6px 2px;
-  background:
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(255,255,255,0.015) 2px,
-      rgba(255,255,255,0.015) 3px
-    ),
-    linear-gradient(160deg, #2e2e2e 0%, #252525 30%, #1e1e1e 60%, #191919 100%);
+  background: linear-gradient(160deg, #2e2e2e 0%, #252525 30%, #1e1e1e 60%, #191919 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 1rem 0.9rem;
-  gap: 0.4rem;
+  padding: 0.95rem 0.85rem;
+  gap: 0.35rem;
   overflow: hidden;
   backface-visibility: hidden;
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.015) 2px, rgba(255,255,255,0.015) 3px), linear-gradient(160deg, #2e2e2e 0%, #252525 30%, #1e1e1e 60%, #191919 100%);
 }
 
-/* Accent strip at top */
-.book-front::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 4px;
-  background: var(--book-accent, var(--accent));
-  opacity: 0.9;
-  border-radius: 0 6px 0 0;
-}
-
-/* Inner glow */
-.book-front::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse 80% 60% at 50% 0%,
-    rgba(var(--book-accent-rgb, 0,229,255), 0.09),
-    transparent 70%
-  );
-  pointer-events: none;
-}
-
-/* Spine — thin 3D face with text */
-.book-spine {
-  position: absolute;
-  top: 0;
-  left: -22px;
-  width: 22px;
-  height: 100%;
-  transform-origin: right center;
-  transform: rotateY(90deg);
-  border-radius: 4px 0 0 4px;
-  background: linear-gradient(to right, #111 0%, #1a1a1a 40%, #222 70%, #1e1e1e 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.book-spine-label {
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  transform: rotate(180deg);
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--book-accent, var(--accent));
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-height: 90%;
-  padding: 0.25rem 0;
-  text-shadow: 0 0 8px rgba(var(--book-accent-rgb, 0,229,255), 0.6);
-}
-
-/* Back face */
-.book-back {
-  position: absolute;
-  inset: 0;
-  background: #111;
-  border-radius: 2px;
-  transform: translateZ(-2px);
-}
-
-/* Top edge */
-.book-top-edge {
-  position: absolute;
-  top: 0;
-  left: -22px;
-  right: 0;
-  height: 8px;
-  transform-origin: bottom center;
-  transform: rotateX(90deg) translateZ(-4px);
-  background: linear-gradient(to right, #1a1a1a, #2a2a2a 20%, #3a3a3a 60%, #2a2a2a);
-  border-radius: 0 2px 0 0;
-}
-
-/* Front cover content */
 .book-cover-category {
-  font-size: 0.6rem;
+  font-size: 0.54rem;
   font-weight: 700;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--book-accent, var(--accent));
-  text-shadow: 0 0 10px rgba(var(--book-accent-rgb, 0,229,255), 0.7);
+  text-shadow: 0 0 8px rgba(var(--book-accent-rgb, 0,229,255), 0.6);
   font-family: var(--font-mono);
   opacity: 0.9;
   position: relative;
@@ -969,10 +892,10 @@ a:hover { text-decoration: underline; }
 }
 
 .book-cover-title {
-  font-size: clamp(0.8rem, 2vw, 0.95rem);
+  font-size: clamp(0.75rem, 1.8vw, 0.88rem);
   font-weight: 800;
   text-align: center;
-  line-height: 1.2;
+  line-height: 1.15;
   background: var(--book-title-gradient, linear-gradient(135deg, #00e5ff, #ff2d78));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -982,67 +905,76 @@ a:hover { text-decoration: underline; }
 }
 
 .book-cover-author {
-  font-size: 0.7rem;
-  font-weight: 500;
+  font-size: 0.62rem;
+  font-weight: 400;
   color: var(--text-muted);
   text-align: center;
   font-family: var(--font-mono);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
+  position: relative;
+  z-index: 1;
+  line-height: 1.08;
+}
+
+.book-cover-divider {
+  width: 28px;
+  height: 0.5px;
+  background: linear-gradient(to right, transparent, var(--book-accent, var(--accent)), transparent);
+  opacity: 0.4;
   position: relative;
   z-index: 1;
 }
 
-.book-cover-divider {
-  width: 36px;
-  height: 1px;
-  background: linear-gradient(to right, transparent, var(--book-accent, var(--accent)), transparent);
+.book-cover-icon {
+  font-size: 1.35rem;
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 0 6px rgba(var(--book-accent-rgb, 0,229,255), 0.4));
+}
 
+.book-cover-year {
+  font-size: 0.54rem;
+  font-family: var(--font-mono);
+  color: rgba(255,255,255,0.23);
+  position: relative;
+  z-index: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-weight: 400;
+}
 
-/* Bottom section of book cover (tags + year/time) */
 .book-cover-bottom {
   margin-top: auto;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.35rem;
   align-items: center;
+  justify-content: flex-end;
   width: 100%;
-  padding-top: 0.6rem;
-  border-top: 1px solid rgba(var(--book-accent-rgb, 0,229,255), 0.15);
-  max-height: 3.5rem;
-  overflow: hidden;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(var(--book-accent-rgb, 0,229,255), 0.12);
+  flex-shrink: 0;
 }
 
 .book-tags-inside {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.3rem;
+  gap: 0.25rem;
   justify-content: center;
   width: 100%;
-  max-height: 2rem;
 }
 
 .book-tags-inside .tag {
-  background: rgba(var(--book-accent-rgb, 0,229,255), 0.12);
-  border: 0.5px solid rgba(var(--book-accent-rgb, 0,229,255), 0.22);
-  padding: 0.22rem 0.4rem;
+  background: rgba(var(--book-accent-rgb, 0,229,255), 0.1);
+  border: 0.5px solid rgba(var(--book-accent-rgb, 0,229,255), 0.2);
+  padding: 0.18rem 0.35rem;
   border-radius: 2px;
-  font-size: 0.55rem;
-  color: rgba(var(--book-accent-rgb, 0,229,255), 0.8);
-  font-weight: 500;
-  text-transform: capitalize;
-  letter-spacing: 0.02em;
+  font-size: 0.51rem;
+  color: rgba(var(--book-accent-rgb, 0,229,255), 0.75);
+  font-weight: 400;
+  text-transform: lowercase;
+  letter-spacing: 0.01em;
   white-space: nowrap;
   line-height: 1;
   font-family: var(--font-mono);
-}
-
-/* Hover animations */
-.book-item:hover .book-3d {
-  transform: rotateY(-6deg) rotateX(2deg);
-  filter: drop-shadow(-4px 16px 36px rgba(0, 0, 0, 0.65));
-}
-
-.book-item:hover .book-front .book-shine {
-  left: 130%;
-  top: -60%;
 }
