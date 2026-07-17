@@ -1425,6 +1425,118 @@ export default function () {
     return html;
   }
 
+  // ── Lesson Quiz (inline) ──────────────────────────────────────────────────
+  function renderLessonQuiz(lessonId, container) {
+    const lessonQuizzes = window.TG_LESSON_QUIZZES || {};
+    const langKey = lang === "en" ? "en" : "pt";
+    const quizData = lessonQuizzes[lessonId]?.[langKey] || lessonQuizzes[lessonId]?.pt;
+    
+    if (!quizData) return; // No quiz for this lesson
+    
+    const quizState = { answered: {}, submitted: false };
+    
+    const questionsHtml = quizData.questions
+      .map((q, qi) => `
+      <div class="lesson-quiz-question">
+        <p><strong>${qi + 1}.</strong> ${escapeHtml(q.q)}</p>
+        <div class="lesson-quiz-options">
+          ${q.options
+            .map((opt, oi) => `
+            <label class="lesson-quiz-option">
+              <input type="radio" name="lq${lessonId}-q${qi}" value="${oi}" class="lesson-quiz-radio">
+              <span>${escapeHtml(opt)}</span>
+            </label>`)
+            .join("")}
+        </div>
+        <div class="lesson-quiz-explain hidden" id="lq-explain-${qi}"></div>
+      </div>`)
+      .join("");
+    
+    const quizHtml = `
+      <div class="lesson-quiz-box" style="margin-top: 2rem; padding: 1.5rem; background: rgba(139, 92, 246, 0.1); border-left: 4px solid #8b5cf6; border-radius: 12px;">
+        <h3 style="margin-top: 0; display: flex; align-items: center; gap: 0.5rem;">🎯 ${escapeHtml(quizData.title)}</h3>
+        <p style="color: var(--text-muted); margin: 0.5rem 0 1rem 0; font-size: 0.9rem;">${quizData.questions.length} ${lang === "en" ? "quick question(s)" : "pergunta(s) rápida(s)"} — ${lang === "en" ? "test your understanding" : "teste seu entendimento"}</p>
+        <form id="lq-form-${lessonId}" class="lesson-quiz-form">
+          ${questionsHtml}
+          <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+            <button type="submit" class="btn btn-primary btn-sm">✓ ${lang === "en" ? "Check" : "Verificar"}</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="lq-reset-${lessonId}">${lang === "en" ? "Reset" : "Resetar"}</button>
+          </div>
+        </form>
+        <div id="lq-result-${lessonId}" class="lesson-quiz-result hidden" style="margin-top: 1rem;"></div>
+      </div>
+    `;
+    
+    if (container) {
+      container.insertAdjacentHTML("beforeend", quizHtml);
+      
+      // Attach listeners
+      const form = document.getElementById(`lq-form-${lessonId}`);
+      if (!form) return;
+      
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (quizState.submitted) return;
+        quizState.submitted = true;
+        
+        let correct = 0;
+        quizData.questions.forEach((q, qi) => {
+          const selected = document.querySelector(
+            `input[name="lq${lessonId}-q${qi}"]:checked`
+          )?.value;
+          const selectedIdx = selected ? parseInt(selected) : -1;
+          const explainEl = document.getElementById(`lq-explain-${qi}`);
+          
+          // Disable options
+          form.querySelectorAll(`input[name="lq${lessonId}-q${qi}"]`).forEach((r) => {
+            r.disabled = true;
+            const label = r.closest(".lesson-quiz-option");
+            if (label) {
+              if (selectedIdx === parseInt(r.value)) label.classList.add("selected-opt");
+              if (selectedIdx === q.correct) label.classList.add("correct-opt");
+              else if (selectedIdx !== -1 && parseInt(r.value) === q.correct)
+                label.classList.add("correct-opt");
+              else if (selectedIdx !== -1 && selectedIdx !== q.correct)
+                label.classList.add("wrong-opt");
+            }
+          });
+          
+          if (selectedIdx === q.correct) correct++;
+          if (explainEl && q.explain) {
+            explainEl.textContent = q.explain;
+            explainEl.classList.remove("hidden");
+          }
+        });
+        
+        const passed = correct >= quizData.passScore;
+        const resultEl = document.getElementById(`lq-result-${lessonId}`);
+        resultEl.className = `lesson-quiz-result ${passed ? "quiz-passed" : "quiz-failed"}`;
+        resultEl.innerHTML = `
+          <div style="padding: 1rem; background: ${passed ? "rgba(16, 185, 129, 0.1)" : "rgba(239, 68, 68, 0.1)"}; border-left: 3px solid ${passed ? "#10b981" : "#ef4444"}; border-radius: 8px;">
+            <div style="font-weight: 600; margin-bottom: 0.5rem;">${passed ? "✅ " + (lang === "en" ? "Great! You understand this." : "Ótimo! Você entendeu.") : "📚 " + (lang === "en" ? "Try again or review the lesson." : "Revise e tente novamente.")}</div>
+            <div style="font-size: 0.9rem; color: var(--text-muted);">${correct}/${quizData.questions.length} ${lang === "en" ? "correct" : "correto"}</div>
+          </div>
+        `;
+        resultEl.classList.remove("hidden");
+      });
+      
+      document.getElementById(`lq-reset-${lessonId}`)?.addEventListener("click", () => {
+        form.querySelectorAll("input[type='radio']").forEach((r) => {
+          r.checked = false;
+          r.disabled = false;
+        });
+        form.querySelectorAll(".lesson-quiz-option").forEach((opt) => {
+          opt.classList.remove("selected-opt", "correct-opt", "wrong-opt");
+        });
+        form.querySelectorAll(".lesson-quiz-explain").forEach((e) => {
+          e.classList.add("hidden");
+        });
+        document.getElementById(`lq-result-${lessonId}`)?.classList.add("hidden");
+        quizState.submitted = false;
+      });
+    }
+  }
+
   // ── Track Detail ──────────────────────────────────────────────────────────
   function renderTrackDetail(trackId) {
     const raw = findTrack(trackId);
@@ -1600,6 +1712,7 @@ export default function () {
           ${seniorHtml}
           ${resourcesHtml}
           <div id="lesson-checklist-zone"></div>
+          <div id="lesson-quiz-zone"></div>
           <div class="lesson-actions">
             <button class="btn btn-primary" id="btn-complete">${done ? t("lesson.unmarkComplete") : t("lesson.markComplete")}</button>
             ${prev ? `<button class="btn btn-secondary" id="btn-prev">${t("lesson.prev")}</button>` : ""}
@@ -1638,6 +1751,12 @@ export default function () {
     if (isFinalProject) {
       const zone = document.getElementById("lesson-checklist-zone");
       renderChecklist(rawTrack.id, zone);
+    }
+
+    // Render inline quiz if available
+    const quizZone = document.getElementById("lesson-quiz-zone");
+    if (quizZone) {
+      renderLessonQuiz(rawLesson.id, quizZone);
     }
 
     document.getElementById("btn-bookmark").addEventListener("click", () => {

@@ -2592,3 +2592,89 @@ a:hover { text-decoration: underline; }
   flex-wrap: wrap;
   justify-content: center;
 }
+
+
+/* ═══════════════════════════════════════════════════
+   LESSON QUIZ — Inline quizzes within lessons
+═══════════════════════════════════════════════════ */
+.lesson-quiz-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.lesson-quiz-question {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.lesson-quiz-question > p {
+  margin: 0;
+}
+
+.lesson-quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.lesson-quiz-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.lesson-quiz-option:hover {
+  border-color: var(--accent);
+  background: rgba(0, 229, 255, 0.05);
+}
+
+.lesson-quiz-option input {
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.lesson-quiz-option.correct-opt {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: #10b981;
+}
+
+.lesson-quiz-option.wrong-opt {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: #ef4444;
+}
+
+.lesson-quiz-option.selected-opt input {
+  accent-color: var(--accent);
+}
+
+.lesson-quiz-explain {
+  padding: 0.75rem;
+  background: rgba(255, 45, 120, 0.1);
+  border-left: 3px solid var(--pink);
+  font-size: 0.9rem;
+  color: var(--text);
+  margin-top: 0.5rem;
+  border-radius: 4px;
+}
+
+.lesson-quiz-explain.hidden {
+  display: none !important;
+}
+
+.lesson-quiz-result {
+  display: none !important;
+}
+
+.lesson-quiz-result.quiz-passed,
+.lesson-quiz-result.quiz-failed {
+  display: block !important;
+  margin-top: 1rem;
+}
