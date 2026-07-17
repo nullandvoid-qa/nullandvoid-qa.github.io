@@ -396,7 +396,7 @@ themeToggle.addEventListener('click', toggleTheme);
 // Load books data
 async function loadBooks() {
   try {
-    const response = await fetch('data/livros.json');
+    const response = await fetch('./data/livros.json');
     if (!response.ok) throw new Error('Failed to load books');
     books = await response.json();
     renderStats();
