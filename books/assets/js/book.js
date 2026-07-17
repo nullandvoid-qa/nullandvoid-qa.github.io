@@ -92,7 +92,12 @@ function renderBook(meta, markdown) {
 
   // Update header info with calculated reading time
   document.getElementById('lesson-title').textContent = meta.titulo;
-  document.getElementById('lesson-meta').innerHTML = `<span>⏱ ${readingTime} min de leitura</span> · <span>${meta.categoria}</span> · <span>${meta.ano}</span>`;
+  document.getElementById('lesson-meta').innerHTML = `
+    <div class="book-author-info">por ${meta.autor}</div>
+    <div class="lesson-meta-row">
+      <span>⏱ ${readingTime} min de leitura</span> · <span>${meta.categoria}</span> · <span>${meta.ano}</span>
+    </div>
+  `;
   
   // Update sidebar
   document.getElementById('sidebar-track').textContent = meta.categoria;

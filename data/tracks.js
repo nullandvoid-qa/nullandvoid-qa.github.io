@@ -197,7 +197,89 @@ window.TG_QAWAY_TRACKS = [
         ]
       }
     ]
+  },
+  {
+    id: "testdata",
+    slug: "test-data-management",
+    title: "📊 Test Data Management",
+    icon: "📊",
+    color: "#06b6d4",
+    description: "Domine gerenciamento de dados de teste: fixtures, factories, seeding, masking e estratégias de data-driven testing.",
+    level: "Intermediário+",
+    topics: ["Fixtures", "Data Factories", "Database Seeding", "Data Masking", "Data-driven Testing"],
+    courses: [
+      {
+        id: "c-tdm-1",
+        title: "Fundamentos de Dados de Teste",
+        lessons: [
+          {
+            id: "tdm-l1",
+            title: "Por que Test Data Importa",
+            duration: "35 min",
+            content: "<h3>O Desafio</h3><p>Teste sem dados bons = teste fraco. Exemplos de problema:</p><ul><li>Usa dados de produção (LGPD viola, dados reais quebram)</li><li>Dados hardcoded (quebra quando produção muda)</li><li>Dados inconsistentes (teste A usa ID=1, teste B usa ID=999)</li><li>Dados corruptados (test A deixa lixo, test B fails)</li><li>Sem isolamento (testes interferem um no outro)</li></ul><h3>Consequências</h3><ul><li><strong>Flaky tests:</strong> Testes instáveis — falham às vezes</li><li><strong>Produção cai:</strong> Dados produção foram alterados durante teste</li><li><strong>Security risk:</strong> Dados sensíveis em test data</li><li><strong>Retrabalho:</strong> Cada teste precisa setup complexo</li></ul><h3>Solução: Test Data Management (TDM)</h3><p>TDM = <strong>Estratégia de criar, gerenciar e destruir dados de teste de forma isolada, consistente e segura</strong>.</p><h3>Princípios Chave</h3><ul><li><strong>1. Isolamento:</strong> Dados de teste separados de produção. Cada teste seu próprio dataset.</li><li><strong>2. Reproductibilidade:</strong> Mesmo comando sempre cria mesmos dados.</li><li><strong>3. Segurança:</strong> Dados sensíveis mascarados ou redacted.</li><li><strong>4. Limpeza:</strong> Após teste, dados deletados ou resetados.</li><li><strong>5. Rastreabilidade:</strong> Sabe de onde cada dado veio.</li></ul><h3>Exemplo Real: E-commerce</h3><p><strong>Cenário sem TDM (BAD):</strong></p><pre style='background: var(--surface-2); padding: 1rem; border-radius: 4px;'>Teste 1: Cria usuário ID=100\nTeste 2: Cria usuário ID=100 (conflita!)\nTeste 3: USA ID=100 (qual é o usuário certo?)\n→ Testes flaky, hard para debuggar</pre><p><strong>Cenário com TDM (GOOD):</strong></p><pre style='background: var(--surface-2); padding: 1rem; border-radius: 4px;'>Test Setup: Cria usuário ÚNICO via Factory\nTeste 1: Usa usuário criado\nTeste 2: Usa seu próprio usuário (criado by factory)\nTest Teardown: Deleta usuário\n→ Testes isolados, determinísticos, rápidos</pre><h3>Pilares de TDM</h3><ul><li><strong>Fixtures:</strong> Dados pré-preparados (arquivos JSON, seed scripts)</li><li><strong>Factories:</strong> Código que gera dados sob demanda</li><li><strong>Builders:</strong> Padrão para construir objetos complexos</li><li><strong>Seeding:</strong> Popular BD com dataset base</li><li><strong>Masking:</strong> Ocultar dados sensíveis</li><li><strong>Cleanup:</strong> Garbage collection de dados</li></ul><h3>Guild Master Note</h3><p>Grandes companies (Uber, Spotify, Airbnb) investem pesado em TDM infrastructure. Por quê? Porque dados ruins = testes ruins = bugs in produção = loss of $$$$$. TDM é ROI direto.</p>",
+            resources: [
+              { label: "Test Data Management Best Practices", url: "https://www.owasp.org/" },
+              { label: "Database Seeding Patterns", url: "https://www.martinfowler.com/" }
+            ]
+          },
+          {
+            id: "tdm-l2",
+            title: "Fixtures: Preparando Dados Estáticos",
+            duration: "40 min",
+            content: "<h3>O que é uma Fixture?</h3><p>Fixture = <strong>conjunto de dados pré-preparados, armazenados em arquivo ou BD, que você carrega para cada teste</strong>.</p><p>Analogia: Você prepara o cenário (montar palco) antes do ator começar.</p><h3>Tipos de Fixtures</h3><ul><li><strong>1. JSON/YAML Files:</strong> Dados em arquivo estático</li><li><strong>2. SQL Scripts:</strong> INSERT statements</li><li><strong>3. ORM Fixtures:</strong> Arquivo que ORMs entendem (Sequelize, TypeORM)</li><li><strong>4. Database Snapshots:</strong> Restore de BD completa</li></ul><h3>Exemplo: JSON Fixture (Simples)</h3><pre style='background: var(--surface-2); padding: 1rem; border-radius: 4px; overflow-x: auto;'>// fixtures/users.json\n[\n  { id: 1, email: 'alice@test.com', role: 'admin' },\n  { id: 2, email: 'bob@test.com', role: 'user' },\n  { id: 3, email: 'charlie@test.com', role: 'user' }\n]\n\n// test.js\nconst users = require('./fixtures/users.json');\ntest('admin pode deletar usuário', () => {\n  const admin = users[0];\n  const userToDelete = users[1];\n  // teste aqui\n});</pre><h3>Exemplo: SQL Fixture (Mais Poderosa)</h3><pre style='background: var(--surface-2); padding: 1rem; border-radius: 4px; overflow-x: auto;'>-- fixtures/seed.sql\nINSERT INTO users (id, email, role) VALUES\n(1, 'alice@test.com', 'admin'),\n(2, 'bob@test.com', 'user'),\n(3, 'charlie@test.com', 'user');\n\nINSERT INTO posts (id, user_id, title) VALUES\n(100, 1, 'Alice Post'),\n(101, 2, 'Bob Post');</pre><h3>Vantagens de Fixtures</h3><ul><li>✅ Simples de usar (load e go)</li><li>✅ Determinístico (sempre mesmos dados)</li><li>✅ Versionável (controle via Git)</li><li>✅ Rápido para pequenos datasets</li></ul><h3>Desvantagens</h3><ul><li>❌ Não escala (arquivos grandes = lento)</li><li>❌ Rígido (mudança em fixture = atualizar arquivo)</li><li>❌ Duplicação (múltiplos testes = fixtures repetidas)</li><li>❌ Conflito de IDs (fixtures hardcoded)</li></ul><h3>Quando Usar Fixtures</h3><p>✓ Datasets pequenos e estáveis<br/>✓ Dados de referência (lista de countries, status)<br/>✓ Seed inicial de BD<br/>✗ Dados gerados dinamicamente<br/>✗ Dados complexos (muitas dependências)</p><h3>Best Practices</h3><ul><li><strong>1. Organize em diretório:</strong> /fixtures/users.json, /fixtures/posts.json</li><li><strong>2. Nomeie claro:</strong> valid-user, admin-with-posts, etc</li><li><strong>3. Documente:</strong> Que aulas/testes usam este fixture?</li><li><strong>4. Versionie:</strong> Git tracking, histórico de mudanças</li><li><strong>5. Limpe após teste:</strong> Fixture = setup, Cleanup = teardown</li></ul>",
+            resources: [
+              { label: "Test Fixtures Guide", url: "https://www.martinfowler.com/bliki/Fixture.html" }
+            ]
+          },
+          {
+            id: "tdm-l3",
+            title: "Data Factories: Gerando Dados Dinamicamente",
+            duration: "45 min",
+            content: "<h3>O Problema com Fixtures Estáticas</h3><p>Fixtures são ótimas mas não escalam:</p><ul><li>Precisa de 100 usuários diferentes? 100 fixtures?</li><li>Precisa de usuário + posts + comments? Dependências complexas?</li><li>Precisa de dados aleatórios (testar com 'cid' inválido)? Hardcoded não dá.</li></ul><h3>Solução: Data Factories</h3><p>Factory = <strong>função/classe que gera dados sob demanda, respeitando constraints</strong>.</p><h3>Exemplo: User Factory (JavaScript)</h3><pre style='background: var(--surface-2); padding: 1rem; border-radius: 4px; overflow-x: auto;'>// factories/userFactory.js\nconst { faker } = require('@faker-js/faker');\n\nclass UserFactory {\n  static create(overrides = {}) {\n    return {\n      id: faker.number.int(),\n      email: faker.internet.email(),\n      name: faker.person.fullName(),\n      role: 'user',\n      createdAt: faker.date.past(),\n      ...overrides // permite override\n    };\n  }\n\n  static admin(overrides = {}) {\n    return this.create({ role: 'admin', ...overrides });\n  }\n\n  static batch(count, overrides = {}) {\n    return Array.from({ length: count }, () => \n      this.create(overrides)\n    );\n  }\n}\n\n// test.js\ntest('admin pode editar usuário', () => {\n  const admin = UserFactory.admin();\n  const user = UserFactory.create();\n  // teste\n});\n\ntest('10 usuários simultâneos', () => {\n  const users = UserFactory.batch(10);\n  // stress test\n});</pre><h3>Vantagens de Factories</h3><ul><li>✅ Dinâmico (cria dados sob demanda)</li><li>✅ Flexível (override qualquer campo)</li><li>✅ Sem conflito de ID (gerado automaticamente)</li><li>✅ Reutilizável (um factory para muitos testes)</li><li>✅ Escala (criar 1000 usuários em 1 linha)</li></ul><h3>Padrões Comuns</h3><ul><li><strong>Builder Pattern:</strong> Chainable methods</li><li><strong>Trait Pattern:</strong> Composição de comportamentos</li><li><strong>Sequence Pattern:</strong> Sequência numérica (ID 1, 2, 3...)</li></ul><h3>Exemplo: Builder Pattern</h3><pre style='background: var(--surface-2); padding: 1rem; border-radius: 4px; overflow-x: auto;'>class UserBuilder {\n  withEmail(email) { this.email = email; return this; }\n  withRole(role) { this.role = role; return this; }\n  isAdmin() { return this.withRole('admin'); }\n  build() { return new User(this.email, this.role); }\n}\n\n// Uso chainable\nconst admin = new UserBuilder()\n  .withEmail('boss@test.com')\n  .isAdmin()\n  .build();
+
+
+            resources: [
+              { label: "Factory Bot Guide", url: "https://github.com/thoughtbot/factory_bot" },
+              { label: "Faker.js Library", url: "https://fakerjs.dev/" }
+            ]
+          }
+        ]
+      },
+      {
+        id: "c-tdm-2",
+        title: "Estratégias Avançadas de TDM",
+        lessons: [
+          {
+            id: "tdm-l4",
+            title: "Database Seeding & Cleanup",
+            duration: "45 min",
+            content: "<h3>Seeding: Populando Base com Dados Base</h3><p>Seeding = carregar dados iniciais na BD antes de testes rodar.</p><h3>Tipos de Seeding</h3><ul><li><strong>1. One-time Seed:</strong> Roda uma vez antes de ALL testes</li><li><strong>2. Per-test Seed:</strong> Roda antes de cada teste</li><li><strong>3. Fresh Seed:</strong> Limpa BD, depois seed (recomendado)</li></ul><h3>Cleanup: Removendo Dados Após Teste</h3><p>Cleanup é crítico para evitar interferência entre testes. Estratégias: Truncate (DELETE tudo), Rollback (transaction), Delete Specific.</p><h3>Transações para Cleanup Instantâneo</h3><p>Melhor prática: Use database transactions. Tudo que roda na transaction é rollback automático em milissegundos.</p><h3>Performance Tips</h3><ul><li><strong>1. Batch inserts:</strong> INSERT 100 rows em 1 query, não 100 queries</li><li><strong>2. Disable constraints:</strong> Durante seed, desabilita foreign keys, depois habilita</li><li><strong>3. Parallel tests:</strong> Cada test usa sua própria transaction (isolado)</li></ul>",
+            resources: []
+          },
+          {
+            id: "tdm-l5",
+            title: "Data Masking & Segurança",
+            duration: "40 min",
+            content: "<h3>O Problema: Dados Sensíveis em Teste</h3><p>Cenários perigosos: Developers vendo dados de produção durante debug, Test data contém SSN/cartão real, LGPD violação.</p><h3>Solução: Data Masking</h3><p>Masking = substituir dados sensíveis por fakes mas realísticos. Tipos: Substitution (trocar), Redaction (remover), Hashing, Encryption.</p><h3>Boas Práticas</h3><ul><li>✓ Use faker libraries (Faker.js, Bogus, factory_bot)</li><li>✓ NUNCA copie dados de produção para teste</li><li>✓ Se precisa real-like data, gera com Faker</li><li>✓ Documente sensibilidade de cada campo</li><li>✓ Audita test data antes de commit</li></ul>",
+            resources: []
+          },
+          {
+            id: "tdm-l6",
+            title: "Data-driven Testing & Test Matrices",
+            duration: "40 min",
+            content: "<h3>O que é Data-driven Testing?</h3><p>Ao invés de escrever um teste para cada input, você escreve UM teste + múltiplos datasets. O teste roda para cada dataset.</p><h3>Exemplo: Sem Data-driven (BAD)</h3><pre style='background: var(--surface-2); padding: 1rem; border-radius: 4px; overflow-x: auto;'>test('validar email válido', () => {\n  expect(validateEmail('john@example.com')).toBe(true);\n});\ntest('validar email inválido1', () => {\n  expect(validateEmail('johnexample.com')).toBe(false);\n});\ntest('validar email inválido2', () => {\n  expect(validateEmail('@example.com')).toBe(false);\n});\n// 3 testes = código duplicado!
+
+<h3>Exemplo: Com Data-driven (GOOD)</h3><pre style='background: var(--surface-2); padding: 1rem; border-radius: 4px; overflow-x: auto;'>const testCases = [\n  { email: 'john@example.com', expected: true },\n  { email: 'johnexample.com', expected: false },\n  { email: '@example.com', expected: false },\n  { email: 'john+tag@example.com', expected: true }\n];\n\ntestCases.forEach(({ email, expected }) => {\n  test(`validar email: ${email}`, () => {\n    expect(validateEmail(email)).toBe(expected);\n  });\n});
+
+<h3>Vantagens de Data-driven</h3><ul><li>✅ DRY: 1 teste, múltiplos cenários</li><li>✅ Fácil adicionar casos: Só adiciona row em array</li><li>✅ Documentação automática: Array mostra todos os casos</li><li>✅ Mantível: Mudança na lógica = muda em 1 lugar</li></ul><h3>Exemplo Avançado: Matriz de Teste (API)</h3><pre style='background: var(--surface-2); padding: 1rem; border-radius: 4px; overflow-x: auto;'>const apiTestMatrix = [\n  // { method, url, payload, expectedStatus, expectedBody }\n  { method: 'GET', url: '/users', payload: null, expectedStatus: 200 },\n  { method: 'POST', url: '/users', payload: {}, expectedStatus: 400 }, // missing fields\n  { method: 'POST', url: '/users', payload: { email: 'john@test.com' }, expectedStatus: 201 },\n  { method: 'GET', url: '/users/999', payload: null, expectedStatus: 404 },\n  { method: 'DELETE', url: '/users/1', payload: null, expectedStatus: 204 }\n];\n\napiTestMatrix.forEach(({ method, url, payload, expectedStatus }) => {\n  test(`${method} ${url} → ${expectedStatus}`, async () => {\n    const response = await makeRequest(method, url, payload);\n    expect(response.status).toBe(expectedStatus);\n  });\n});
+
+<h3>Boas Práticas de Data-driven</h3><ul><li><strong>1. Organize dados:</strong> Separa em arquivo (CSV, JSON) vs hardcode</li><li><strong>2. Nomeie claro:</strong> testCases = bem descritivo</li><li><strong>3. Comente casos:</strong> Por que este caso existe?</li><li><strong>4. Valida dados:</strong> Schema validation antes de usar</li><li><strong>5. Métricas:</strong> Quantos testes gerados? Coverage?</li></ul><h3>Quando Usar Data-driven</h3><p>✓ Validações de input (emails, phones, zips)<br/>✓ APIs com múltiplos status (200, 400, 404, 500)<br/>✓ Cálculos (desconto, imposto, frete)<br/>✓ Conversões (currency, time zones)<br/>✗ Testes que precisam lógica complexa entre steps<br/>✗ UI workflows (navigate, fill, click)</p><h3>Guild Master Note</h3><p>Data-driven testing + Factories = power combo. Factories geram dados, data-driven executa testes com eles. Juntas, você cobre mais cenários em menos tempo.</p>",
+            resources: [
+              { label: "Parameterized Testing", url: "https://jestjs.io/docs/parametrized-tests" }
+            ]
+          }
+        ]
+      }
+    ]
   }
 ];
-
-
