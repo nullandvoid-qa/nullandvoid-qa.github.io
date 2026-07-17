@@ -320,15 +320,7 @@ a:hover { text-decoration: underline; }
 }
 
 .hero-stats {
-  display: flex;
-  justify-content: center;
-  gap: 3rem;
-  flex-wrap: wrap;
-  margin-bottom: 3rem;
-  padding: 2rem 1rem;
-  background: rgba(0, 229, 255, 0.03);
-  border-top: 1px solid rgba(0, 229, 255, 0.15);
-  border-bottom: 1px solid rgba(255, 45, 120, 0.15);
+  display: none;
 }
 
 .stat {
