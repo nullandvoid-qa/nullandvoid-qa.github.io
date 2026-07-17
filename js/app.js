@@ -1318,6 +1318,7 @@
             <button class="btn btn-primary" id="btn-complete">${done ? t("lesson.unmarkComplete") : t("lesson.markComplete")}</button>
             ${prev ? `<button class="btn btn-secondary" id="btn-prev">${t("lesson.prev")}</button>` : ""}
             ${next ? `<button class="btn btn-secondary" id="btn-next">${t("lesson.next")}</button>` : ""}
+            <button class="btn btn-outline" id="btn-feedback" style="margin-left: auto;">💬 ${lang === "en" ? "Feedback" : "Feedback"}</button>
           </div>
         </article>
       </div>`;
@@ -1361,6 +1362,19 @@
         .addEventListener("click", () =>
           navigate("lesson", { lessonId: next.id }),
         );
+
+    // Feedback button
+    const feedbackBtn = document.getElementById("btn-feedback");
+    if (feedbackBtn) {
+      feedbackBtn.addEventListener("click", () => {
+        const subject = `Feedback: ${escapeHtml(lesson.title)}`;
+        const body = `Feedback for lesson: ${rawLesson.id}\n\nYour feedback here...`;
+        const issueUrl = `https://github.com/nullandvoid-qa/nullandvoid-qa.github.io/issues/new?title=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        
+        showToast(lang === "en" ? "📝 Open GitHub to send feedback" : "📝 Abra GitHub para enviar feedback");
+        window.open(issueUrl, "_blank");
+      });
+    }
 
     document.querySelectorAll(".sidebar-lesson").forEach((el) => {
       const open = () => navigate("lesson", { lessonId: el.dataset.lesson });
