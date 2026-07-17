@@ -80,9 +80,11 @@
         pdf.setTextColor(100, 100, 100);
         pdf.text(`Verification Code: ${verifyCode}`, width / 2, height - 25, { align: "center" });
 
-        // QR Code placeholder (would need qrcode.js library)
-        pdf.setFontSize(9);
-        pdf.text(`nullandvoid-qa.github.io/verify/${verifyCode}`, width / 2, height - 18, { align: "center" });
+        // QR Code placeholder
+        pdf.setFontSize(8);
+        pdf.setTextColor(100, 100, 100);
+        const verifyUrl = `https://nullandvoid-qa.github.io/verify.html?code=${verifyCode}`;
+        pdf.text(`Verify at: ${verifyUrl}`, width / 2, height - 18, { align: "center" });
 
         // Signature line
         pdf.setLineWidth(0.5);

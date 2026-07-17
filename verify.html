@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Verificar certificado de conclusão — Null and Void QA Course" />
+  <title>Verificar Certificado — Null and Void QA</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Inter", -apple-system, system-ui, sans-serif;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2e2e2e 100%);
+      color: #f0f0f0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 600px;
+      background: #222;
+      border-radius: 16px;
+      padding: 2rem;
+      border: 1px solid #3a3a3a;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .logo {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #00e5ff, #ff2d78);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      color: #9a9a9a;
+      font-size: 1rem;
+    }
+
+    .search-form {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    input, button {
+      font-family: inherit;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      border: none;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+
+    input {
+      flex: 1;
+      background: #1a1a1a;
+      color: #f0f0f0;
+      border: 1px solid #3a3a3a;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #00e5ff;
+      box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.2);
+    }
+
+    button {
+      background: linear-gradient(135deg, #00e5ff, #00b8d4);
+      color: #000;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0.75rem 1.5rem;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 229, 255, 0.3);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .result {
+      display: none;
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-top: 2rem;
+    }
+
+    .result.valid {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid #10b981;
+    }
+
+    .result.invalid {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid #ef4444;
+    }
+
+    .result-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .result-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .result-details {
+      display: grid;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      font-size: 0.95rem;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+    }
+
+    .detail-label {
+      color: #9a9a9a;
+    }
+
+    .detail-value {
+      font-weight: 600;
+    }
+
+    .error-message {
+      color: #ef4444;
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .success-message {
+      color: #10b981;
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .leaderboard {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid #3a3a3a;
+    }
+
+    .leaderboard-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .leaderboard-list {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .leaderboard-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      border-left: 3px solid #00e5ff;
+    }
+
+    .leaderboard-rank {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-right: 1rem;
+      color: #00e5ff;
+    }
+
+    .leaderboard-name {
+      flex: 1;
+    }
+
+    .leaderboard-track {
+      font-size: 0.9rem;
+      color: #9a9a9a;
+    }
+
+    .leaderboard-date {
+      font-size: 0.85rem;
+      color: #9a9a9a;
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .back-link a {
+      color: #00e5ff;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .back-link a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 640px) {
+      .container { padding: 1.5rem; }
+      h1 { font-size: 1.3rem; }
+      .search-form { flex-direction: column; }
+      button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">🎓</div>
+      <h1>Verificar Certificado</h1>
+      <p class="subtitle">Confirme a autenticidade de um certificado</p>
+    </div>
+
+    <div class="search-form">
+      <input
+        type="text"
+        id="verifyCode"
+        placeholder="Cole o código de verificação (8 dígitos)"
+        maxlength="8"
+      />
+      <button onclick="verifyCertificate()">Verificar</button>
+    </div>
+
+    <div id="result" class="result"></div>
+
+    <div id="leaderboard" class="leaderboard" style="display:none;">
+      <div class="leaderboard-title">🏆 Certificados Recentes</div>
+      <div id="leaderboardList" class="leaderboard-list"></div>
+    </div>
+
+    <div class="back-link">
+      <a href="/">← Voltar para o curso</a>
+    </div>
+  </div>
+
+  <script>
+    // Simulated certificate database (in production, seria backend)
+    const CERTIFICATES = {};
+
+    // Quando página carrega, carrega certificados de localStorage
+    function initCertificates() {
+      try {
+        const certs = JSON.parse(localStorage.getItem('testers-guild-certificates') || '[]');
+        certs.forEach(cert => {
+          if (cert.verifyCode) {
+            CERTIFICATES[cert.verifyCode] = cert;
+          }
+        });
+      } catch (e) {
+        console.error('Failed to load certificates:', e);
+      }
+    }
+
+    function verifyCertificate() {
+      const code = document.getElementById('verifyCode').value.trim().toUpperCase();
+      const resultDiv = document.getElementById('result');
+
+      if (!code || code.length !== 8) {
+        resultDiv.innerHTML = '<p class="error-message">Por favor, digite um código válido (8 dígitos)</p>';
+        return;
+      }
+
+      const cert = CERTIFICATES[code];
+
+      if (cert) {
+        // Certificado válido
+        const trackData = findTrackData(cert.trackId);
+        const completedDate = new Date(cert.completedDate).toLocaleDateString('pt-BR', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+
+        resultDiv.classList.remove('invalid');
+        resultDiv.classList.add('valid');
+        resultDiv.style.display = 'block';
+        resultDiv.innerHTML = `
+          <div class="result-icon">✅</div>
+          <div class="result-title">Certificado Verificado!</div>
+          <div class="result-details">
+            <div class="detail-row">
+              <span class="detail-label">Nome:</span>
+              <span class="detail-value">${escapeHtml(cert.userName)}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Trilha:</span>
+              <span class="detail-value">${trackData ? trackData.icon + ' ' + trackData.title : cert.trackId}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Data:</span>
+              <span class="detail-value">${completedDate}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Código:</span>
+              <span class="detail-value">${code}</span>
+            </div>
+          </div>
+          <p class="success-message">✓ Este certificado é autêntico e foi gerado em ${new Date(cert.generatedAt).toLocaleDateString('pt-BR')}</p>
+        `;
+      } else {
+        // Certificado inválido
+        resultDiv.classList.remove('valid');
+        resultDiv.classList.add('invalid');
+        resultDiv.style.display = 'block';
+        resultDiv.innerHTML = `
+          <div class="result-icon">❌</div>
+          <div class="result-title">Certificado Não Encontrado</div>
+          <p class="error-message">Este código não corresponde a nenhum certificado verificado. Verifique se digitou corretamente.</p>
+        `;
+      }
+
+      showLeaderboard();
+    }
+
+    function findTrackData(trackId) {
+      if (typeof window.TG_QAWAY_TRACKS === 'undefined') return null;
+      return window.TG_QAWAY_TRACKS.find(t => t.id === trackId);
+    }
+
+    function showLeaderboard() {
+      const certs = Object.values(CERTIFICATES);
+      if (certs.length === 0) return;
+
+      // Ordena por data decrescente
+      const sorted = certs.sort((a, b) => 
+        new Date(b.generatedAt) - new Date(a.generatedAt)
+      ).slice(0, 5);
+
+      const leaderboardDiv = document.getElementById('leaderboard');
+      const listDiv = document.getElementById('leaderboardList');
+
+      listDiv.innerHTML = sorted.map((cert, index) => {
+        const trackData = findTrackData(cert.trackId);
+        const date = new Date(cert.completedDate).toLocaleDateString('pt-BR');
+        return `
+          <div class="leaderboard-item">
+            <div class="leaderboard-rank">#${index + 1}</div>
+            <div>
+              <div class="leaderboard-name">${escapeHtml(cert.userName)}</div>
+              <div class="leaderboard-track">${trackData ? trackData.icon + ' ' + trackData.title : cert.trackId} • ${date}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      leaderboardDiv.style.display = 'block';
+    }
+
+    function escapeHtml(text) {
+      const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      };
+      return String(text).replace(/[&<>"']/g, m => map[m]);
+    }
+
+    // Suportar Enter key
+    document.getElementById('verifyCode').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') verifyCertificate();
+    });
+
+    // Init na página carregar
+    window.addEventListener('load', () => {
+      initCertificates();
+      showLeaderboard();
+    });
+  </script>
+
+  <!-- Carrega dados das trilhas e certificados -->
+  <script src="data/tracks.js"></script>
+  <script src="data/translations-en.js"></script>
+</body>
+</html>
