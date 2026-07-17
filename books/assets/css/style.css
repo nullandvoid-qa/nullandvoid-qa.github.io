@@ -1387,8 +1387,12 @@ a:hover { text-decoration: underline; }
     padding: 0;
   }
 
-  .lesson-header-row h1 {
-    font-size: clamp(2rem, 6vw, 2.5rem);
+  #book-content h1 {
+    font-size: clamp(2.5rem, 8vw, 3.5rem);
+  }
+
+  .book-author-info {
+    font-size: clamp(1.3rem, 4vw, 1.8rem);
   }
 
   .lesson-meta-row {
