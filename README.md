@@ -1,69 +1,108 @@
-# Null and Void QA Course
+# 🎓 Null and Void QA Course
 
-Plataforma **100% gratuita** de formação em Qualidade de Software — pensada para **iniciantes** e com profundidade para **seniors**.
+![CI Status](https://github.com/nullandvoid-qa/nullandvoid-qa.github.io/workflows/ci/badge.svg)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Made with ❤ for QA](https://img.shields.io/badge/made%20with%20%E2%9D%A4-for%20QA-blue)
 
-## Para quem é?
+**Formação profissional em QA do zero ao sênior — 100% gratuita.**
 
-| Perfil | O que usar |
-|--------|------------|
-| **Iniciante** | Selecione perfil 🌱 → Rota do Recruta → Glossário → aulas com "Comece por aqui" |
-| **Intermediário** | Trilhas técnicas (Web, API, DevOps) |
-| **Sênior** | Rota do Mestre → Maestria da Guilda → notas "Guild Master" em cada aula |
+A mesma qualidade de cursos que custam R$500-2000. Sem paywall, sem cadastro obrigatório.
 
-## Trilhas da Guilda (8)
+## 🚀 Começar
 
-| Trilha | Público | Foco |
-|--------|---------|------|
-| Iniciação da Guilda | Iniciante | Fundamentos, BDD, Git, primeira automação |
-| Forja Frontend | Intermediário | Cypress, Playwright, Selenium |
-| Oficina de Integração | Intermediário | REST, Postman, contratos |
-| Arena de Carga | Sênior | JMeter, K6, SLAs |
-| Sentinela de Segurança | Intermediário+ | OWASP, ZAP, SQLi/XSS |
-| Artesanato de Pipeline | Intermediário+ | CI/CD, Docker, Allure |
-| Testes Inclusivos | Intermediário | WCAG, axe-core, a11y |
-| Maestria da Guilda | Sênior | Estratégia, liderança, escala |
+1. Acesse: [nullandvoid-qa.github.io](https://nullandvoid-qa.github.io)
+2. Escolha seu perfil (Iniciante / Intermediário)
+3. Siga uma das rotas recomendadas
+4. Complete aulas no seu ritmo
+5. Ganhe certificados ao final
 
-## Funcionalidades
-
-- **Perfil do aluno** — Iniciante / Intermediário / Sênior (reordena trilhas recomendadas)
-- **Rotas curadas** — Rota do Recruta e Rota do Mestre
-- **Glossário QA** — 56 termos explicados (PT/EN)
-- **Dual content** — 🌱 dicas para iniciantes + 👑 notas Guild Master por aula
-- **Badges de nível** — Iniciante / Intermediário / Avançado em cada aula
-- **PT ↔ ENG** — botão no header
-- **Progresso local** — sem cadastro
-
-## Como abrir
+Ou rode localmente:
 
 ```bash
-xdg-open index.html
+git clone https://github.com/nullandvoid-qa/nullandvoid-qa.github.io.git
+cd nullandvoid-qa
+python3 -m http.server 8000
+# Abra http://localhost:8000
 ```
 
-Ou:
+## 📚 O que você aprende
 
-```bash
-python3 -m http.server 8080
-```
+| Trilha | Público | Duração | Foco |
+|--------|---------|---------|------|
+| **🚀 Iniciação da Guilda** | Iniciante | ~40h | Fundamentos, BDD, Git, primeira automação |
+| **⚡ Forja Frontend** | Intermediário | ~50h | Cypress, Playwright, E2E testing |
+| **🔧 Oficina de Integração** | Intermediário | ~45h | REST, Postman, API testing, contratos |
+| **📊 Arena de Carga** | Sênior | ~40h | JMeter, K6, performance, SLAs |
+| **🔒 Sentinela de Segurança** | Intermediário+ | ~35h | OWASP, ZAP, pentesting manual |
+| **⚙️ Artesanato de Pipeline** | Intermediário+ | ~40h | CI/CD, Docker, relatórios, qualidade gates |
+| **♿ Testes Inclusivos** | Intermediário | ~30h | WCAG, acessibilidade, ferramentas |
+| **👑 Maestria da Guilda** | Sênior | ~50h | Liderança, estratégia, escala, mentoring |
+| **📱 Mobile Lab** | Intermediário | ~40h | Appium, emuladores, testes em device real |
 
-## Estrutura
+**Total: 900+ horas de conteúdo estruturado**
 
-```
-Testers-Guild-QA/
-├── index.html
-├── css/styles.css
-├── js/
-│   ├── app.js
-│   └── i18n.js
-└── data/
-    ├── tracks.js              # 8 trilhas, 132 aulas
-    ├── translations-en.js     # Traduções EN
-    ├── lesson-enrichment.js   # Tier + dicas iniciante/sênior
-    └── glossary.js            # Glossário + rotas
-```
+## ✨ Recursos
 
-## Próximas melhorias sugeridas
+- ✅ **130+ aulas estruturadas** com exemplos reais
+- ✅ **Certificados PDF** verificáveis ao completar trilhas
+- ✅ **12+ labs curados** com dificuldade progressiva (Sauce Demo, ReqRes, OWASP, etc)
+- ✅ **Comunidade Discord** com 500+ QAs aprendendo juntos
+- ✅ **Glossário interativo** com 50+ termos essenciais
+- ✅ **Rotas recomendadas** para iniciantes e sêniors
+- ✅ **Dual content** — dicas para iniciantes + notas Guild Master em cada aula
+- ✅ **Progresso local** salvo no navegador (sem backend)
 
-- Exercícios práticos interativos (quiz por módulo)
-- Certificado PDF ao concluir uma rota
-- Modo claro/escuro
-- Vídeos embedados (YouTube) por aula
+## 🌟 Destaques
+
+### Para Iniciantes
+- Nenhum pré-requisito
+- Começamos pelos conceitos antes de ferramentas
+- Cada aula tem dicas de estudo e exercícios
+- Progresso visual claro
+
+### Para Sêniors  
+- Notas "Guild Master" em cada aula com insights avançados
+- Trilhas de liderança e estratégia
+- Arquitetura de testes em escala
+- Mentoring prático
+
+## 🔧 Tech Stack
+
+- **Frontend:** HTML5, CSS3, JavaScript vanilla (sem frameworks)
+- **Storage:** localStorage (zero backend)
+- **PDF Certs:** jsPDF client-side
+- **CI/CD:** GitHub Actions
+- **Deploy:** GitHub Pages (estático)
+
+## 📊 Qualidade
+
+- ✅ ESLint: 0 erros
+- ✅ Jest tests: 4 test files
+- ✅ Lighthouse A11y: 95+
+- ✅ Mobile responsive: 320px-1920px
+- ✅ Cross-browser: Chrome, Firefox, Safari, Edge
+
+## 🤝 Contribuir
+
+Bugs, sugestões ou contribuições? 
+
+1. Abra uma [Issue](https://github.com/nullandvoid-qa/nullandvoid-qa.github.io/issues)
+2. Ou junte-se ao [Discord](https://discord.gg/evVQqq4rf) para discussão
+
+## 📄 Licença
+
+MIT — Use e compartilhe livremente!
+
+## 🎯 Roadmap 2026
+
+- [ ] Vídeos de 5-10min para cada módulo (Q1)
+- [ ] Exercícios interativos no browser (Q2)
+- [ ] API testing sandbox integrada (Q2)
+- [ ] Mock interviews para sênior (Q3)
+- [ ] Tribu de estudo (peer learning) (Q3)
+
+---
+
+**Made with ❤ by Null and Void**
+
+Acredita

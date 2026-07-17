@@ -102,12 +102,14 @@
         <div class="hero">
           <div class="hero-badge">
             <span class="badge-free" data-i18n="hero.badge"
-              >100% Gratuito · Do zero ao sênior</span
+              >🎓 Apprenda do zero até senior — 100% grátis</span
             >
           </div>
-          <h1 data-i18n="hero.title">Bem-vindo à Null and Void</h1>
-          <p data-i18n="hero.subtitle">
-            Formação QA para iniciantes e seniors.
+          <h1 data-i18n="hero.title" style="font-size: 2.2rem; line-height: 1.3; margin-bottom: 1rem;">
+            Torne-se um QA competente.<br/>Sem pagar nada.
+          </h1>
+          <p data-i18n="hero.subtitle" style="font-size: 1.05rem; color: var(--text-muted); max-width: 700px; margin: 0 auto 2rem; line-height: 1.7;">
+            Trilhas estruturadas, conteúdo profundo, labs práticos. Do iniciante ao sênior — mesma qualidade dos cursos que custam R$500-2000. Comece agora, sem cadastro.
           </p>
           <div class="hero-stats">
             <div class="stat">
@@ -460,6 +462,64 @@
     </footer>
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <!-- Onboarding Modal -->
+    <div id="onboarding-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="onboarding-title">
+      <div class="modal-overlay"></div>
+      <div class="modal-content" style="max-width: 500px;">
+        <button class="modal-close" id="onboarding-close">×</button>
+        <div style="text-align: center; padding: 2rem;">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">🚀</div>
+          <h2 id="onboarding-title" style="margin-bottom: 1rem; font-size: 1.5rem;">Bem-vindo(a)!</h2>
+          <p style="color: var(--text-muted); margin-bottom: 2rem; line-height: 1.6;">
+            Esta é uma plataforma <strong>100% gratuita</strong> para você aprender QA do zero até senior. Sem cadastro, sem paywall.
+          </p>
+          
+          <div style="background: var(--surface-2); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; text-align: left;">
+            <h3 style="margin-top: 0; margin-bottom: 1rem; font-size: 1.1rem;">Como começar:</h3>
+            <ol style="margin: 0; padding-left: 1.5rem; line-height: 1.8; color: var(--text-muted);">
+              <li><strong>Escolha seu perfil:</strong> Iniciante ou Intermediário</li>
+              <li><strong>Siga uma rota recomendada</strong> ou explore trilhas</li>
+              <li><strong>Complete as aulas</strong> do seu ritmo (0 pré-requisitos)</li>
+              <li><strong>Ganhe certificados</strong> ao completar trilhas</li>
+            </ol>
+          </div>
+
+          <div style="display: flex; gap: 1rem;">
+            <button class="btn btn-secondary" id="onboarding-close-btn" style="flex: 1;">Já entendi</button>
+            <button class="btn btn-primary" id="onboarding-start-btn" style="flex: 1;">Começar!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      .modal { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 1000; }
+      .modal.hidden { display: none; }
+      .modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.7); }
+      .modal-content { position: relative; background: var(--surface); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+      .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
+    </style>
+
+    <script>
+      // Onboarding: show only on first visit
+      if (!localStorage.getItem('nvqa_seen_onboarding')) {
+        document.getElementById('onboarding-modal').classList.remove('hidden');
+        localStorage.setItem('nvqa_seen_onboarding', 'true');
+      }
+      
+      document.getElementById('onboarding-close').addEventListener('click', () => {
+        document.getElementById('onboarding-modal').classList.add('hidden');
+      });
+      document.getElementById('onboarding-close-btn').addEventListener('click', () => {
+        document.getElementById('onboarding-modal').classList.add('hidden');
+      });
+      document.getElementById('onboarding-start-btn').addEventListener('click', () => {
+        document.getElementById('onboarding-modal').classList.add('hidden');
+        // Navigate to tracks
+        document.querySelector('[data-nav="tracks"]').click();
+      });
+    </script>
 
     <script src="js/utils.js"></script>
     <script src="js/certificates.js"></script>
