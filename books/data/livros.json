@@ -53,5 +53,315 @@
     "tempoLeitura": 15,
     "arquivo": "resumos/essencialismo.md",
     "capa": "assets/img/capas/essencialismo.jpg"
+  },
+  {
+    "id": "mindset",
+    "titulo": "Mindset",
+    "autor": "Carol S. Dweck",
+    "ano": 2006,
+    "categoria": "Psicologia",
+    "tags": ["mentalidade", "crescimento", "aprendizado", "potencial"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/mindset.md"
+  },
+  {
+    "id": "4-horas-semana",
+    "titulo": "A Semana de 4 Horas",
+    "autor": "Tim Ferriss",
+    "ano": 2007,
+    "categoria": "Produtividade",
+    "tags": ["automação", "delegação", "produtividade", "liberdade"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/4-horas-semana.md"
+  },
+  {
+    "id": "atomos-da-mudanca",
+    "titulo": "O Homo Deus",
+    "autor": "Yuval Noah Harari",
+    "ano": 2015,
+    "categoria": "Filosofia",
+    "tags": ["história", "futuro", "tecnologia", "humanidade"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/homo-deus.md"
+  },
+  {
+    "id": "comece-pelo-porque",
+    "titulo": "Comece Pelo Por Quê",
+    "autor": "Simon Sinek",
+    "ano": 2009,
+    "categoria": "Negócios",
+    "tags": ["liderança", "propósito", "motivação", "inspiração"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/comece-pelo-porque.md"
+  },
+  {
+    "id": "homem-em-busca-significado",
+    "titulo": "Em Busca de Significado",
+    "autor": "Viktor Frankl",
+    "ano": 1946,
+    "categoria": "Filosofia",
+    "tags": ["significado", "propósito", "resiliência", "psicologia"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/em-busca-significado.md"
+  },
+  {
+    "id": "fluxo",
+    "titulo": "Fluxo",
+    "autor": "Mihaly Csikszentmihalyi",
+    "ano": 1990,
+    "categoria": "Psicologia",
+    "tags": ["felicidade", "foco", "experiência", "performance"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/fluxo.md"
+  },
+  {
+    "id": "analise-tecnica",
+    "titulo": "Análise Técnica para Iniciantes",
+    "autor": "Martin Pring",
+    "ano": 1991,
+    "categoria": "Finanças",
+    "tags": ["trading", "mercado", "investimentos", "análise"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/analise-tecnica.md"
+  },
+  {
+    "id": "o-investidor-inteligente",
+    "titulo": "O Investidor Inteligente",
+    "autor": "Benjamin Graham",
+    "ano": 1949,
+    "categoria": "Finanças",
+    "tags": ["investimentos", "value-investing", "mercado", "estratégia"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/investidor-inteligente.md"
+  },
+  {
+    "id": "guerra-arte",
+    "titulo": "A Arte da Guerra",
+    "autor": "Sun Tzu",
+    "ano": 500,
+    "categoria": "Filosofia",
+    "tags": ["estratégia", "liderança", "tática", "negócios"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/guerra-arte.md"
+  },
+  {
+    "id": "hábitos-milionarios",
+    "titulo": "Os Hábitos dos Milionários",
+    "autor": "Lewis Howes",
+    "ano": 2013,
+    "categoria": "Finanças",
+    "tags": ["riqueza", "hábitos", "sucesso", "mentalidade"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/habitos-milionarios.md"
+  },
+  {
+    "id": "mude-sua-vida",
+    "titulo": "Mude Sua Vida em 30 Dias",
+    "autor": "Jack Canfield",
+    "ano": 2011,
+    "categoria": "Autoajuda",
+    "tags": ["transformação", "objetivos", "sucesso", "mudança"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/mude-vida-30-dias.md"
+  },
+  {
+    "id": "nao-importa",
+    "titulo": "Não Importa o Que Pensem",
+    "autor": "Mark Manson",
+    "ano": 2016,
+    "categoria": "Autoajuda",
+    "tags": ["vida", "liberdade", "aceitação", "minimalismo"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/nao-importa.md"
+  },
+  {
+    "id": "homem-improvavel",
+    "titulo": "Outliers",
+    "autor": "Malcolm Gladwell",
+    "ano": 2008,
+    "categoria": "Psicologia",
+    "tags": ["sucesso", "oportunidade", "prática", "talento"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/outliers.md"
+  },
+  {
+    "id": "pensamentos-rápido-lento",
+    "titulo": "Rápido e Devagar",
+    "autor": "Daniel Kahneman",
+    "ano": 2011,
+    "categoria": "Psicologia",
+    "tags": ["pensamento", "decisão", "viés", "cognição"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/rapido-devagar.md"
+  },
+  {
+    "id": "codigo-limpo",
+    "titulo": "Código Limpo",
+    "autor": "Robert C. Martin",
+    "ano": 2008,
+    "categoria": "Tecnologia",
+    "tags": ["programação", "qualidade", "best-practices", "engenharia"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/codigo-limpo.md"
+  },
+  {
+    "id": "o-jeito-pragmatico",
+    "titulo": "O Jeito Pragmático",
+    "autor": "David Thomas & Andrew Hunt",
+    "ano": 1999,
+    "categoria": "Tecnologia",
+    "tags": ["programação", "desenvolvimento", "carreira", "produtividade"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/jeito-pragmatico.md"
+  },
+  {
+    "id": "testing-microsservices",
+    "titulo": "Testing Microservices Architected System",
+    "autor": "Melissa Evers & Carlos Sanchez",
+    "ano": 2017,
+    "categoria": "Tecnologia",
+    "tags": ["QA", "testes", "microsserviços", "arquitetura"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/testing-microsservices.md"
+  },
+  {
+    "id": "test-driven",
+    "titulo": "Test Driven Development",
+    "autor": "Kent Beck",
+    "ano": 2002,
+    "categoria": "Tecnologia",
+    "tags": ["TDD", "testes", "desenvolvimento", "qualidade"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/test-driven.md"
+  },
+  {
+    "id": "a-arte-testes-software",
+    "titulo": "A Arte de Testar Software",
+    "autor": "Glenford Myers",
+    "ano": 2004,
+    "categoria": "Tecnologia",
+    "tags": ["QA", "testes", "qualidade", "metodologia"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/arte-testes-software.md"
+  },
+  {
+    "id": "perfect-software",
+    "titulo": "Perfect Software",
+    "autor": "Gerald Weinberg",
+    "ano": 2008,
+    "categoria": "Tecnologia",
+    "tags": ["QA", "testes", "qualidade", "mindset"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/perfect-software.md"
+  },
+  {
+    "id": "homo-sapiens",
+    "titulo": "Sapiens",
+    "autor": "Yuval Noah Harari",
+    "ano": 2011,
+    "categoria": "História",
+    "tags": ["história", "humanidade", "evolução", "cultura"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/sapiens.md"
+  },
+  {
+    "id": "steve-jobs",
+    "titulo": "Steve Jobs",
+    "autor": "Walter Isaacson",
+    "ano": 2011,
+    "categoria": "Biografia",
+    "tags": ["inovação", "liderança", "visão", "criatividade"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/steve-jobs.md"
+  },
+  {
+    "id": "benjamin-franklin",
+    "titulo": "Benjamin Franklin",
+    "autor": "Walter Isaacson",
+    "ano": 2003,
+    "categoria": "Biografia",
+    "tags": ["inovação", "liderança", "dedicação", "aprendizado"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/benjamin-franklin.md"
+  },
+  {
+    "id": "economia-comportamental",
+    "titulo": "Economia Comportamental",
+    "autor": "Richard Thaler",
+    "ano": 2015,
+    "categoria": "Economia",
+    "tags": ["economia", "comportamento", "tomada-decisão", "mercado"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/economia-comportamental.md"
+  },
+  {
+    "id": "black-swan",
+    "titulo": "A Cisterna Negra",
+    "autor": "Nassim Nicholas Taleb",
+    "ano": 2007,
+    "categoria": "Economia",
+    "tags": ["risco", "incerteza", "mercado", "probabilidade"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/black-swan.md"
+  },
+  {
+    "id": "marketing-permissao",
+    "titulo": "Permission Marketing",
+    "autor": "Seth Godin",
+    "ano": 1999,
+    "categoria": "Marketing",
+    "tags": ["marketing", "relacionamento", "permissão", "conexão"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/marketing-permissao.md"
+  },
+  {
+    "id": "traction",
+    "titulo": "Traction",
+    "autor": "Gabriel Weinberg",
+    "ano": 2014,
+    "categoria": "Negócios",
+    "tags": ["crescimento", "startups", "marketing", "adquisição"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/traction.md"
+  },
+  {
+    "id": "lean-startup",
+    "titulo": "Lean Startup",
+    "autor": "Eric Ries",
+    "ano": 2011,
+    "categoria": "Negócios",
+    "tags": ["startups", "inovação", "iteração", "feedback"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/lean-startup.md"
+  },
+  {
+    "id": "zero-one",
+    "titulo": "De Zero a Um",
+    "autor": "Peter Thiel",
+    "ano": 2014,
+    "categoria": "Negócios",
+    "tags": ["startups", "inovação", "tecnologia", "futuro"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/zero-one.md"
+  },
+  {
+    "id": "lideranca-situacional",
+    "titulo": "Liderança Situacional",
+    "autor": "Paul Hersey & Ken Blanchard",
+    "ano": 1969,
+    "categoria": "Liderança",
+    "tags": ["liderança", "desenvolvimento", "adaptação", "equipe"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/lideranca-situacional.md"
+  },
+  {
+    "id": "verdades-lideranca",
+    "titulo": "As Verdades da Liderança",
+    "autor": "James Kouzes & Barry Posner",
+    "ano": 1987,
+    "categoria": "Liderança",
+    "tags": ["liderança", "inspiração", "credibilidade", "transformação"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/verdades-lideranca.md"
   }
 ]

@@ -298,8 +298,6 @@ function getCategoryColorRgb(category) {
 }
 
 function getCategoryTitleGradient(category) {
-  // Alternate direction: cyan-dominant categories go cyan→pink,
-  // pink-dominant go pink→cyan — keeps it visually varied.
   const cyan  = 'linear-gradient(135deg, #00e5ff 20%, #ff2d78 90%)';
   const pink  = 'linear-gradient(135deg, #ff2d78 20%, #00e5ff 90%)';
   const map = {
