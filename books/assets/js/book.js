@@ -79,6 +79,10 @@ async function loadBook() {
 function renderBook(meta, markdown) {
   currentBook = meta;
 
+  // Calculate reading time based on word count
+  const wordCount = markdown.split(/\s+/).length;
+  const readingTime = Math.max(10, Math.ceil(wordCount / 200)); // ~200 words per minute
+  
   // Update meta tags
   document.title = `${meta.titulo} — Biblioteca 15min`;
   document.querySelector('meta[name="description"]').content = `Resumo de ${meta.titulo} por ${meta.autor} - Biblioteca 15min`;
@@ -86,9 +90,9 @@ function renderBook(meta, markdown) {
   // Update breadcrumb
   document.getElementById('breadcrumb-title').textContent = meta.titulo;
 
-  // Update header info
+  // Update header info with calculated reading time
   document.getElementById('lesson-title').textContent = meta.titulo;
-  document.getElementById('lesson-meta').innerHTML = `<span>⏱ ${meta.tempoLeitura} min</span> · <span>${meta.categoria}</span> · <span>${meta.ano}</span>`;
+  document.getElementById('lesson-meta').innerHTML = `<span>⏱ ${readingTime} min de leitura</span> · <span>${meta.categoria}</span> · <span>${meta.ano}</span>`;
   
   // Update sidebar
   document.getElementById('sidebar-track').textContent = meta.categoria;
