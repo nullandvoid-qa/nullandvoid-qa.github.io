@@ -1075,6 +1075,61 @@ export default function () {
     // Render lessons section
     renderHomeLessonsFilterBar();
     renderHomeLessons();
+    
+    // PWA Install Banner
+    renderInstallBanner();
+  }
+
+  /**
+   * Render PWA install prompt banner
+   */
+  function renderInstallBanner() {
+    const banner = document.getElementById("install-banner");
+    if (!banner) return;
+
+    // Check if PWA is installable
+    let deferredPrompt = null;
+
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      // Show install banner
+      banner.style.display = "flex";
+    });
+
+    // Hide when installed
+    window.addEventListener("appinstalled", () => {
+      banner.style.display = "none";
+      deferredPrompt = null;
+    });
+
+    const btnInstall = document.getElementById("install-app-btn");
+    const btnDismiss = document.getElementById("dismiss-install-btn");
+
+    if (btnInstall) {
+      btnInstall.addEventListener("click", async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const result = await deferredPrompt.userChoice;
+        if (result.outcome === "accepted") {
+          banner.style.display = "none";
+        }
+        deferredPrompt = null;
+      });
+    }
+
+    if (btnDismiss) {
+      btnDismiss.addEventListener("click", () => {
+        banner.style.display = "none";
+        localStorage.setItem("pwa-dismissed", "true");
+      });
+    }
+
+    // Don't show if already dismissed
+    const dismissed = localStorage.getItem("pwa-dismissed") === "true";
+    if (dismissed || !("serviceWorker" in navigator)) {
+      banner.style.display = "none";
+    }
   }
 
   // ── Tracks page ───────────────────────────────────────────────────────────
@@ -2206,6 +2261,17 @@ export default function () {
     updateLangToggle();
     checkAchievements();
     renderHome();
+
+    // Register Service Worker for PWA support
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/js/service-worker.js', { scope: '/' })
+        .then(registration => {
+          console.log('[PWA] Service Worker registered');
+        })
+        .catch(error => {
+          console.warn('[PWA] Service Worker registration failed:', error);
+        });
+    }
   }
 
   init();
