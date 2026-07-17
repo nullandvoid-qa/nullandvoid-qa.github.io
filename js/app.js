@@ -761,6 +761,28 @@
         el.classList.toggle("active", el.dataset.persona === persona),
       );
 
+    // Update avatar display
+    const avatarEmoji = document.getElementById("avatar-emoji");
+    const avatarLevel = document.getElementById("avatar-level");
+    const avatarProgress = document.getElementById("avatar-progress");
+    
+    if (avatarEmoji && avatarLevel) {
+      // Calculate level based on completion %
+      if (global.pct >= 70) {
+        avatarEmoji.textContent = "👑";
+        avatarLevel.textContent = "Sênior";
+        avatarProgress.textContent = "🎉 Parabéns! Você atingiu o nível máximo";
+      } else if (global.pct >= 35) {
+        avatarEmoji.textContent = "⚡";
+        avatarLevel.textContent = "Intermediário";
+        avatarProgress.textContent = `${global.pct}% completado`;
+      } else {
+        avatarEmoji.textContent = "🌱";
+        avatarLevel.textContent = "Iniciante";
+        avatarProgress.textContent = `${global.pct}% completado`;
+      }
+    }
+
     renderHomeFilterBar();
 
     const filtered =

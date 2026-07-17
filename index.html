@@ -212,6 +212,23 @@
 
         <div id="continue-banner" class="continue-banner hidden"></div>
 
+        <!-- Persona Display with Avatar -->
+        <div style="background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(139,92,246,0.1)); border-radius: 16px; padding: 2rem; margin: 2rem 0; text-align: center;">
+          <h3 style="margin-top: 0; margin-bottom: 1rem;">👤 Seu Perfil de Aprendizado</h3>
+          <div id="persona-display" style="display: flex; justify-content: center; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+            <div id="avatar-container" style="text-align: center;">
+              <div id="avatar-emoji" style="font-size: 4rem; margin-bottom: 0.5rem;">🌱</div>
+              <div id="avatar-level" style="font-weight: 600; font-size: 1.1rem;">Iniciante</div>
+              <div id="avatar-progress" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">0% completado</div>
+            </div>
+            <div style="border-left: 2px solid var(--border); padding: 0 1.5rem;">
+              <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Próximo nível:</div>
+              <div style="font-weight: 600;">⚡ Intermediário</div>
+              <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">Falta completar 3 trilhas</div>
+            </div>
+          </div>
+        </div>
+
         <div class="search-bar-wrap">
           <input
             type="search"
@@ -327,8 +344,50 @@
           Rotas de Aprendizado
         </h2>
         <p class="section-sub" data-i18n="sections.roadmapSub">
-          Caminhos curados.
+          Caminhos curados para cada objetivo.
         </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; margin-top: 2rem;">
+          <!-- Rota do Recruta -->
+          <div style="background: var(--surface-2); border-radius: 12px; padding: 2rem; border-left: 4px solid #10b981;">
+            <h3 style="margin-top: 0; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">🌱 Rota do Recruta</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Para quem nunca trabalhou com QA</p>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.9rem;">
+              <div>1️⃣ Fundamentos de QA (40h)</div>
+              <div>2️⃣ Testes Manuais (30h)</div>
+              <div>3️⃣ BDD & Gherkin (25h)</div>
+              <div>4️⃣ Primeira Automação (40h)</div>
+              <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); font-weight: 600;">🎯 Total: ~8 semanas</div>
+            </div>
+          </div>
+
+          <!-- Rota do Mestre -->
+          <div style="background: var(--surface-2); border-radius: 12px; padding: 2rem; border-left: 4px solid #8b5cf6;">
+            <h3 style="margin-top: 0; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">👑 Rota do Mestre</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Para QA intermediário → sênior</p>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.9rem;">
+              <div>1️⃣ Automação Web Avançada (50h)</div>
+              <div>2️⃣ API Testing + Performance (45h)</div>
+              <div>3️⃣ Segurança & Testes (40h)</div>
+              <div>4️⃣ Liderança & Arquitetura (50h)</div>
+              <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); font-weight: 600;">🎯 Total: ~12 semanas</div>
+            </div>
+          </div>
+
+          <!-- Rota Especialista -->
+          <div style="background: var(--surface-2); border-radius: 12px; padding: 2rem; border-left: 4px solid #f59e0b;">
+            <h3 style="margin-top: 0; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">🔧 Rota Especialista</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Deep dives em tópicos específicos</p>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.9rem;">
+              <div>🛡️ Segurança (35h)</div>
+              <div>📱 Mobile Automation (40h)</div>
+              <div>📊 Performance & Load (40h)</div>
+              <div>♿ Acessibilidade (30h)</div>
+              <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); font-weight: 600;">🎯 Pick & mix</div>
+            </div>
+          </div>
+        </div>
+
         <div id="roadmap-content"></div>
       </section>
 
