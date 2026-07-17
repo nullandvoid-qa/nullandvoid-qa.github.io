@@ -1,0 +1,20 @@
+{
+  "name": "qa-starter-project",
+  "version": "1.0.0",
+  "description": "Starter QA project template from Null and Void Course",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "report": "playwright show-report",
+    "lint": "eslint automated/tests/ --fix",
+    "ci": "npm run lint && npm test"
+  },
+  "keywords": ["qa", "testing", "playwright", "automation"],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.42.0",
+    "eslint": "^8.56.0"
+  }
+}
