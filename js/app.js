@@ -1466,6 +1466,42 @@
         });
       }
     }
+
+    // Recommendations section
+    const recSection = document.getElementById("dashboard-recommendations");
+    if (recSection) {
+      const inProgressTracks = tracks.filter((tr) => {
+        const p = getTrackProgress(tr);
+        return p.pct > 0 && p.pct < 100;
+      });
+      const nextTracks = tracks.filter((tr) => getTrackProgress(tr).pct === 0).slice(0, 2);
+      
+      let recHtml = "";
+      
+      if (inProgressTracks.length > 0) {
+        recHtml += `<div style="padding: 1rem; background: var(--surface-2); border-radius: 8px; border-left: 4px solid var(--primary);">
+          <p style="margin: 0 0 0.5rem 0; font-weight: 600;">🚀 ${lang === "en" ? "Keep Going!" : "Continue!"}</p>
+          <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted);">
+            ${lang === "en" ? "You're almost there on:" : "Você está quase lá em:"} <strong>${inProgressTracks.map(t => localizedTrack(t).title).join(", ")}</strong>
+          </p>
+        </div>`;
+      }
+      
+      if (nextTracks.length > 0 && (inProgressTracks.length === 0 || getGlobalProgress().pct > 30)) {
+        recHtml += `<div style="padding: 1rem; background: var(--surface-2); border-radius: 8px; border-left: 4px solid var(--accent);">
+          <p style="margin: 0 0 0.5rem 0; font-weight: 600;">✨ ${lang === "en" ? "Recommended Next" : "Próximo Recomendado"}</p>
+          <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted);">
+            ${nextTracks.map(t => `<strong>${localizedTrack(t).title}</strong>`).join(", ")}
+          </p>
+        </div>`;
+      }
+
+      if (!recHtml) {
+        recHtml = `<p class="empty-state" style="padding:1rem;color:var(--text-muted)">${lang === "en" ? "Congratulations! You've completed all tracks." : "Parabéns! Você completou todas as trilhas."}</p>`;
+      }
+      
+      recSection.innerHTML = recHtml;
+    }
   }
 
   // ── Search ────────────────────────────────────────────────────────────────
