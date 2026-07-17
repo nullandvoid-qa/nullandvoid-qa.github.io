@@ -1338,8 +1338,30 @@ a:hover { text-decoration: underline; }
   .nav-links { justify-content: center; }
   .lang-toggle { justify-content: center; }
   .hero { padding: 2rem 0.5rem 3rem; }
+  .hero h1 { font-size: 1.6rem !important; }
+  .hero p { font-size: 0.95rem !important; }
   .lesson-content { padding: 1.25rem; }
   .search-bar-wrap { max-width: 100%; }
+  .tracks-grid { grid-template-columns: 1fr; }
+  .lessons-list-grid { grid-template-columns: 1fr; }
+  .features-grid { grid-template-columns: 1fr; }
+  .persona-grid { grid-template-columns: 1fr; }
+  .cta-group { flex-direction: column !important; }
+  .btn { width: 100%; }
+}
+
+@media (max-width: 425px) {
+  body { font-size: 14px; }
+  .hero { padding: 1.5rem 1rem 2rem; }
+  .hero h1 { font-size: 1.4rem !important; line-height: 1.2; }
+  .hero p { font-size: 0.9rem !important; }
+  .header { padding: 0.75rem 0; }
+  .logo-text { font-size: 0.85rem; }
+  .nav-links { font-size: 0.9rem; gap: 0.5rem; }
+  .hero-stats { grid-template-columns: 1fr 1fr; }
+  .section-title { font-size: 1.3rem; }
+  .feature-card { padding: 1.25rem !important; }
+  .feature-icon { font-size: 2rem !important; }
 }
 
 

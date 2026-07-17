@@ -1489,32 +1489,58 @@
         return p.pct > 0 && p.pct < 100;
       });
       const nextTracks = tracks.filter((tr) => getTrackProgress(tr).pct === 0).slice(0, 2);
+      const completedTracks = tracks.filter((tr) => getTrackProgress(tr).pct === 100);
       
       let recHtml = "";
       
+      // Show current progress
       if (inProgressTracks.length > 0) {
-        recHtml += `<div style="padding: 1rem; background: var(--surface-2); border-radius: 8px; border-left: 4px solid var(--primary);">
-          <p style="margin: 0 0 0.5rem 0; font-weight: 600;">🚀 ${lang === "en" ? "Keep Going!" : "Continue!"}</p>
-          <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted);">
-            ${lang === "en" ? "You're almost there on:" : "Você está quase lá em:"} <strong>${inProgressTracks.map(t => localizedTrack(t).title).join(", ")}</strong>
-          </p>
-        </div>`;
+        inProgressTracks.forEach(tr => {
+          const p = getTrackProgress(tr);
+          const lt = localizedTrack(tr);
+          recHtml += `<div style="padding: 1rem; background: linear-gradient(135deg, ${tr.color}22, ${tr.color}11); border-left: 4px solid ${tr.color}; border-radius: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <p style="margin: 0; font-weight: 600;">🚀 ${escapeHtml(lt.title)}</p>
+              <span style="font-size: 0.85rem; color: var(--text-muted);">${p.pct}% completo</span>
+            </div>
+            <div class="progress-bar" style="margin: 0.5rem 0;"><div class="progress-fill" style="width:${p.pct}%"></div></div>
+            <button class="btn btn-secondary btn-sm" style="margin-top: 0.5rem;" data-nav="track" data-track-id="${tr.id}">
+              Continuar →
+            </button>
+          </div>`;
+        });
       }
       
-      if (nextTracks.length > 0 && (inProgressTracks.length === 0 || getGlobalProgress().pct > 30)) {
-        recHtml += `<div style="padding: 1rem; background: var(--surface-2); border-radius: 8px; border-left: 4px solid var(--accent);">
-          <p style="margin: 0 0 0.5rem 0; font-weight: 600;">✨ ${lang === "en" ? "Recommended Next" : "Próximo Recomendado"}</p>
-          <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted);">
-            ${nextTracks.map(t => `<strong>${localizedTrack(t).title}</strong>`).join(", ")}
-          </p>
-        </div>`;
+      // Show next recommendations
+      if (nextTracks.length > 0 && (inProgressTracks.length === 0 || completedTracks.length > 0)) {
+        nextTracks.forEach(tr => {
+          const lt = localizedTrack(tr);
+          recHtml += `<div style="padding: 1rem; background: var(--surface-2); border-left: 4px solid var(--accent); border-radius: 8px;">
+            <p style="margin: 0 0 0.5rem 0; font-weight: 600;">✨ ${lang === "en" ? "Próximo recomendado" : "Próximo recomendado"}</p>
+            <p style="margin: 0 0 1rem 0; color: var(--text-muted);">${escapeHtml(lt.description)}</p>
+            <button class="btn btn-primary btn-sm" style="width: 100%;" data-nav="track" data-track-id="${tr.id}">
+              Começar trilha →
+            </button>
+          </div>`;
+        });
       }
 
       if (!recHtml) {
-        recHtml = `<p class="empty-state" style="padding:1rem;color:var(--text-muted)">${lang === "en" ? "Congratulations! You've completed all tracks." : "Parabéns! Você completou todas as trilhas."}</p>`;
+        recHtml = `<div style="padding: 2rem; text-align: center; background: var(--surface-2); border-radius: 8px;">
+          <p style="margin: 0; font-size: 3rem; margin-bottom: 1rem;">🎉</p>
+          <p style="margin: 0; font-weight: 600; margin-bottom: 0.5rem;">${lang === "en" ? "Parabéns!" : "Parabéns!"}</p>
+          <p style="margin: 0; color: var(--text-muted);">${lang === "en" ? "Você completou todas as trilhas! Volta quando quiser revisar." : "Você completou todas as trilhas! Volta quando quiser revisar."}</p>
+        </div>`;
       }
       
       recSection.innerHTML = recHtml;
+      
+      // Add click handlers for continue/start buttons
+      recSection.querySelectorAll('[data-track-id]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          navigate('track', { trackId: btn.dataset.trackId });
+        });
+      });
     }
   }
 
