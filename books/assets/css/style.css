@@ -1260,27 +1260,33 @@ a:hover { text-decoration: underline; }
 }
 
 #book-content h1 {
-  font-size: clamp(1.8rem, 5vw, 2.2rem);
-  margin-bottom: 0.5rem;
+  font-size: clamp(2.5rem, 7vw, 3.5rem);
+  font-weight: 900;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
 }
 
 #book-content h2 {
-  font-size: clamp(1.35rem, 4vw, 1.75rem);
-  margin-top: 2rem;
-  margin-bottom: 1.2rem;
+  font-size: clamp(1.8rem, 5vw, 2.2rem);
+  font-weight: 800;
+  margin: 2.5rem 0 1.5rem;
   line-height: 1.3;
-}
+  border-bottom: 3px solid var(--accent);
+  padding-bottom: 0.75rem;
 
 #book-content h3 {
-  font-size: clamp(1.1rem, 3vw, 1.3rem);
-  margin-top: 1.5rem;
-  margin-bottom: 0.8rem;
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  font-weight: 700;
+  margin-top: 1.8rem;
+  margin-bottom: 1rem;
+  color: var(--accent);
 }
 
 #book-content p {
   font-size: clamp(0.95rem, 2vw, 1.05rem);
-  line-height: 1.85;
-  margin-bottom: 1.2rem;
+  line-height: 2.0;
+  margin-bottom: 1.5rem;
 }
 
 #book-content li {
@@ -1294,10 +1300,89 @@ a:hover { text-decoration: underline; }
   padding-left: 1.5rem;
 }
 
+#book-content strong {
+  font-weight: 800;
+  color: var(--pink);
+  text-shadow: 0 0 8px rgba(255, 45, 120, 0.3);
+}
+
+#book-content em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+#book-content ul, #book-content ol {
+  margin: 1.5rem 0 1.5rem 2.5rem;
+}
+
+#book-content li {
+  margin: 0.8rem 0;
+  line-height: 2.0;
+}
+
+/* Lesson header and meta styling */
+.lesson-header-row {
+  margin-bottom: 1.5rem;
+}
+
+.lesson-header-row h1 {
+  font-size: clamp(2.5rem, 7vw, 3.5rem);
+  font-weight: 900;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.lesson-meta-row {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 2rem;
+}
+
+.lesson-meta-row span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Sidebar TOC styling */
+.sidebar-lessons a {
+  color: var(--accent);
+  font-size: 0.95rem;
+  transition: all var(--transition);
+  padding: 0.35rem 0.5rem;
+  border-radius: 4px;
+  display: block;
+}
+
+.sidebar-lessons a:hover {
+  color: var(--pink);
+  background: rgba(0, 229, 255, 0.08);
+  transform: translateX(4px);
+}
+
+.sidebar-section-h3 {
+  opacity: 0.8;
+}
+
 /* Mobile optimization */
 @media (max-width: 640px) {
   #book-content {
     padding: 0;
+  }
+
+  .lesson-header-row h1 {
+    font-size: clamp(2rem, 6vw, 2.5rem);
+  }
+
+  .lesson-meta-row {
+    font-size: 0.95rem;
+    gap: 1rem;
   }
 
   .book-toc {

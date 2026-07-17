@@ -103,8 +103,11 @@ function renderBook(meta, markdown) {
   const html = marked.parse(markdown);
   document.getElementById('book-content').innerHTML = html;
 
-  // Generate Table of Contents from H2/H3 headings
+  // Generate Table of Contents from H2/H3 headings (both in content AND sidebar)
   generateTableOfContents();
+
+  // Populate sidebar with TOC
+  populateSidebarTOC();
 
   // Add copy buttons to code blocks
   document.querySelectorAll('pre code').forEach(block => {
@@ -159,6 +162,40 @@ function generateTableOfContents() {
       if (target) {
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         // Highlight briefly
+        target.classList.add('highlight-section');
+        setTimeout(() => target.classList.remove('highlight-section'), 2000);
+      }
+    });
+  });
+}
+
+function populateSidebarTOC() {
+  const contentEl = document.getElementById('book-content');
+  const headings = contentEl.querySelectorAll('h2, h3');
+  
+  if (headings.length === 0) return;
+
+  // Build sidebar TOC
+  let sidebarHTML = '<li><strong>Seções:</strong></li>';
+  headings.forEach((heading, index) => {
+    const level = heading.tagName === 'H2' ? 2 : 3;
+    const indent = level === 2 ? '' : 'style="margin-left:1rem; font-size:0.9rem;"';
+    const className = level === 2 ? 'sidebar-section-h2' : 'sidebar-section-h3';
+    sidebarHTML += `<li ${indent} class="${className}"><a href="#${heading.id}">${heading.textContent}</a></li>`;
+  });
+
+  // Update sidebar
+  const sidebarLessons = document.getElementById('sidebar-lessons');
+  sidebarLessons.innerHTML = sidebarHTML;
+
+  // Add click handlers
+  sidebarLessons.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = link.getAttribute('href').substring(1);
+      const target = document.getElementById(targetId);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         target.classList.add('highlight-section');
         setTimeout(() => target.classList.remove('highlight-section'), 2000);
       }
