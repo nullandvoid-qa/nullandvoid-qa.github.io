@@ -2267,14 +2267,28 @@ export default function () {
     // Load all tracks: merge main tracks + new specialized tracks
     tracks = window.TG_QAWAY_TRACKS || [];
     
-    // Merge new track arrays if they exist
-    if (window.TG_PERFORMANCE_TRACK && Array.isArray(window.TG_PERFORMANCE_TRACK)) {
-      tracks = tracks.concat(window.TG_PERFORMANCE_TRACK);
+    // Merge new track structures (they are objects with courses, not track arrays)
+    // Convert them to track format
+    if (window.TG_PERFORMANCE_TRACK && window.TG_PERFORMANCE_TRACK.courses) {
+      tracks.push({
+        id: 'performance',
+        icon: '⚡',
+        title: 'Performance Testing',
+        tier: 'Sênior',
+        courses: window.TG_PERFORMANCE_TRACK.courses
+      });
     }
-    if (window.TG_MENTORSHIP && Array.isArray(window.TG_MENTORSHIP)) {
-      tracks = tracks.concat(window.TG_MENTORSHIP);
+    if (window.TG_MENTORSHIP && window.TG_MENTORSHIP.courses) {
+      tracks.push({
+        id: 'mentorship',
+        icon: '🎓',
+        title: 'Mentorship Program',
+        tier: 'Intermediário',
+        courses: window.TG_MENTORSHIP.courses
+      });
     }
     if (window.TG_MOBILE_LABS && Array.isArray(window.TG_MOBILE_LABS)) {
+      // Mobile labs is an array of tracks, merge directly
       tracks = tracks.concat(window.TG_MOBILE_LABS);
     }
 
