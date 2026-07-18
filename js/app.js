@@ -1087,14 +1087,29 @@ export default function () {
     const banner = document.getElementById("install-banner");
     if (!banner) return;
 
+    // Hide on desktop (only show on mobile)
+    const mediaQuery = window.matchMedia("(max-width: 768px)");
+    const updateBannerVisibility = () => {
+      if (!mediaQuery.matches) {
+        banner.style.display = "none";
+        return;
+      }
+    };
+    
+    // Check initial and on resize
+    updateBannerVisibility();
+    mediaQuery.addEventListener("change", updateBannerVisibility);
+
     // Check if PWA is installable
     let deferredPrompt = null;
 
     window.addEventListener("beforeinstallprompt", (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      // Show install banner
-      banner.style.display = "flex";
+      // Show install banner only on mobile
+      if (mediaQuery.matches) {
+        banner.style.display = "flex";
+      }
     });
 
     // Hide when installed
@@ -2249,7 +2264,19 @@ export default function () {
 
   // ── Init ──────────────────────────────────────────────────────────────────
   function init() {
+    // Load all tracks: merge main tracks + new specialized tracks
     tracks = window.TG_QAWAY_TRACKS || [];
+    
+    // Merge new track arrays if they exist
+    if (window.TG_PERFORMANCE_TRACK && Array.isArray(window.TG_PERFORMANCE_TRACK)) {
+      tracks = tracks.concat(window.TG_PERFORMANCE_TRACK);
+    }
+    if (window.TG_MENTORSHIP && Array.isArray(window.TG_MENTORSHIP)) {
+      tracks = tracks.concat(window.TG_MENTORSHIP);
+    }
+    if (window.TG_MOBILE_LABS && Array.isArray(window.TG_MOBILE_LABS)) {
+      tracks = tracks.concat(window.TG_MOBILE_LABS);
+    }
 
     window.lang = lang; // Sync with global for utility functions
     document.documentElement.lang = lang === "en" ? "en" : "pt-BR";

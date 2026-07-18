@@ -110,18 +110,18 @@
     </header>
 
     <main id="main-content" class="main">
-      <!-- PWA Install Banner -->
-      <div id="install-banner" style="display: none; position: fixed; top: 0; left: 0; right: 0; background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 1rem 2rem; z-index: 1000; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+      <!-- PWA Install Banner (mobile only, bottom position) -->
+      <div id="install-banner" style="display: none; position: fixed; bottom: 0; left: 0; right: 0; background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 1rem 1.5rem; z-index: 999; flex-direction: column; gap: 0.75rem; box-shadow: 0 -4px 12px rgba(0,0,0,0.2); max-width: 100%; align-items: stretch;">
         <div style="display: flex; align-items: center; gap: 1rem;">
-          <span style="font-size: 1.5rem;">📲</span>
-          <div>
-            <strong>Instale nosso aplicativo</strong>
-            <p style="font-size: 0.9rem; margin: 0.25rem 0 0 0; opacity: 0.9;">Acesse offline + push notifications</p>
+          <span style="font-size: 1.5rem; flex-shrink: 0;">📲</span>
+          <div style="flex: 1;">
+            <strong style="display: block; margin-bottom: 0.25rem;">Instale nosso app</strong>
+            <p style="font-size: 0.85rem; margin: 0; opacity: 0.9;">Acesse offline + notificações</p>
           </div>
         </div>
-        <div style="display: flex; gap: 0.75rem;">
-          <button id="install-app-btn" style="background: white; color: #10b981; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600; cursor: pointer;">Instalar</button>
-          <button id="dismiss-install-btn" style="background: transparent; color: white; border: 1px solid rgba(255,255,255,0.5); padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;">Não agora</button>
+        <div style="display: flex; gap: 0.75rem; justify-self: flex-end;">
+          <button id="dismiss-install-btn" style="flex: 1; background: transparent; color: white; border: 1px solid rgba(255,255,255,0.5); padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">Não agora</button>
+          <button id="install-app-btn" style="flex: 1; background: white; color: #10b981; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.9rem;">Instalar</button>
         </div>
       </div>
       <section id="view-home" class="view active">
@@ -589,11 +589,10 @@
     </style>
 
     <script>
-      // Onboarding: show only on first visit
-      if (!localStorage.getItem('nvqa_seen_onboarding')) {
-        document.getElementById('onboarding-modal').classList.remove('hidden');
-        localStorage.setItem('nvqa_seen_onboarding', 'true');
-      }
+      // Onboarding: DISABLED - show content directly instead
+      // Users can access onboarding info from dashboard or help
+      localStorage.setItem('nvqa_seen_onboarding', 'true');
+      document.getElementById('onboarding-modal').classList.add('hidden');
       
       document.getElementById('onboarding-close').addEventListener('click', () => {
         document.getElementById('onboarding-modal').classList.add('hidden');
