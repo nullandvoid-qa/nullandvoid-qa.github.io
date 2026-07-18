@@ -100,6 +100,7 @@ MIT — Use e compartilhe livremente!
 - [ ] API testing sandbox integrada (Q2)
 - [ ] Mock interviews para sênior (Q3)
 - [ ] Tribu de estudo (peer learning) (Q3)
+- [ ] Ver `ROADMAP.md` para o plano de execução detalhado e prioridades imediatas.
 
 ---
 

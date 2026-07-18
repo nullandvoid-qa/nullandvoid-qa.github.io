@@ -44,7 +44,7 @@
           data-nav="home"
           aria-label="Null and Void QA Course Home"
         >
-          <div class="logo-icon">⚔</div>
+          <div class="logo-icon" data-icon="shield" data-icon-size="28"></div>
           <span class="logo-text"
             ><span data-i18n="brand.name">Null and Void</span>
             <span class="logo-suffix" data-i18n="brand.suffix"
@@ -59,9 +59,9 @@
             >
             <a href="#" data-nav="tracks" data-i18n="nav.tracks">Trilhas</a>
             <a href="#" data-nav="roadmap" data-i18n="nav.roadmap">Rotas</a>
-            <a href="#" data-nav="sandbox" class="badge-new" title="Novo!"
-              >🧪 Sandbox</a
-            >
+            <a href="#" data-nav="sandbox" class="badge-new" title="Novo!">
+              <span data-icon="sandbox" data-icon-size="16"></span> Sandbox
+            </a>
             <a href="#" data-nav="glossary" data-i18n="nav.glossary"
               >Glossário</a
             >
@@ -69,9 +69,9 @@
             <a href="#" data-nav="dashboard" data-i18n="nav.dashboard"
               >Progresso</a
             >
-            <span class="badge-free" data-i18n="nav.allUnlocked"
-              >🔓 Tudo Liberado</span
-            >
+            <span class="badge-free" data-i18n="nav.allUnlocked">
+              <span data-icon="unlock" data-icon-size="14"></span> Tudo Liberado
+            </span>
           </nav>
           <div class="header-toggles">
             <button
@@ -79,8 +79,9 @@
               id="theme-toggle"
               class="icon-toggle"
               title="Theme"
+              aria-label="Toggle theme"
             >
-              🌙
+              <span data-icon="moon" data-icon-size="18"></span>
             </button>
             <button
               type="button"
@@ -97,8 +98,8 @@
               <div id="auth-user" class="auth-user hidden">
                 <img id="auth-picture" class="auth-picture" alt="User avatar" />
                 <span id="auth-name" class="auth-name"></span>
-                <button type="button" id="auth-logout" class="btn-logout" title="Logout">
-                  ↗️
+                <button type="button" id="auth-logout" class="btn-logout" title="Logout" aria-label="Logout">
+                  <span data-icon="logout" data-icon-size="16"></span>
                 </button>
               </div>
             </div>
@@ -125,9 +126,10 @@
       <section id="view-home" class="view active">
         <div class="hero">
           <div class="hero-badge">
-            <span class="badge-free" data-i18n="hero.badge"
-              >🎓 Apprenda do zero até senior — 100% grátis</span
-            >
+            <span class="badge-free" data-i18n="hero.badge">
+              <span data-icon="certificate" data-icon-size="14"></span>
+              Aprenda do zero até senior — 100% grátis
+            </span>
           </div>
           <h1 data-i18n="hero.title" style="font-size: 2.2rem; line-height: 1.3; margin-bottom: 1rem;">
             Torne-se um QA competente.<br/>Sem pagar nada.
@@ -193,12 +195,10 @@
           aria-label="Acessar resumos de livros"
         >
           <div class="books-banner-inner">
-            <span class="books-icon">📚</span>
+            <span class="books-icon" data-icon="books" data-icon-size="28"></span>
             <div class="books-text">
               <span class="books-label">Biblioteca de Livros</span>
-              <span class="books-cta"
-                >Resumos de 30+ livros de QA e desenvolvimento →</span
-              >
+              <span class="books-cta">Resumos de 130+ livros — leia em 15 min →</span>
             </div>
             <span class="books-pulse"></span>
           </div>
@@ -210,26 +210,14 @@
           </h2>
           <div class="persona-grid" id="persona-grid">
             <button type="button" class="persona-card" data-persona="beginner">
-              <span class="persona-emoji">🌱</span>
-              <span class="persona-name" data-i18n="persona.beginner"
-                >Iniciante</span
-              >
-              <span class="persona-desc" data-i18n="persona.beginnerDesc"
-                >Nunca trabalhei com QA</span
-              >
+              <span class="persona-icon" data-icon="seedling" data-icon-size="32"></span>
+              <span class="persona-name" data-i18n="persona.beginner">Iniciante</span>
+              <span class="persona-desc" data-i18n="persona.beginnerDesc">Nunca trabalhei com QA</span>
             </button>
-            <button
-              type="button"
-              class="persona-card"
-              data-persona="experienced"
-            >
-              <span class="persona-emoji">⚡</span>
-              <span class="persona-name" data-i18n="persona.experienced"
-                >Intermediário</span
-              >
-              <span class="persona-desc" data-i18n="persona.experiencedDesc"
-                >Já testo, quero evoluir</span
-              >
+            <button type="button" class="persona-card" data-persona="experienced">
+              <span class="persona-icon" data-icon="bolt" data-icon-size="32"></span>
+              <span class="persona-name" data-i18n="persona.experienced">Intermediário</span>
+              <span class="persona-desc" data-i18n="persona.experiencedDesc">Já testo, quero evoluir</span>
             </button>
           </div>
         </div>
@@ -237,17 +225,22 @@
         <div id="continue-banner" class="continue-banner hidden"></div>
 
         <!-- Persona Display with Avatar -->
-        <div style="background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(139,92,246,0.1)); border-radius: 16px; padding: 2rem; margin: 2rem 0; text-align: center;">
-          <h3 style="margin-top: 0; margin-bottom: 1rem;">👤 Seu Perfil de Aprendizado</h3>
+        <div style="background: linear-gradient(135deg, rgba(0,229,255,0.06), rgba(255,45,120,0.06)); border-radius: 16px; padding: 2rem; margin: 2rem 0; text-align: center;">
+          <h3 style="margin-top: 0; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+            <span data-icon="dashboard" data-icon-size="20" style="color: var(--accent);"></span>
+            Seu Perfil de Aprendizado
+          </h3>
           <div id="persona-display" style="display: flex; justify-content: center; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
             <div id="avatar-container" style="text-align: center;">
-              <div id="avatar-emoji" style="font-size: 4rem; margin-bottom: 0.5rem;">🌱</div>
+              <div id="avatar-icon" style="font-size: 2.5rem; margin-bottom: 0.5rem; color: var(--accent);" data-icon="seedling" data-icon-size="48"></div>
               <div id="avatar-level" style="font-weight: 600; font-size: 1.1rem;">Iniciante</div>
               <div id="avatar-progress" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">0% completado</div>
             </div>
             <div style="border-left: 2px solid var(--border); padding: 0 1.5rem;">
               <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Próximo nível:</div>
-              <div style="font-weight: 600;">⚡ Intermediário</div>
+              <div style="font-weight: 600; display: flex; align-items: center; gap: 0.4rem;">
+                <span data-icon="bolt" data-icon-size="16" style="color: var(--pink);"></span> Intermediário
+              </div>
               <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">Falta completar 3 trilhas</div>
             </div>
           </div>
@@ -298,7 +291,7 @@
         <div class="filter-bar" id="home-filter-bar"></div>
         <div id="home-tracks-grid" class="tracks-grid"></div>
         <div id="home-tracks-empty" class="empty-state hidden">
-          <div class="empty-state-icon">🗺️</div>
+          <div class="empty-state-icon" data-icon="roadmap" data-icon-size="48" style="color: var(--text-muted); margin: 0 auto 1rem;"></div>
           <h3>Trilhas carregando...</h3>
           <p>As trilhas de aprendizado aparecerão aqui em breve.</p>
         </div>
@@ -327,24 +320,22 @@
           </p>
           <div class="features-grid">
             <div class="feature-card">
-              <div class="feature-icon">🌱👑</div>
+              <div class="feature-icon" data-icon="seedling" data-icon-size="28"></div>
               <h3 data-i18n="features.dual.title">Iniciante + Sênior</h3>
-              <p data-i18n="features.dual.desc">
-                Dicas e notas Guild Master em cada aula.
-              </p>
+              <p data-i18n="features.dual.desc">Dicas e notas Guild Master em cada aula.</p>
             </div>
             <div class="feature-card">
-              <div class="feature-icon">🔓</div>
+              <div class="feature-icon" data-icon="unlock" data-icon-size="28"></div>
               <h3 data-i18n="features.unlocked.title">Tudo liberado</h3>
               <p data-i18n="features.unlocked.desc">Sem paywall.</p>
             </div>
             <div class="feature-card">
-              <div class="feature-icon">📚</div>
+              <div class="feature-icon" data-icon="tracks" data-icon-size="28"></div>
               <h3 data-i18n="features.tracks.title">9 trilhas</h3>
               <p data-i18n="features.tracks.desc">Do zero à maestria.</p>
             </div>
             <div class="feature-card">
-              <div class="feature-icon">💾</div>
+              <div class="feature-icon" data-icon="dashboard" data-icon-size="28"></div>
               <h3 data-i18n="features.progress.title">Progresso local</h3>
               <p data-i18n="features.progress.desc">Sem cadastro.</p>
             </div>
@@ -373,41 +364,53 @@
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; margin-top: 2rem;">
           <!-- Rota do Recruta -->
-          <div style="background: var(--surface-2); border-radius: 12px; padding: 2rem; border-left: 4px solid #10b981;">
-            <h3 style="margin-top: 0; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">🌱 Rota do Recruta</h3>
+          <div style="background: var(--bg-elevated); border-radius: 12px; padding: 2rem; border-left: 4px solid #00e5ff;">
+            <h3 style="margin-top: 0; display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;">
+              <span data-icon="seedling" data-icon-size="20" style="color:#00e5ff;"></span> Rota do Recruta
+            </h3>
             <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Para quem nunca trabalhou com QA</p>
             <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.9rem;">
-              <div>1️⃣ Fundamentos de QA (40h)</div>
-              <div>2️⃣ Testes Manuais (30h)</div>
-              <div>3️⃣ BDD & Gherkin (25h)</div>
-              <div>4️⃣ Primeira Automação (40h)</div>
-              <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); font-weight: 600;">🎯 Total: ~8 semanas</div>
+              <div style="display:flex;align-items:center;gap:0.5rem;"><span data-icon="flag" data-icon-size="14" style="color:var(--text-muted);flex-shrink:0;"></span> Fundamentos de QA (40h)</div>
+              <div style="display:flex;align-items:center;gap:0.5rem;"><span data-icon="flag" data-icon-size="14" style="color:var(--text-muted);flex-shrink:0;"></span> Testes Manuais (30h)</div>
+              <div style="display:flex;align-items:center;gap:0.5rem;"><span data-icon="flag" data-icon-size="14" style="color:var(--text-muted);flex-shrink:0;"></span> BDD &amp; Gherkin (25h)</div>
+              <div style="display:flex;align-items:center;gap:0.5rem;"><span data-icon="flag" data-icon-size="14" style="color:var(--text-muted);flex-shrink:0;"></span> Primeira Automação (40h)</div>
+              <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); font-weight: 600; display:flex;align-items:center;gap:0.5rem;">
+                <span data-icon="target" data-icon-size="16" style="color:#00e5ff;"></span> Total: ~8 semanas
+              </div>
             </div>
           </div>
 
           <!-- Rota do Mestre -->
-          <div style="background: var(--surface-2); border-radius: 12px; padding: 2rem; border-left: 4px solid #8b5cf6;">
-            <h3 style="margin-top: 0; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">👑 Rota do Mestre</h3>
+          <div style="background: var(--bg-elevated); border-radius: 12px; padding: 2rem; border-left: 4px solid #ff2d78;">
+            <h3 style="margin-top: 0; display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;">
+              <span data-icon="crown" data-icon-size="20" style="color:#ff2d78;"></span> Rota do Mestre
+            </h3>
             <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Para QA intermediário → sênior</p>
             <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.9rem;">
-              <div>1️⃣ Automação Web Avançada (50h)</div>
-              <div>2️⃣ API Testing + Performance (45h)</div>
-              <div>3️⃣ Segurança & Testes (40h)</div>
-              <div>4️⃣ Liderança & Arquitetura (50h)</div>
-              <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); font-weight: 600;">🎯 Total: ~12 semanas</div>
+              <div style="display:flex;align-items:center;gap:0.5rem;"><span data-icon="flag" data-icon-size="14" style="color:var(--text-muted);flex-shrink:0;"></span> Automação Web Avançada (50h)</div>
+              <div style="display:flex;align-items:center;gap:0.5rem;"><span data-icon="flag" data-icon-size="14" style="color:var(--text-muted);flex-shrink:0;"></span> API Testing + Performance (45h)</div>
+              <div style="display:flex;align-items:center;gap:0.5rem;"><span data-icon="flag" data-icon-size="14" style="color:var(--text-muted);flex-shrink:0;"></span> Segurança &amp; Testes (40h)</div>
+              <div style="display:flex;align-items:center;gap:0.5rem;"><span data-icon="flag" data-icon-size="14" style="color:var(--text-muted);flex-shrink:0;"></span> Liderança &amp; Arquitetura (50h)</div>
+              <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); font-weight: 600; display:flex;align-items:center;gap:0.5rem;">
+                <span data-icon="target" data-icon-size="16" style="color:#ff2d78;"></span> Total: ~12 semanas
+              </div>
             </div>
           </div>
 
           <!-- Rota Especialista -->
-          <div style="background: var(--surface-2); border-radius: 12px; padding: 2rem; border-left: 4px solid #f59e0b;">
-            <h3 style="margin-top: 0; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">🔧 Rota Especialista</h3>
+          <div style="background: var(--bg-elevated); border-radius: 12px; padding: 2rem; border-left: 4px solid #f59e0b;">
+            <h3 style="margin-top: 0; display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;">
+              <span data-icon="settings" data-icon-size="20" style="color:#f59e0b;"></span> Rota Especialista
+            </h3>
             <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Deep dives em tópicos específicos</p>
             <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.9rem;">
-              <div>🛡️ Segurança (35h)</div>
-              <div>📱 Mobile Automation (40h)</div>
-              <div>📊 Performance & Load (40h)</div>
-              <div>♿ Acessibilidade (30h)</div>
-              <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); font-weight: 600;">🎯 Pick & mix</div>
+              <div style="display:flex;align-items:center;gap:0.5rem;"><span data-icon="security" data-icon-size="14" style="color:var(--text-muted);flex-shrink:0;"></span> Segurança (35h)</div>
+              <div style="display:flex;align-items:center;gap:0.5rem;"><span data-icon="mobile" data-icon-size="14" style="color:var(--text-muted);flex-shrink:0;"></span> Mobile Automation (40h)</div>
+              <div style="display:flex;align-items:center;gap:0.5rem;"><span data-icon="perf" data-icon-size="14" style="color:var(--text-muted);flex-shrink:0;"></span> Performance &amp; Load (40h)</div>
+              <div style="display:flex;align-items:center;gap:0.5rem;"><span data-icon="accessibility" data-icon-size="14" style="color:var(--text-muted);flex-shrink:0;"></span> Acessibilidade (30h)</div>
+              <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); font-weight: 600; display:flex;align-items:center;gap:0.5rem;">
+                <span data-icon="target" data-icon-size="16" style="color:#f59e0b;"></span> Pick &amp; mix
+              </div>
             </div>
           </div>
         </div>
@@ -482,14 +485,33 @@
               Suas aulas concluídas.
             </p>
           </div>
-          <button
-            type="button"
-            id="btn-reset-progress"
-            class="btn btn-secondary btn-sm"
-            data-i18n="dashboard.resetProgress"
-          >
-            Resetar
-          </button>
+          <div class="dashboard-actions">
+            <button
+              type="button"
+              id="btn-export-progress"
+              class="btn btn-secondary btn-sm"
+              data-i18n="dashboard.exportProgress"
+            >
+              Exportar
+            </button>
+            <button
+              type="button"
+              id="btn-import-progress"
+              class="btn btn-secondary btn-sm"
+              data-i18n="dashboard.importProgress"
+            >
+              Importar
+            </button>
+            <button
+              type="button"
+              id="btn-reset-progress"
+              class="btn btn-secondary btn-sm"
+              data-i18n="dashboard.resetProgress"
+            >
+              Resetar
+            </button>
+            <input type="file" id="progress-import-input" accept="application/json" hidden />
+          </div>
         </div>
         <div id="dashboard-stats" class="dashboard-grid"></div>
         <h3
@@ -517,7 +539,8 @@
         </h3>
         <div id="dashboard-certificates" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;"></div>
         <h3 class="section-title section-title-sm" style="margin-top: 2rem">
-          📊 <span data-i18n="dashboard.recommendations">Recomendações de Aprendizado</span>
+          <span data-icon="roadmap" data-icon-size="18" style="color:var(--accent);vertical-align:middle;margin-right:0.4rem;"></span>
+          <span data-i18n="dashboard.recommendations">Recomendações de Aprendizado</span>
         </h3>
         <div id="dashboard-recommendations" style="display: grid; gap: 1rem;"></div>
         <h3 class="section-title section-title-sm" style="margin-top: 2rem">
@@ -536,12 +559,9 @@
         Plataforma independente.
       </p>
       <p class="footer-discord">
-        <a
-          href="https://discord.gg/evVQqq4rf"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          💬 Comunidade no Discord
+        <a href="https://discord.gg/evVQqq4rf" target="_blank" rel="noopener noreferrer"
+           style="display:inline-flex;align-items:center;gap:0.4rem;">
+          <span data-icon="discord" data-icon-size="16"></span> Comunidade no Discord
         </a>
       </p>
     </footer>
@@ -554,7 +574,7 @@
       <div class="modal-content" style="max-width: 500px;">
         <button class="modal-close" id="onboarding-close">×</button>
         <div style="text-align: center; padding: 2rem;">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">🚀</div>
+          <div style="margin-bottom: 1rem; color: var(--accent);" data-icon="starter" data-icon-size="48"></div>
           <h2 id="onboarding-title" style="margin-bottom: 1rem; font-size: 1.5rem;">Bem-vindo(a)!</h2>
           <p style="color: var(--text-muted); margin-bottom: 2rem; line-height: 1.6;">
             Esta é uma plataforma <strong>100% gratuita</strong> para você aprender QA do zero até senior. Sem cadastro, sem paywall.
@@ -605,28 +625,28 @@
       });
     </script>
 
-    <script src="js/utils.js"></script>
-    <script src="js/certificates.js"></script>
-    <script src="data/tracks.js"></script>
-    <script src="data/translations-en.js"></script>
-    <script src="data/lesson-enrichment.js"></script>
-    <script src="data/quizzes.js"></script>
-    <script src="data/lesson-quizzes.js"></script>
-    <script src="data/checklists.js"></script>
-    <script src="data/labs.js"></script>
-    <script src="data/achievements.js"></script>
-    <script src="data/glossary.js"></script>
-    <!-- TEMPORARILY DISABLED: Syntax errors, will fix -->
-    <!-- <script src="data/video-scripts.js"></script> -->
-    <!-- <script src="data/performance-track.js"></script> -->>
-    <script src="data/daily-challenges.js"></script>
-    <script src="data/mentorship.js"></script>
-    <script src="data/mobile-labs.js"></script>
-    <script src="js/i18n.js"></script>
+    <script src="js/utils.js" defer></script>
+    <script src="js/icons.js" defer></script>
+    <script src="js/certificates.js" defer></script>
+    <script src="data/tracks.js" defer></script>
+    <script src="data/translations-en.js" defer></script>
+    <script src="data/lesson-enrichment.js" defer></script>
+    <script src="data/quizzes.js" defer></script>
+    <script src="data/lesson-quizzes.js" defer></script>
+    <script src="data/checklists.js" defer></script>
+    <script src="data/labs.js" defer></script>
+    <script src="data/achievements.js" defer></script>
+    <script src="data/glossary.js" defer></script>
+    <script src="data/video-scripts.js" defer></script>
+    <script src="data/performance-track.js" defer></script>
+    <script src="data/daily-challenges.js" defer></script>
+    <script src="data/mentorship.js" defer></script>
+    <script src="data/mobile-labs.js" defer></script>
+    <script src="js/i18n.js" defer></script>
     <!-- JWT Decode must load before auth.js -->
-    <script src="https://unpkg.com/jwt-decode@3.1.2/build/jwt-decode.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/discord-integration.js"></script>
-    <script src="js/app.js?v=1784338953"></script>
+    <script src="https://unpkg.com/jwt-decode@3.1.2/build/jwt-decode.js" defer></script>
+    <script src="js/auth.js" defer></script>
+    <script src="js/discord-integration.js" defer></script>
+    <script src="js/app.js?v=1784338953" defer></script>
   </body>
 </html>
