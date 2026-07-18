@@ -523,39 +523,7 @@ a:hover { text-decoration: underline; }
   filter: drop-shadow(-4px 16px 36px rgba(0, 0, 0, 0.65));
 }
 
-/* Front face */
-.book-front {
-  position: absolute;
-  inset: 0;
-  border-radius: 2px 6px 6px 2px;
-  background:
-    linear-gradient(
-      160deg,
-      #2e2e2e 0%,
-      #252525 30%,
-      #1e1e1e 60%,
-      #191919 100%
-    );
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.1rem 0.9rem;
-  gap: 0.3rem;
-  overflow: visible;
-  backface-visibility: hidden;
-
-  /* subtle paper texture via layered gradients */
-  background-image:
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(255,255,255,0.015) 2px,
-      rgba(255,255,255,0.015) 3px
-    ),
-    linear-gradient(160deg, #2e2e2e 0%, #252525 30%, #1e1e1e 60%, #191919 100%);
-}
+/* Front face - MOVED to line ~1045 with improved charcoal gradient */
 
 /* Highlight strip at top of front cover */
 .book-front::before {
@@ -657,30 +625,7 @@ a:hover { text-decoration: underline; }
   z-index: 1;
 }
 
-.book-cover-title {
-  font-size: clamp(1rem, 3vw, 1.35rem);
-  font-weight: 900;
-  text-align: center;
-  line-height: 1.1;
-  background: var(--book-title-gradient, linear-gradient(135deg, #00e5ff, #ff2d78));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  position: relative;
-  z-index: 1;
-}
-
-.book-cover-author {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-align: center;
-  font-family: var(--font-mono);
-  letter-spacing: 0.04em;
-  position: relative;
-  z-index: 1;
-  line-height: 1.2;
-}
+/* Title and author styles moved to line ~1128 to avoid duplicates */
 
 .book-cover-divider {
   width: 36px;
