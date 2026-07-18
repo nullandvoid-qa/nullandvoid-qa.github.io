@@ -124,10 +124,14 @@ function createBookCard(book) {
   const emoji       = getCategoryEmoji(book.categoria);
   const spineLabel  = escapeHtml(book.titulo);
   const tagsHtml    = book.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('');
+  
+  // Check if book is marked as read
+  const isRead = window.NVAuth && window.NVAuth.isAuthenticated && window.NVAuth.isBookRead(book.id);
+  const readBadge = isRead ? '<div class="book-read-badge" title="Lido">✓ Lido</div>' : '';
 
   return `
     <article
-      class="book-item"
+      class="book-item ${isRead ? 'book-read' : ''}"
       role="listitem"
       data-id="${book.id}"
       tabindex="0"
@@ -139,6 +143,7 @@ function createBookCard(book) {
       "
     >
       <div class="book-wrapper">
+        ${readBadge}
         <div class="book-cover">
           <div class="book-3d" aria-hidden="true">
             <div class="book-back"></div>
@@ -409,6 +414,28 @@ function init() {
   applyTheme(currentTheme);
   loadBooks();
 }
+
+// Export functions for use in HTML inline scripts
+window.renderBooks = renderBooks;
+window.updateBookCardReadStatus = function(bookId, marked) {
+  const bookCard = document.querySelector(`.book-item[data-id="${bookId}"]`);
+  if (!bookCard) return;
+  
+  if (marked) {
+    bookCard.classList.add('book-read');
+    if (!bookCard.querySelector('.book-read-badge')) {
+      const badge = document.createElement('div');
+      badge.className = 'book-read-badge';
+      badge.title = 'Lido';
+      badge.textContent = '✓ Lido';
+      bookCard.querySelector('.book-wrapper').insertAdjacentElement('afterbegin', badge);
+    }
+  } else {
+    bookCard.classList.remove('book-read');
+    const badge = bookCard.querySelector('.book-read-badge');
+    if (badge) badge.remove();
+  }
+};
 
 // Start
 init();

@@ -6,4 +6,10 @@ module.exports = {
   globals: {
     global: {},
   },
+  collectCoverageFrom: [
+    'js/**/*.js',
+    '!js/__tests__/**',
+    '!js/**/node_modules/**',
+  ],
+  outputFile: 'test-results.json',
 };

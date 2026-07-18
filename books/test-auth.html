@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teste Auth - Biblioteca 15min</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #1a1a1a;
+      color: #f0f0f0;
+    }
+    
+    .test-section {
+      background: #222;
+      border: 1px solid #3a3a3a;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    h1 {
+      color: #00e5ff;
+    }
+    
+    h2 {
+      color: #ff2d78;
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+    
+    .status {
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      margin: 0.5rem 0;
+    }
+    
+    .success {
+      background: #004d00;
+      color: #00ff00;
+    }
+    
+    .error {
+      background: #4d0000;
+      color: #ff0000;
+    }
+    
+    .info {
+      background: #003d4d;
+      color: #00e5ff;
+    }
+    
+    button {
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      border: 1px solid #00e5ff;
+      background: #222;
+      color: #00e5ff;
+      cursor: pointer;
+      font-weight: 600;
+      margin: 0.5rem 0.5rem 0.5rem 0;
+    }
+    
+    button:hover {
+      background: rgba(0, 229, 255, 0.1);
+    }
+    
+    .auth-user {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 0.75rem;
+      background: #2e2e2e;
+      border: 1px solid #3a3a3a;
+      border-radius: 8px;
+      font-size: 0.85rem;
+    }
+    
+    .auth-picture {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    
+    pre {
+      background: #0f0f0f;
+      padding: 1rem;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+    }
+    
+    .hidden {
+      display: none;
+    }
+  </style>
+  
+  <!-- Google OAuth2 -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <!-- JWT Decoding -->
+  <script src="https://cdn.jsdelivr.net/npm/jwt-decode@4/build/jwt-decode.min.js"></script>
+</head>
+<body>
+  <h1>🧪 Teste de Autenticação Google</h1>
+  
+  <div class="test-section">
+    <h2>Status do Sistema</h2>
+    <div id="system-status"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Autenticação Google</h2>
+    <div id="auth-signin"></div>
+    <div id="auth-user" class="auth-user hidden">
+      <img id="auth-picture" class="auth-picture" alt="Profile" />
+      <span id="auth-name" class="auth-name"></span>
+      <button type="button" id="auth-logout" onclick="logout()">Logout</button>
+    </div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Teste de Funcionalidades</h2>
+    <button onclick="testMarkAsRead()">Marcar Livro Como Lido</button>
+    <button onclick="testGetReadBooks()">Ver Livros Lidos</button>
+    <button onclick="testUnmarkAsRead()">Desmarcar Livro</button>
+    <button onclick="clearAllData()">Limpar Dados</button>
+    <div id="test-output"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>LocalStorage (Dados Salvos)</h2>
+    <button onclick="showLocalStorage()">Atualizar</button>
+    <pre id="storage-content"></pre>
+  </div>
+  
+  <div class="test-section">
+    <h2>Console de Eventos</h2>
+    <pre id="event-log"></pre>
+  </div>
+  
+  <!-- Auth module -->
+  <script src="../js/auth.js"></script>
+  
+  <script>
+    // Event logging
+    const eventLog = document.getElementById('event-log');
+    function log(message, type = 'info') {
+      const timestamp = new Date().toLocaleTimeString();
+      eventLog.textContent = `[${timestamp}] ${message}\n` + eventLog.textContent;
+      console.log(message);
+    }
+    
+    // Check system status
+    function checkSystemStatus() {
+      const status = document.getElementById('system-status');
+      let html = '';
+      
+      if (typeof window.NVAuth !== 'undefined') {
+        html += '<div class="status success">✓ NVAuth carregado</div>';
+        html += `<div class="status info">Autenticado: ${window.NVAuth.isAuthenticated ? 'Sim' : 'Não'}</div>`;
+        if (window.NVAuth.user) {
+          html += `<div class="status info">Usuário: ${window.NVAuth.user.name}</div>`;
+        }
+      } else {
+        html += '<div class="status error">✗ NVAuth não carregado</div>';
+      }
+      
+      if (typeof google !== 'undefined' && google.accounts) {
+        html += '<div class="status success">✓ Google API carregada</div>';
+      } else {
+        html += '<div class="status error">✗ Google API não carregada</div>';
+      }
+      
+      if (typeof jwt_decode !== 'undefined') {
+        html += '<div class="status success">✓ JWT Decode carregado</div>';
+      } else {
+        html += '<div class="status error">✗ JWT Decode não carregado</div>';
+      }
+      
+      status.innerHTML = html;
+    }
+    
+    // Test functions
+    function testMarkAsRead() {
+      if (!window.NVAuth || !window.NVAuth.isAuthenticated) {
+        alert('Faça login primeiro!');
+        return;
+      }
+      
+      const testBookId = 'test-book-' + Date.now();
+      const result = window.NVAuth.markAsRead(testBookId);
+      
+      const output = document.getElementById('test-output');
+      if (result) {
+        output.innerHTML = `<div class="status success">✓ Livro ${testBookId} marcado como lido!</div>`;
+        log(`Livro marcado: ${testBookId}`);
+      } else {
+        output.innerHTML = `<div class="status error">✗ Falha ao marcar livro</div>`;
+      }
+      
+      showLocalStorage();
+    }
+    
+    function testGetReadBooks() {
+      if (!window.NVAuth || !window.NVAuth.isAuthenticated) {
+        alert('Faça login primeiro!');
+        return;
+      }
+      
+      const readBooks = window.NVAuth.getReadBooks();
+      const output = document.getElementById('test-output');
+      output.innerHTML = `<div class="status info">Livros lidos: ${Object.keys(readBooks).length}</div>`;
+      output.innerHTML += `<pre>${JSON.stringify(readBooks, null, 2)}</pre>`;
+      log(`Total de livros lidos: ${Object.keys(readBooks).length}`);
+    }
+    
+    function testUnmarkAsRead() {
+      if (!window.NVAuth || !window.NVAuth.isAuthenticated) {
+        alert('Faça login primeiro!');
+        return;
+      }
+      
+      const readBooks = window.NVAuth.getReadBooks();
+      const bookIds = Object.keys(readBooks);
+      
+      if (bookIds.length === 0) {
+        alert('Nenhum livro marcado para desmarcar!');
+        return;
+      }
+      
+      const bookId = bookIds[bookIds.length - 1];
+      const result = window.NVAuth.unmarkAsRead(bookId);
+      
+      const output = document.getElementById('test-output');
+      if (result) {
+        output.innerHTML = `<div class="status success">✓ Livro ${bookId} desmarcado!</div>`;
+        log(`Livro desmarcado: ${bookId}`);
+      } else {
+        output.innerHTML = `<div class="status error">✗ Falha ao desmarcar livro</div>`;
+      }
+      
+      showLocalStorage();
+    }
+    
+    function clearAllData() {
+      if (confirm('Limpar TODOS os dados do localStorage?')) {
+        localStorage.clear();
+        alert('Dados limpos! Recarregue a página.');
+        showLocalStorage();
+        log('LocalStorage limpo');
+      }
+    }
+    
+    function showLocalStorage() {
+      const storage = document.getElementById('storage-content');
+      const data = {};
+      
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        try {
+          data[key] = JSON.parse(localStorage.getItem(key));
+        } catch {
+          data[key] = localStorage.getItem(key);
+        }
+      }
+      
+      storage.textContent = JSON.stringify(data, null, 2);
+    }
+    
+    function logout() {
+      if (window.NVAuth) {
+        window.NVAuth.logout();
+      }
+    }
+    
+    // Event listeners
+    document.addEventListener('nvauth:login', (e) => {
+      log(`✓ Login bem-sucedido: ${e.detail.name}`, 'success');
+      checkSystemStatus();
+      showLocalStorage();
+    });
+    
+    document.addEventListener('nvauth:logout', () => {
+      log('✓ Logout realizado', 'info');
+      checkSystemStatus();
+      showLocalStorage();
+    });
+    
+    document.addEventListener('nvauth:bookmarked', (e) => {
+      log(`✓ Livro ${e.detail.bookId} ${e.detail.marked ? 'marcado' : 'desmarcado'}`, 'info');
+    });
+    
+    // Initialize
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        checkSystemStatus();
+        showLocalStorage();
+        log('Página de teste carregada');
+        
+        if (window.NVAuth && window.NVAuth.init) {
+          log('Inicializando NVAuth...');
+          window.NVAuth.init();
+        }
+      }, 500);
+    });
+    
+    // Update status every 2 seconds
+    setInterval(checkSystemStatus, 2000);
+  </script>
+</body>
+</html>

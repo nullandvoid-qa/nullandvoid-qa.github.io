@@ -5,7 +5,12 @@
     "autor": "James Clear",
     "ano": 2018,
     "categoria": "Produtividade",
-    "tags": ["hábitos", "comportamento", "mudança", "pequenas-vitórias"],
+    "tags": [
+      "hábitos",
+      "comportamento",
+      "mudança",
+      "pequenas-vitórias"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/habitos-atomicos.md",
     "capa": "assets/img/capas/habitos-atomicos.jpg"
@@ -16,7 +21,12 @@
     "autor": "Daniel Goleman",
     "ano": 1995,
     "categoria": "Psicologia",
-    "tags": ["emoções", "autoconhecimento", "relacionamentos", "liderança"],
+    "tags": [
+      "emoções",
+      "autoconhecimento",
+      "relacionamentos",
+      "liderança"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/inteligencia-emocional.md",
     "capa": "assets/img/capas/inteligencia-emocional.jpg"
@@ -27,7 +37,12 @@
     "autor": "Robert Kiyosaki",
     "ano": 1997,
     "categoria": "Finanças",
-    "tags": ["finanças-pessoais", "investimentos", "mentalidade-rica", "educação-financeira"],
+    "tags": [
+      "finanças-pessoais",
+      "investimentos",
+      "mentalidade-rica",
+      "educação-financeira"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/pai-rico-pai-pobre.md",
     "capa": "assets/img/capas/pai-rico-pai-pobre.jpg"
@@ -38,7 +53,12 @@
     "autor": "Charles Duhigg",
     "ano": 2012,
     "categoria": "Produtividade",
-    "tags": ["hábitos", "produtividade", "psicologia", "mudança de comportamento"],
+    "tags": [
+      "hábitos",
+      "produtividade",
+      "psicologia",
+      "mudança de comportamento"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/o-poder-do-habito.md",
     "capa": "assets/img/capas/o-poder-do-habito.jpg"
@@ -49,7 +69,13 @@
     "autor": "Greg McKeown",
     "ano": 2014,
     "categoria": "Produtividade",
-    "tags": ["produtividade", "foco", "priorização", "minimalismo", "decisão"],
+    "tags": [
+      "produtividade",
+      "foco",
+      "priorização",
+      "minimalismo",
+      "decisão"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/essencialismo.md",
     "capa": "assets/img/capas/essencialismo.jpg"
@@ -60,7 +86,12 @@
     "autor": "Carol S. Dweck",
     "ano": 2006,
     "categoria": "Psicologia",
-    "tags": ["mentalidade", "crescimento", "aprendizado", "potencial"],
+    "tags": [
+      "mentalidade",
+      "crescimento",
+      "aprendizado",
+      "potencial"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/mindset.md"
   },
@@ -70,7 +101,12 @@
     "autor": "Tim Ferriss",
     "ano": 2007,
     "categoria": "Produtividade",
-    "tags": ["automação", "delegação", "produtividade", "liberdade"],
+    "tags": [
+      "automação",
+      "delegação",
+      "produtividade",
+      "liberdade"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/4-horas-semana.md"
   },
@@ -80,7 +116,12 @@
     "autor": "Yuval Noah Harari",
     "ano": 2015,
     "categoria": "Filosofia",
-    "tags": ["história", "futuro", "tecnologia", "humanidade"],
+    "tags": [
+      "história",
+      "futuro",
+      "tecnologia",
+      "humanidade"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/homo-deus.md"
   },
@@ -90,7 +131,12 @@
     "autor": "Simon Sinek",
     "ano": 2009,
     "categoria": "Negócios",
-    "tags": ["liderança", "propósito", "motivação", "inspiração"],
+    "tags": [
+      "liderança",
+      "propósito",
+      "motivação",
+      "inspiração"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/comece-pelo-porque.md"
   },
@@ -100,9 +146,14 @@
     "autor": "Viktor Frankl",
     "ano": 1946,
     "categoria": "Filosofia",
-    "tags": ["significado", "propósito", "resiliência", "psicologia"],
+    "tags": [
+      "significado",
+      "propósito",
+      "resiliência",
+      "psicologia"
+    ],
     "tempoLeitura": 15,
-    "arquivo": "resumos/em-busca-significado.md"
+    "arquivo": "resumos/homem-em-busca-significado.md"
   },
   {
     "id": "fluxo",
@@ -110,7 +161,12 @@
     "autor": "Mihaly Csikszentmihalyi",
     "ano": 1990,
     "categoria": "Psicologia",
-    "tags": ["felicidade", "foco", "experiência", "performance"],
+    "tags": [
+      "felicidade",
+      "foco",
+      "experiência",
+      "performance"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/fluxo.md"
   },
@@ -120,19 +176,14 @@
     "autor": "Martin Pring",
     "ano": 1991,
     "categoria": "Finanças",
-    "tags": ["trading", "mercado", "investimentos", "análise"],
+    "tags": [
+      "trading",
+      "mercado",
+      "investimentos",
+      "análise"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/analise-tecnica.md"
-  },
-  {
-    "id": "o-investidor-inteligente",
-    "titulo": "O Investidor Inteligente",
-    "autor": "Benjamin Graham",
-    "ano": 1949,
-    "categoria": "Finanças",
-    "tags": ["investimentos", "value-investing", "mercado", "estratégia"],
-    "tempoLeitura": 15,
-    "arquivo": "resumos/investidor-inteligente.md"
   },
   {
     "id": "guerra-arte",
@@ -140,7 +191,12 @@
     "autor": "Sun Tzu",
     "ano": 500,
     "categoria": "Filosofia",
-    "tags": ["estratégia", "liderança", "tática", "negócios"],
+    "tags": [
+      "estratégia",
+      "liderança",
+      "tática",
+      "negócios"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/guerra-arte.md"
   },
@@ -150,7 +206,12 @@
     "autor": "Lewis Howes",
     "ano": 2013,
     "categoria": "Finanças",
-    "tags": ["riqueza", "hábitos", "sucesso", "mentalidade"],
+    "tags": [
+      "riqueza",
+      "hábitos",
+      "sucesso",
+      "mentalidade"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/habitos-milionarios.md"
   },
@@ -160,9 +221,14 @@
     "autor": "Jack Canfield",
     "ano": 2011,
     "categoria": "Autoajuda",
-    "tags": ["transformação", "objetivos", "sucesso", "mudança"],
+    "tags": [
+      "transformação",
+      "objetivos",
+      "sucesso",
+      "mudança"
+    ],
     "tempoLeitura": 15,
-    "arquivo": "resumos/mude-vida-30-dias.md"
+    "arquivo": "resumos/mude-sua-vida.md"
   },
   {
     "id": "nao-importa",
@@ -170,7 +236,12 @@
     "autor": "Mark Manson",
     "ano": 2016,
     "categoria": "Autoajuda",
-    "tags": ["vida", "liberdade", "aceitação", "minimalismo"],
+    "tags": [
+      "vida",
+      "liberdade",
+      "aceitação",
+      "minimalismo"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/nao-importa.md"
   },
@@ -180,9 +251,14 @@
     "autor": "Malcolm Gladwell",
     "ano": 2008,
     "categoria": "Psicologia",
-    "tags": ["sucesso", "oportunidade", "prática", "talento"],
+    "tags": [
+      "sucesso",
+      "oportunidade",
+      "prática",
+      "talento"
+    ],
     "tempoLeitura": 15,
-    "arquivo": "resumos/outliers.md"
+    "arquivo": "resumos/homem-improvavel.md"
   },
   {
     "id": "pensamentos-rápido-lento",
@@ -190,9 +266,14 @@
     "autor": "Daniel Kahneman",
     "ano": 2011,
     "categoria": "Psicologia",
-    "tags": ["pensamento", "decisão", "viés", "cognição"],
+    "tags": [
+      "pensamento",
+      "decisão",
+      "viés",
+      "cognição"
+    ],
     "tempoLeitura": 15,
-    "arquivo": "resumos/rapido-devagar.md"
+    "arquivo": "resumos/pensamentos-rapido-lento.md"
   },
   {
     "id": "codigo-limpo",
@@ -200,7 +281,12 @@
     "autor": "Robert C. Martin",
     "ano": 2008,
     "categoria": "Tecnologia",
-    "tags": ["programação", "qualidade", "best-practices", "engenharia"],
+    "tags": [
+      "programação",
+      "qualidade",
+      "best-practices",
+      "engenharia"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/codigo-limpo.md"
   },
@@ -210,7 +296,12 @@
     "autor": "David Thomas & Andrew Hunt",
     "ano": 1999,
     "categoria": "Tecnologia",
-    "tags": ["programação", "desenvolvimento", "carreira", "produtividade"],
+    "tags": [
+      "programação",
+      "desenvolvimento",
+      "carreira",
+      "produtividade"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/jeito-pragmatico.md"
   },
@@ -220,7 +311,12 @@
     "autor": "Melissa Evers & Carlos Sanchez",
     "ano": 2017,
     "categoria": "Tecnologia",
-    "tags": ["QA", "testes", "microsserviços", "arquitetura"],
+    "tags": [
+      "QA",
+      "testes",
+      "microsserviços",
+      "arquitetura"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/testing-microsservices.md"
   },
@@ -230,7 +326,12 @@
     "autor": "Kent Beck",
     "ano": 2002,
     "categoria": "Tecnologia",
-    "tags": ["TDD", "testes", "desenvolvimento", "qualidade"],
+    "tags": [
+      "TDD",
+      "testes",
+      "desenvolvimento",
+      "qualidade"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/test-driven.md"
   },
@@ -240,7 +341,12 @@
     "autor": "Glenford Myers",
     "ano": 2004,
     "categoria": "Tecnologia",
-    "tags": ["QA", "testes", "qualidade", "metodologia"],
+    "tags": [
+      "QA",
+      "testes",
+      "qualidade",
+      "metodologia"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/arte-testes-software.md"
   },
@@ -250,7 +356,12 @@
     "autor": "Gerald Weinberg",
     "ano": 2008,
     "categoria": "Tecnologia",
-    "tags": ["QA", "testes", "qualidade", "mindset"],
+    "tags": [
+      "QA",
+      "testes",
+      "qualidade",
+      "mindset"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/perfect-software.md"
   },
@@ -260,7 +371,12 @@
     "autor": "Yuval Noah Harari",
     "ano": 2011,
     "categoria": "História",
-    "tags": ["história", "humanidade", "evolução", "cultura"],
+    "tags": [
+      "história",
+      "humanidade",
+      "evolução",
+      "cultura"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/sapiens.md"
   },
@@ -270,7 +386,12 @@
     "autor": "Walter Isaacson",
     "ano": 2011,
     "categoria": "Biografia",
-    "tags": ["inovação", "liderança", "visão", "criatividade"],
+    "tags": [
+      "inovação",
+      "liderança",
+      "visão",
+      "criatividade"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/steve-jobs.md"
   },
@@ -280,7 +401,12 @@
     "autor": "Walter Isaacson",
     "ano": 2003,
     "categoria": "Biografia",
-    "tags": ["inovação", "liderança", "dedicação", "aprendizado"],
+    "tags": [
+      "inovação",
+      "liderança",
+      "dedicação",
+      "aprendizado"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/benjamin-franklin.md"
   },
@@ -290,7 +416,12 @@
     "autor": "Richard Thaler",
     "ano": 2015,
     "categoria": "Economia",
-    "tags": ["economia", "comportamento", "tomada-decisão", "mercado"],
+    "tags": [
+      "economia",
+      "comportamento",
+      "tomada-decisão",
+      "mercado"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/economia-comportamental.md"
   },
@@ -300,7 +431,12 @@
     "autor": "Nassim Nicholas Taleb",
     "ano": 2007,
     "categoria": "Economia",
-    "tags": ["risco", "incerteza", "mercado", "probabilidade"],
+    "tags": [
+      "risco",
+      "incerteza",
+      "mercado",
+      "probabilidade"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/black-swan.md"
   },
@@ -310,7 +446,12 @@
     "autor": "Seth Godin",
     "ano": 1999,
     "categoria": "Marketing",
-    "tags": ["marketing", "relacionamento", "permissão", "conexão"],
+    "tags": [
+      "marketing",
+      "relacionamento",
+      "permissão",
+      "conexão"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/marketing-permissao.md"
   },
@@ -320,7 +461,12 @@
     "autor": "Gabriel Weinberg",
     "ano": 2014,
     "categoria": "Negócios",
-    "tags": ["crescimento", "startups", "marketing", "adquisição"],
+    "tags": [
+      "crescimento",
+      "startups",
+      "marketing",
+      "adquisição"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/traction.md"
   },
@@ -330,7 +476,12 @@
     "autor": "Eric Ries",
     "ano": 2011,
     "categoria": "Negócios",
-    "tags": ["startups", "inovação", "iteração", "feedback"],
+    "tags": [
+      "startups",
+      "inovação",
+      "iteração",
+      "feedback"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/lean-startup.md"
   },
@@ -340,7 +491,12 @@
     "autor": "Peter Thiel",
     "ano": 2014,
     "categoria": "Negócios",
-    "tags": ["startups", "inovação", "tecnologia", "futuro"],
+    "tags": [
+      "startups",
+      "inovação",
+      "tecnologia",
+      "futuro"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/zero-one.md"
   },
@@ -350,7 +506,12 @@
     "autor": "Paul Hersey & Ken Blanchard",
     "ano": 1969,
     "categoria": "Liderança",
-    "tags": ["liderança", "desenvolvimento", "adaptação", "equipe"],
+    "tags": [
+      "liderança",
+      "desenvolvimento",
+      "adaptação",
+      "equipe"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/lideranca-situacional.md"
   },
@@ -360,7 +521,12 @@
     "autor": "James Kouzes & Barry Posner",
     "ano": 1987,
     "categoria": "Liderança",
-    "tags": ["liderança", "inspiração", "credibilidade", "transformação"],
+    "tags": [
+      "liderança",
+      "inspiração",
+      "credibilidade",
+      "transformação"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/verdades-lideranca.md"
   },
@@ -370,39 +536,14 @@
     "autor": "David Thomas & Andrew Hunt",
     "ano": 2019,
     "categoria": "Tecnologia",
-    "tags": ["programação", "carreira", "best-practices", "produtividade"],
+    "tags": [
+      "programação",
+      "carreira",
+      "best-practices",
+      "produtividade"
+    ],
     "tempoLeitura": 15,
-    "arquivo": "resumos/pragmatic-programmer.md"
-  },
-  {
-    "id": "design-patterns",
-    "titulo": "Design Patterns",
-    "autor": "Gang of Four",
-    "ano": 1994,
-    "categoria": "Tecnologia",
-    "tags": ["padrões", "arquitetura", "OOP", "engenharia"],
-    "tempoLeitura": 15,
-    "arquivo": "resumos/design-patterns.md"
-  },
-  {
-    "id": "refactoring",
-    "titulo": "Refactoring",
-    "autor": "Martin Fowler",
-    "ano": 2018,
-    "categoria": "Tecnologia",
-    "tags": ["qualidade", "código", "manutenção", "best-practices"],
-    "tempoLeitura": 15,
-    "arquivo": "resumos/refactoring.md"
-  },
-  {
-    "id": "arquitetura-limpa",
-    "titulo": "Arquitetura Limpa",
-    "autor": "Robert C. Martin",
-    "ano": 2017,
-    "categoria": "Tecnologia",
-    "tags": ["arquitetura", "design", "qualidade", "SOLID"],
-    "tempoLeitura": 15,
-    "arquivo": "resumos/arquitetura-limpa.md"
+    "arquivo": "resumos/cradle-control.md"
   },
   {
     "id": "automation-testing",
@@ -410,7 +551,12 @@
     "autor": "Paul Gerrard & Mark Fewster",
     "ano": 2012,
     "categoria": "Tecnologia",
-    "tags": ["QA", "testes", "automação", "selenium"],
+    "tags": [
+      "QA",
+      "testes",
+      "automação",
+      "selenium"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/automation-testing.md"
   },
@@ -420,7 +566,12 @@
     "autor": "Microsoft Patterns & Practices",
     "ano": 2011,
     "categoria": "Tecnologia",
-    "tags": ["QA", "performance", "testes", "escalabilidade"],
+    "tags": [
+      "QA",
+      "performance",
+      "testes",
+      "escalabilidade"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/performance-testing.md"
   },
@@ -430,7 +581,12 @@
     "autor": "John Ferguson Smart",
     "ano": 2014,
     "categoria": "Tecnologia",
-    "tags": ["QA", "BDD", "testes", "cucumber"],
+    "tags": [
+      "QA",
+      "BDD",
+      "testes",
+      "cucumber"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/bdd-cucumber.md"
   },
@@ -440,39 +596,14 @@
     "autor": "Kent Beck",
     "ano": 2004,
     "categoria": "Tecnologia",
-    "tags": ["XP", "desenvolvimento", "qualidade", "metodologia"],
+    "tags": [
+      "XP",
+      "desenvolvimento",
+      "qualidade",
+      "metodologia"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/xp-explained.md"
-  },
-  {
-    "id": "scrum-master",
-    "titulo": "The Scrum Master",
-    "autor": "Geoff Watts",
-    "ano": 2012,
-    "categoria": "Tecnologia",
-    "tags": ["agile", "scrum", "liderança", "equipe"],
-    "tempoLeitura": 15,
-    "arquivo": "resumos/scrum-master.md"
-  },
-  {
-    "id": "agile-mindset",
-    "titulo": "The Agile Mindset",
-    "autor": "Gil Broza",
-    "ano": 2015,
-    "categoria": "Tecnologia",
-    "tags": ["agile", "cultura", "transformação", "equipe"],
-    "tempoLeitura": 15,
-    "arquivo": "resumos/agile-mindset.md"
-  },
-  {
-    "id": "devops-handbook",
-    "titulo": "The DevOps Handbook",
-    "autor": "Gene Kim et al.",
-    "ano": 2016,
-    "categoria": "Tecnologia",
-    "tags": ["DevOps", "CI/CD", "automação", "operações"],
-    "tempoLeitura": 15,
-    "arquivo": "resumos/devops-handbook.md"
   },
   {
     "id": "cloud-native",
@@ -480,7 +611,12 @@
     "autor": "Cornelia Davis",
     "ano": 2019,
     "categoria": "Tecnologia",
-    "tags": ["cloud", "kubernetes", "microserviços", "arquitetura"],
+    "tags": [
+      "cloud",
+      "kubernetes",
+      "microserviços",
+      "arquitetura"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/cloud-native.md"
   },
@@ -490,7 +626,12 @@
     "autor": "Pramod Sadalage & Martin Fowler",
     "ano": 2012,
     "categoria": "Tecnologia",
-    "tags": ["banco-dados", "nosql", "escalabilidade", "design"],
+    "tags": [
+      "banco-dados",
+      "nosql",
+      "escalabilidade",
+      "design"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/nosql-distilled.md"
   },
@@ -500,7 +641,12 @@
     "autor": "Eric Evans",
     "ano": 2003,
     "categoria": "Tecnologia",
-    "tags": ["DDD", "arquitetura", "design", "engenharia"],
+    "tags": [
+      "DDD",
+      "arquitetura",
+      "design",
+      "engenharia"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/domain-driven.md"
   },
@@ -510,7 +656,12 @@
     "autor": "Justin Richer & David Hardin",
     "ano": 2019,
     "categoria": "Tecnologia",
-    "tags": ["segurança", "autenticação", "oauth", "API"],
+    "tags": [
+      "segurança",
+      "autenticação",
+      "oauth",
+      "API"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/oauth2-guide.md"
   },
@@ -520,7 +671,12 @@
     "autor": "Stuttard & Pinto",
     "ano": 2007,
     "categoria": "Tecnologia",
-    "tags": ["segurança", "web", "testes", "OWASP"],
+    "tags": [
+      "segurança",
+      "web",
+      "testes",
+      "OWASP"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/web-security.md"
   },
@@ -530,7 +686,12 @@
     "autor": "Robert C. Martin",
     "ano": 2011,
     "categoria": "Tecnologia",
-    "tags": ["profissionalismo", "carreira", "código", "ética"],
+    "tags": [
+      "profissionalismo",
+      "carreira",
+      "código",
+      "ética"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/clean-coder.md"
   },
@@ -540,7 +701,12 @@
     "autor": "Michael Feathers",
     "ano": 2004,
     "categoria": "Tecnologia",
-    "tags": ["código-legado", "refactoring", "testes", "qualidade"],
+    "tags": [
+      "código-legado",
+      "refactoring",
+      "testes",
+      "qualidade"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/working-effectively.md"
   },
@@ -550,7 +716,12 @@
     "autor": "Jez Humble & David Farley",
     "ano": 2010,
     "categoria": "Tecnologia",
-    "tags": ["CI/CD", "deploy", "automação", "operações"],
+    "tags": [
+      "CI/CD",
+      "deploy",
+      "automação",
+      "operações"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/continuous-delivery.md"
   },
@@ -560,7 +731,12 @@
     "autor": "Gene Kim et al.",
     "ano": 2013,
     "categoria": "Tecnologia",
-    "tags": ["DevOps", "agile", "transformação", "lean"],
+    "tags": [
+      "DevOps",
+      "agile",
+      "transformação",
+      "lean"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/phoenix-project.md"
   },
@@ -570,7 +746,12 @@
     "autor": "Michael Nygard",
     "ano": 2018,
     "categoria": "Tecnologia",
-    "tags": ["confiabilidade", "operações", "design", "padrões"],
+    "tags": [
+      "confiabilidade",
+      "operações",
+      "design",
+      "padrões"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/release-it.md"
   },
@@ -580,7 +761,12 @@
     "autor": "Betsy Beyer et al.",
     "ano": 2016,
     "categoria": "Tecnologia",
-    "tags": ["SRE", "operações", "confiabilidade", "escalabilidade"],
+    "tags": [
+      "SRE",
+      "operações",
+      "confiabilidade",
+      "escalabilidade"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/site-reliability.md"
   },
@@ -590,7 +776,12 @@
     "autor": "Robert Glass",
     "ano": 2002,
     "categoria": "Tecnologia",
-    "tags": ["QA", "comportamento", "comunicação", "equipe"],
+    "tags": [
+      "QA",
+      "comportamento",
+      "comunicação",
+      "equipe"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/human-factors-qa.md"
   },
@@ -600,7 +791,12 @@
     "autor": "James Whittaker",
     "ano": 2009,
     "categoria": "Tecnologia",
-    "tags": ["QA", "testes", "criatividade", "investigação"],
+    "tags": [
+      "QA",
+      "testes",
+      "criatividade",
+      "investigação"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/exploratory-testing.md"
   },
@@ -610,7 +806,12 @@
     "autor": "Bruce Schneier",
     "ano": 2019,
     "categoria": "Tecnologia",
-    "tags": ["segurança", "mentalidade", "risco", "defesa"],
+    "tags": [
+      "segurança",
+      "mentalidade",
+      "risco",
+      "defesa"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/security-mindset.md"
   },
@@ -620,7 +821,12 @@
     "autor": "Barry Boehm",
     "ano": 1989,
     "categoria": "Tecnologia",
-    "tags": ["risco", "gestão", "projeto", "planejamento"],
+    "tags": [
+      "risco",
+      "gestão",
+      "projeto",
+      "planejamento"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/risco-softwares.md"
   },
@@ -630,7 +836,12 @@
     "autor": "Steve McConnell",
     "ano": 2006,
     "categoria": "Tecnologia",
-    "tags": ["estimativa", "planejamento", "projeto", "gestão"],
+    "tags": [
+      "estimativa",
+      "planejamento",
+      "projeto",
+      "gestão"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/estimating-software.md"
   },
@@ -640,7 +851,12 @@
     "autor": "Marnie Hutcheson",
     "ano": 2003,
     "categoria": "Tecnologia",
-    "tags": ["QA", "testes", "fundamentals", "metodologia"],
+    "tags": [
+      "QA",
+      "testes",
+      "fundamentals",
+      "metodologia"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/fundamentals-testing.md"
   },
@@ -650,7 +866,12 @@
     "autor": "Arnaldo Sandoval",
     "ano": 2017,
     "categoria": "Tecnologia",
-    "tags": ["QA", "testes", "API", "automação"],
+    "tags": [
+      "QA",
+      "testes",
+      "API",
+      "automação"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/api-testing.md"
   },
@@ -660,7 +881,12 @@
     "autor": "Lisa Crispin & Janet Gregory",
     "ano": 2008,
     "categoria": "Tecnologia",
-    "tags": ["QA", "agile", "testes", "desenvolvimento"],
+    "tags": [
+      "QA",
+      "agile",
+      "testes",
+      "desenvolvimento"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/agile-testing.md"
   },
@@ -670,7 +896,12 @@
     "autor": "Jonathan Kohl",
     "ano": 2014,
     "categoria": "Tecnologia",
-    "tags": ["QA", "mobile", "testes", "automação"],
+    "tags": [
+      "QA",
+      "mobile",
+      "testes",
+      "automação"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/mobile-testing.md"
   },
@@ -680,7 +911,12 @@
     "autor": "Brian Hambling",
     "ano": 2011,
     "categoria": "Tecnologia",
-    "tags": ["QA", "gestão", "planejamento", "processo"],
+    "tags": [
+      "QA",
+      "gestão",
+      "planejamento",
+      "processo"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/test-management.md"
   },
@@ -690,7 +926,12 @@
     "autor": "Govindarajan & Trimble",
     "ano": 2012,
     "categoria": "Negócios",
-    "tags": ["inovação", "estratégia", "criatividade", "transformação"],
+    "tags": [
+      "inovação",
+      "estratégia",
+      "criatividade",
+      "transformação"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/rethinking-innovation.md"
   },
@@ -700,7 +941,12 @@
     "autor": "W. Chan Kim & Renée Mauborgne",
     "ano": 2005,
     "categoria": "Negócios",
-    "tags": ["estratégia", "inovação", "mercado", "competição"],
+    "tags": [
+      "estratégia",
+      "inovação",
+      "mercado",
+      "competição"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/blue-ocean.md"
   },
@@ -710,9 +956,14 @@
     "autor": "Jim Collins",
     "ano": 2001,
     "categoria": "Negócios",
-    "tags": ["liderança", "excelência", "transformação", "sucesso"],
+    "tags": [
+      "liderança",
+      "excelência",
+      "transformação",
+      "sucesso"
+    ],
     "tempoLeitura": 15,
-    "arquivo": "resumos/good-to-great.md"
+    "arquivo": "resumos/boa-a-runa.md"
   },
   {
     "id": "disruptive-innovation",
@@ -720,7 +971,12 @@
     "autor": "Clayton Christensen",
     "ano": 1997,
     "categoria": "Negócios",
-    "tags": ["inovação", "disrupção", "estratégia", "mercado"],
+    "tags": [
+      "inovação",
+      "disrupção",
+      "estratégia",
+      "mercado"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/disruptive-innovation.md"
   },
@@ -730,19 +986,14 @@
     "autor": "Michael Dostal & Chris Golec",
     "ano": 2017,
     "categoria": "Negócios",
-    "tags": ["clientes", "relacionamento", "retenção", "crescimento"],
+    "tags": [
+      "clientes",
+      "relacionamento",
+      "retenção",
+      "crescimento"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/customer-success.md"
-  },
-  {
-    "id": "winning-through-innovation",
-    "titulo": "Winning Through Innovation",
-    "autor": "Michael Tushman & Charles O'Reilly",
-    "ano": 2002,
-    "categoria": "Negócios",
-    "tags": ["inovação", "liderança", "mudança", "organização"],
-    "tempoLeitura": 15,
-    "arquivo": "resumos/winning-innovation.md"
   },
   {
     "id": "market-leadership",
@@ -750,7 +1001,12 @@
     "autor": "Jon Kolind & Soren Pilmark",
     "ano": 2004,
     "categoria": "Negócios",
-    "tags": ["liderança", "mercado", "estratégia", "competição"],
+    "tags": [
+      "liderança",
+      "mercado",
+      "estratégia",
+      "competição"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/market-leadership.md"
   },
@@ -760,7 +1016,12 @@
     "autor": "Donald Bowersox et al.",
     "ano": 2012,
     "categoria": "Negócios",
-    "tags": ["cadeia-suprimentos", "logística", "operações", "eficiência"],
+    "tags": [
+      "cadeia-suprimentos",
+      "logística",
+      "operações",
+      "eficiência"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/supply-chain.md"
   },
@@ -770,7 +1031,12 @@
     "autor": "Paige Ross",
     "ano": 2011,
     "categoria": "Finanças",
-    "tags": ["VC", "investimentos", "startups", "negócios"],
+    "tags": [
+      "VC",
+      "investimentos",
+      "startups",
+      "negócios"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/venture-capital.md"
   },
@@ -780,7 +1046,12 @@
     "autor": "Ramesh Rao",
     "ano": 2014,
     "categoria": "Finanças",
-    "tags": ["investimentos", "PE", "mercado", "negócios"],
+    "tags": [
+      "investimentos",
+      "PE",
+      "mercado",
+      "negócios"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/private-equity.md"
   },
@@ -790,7 +1061,12 @@
     "autor": "Paul Vigna & Michael J. Casey",
     "ano": 2015,
     "categoria": "Finanças",
-    "tags": ["bitcoin", "blockchain", "cripto", "futuro"],
+    "tags": [
+      "bitcoin",
+      "blockchain",
+      "cripto",
+      "futuro"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/cryptocurrencies.md"
   },
@@ -800,7 +1076,12 @@
     "autor": "Michael Pento",
     "ano": 2020,
     "categoria": "Economia",
-    "tags": ["inflação", "economia", "moeda", "mercado"],
+    "tags": [
+      "inflação",
+      "economia",
+      "moeda",
+      "mercado"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/inflation-money.md"
   },
@@ -810,7 +1091,12 @@
     "autor": "Dan Ariely",
     "ano": 2010,
     "categoria": "Economia",
-    "tags": ["comportamento", "finanças", "decisão", "viés"],
+    "tags": [
+      "comportamento",
+      "finanças",
+      "decisão",
+      "viés"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/behavioral-finance.md"
   },
@@ -820,7 +1106,12 @@
     "autor": "Joseph Stiglitz",
     "ano": 2010,
     "categoria": "Economia",
-    "tags": ["crise", "economia", "mercado", "regulação"],
+    "tags": [
+      "crise",
+      "economia",
+      "mercado",
+      "regulação"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/bubble-crash.md"
   },
@@ -830,7 +1121,12 @@
     "autor": "Thomas Piketty",
     "ano": 2013,
     "categoria": "Economia",
-    "tags": ["desigualdade", "capital", "economia", "sociedade"],
+    "tags": [
+      "desigualdade",
+      "capital",
+      "economia",
+      "sociedade"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/inequality-capital.md"
   },
@@ -840,7 +1136,12 @@
     "autor": "Steven Levitt & Stephen Dubner",
     "ano": 2005,
     "categoria": "Economia",
-    "tags": ["economia", "criatividade", "análise", "dados"],
+    "tags": [
+      "economia",
+      "criatividade",
+      "análise",
+      "dados"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/freakonomics.md"
   },
@@ -850,7 +1151,12 @@
     "autor": "Klaus Schwab",
     "ano": 2021,
     "categoria": "Economia",
-    "tags": ["capitalismo", "stakeholders", "sustentabilidade", "futuro"],
+    "tags": [
+      "capitalismo",
+      "stakeholders",
+      "sustentabilidade",
+      "futuro"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/stakeholder-capitalism.md"
   },
@@ -860,7 +1166,12 @@
     "autor": "Malcolm Gladwell",
     "ano": 2000,
     "categoria": "Psicologia",
-    "tags": ["tendências", "epidemias", "comportamento", "mudança"],
+    "tags": [
+      "tendências",
+      "epidemias",
+      "comportamento",
+      "mudança"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/tipping-point.md"
   },
@@ -870,7 +1181,12 @@
     "autor": "Malcolm Gladwell",
     "ano": 2005,
     "categoria": "Psicologia",
-    "tags": ["intuição", "decisão", "subconsciente", "cognição"],
+    "tags": [
+      "intuição",
+      "decisão",
+      "subconsciente",
+      "cognição"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/blink.md"
   },
@@ -880,19 +1196,14 @@
     "autor": "Malcolm Gladwell",
     "ano": 2013,
     "categoria": "Psicologia",
-    "tags": ["adversidade", "vantagem", "perspectiva", "sucesso"],
+    "tags": [
+      "adversidade",
+      "vantagem",
+      "perspectiva",
+      "sucesso"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/david-goliath.md"
-  },
-  {
-    "id": "umwelt-perception",
-    "titulo": "Thinking, Fast and Slow",
-    "autor": "Daniel Kahneman",
-    "ano": 2011,
-    "categoria": "Psicologia",
-    "tags": ["cognição", "pensamento", "viés", "decisão"],
-    "tempoLeitura": 15,
-    "arquivo": "resumos/thinking-fast-slow.md"
   },
   {
     "id": "predictably-irrational",
@@ -900,39 +1211,14 @@
     "autor": "Dan Ariely",
     "ano": 2008,
     "categoria": "Psicologia",
-    "tags": ["irracionalidade", "comportamento", "decisão", "economia"],
+    "tags": [
+      "irracionalidade",
+      "comportamento",
+      "decisão",
+      "economia"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/predictably-irrational.md"
-  },
-  {
-    "id": "emotional-intelligence-eq",
-    "titulo": "Emotional Intelligence 2.0",
-    "autor": "Travis Bradberry & Jean Greaves",
-    "ano": 2009,
-    "categoria": "Psicologia",
-    "tags": ["EQ", "emoções", "autoconhecimento", "relacionamentos"],
-    "tempoLeitura": 15,
-    "arquivo": "resumos/emotional-intelligence-2.md"
-  },
-  {
-    "id": "social-psychology",
-    "titulo": "Influence",
-    "autor": "Robert Cialdini",
-    "ano": 1984,
-    "categoria": "Psicologia",
-    "tags": ["persuasão", "influência", "psicologia-social", "comportamento"],
-    "tempoLeitura": 15,
-    "arquivo": "resumos/influence.md"
-  },
-  {
-    "id": "driven-passion",
-    "titulo": "Drive",
-    "autor": "Daniel Pink",
-    "ano": 2009,
-    "categoria": "Psicologia",
-    "tags": ["motivação", "autonomia", "propósito", "desempenho"],
-    "tempoLeitura": 15,
-    "arquivo": "resumos/drive.md"
   },
   {
     "id": "grit",
@@ -940,19 +1226,14 @@
     "autor": "Angela Duckworth",
     "ano": 2016,
     "categoria": "Psicologia",
-    "tags": ["perseverança", "determinação", "sucesso", "paixão"],
+    "tags": [
+      "perseverança",
+      "determinação",
+      "sucesso",
+      "paixão"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/grit.md"
-  },
-  {
-    "id": "self-control",
-    "titulo": "Willpower",
-    "autor": "Roy Baumeister & John Tierney",
-    "ano": 2011,
-    "categoria": "Psicologia",
-    "tags": ["vontade", "autodisciplina", "autorregulação", "sucesso"],
-    "tempoLeitura": 15,
-    "arquivo": "resumos/willpower.md"
   },
   {
     "id": "growth-mindset",
@@ -960,19 +1241,14 @@
     "autor": "Carol Dweck",
     "ano": 2019,
     "categoria": "Autoajuda",
-    "tags": ["mentalidade", "crescimento", "aprendizado", "transformação"],
+    "tags": [
+      "mentalidade",
+      "crescimento",
+      "aprendizado",
+      "transformação"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/growth-mindset.md"
-  },
-  {
-    "id": "atomic-habits",
-    "titulo": "Atomic Habits Advanced",
-    "autor": "James Clear",
-    "ano": 2020,
-    "categoria": "Produtividade",
-    "tags": ["hábitos", "sistemas", "pequenas-mudanças", "resultados"],
-    "tempoLeitura": 15,
-    "arquivo": "resumos/atomic-habits-advanced.md"
   },
   {
     "id": "do-trabalho",
@@ -980,9 +1256,14 @@
     "autor": "Steven Pressfield",
     "ano": 2002,
     "categoria": "Produtividade",
-    "tags": ["criatividade", "resistência", "profissionalismo", "obra"],
+    "tags": [
+      "criatividade",
+      "resistência",
+      "profissionalismo",
+      "obra"
+    ],
     "tempoLeitura": 15,
-    "arquivo": "resumos/war-of-art.md"
+    "arquivo": "resumos/do-trabalho.md"
   },
   {
     "id": "estoicismo",
@@ -990,9 +1271,14 @@
     "autor": "William Irvine",
     "ano": 2009,
     "categoria": "Filosofia",
-    "tags": ["estoicismo", "felicidade", "virtude", "vida boa"],
+    "tags": [
+      "estoicismo",
+      "felicidade",
+      "virtude",
+      "vida boa"
+    ],
     "tempoLeitura": 15,
-    "arquivo": "resumos/guide-good-life.md"
+    "arquivo": "resumos/estoicismo.md"
   },
   {
     "id": "meditations",
@@ -1000,9 +1286,14 @@
     "autor": "Marco Aurélio",
     "ano": 170,
     "categoria": "Filosofia",
-    "tags": ["estoicismo", "reflexão", "poder", "virtude"],
+    "tags": [
+      "estoicismo",
+      "reflexão",
+      "poder",
+      "virtude"
+    ],
     "tempoLeitura": 15,
-    "arquivo": "resumos/meditacoes.md"
+    "arquivo": "resumos/meditations.md"
   },
   {
     "id": "mans-search",
@@ -1010,7 +1301,12 @@
     "autor": "Viktor Frankl",
     "ano": 1946,
     "categoria": "Filosofia",
-    "tags": ["significado", "propósito", "resiliência", "vida"],
+    "tags": [
+      "significado",
+      "propósito",
+      "resiliência",
+      "vida"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/mans-search.md"
   },
@@ -1020,7 +1316,12 @@
     "autor": "Jostein Gaarder",
     "ano": 1991,
     "categoria": "Filosofia",
-    "tags": ["filosofia", "história", "mistério", "pensamento"],
+    "tags": [
+      "filosofia",
+      "história",
+      "mistério",
+      "pensamento"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/sophies-world.md"
   },
@@ -1030,7 +1331,12 @@
     "autor": "Immanuel Kant",
     "ano": 1781,
     "categoria": "Filosofia",
-    "tags": ["epistemologia", "metafísica", "conhecimento", "razão"],
+    "tags": [
+      "epistemologia",
+      "metafísica",
+      "conhecimento",
+      "razão"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/critique-pure-reason.md"
   },
@@ -1040,7 +1346,12 @@
     "autor": "Platão",
     "ano": 380,
     "categoria": "Filosofia",
-    "tags": ["justiça", "Estado", "virtude", "realidade"],
+    "tags": [
+      "justiça",
+      "Estado",
+      "virtude",
+      "realidade"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/republic-plato.md"
   },
@@ -1050,7 +1361,12 @@
     "autor": "Jean-Paul Sartre",
     "ano": 1945,
     "categoria": "Filosofia",
-    "tags": ["existencialismo", "liberdade", "responsabilidade", "essência"],
+    "tags": [
+      "existencialismo",
+      "liberdade",
+      "responsabilidade",
+      "essência"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/existentialism.md"
   },
@@ -1060,7 +1376,12 @@
     "autor": "Carl Sagan",
     "ano": 1980,
     "categoria": "Ciência",
-    "tags": ["universo", "ciência", "exploração", "maravilha"],
+    "tags": [
+      "universo",
+      "ciência",
+      "exploração",
+      "maravilha"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/cosmos.md"
   },
@@ -1070,7 +1391,12 @@
     "autor": "Carl Sagan",
     "ano": 1994,
     "categoria": "Ciência",
-    "tags": ["terra", "perspectiva", "humanidade", "cosmos"],
+    "tags": [
+      "terra",
+      "perspectiva",
+      "humanidade",
+      "cosmos"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/pale-blue-dot.md"
   },
@@ -1080,7 +1406,12 @@
     "autor": "Richard Dawkins",
     "ano": 1976,
     "categoria": "Ciência",
-    "tags": ["evolução", "genes", "biologia", "natureza"],
+    "tags": [
+      "evolução",
+      "genes",
+      "biologia",
+      "natureza"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/selfish-gene.md"
   },
@@ -1090,7 +1421,12 @@
     "autor": "Charles Darwin",
     "ano": 1859,
     "categoria": "Ciência",
-    "tags": ["evolução", "seleção-natural", "biologia", "vida"],
+    "tags": [
+      "evolução",
+      "seleção-natural",
+      "biologia",
+      "vida"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/origen-especies.md"
   },
@@ -1100,7 +1436,12 @@
     "autor": "Brian Greene",
     "ano": 1999,
     "categoria": "Ciência",
-    "tags": ["física", "relatividade", "quântica", "universo"],
+    "tags": [
+      "física",
+      "relatividade",
+      "quântica",
+      "universo"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/elegant-universe.md"
   },
@@ -1110,7 +1451,12 @@
     "autor": "Stephen Hawking",
     "ano": 1988,
     "categoria": "Ciência",
-    "tags": ["física", "tempo", "universo", "buracos-negros"],
+    "tags": [
+      "física",
+      "tempo",
+      "universo",
+      "buracos-negros"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/black-holes.md"
   },
@@ -1120,7 +1466,12 @@
     "autor": "Donella Meadows",
     "ano": 2008,
     "categoria": "Ciência",
-    "tags": ["sistemas", "pensamento", "complexidade", "dinamica"],
+    "tags": [
+      "sistemas",
+      "pensamento",
+      "complexidade",
+      "dinamica"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/thinking-systems.md"
   },
@@ -1130,7 +1481,12 @@
     "autor": "Adam Rutherford",
     "ano": 2018,
     "categoria": "Ciência",
-    "tags": ["biologia", "humanidade", "genes", "história"],
+    "tags": [
+      "biologia",
+      "humanidade",
+      "genes",
+      "história"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/human-biology.md"
   },
@@ -1140,7 +1496,12 @@
     "autor": "Andrew Roberts",
     "ano": 2014,
     "categoria": "História",
-    "tags": ["líder", "guerra", "europa", "política"],
+    "tags": [
+      "líder",
+      "guerra",
+      "europa",
+      "política"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/napoleon-history.md"
   },
@@ -1150,7 +1511,12 @@
     "autor": "Winston Churchill",
     "ano": 1948,
     "categoria": "História",
-    "tags": ["guerra", "história", "política", "liderança"],
+    "tags": [
+      "guerra",
+      "história",
+      "política",
+      "liderança"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/world-war2.md"
   },
@@ -1160,7 +1526,12 @@
     "autor": "David McCullough",
     "ano": 2001,
     "categoria": "História",
-    "tags": ["revolução", "américa", "política", "liberdade"],
+    "tags": [
+      "revolução",
+      "américa",
+      "política",
+      "liberdade"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/american-revolution.md"
   },
@@ -1170,7 +1541,12 @@
     "autor": "Ibram Kendi",
     "ano": 2016,
     "categoria": "História",
-    "tags": ["história", "raça", "sociedade", "política"],
+    "tags": [
+      "história",
+      "raça",
+      "sociedade",
+      "política"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/black-history.md"
   },
@@ -1180,7 +1556,12 @@
     "autor": "Peter Frankopan",
     "ano": 2015,
     "categoria": "História",
-    "tags": ["comércio", "cultura", "continentes", "história"],
+    "tags": [
+      "comércio",
+      "cultura",
+      "continentes",
+      "história"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/silk-road.md"
   },
@@ -1190,7 +1571,12 @@
     "autor": "Jack Kelly",
     "ano": 2004,
     "categoria": "História",
-    "tags": ["tecnologia", "poder", "transformação", "mundo"],
+    "tags": [
+      "tecnologia",
+      "poder",
+      "transformação",
+      "mundo"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/gunpowder.md"
   },
@@ -1200,7 +1586,12 @@
     "autor": "Niall Ferguson",
     "ano": 2011,
     "categoria": "História",
-    "tags": ["ocidente", "civilização", "poder", "história"],
+    "tags": [
+      "ocidente",
+      "civilização",
+      "poder",
+      "história"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/civilization-west.md"
   },
@@ -1210,19 +1601,14 @@
     "autor": "Peter Ackroyd",
     "ano": 2000,
     "categoria": "História",
-    "tags": ["cidade", "cultura", "política", "vida"],
+    "tags": [
+      "cidade",
+      "cultura",
+      "política",
+      "vida"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/london-history.md"
-  },
-  {
-    "id": "creativity",
-    "titulo": "Creativity Inc",
-    "autor": "Ed Catmull & Amy Wallace",
-    "ano": 2014,
-    "categoria": "Negócios",
-    "tags": ["criatividade", "inovação", "equipe", "liderança"],
-    "tempoLeitura": 15,
-    "arquivo": "resumos/creativity-inc.md"
   },
   {
     "id": "nike-story",
@@ -1230,9 +1616,14 @@
     "autor": "Phil Knight",
     "ano": 2016,
     "categoria": "Biografia",
-    "tags": ["empreendedor", "nike", "riscos", "sucesso"],
+    "tags": [
+      "empreendedor",
+      "nike",
+      "riscos",
+      "sucesso"
+    ],
     "tempoLeitura": 15,
-    "arquivo": "resumos/shoe-dog.md"
+    "arquivo": "resumos/nike-story.md"
   },
   {
     "id": "elon-biography",
@@ -1240,7 +1631,12 @@
     "autor": "Walter Isaacson",
     "ano": 2023,
     "categoria": "Biografia",
-    "tags": ["inovador", "visão", "tesla", "spacex"],
+    "tags": [
+      "inovador",
+      "visão",
+      "tesla",
+      "spacex"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/elon-biography.md"
   },
@@ -1250,7 +1646,12 @@
     "autor": "Jennifer Lee",
     "ano": 2015,
     "categoria": "Biografia",
-    "tags": ["filantropia", "tecnologia", "negócios", "impacto"],
+    "tags": [
+      "filantropia",
+      "tecnologia",
+      "negócios",
+      "impacto"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/bill-gates-bio.md"
   },
@@ -1260,7 +1661,12 @@
     "autor": "Andrew Hodges",
     "ano": 2012,
     "categoria": "Biografia",
-    "tags": ["computação", "enigma", "genio", "história"],
+    "tags": [
+      "computação",
+      "enigma",
+      "genio",
+      "história"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/alan-turing.md"
   },
@@ -1270,7 +1676,12 @@
     "autor": "Eve Curie",
     "ano": 1937,
     "categoria": "Biografia",
-    "tags": ["ciência", "mulher", "determinação", "descoberta"],
+    "tags": [
+      "ciência",
+      "mulher",
+      "determinação",
+      "descoberta"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/marie-curie.md"
   },
@@ -1280,7 +1691,12 @@
     "autor": "Peter Ackroyd",
     "ano": 2018,
     "categoria": "Biografia",
-    "tags": ["liderança", "guerra", "política", "coragem"],
+    "tags": [
+      "liderança",
+      "guerra",
+      "política",
+      "coragem"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/churchill-bio.md"
   },
@@ -1290,7 +1706,12 @@
     "autor": "Walter Isaacson",
     "ano": 2017,
     "categoria": "Biografia",
-    "tags": ["genio", "arte", "ciência", "renascimento"],
+    "tags": [
+      "genio",
+      "arte",
+      "ciência",
+      "renascimento"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/leonardo-vinci.md"
   },
@@ -1300,7 +1721,12 @@
     "autor": "Doris Kearns Goodwin",
     "ano": 2005,
     "categoria": "Biografia",
-    "tags": ["lincoln", "liderança", "governo", "guerra-civil"],
+    "tags": [
+      "lincoln",
+      "liderança",
+      "governo",
+      "guerra-civil"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/lincoln-bio.md"
   },
@@ -1310,7 +1736,12 @@
     "autor": "Rajmohan Gandhi",
     "ano": 2006,
     "categoria": "Biografia",
-    "tags": ["não-violência", "independência", "líder", "índia"],
+    "tags": [
+      "não-violência",
+      "independência",
+      "líder",
+      "índia"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/gandhi-bio.md"
   },
@@ -1320,7 +1751,12 @@
     "autor": "Martin Luther King Jr",
     "ano": 1998,
     "categoria": "Biografia",
-    "tags": ["direitos-civis", "sonho", "justiça", "liderança"],
+    "tags": [
+      "direitos-civis",
+      "sonho",
+      "justiça",
+      "liderança"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/mlk-bio.md"
   },
@@ -1330,7 +1766,12 @@
     "autor": "Jerry Jones",
     "ano": 2020,
     "categoria": "Marketing",
-    "tags": ["marketing", "digital", "online", "estratégia"],
+    "tags": [
+      "marketing",
+      "digital",
+      "online",
+      "estratégia"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/digital-marketing.md"
   },
@@ -1340,7 +1781,12 @@
     "autor": "Rebecca Lieb",
     "ano": 2011,
     "categoria": "Marketing",
-    "tags": ["conteúdo", "estratégia", "audiência", "marcas"],
+    "tags": [
+      "conteúdo",
+      "estratégia",
+      "audiência",
+      "marcas"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/content-marketing.md"
   },
@@ -1350,7 +1796,12 @@
     "autor": "Mark Jeffery",
     "ano": 2010,
     "categoria": "Marketing",
-    "tags": ["dados", "análise", "ROI", "métricas"],
+    "tags": [
+      "dados",
+      "análise",
+      "ROI",
+      "métricas"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/data-driven-marketing.md"
   },
@@ -1360,7 +1811,12 @@
     "autor": "Donald Miller",
     "ano": 2017,
     "categoria": "Marketing",
-    "tags": ["marca", "narrativa", "cliente", "mensagem"],
+    "tags": [
+      "marca",
+      "narrativa",
+      "cliente",
+      "mensagem"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/brand-building.md"
   },
@@ -1370,7 +1826,12 @@
     "autor": "Jonah Berger",
     "ano": 2013,
     "categoria": "Marketing",
-    "tags": ["viral", "social", "psicologia", "difusão"],
+    "tags": [
+      "viral",
+      "social",
+      "psicologia",
+      "difusão"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/viral-marketing.md"
   },
@@ -1380,7 +1841,12 @@
     "autor": "Andrew Chen",
     "ano": 2022,
     "categoria": "Negócios",
-    "tags": ["rede", "crescimento", "plataforma", "escalabilidade"],
+    "tags": [
+      "rede",
+      "crescimento",
+      "plataforma",
+      "escalabilidade"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/network-effect.md"
   },
@@ -1390,7 +1856,12 @@
     "autor": "Geoffrey Parker et al.",
     "ano": 2016,
     "categoria": "Negócios",
-    "tags": ["plataforma", "mercado", "dois-lados", "economia"],
+    "tags": [
+      "plataforma",
+      "mercado",
+      "dois-lados",
+      "economia"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/platform-strategy.md"
   },
@@ -1400,7 +1871,12 @@
     "autor": "Peter Diamandis & Steven Kotler",
     "ano": 2012,
     "categoria": "Filosofia",
-    "tags": ["futuro", "tecnologia", "esperança", "inovação"],
+    "tags": [
+      "futuro",
+      "tecnologia",
+      "esperança",
+      "inovação"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/abundance.md"
   },
@@ -1410,7 +1886,12 @@
     "autor": "Ray Kurzweil",
     "ano": 2005,
     "categoria": "Ciência",
-    "tags": ["IA", "futuro", "tecnologia", "transhumanismo"],
+    "tags": [
+      "IA",
+      "futuro",
+      "tecnologia",
+      "transhumanismo"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/singularity.md"
   },
@@ -1420,7 +1901,12 @@
     "autor": "Max Tegmark",
     "ano": 2017,
     "categoria": "Filosofia",
-    "tags": ["IA", "futuro", "humanidade", "propósito"],
+    "tags": [
+      "IA",
+      "futuro",
+      "humanidade",
+      "propósito"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/life-3.0.md"
   },
@@ -1430,7 +1916,12 @@
     "autor": "Nick Bostrom",
     "ano": 2014,
     "categoria": "Ciência",
-    "tags": ["IA", "risco", "futuro", "segurança"],
+    "tags": [
+      "IA",
+      "risco",
+      "futuro",
+      "segurança"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/superintelligence.md"
   },
@@ -1440,7 +1931,12 @@
     "autor": "Stuart Russell",
     "ano": 2019,
     "categoria": "Ciência",
-    "tags": ["IA", "alinhamento", "segurança", "futuro"],
+    "tags": [
+      "IA",
+      "alinhamento",
+      "segurança",
+      "futuro"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/human-compatible.md"
   },
@@ -1450,19 +1946,14 @@
     "autor": "Jon Kabat-Zinn",
     "ano": 1990,
     "categoria": "Psicologia",
-    "tags": ["meditação", "mindfulness", "saúde", "bem-estar"],
+    "tags": [
+      "meditação",
+      "mindfulness",
+      "saúde",
+      "bem-estar"
+    ],
     "tempoLeitura": 15,
-    "arquivo": "resumos/full-catastrophe.md"
-  },
-  {
-    "id": "yoga-filosofia",
-    "titulo": "The Yoga Sutras",
-    "autor": "Patanjali",
-    "ano": 400,
-    "categoria": "Filosofia",
-    "tags": ["yoga", "meditação", "espiritualismo", "mente"],
-    "tempoLeitura": 15,
-    "arquivo": "resumos/yoga-sutras.md"
+    "arquivo": "resumos/meditacao-mindfulness.md"
   },
   {
     "id": "buddhist-philosophy",
@@ -1470,9 +1961,14 @@
     "autor": "Buddhist Texts",
     "ano": 200,
     "categoria": "Filosofia",
-    "tags": ["budismo", "sabedoria", "iluminação", "paz"],
+    "tags": [
+      "budismo",
+      "sabedoria",
+      "iluminação",
+      "paz"
+    ],
     "tempoLeitura": 15,
-    "arquivo": "resumos/heart-sutra.md"
+    "arquivo": "resumos/buddhist-philosophy.md"
   },
   {
     "id": "stoic-philosophy",
@@ -1480,9 +1976,14 @@
     "autor": "Epictetus",
     "ano": 100,
     "categoria": "Filosofia",
-    "tags": ["estoicismo", "liberdade", "controle", "virtude"],
+    "tags": [
+      "estoicismo",
+      "liberdade",
+      "controle",
+      "virtude"
+    ],
     "tempoLeitura": 15,
-    "arquivo": "resumos/discourses-epictetus.md"
+    "arquivo": "resumos/stoic-philosophy.md"
   },
   {
     "id": "tao-te-ching",
@@ -1490,7 +1991,12 @@
     "autor": "Laozi",
     "ano": 600,
     "categoria": "Filosofia",
-    "tags": ["taoísmo", "caminho", "natureza", "sabedoria"],
+    "tags": [
+      "taoísmo",
+      "caminho",
+      "natureza",
+      "sabedoria"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/tao-te-ching.md"
   },
@@ -1500,9 +2006,14 @@
     "autor": "Confucius",
     "ano": 500,
     "categoria": "Filosofia",
-    "tags": ["confucionismo", "moralidade", "relacionamento", "sociedade"],
+    "tags": [
+      "confucionismo",
+      "moralidade",
+      "relacionamento",
+      "sociedade"
+    ],
     "tempoLeitura": 15,
-    "arquivo": "resumos/analects-confucius.md"
+    "arquivo": "resumos/confucianism.md"
   },
   {
     "id": "deep-work",
@@ -1510,7 +2021,12 @@
     "autor": "Cal Newport",
     "ano": 2016,
     "categoria": "Produtividade",
-    "tags": ["foco", "concentração", "conhecimento", "valor"],
+    "tags": [
+      "foco",
+      "concentração",
+      "conhecimento",
+      "valor"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/deep-work.md"
   },
@@ -1520,7 +2036,12 @@
     "autor": "Cal Newport",
     "ano": 2019,
     "categoria": "Autoajuda",
-    "tags": ["tecnologia", "minimalismo", "bem-estar", "intenção"],
+    "tags": [
+      "tecnologia",
+      "minimalismo",
+      "bem-estar",
+      "intenção"
+    ],
     "tempoLeitura": 15,
     "arquivo": "resumos/digital-minimalism.md"
   }

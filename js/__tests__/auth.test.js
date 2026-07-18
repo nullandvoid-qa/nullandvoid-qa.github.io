@@ -34,7 +34,7 @@ describe('NVAuth Module', () => {
     }
 
     // Mock globals
-    global.jwt_decode = (token) => ({
+    global.jwt_decode = (_token) => ({
       sub: 'test-user-123',
       name: 'Test User',
       picture: 'https://example.com/pic.jpg',

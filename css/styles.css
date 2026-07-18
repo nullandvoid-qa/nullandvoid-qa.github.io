@@ -544,29 +544,37 @@ a:hover { text-decoration: underline; }
   margin-bottom: 1.5rem;
 }
 
-.hero h1 {
-  font-size: clamp(2.4rem, 6vw, 3.8rem);
+.hero h1,
+.hero-title {
+  font-size: clamp(2.4rem, 6vw, 3.2rem);
   font-weight: 900;
-  line-height: 1.1;
-  margin-bottom: 1.25rem;
-  background: linear-gradient(120deg, var(--accent) 0%, var(--accent-hover) 50%, var(--pink) 100%);
+  line-height: 1.05;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+  background: linear-gradient(120deg, var(--accent) 0%, var(--accent-hover) 45%, var(--pink) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  letter-spacing: -0.02em;
 }
 
-.hero p {
-  font-size: clamp(1rem, 2.5vw, 1.25rem);
+.hero p,
+.hero-copy {
+  font-size: clamp(1rem, 2.5vw, 1.1rem);
   color: var(--text-muted);
-  max-width: 640px;
-  margin: 0 auto 2.5rem;
+  max-width: 700px;
+  margin: 0 auto 2rem;
   font-weight: 500;
   letter-spacing: 0.01em;
+  line-height: 1.7;
 }
 
 .hero-stats {
-  display: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(150px, 1fr));
+  gap: 1rem;
+  justify-items: center;
+  margin: 0 auto;
+  max-width: 760px;
 }
 
 .stat {
@@ -599,6 +607,84 @@ a:hover { text-decoration: underline; }
   justify-content: center;
   flex-wrap: wrap;
   margin-bottom: 3rem;
+}
+
+.hero-cta-group {
+  margin-top: 2rem;
+}
+
+.install-banner {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  padding: 1rem 1.5rem;
+  z-index: 999;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.2);
+  max-width: 100%;
+  align-items: stretch;
+}
+
+.install-banner-body {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.install-banner-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.install-banner-copy {
+  flex: 1;
+}
+
+.install-banner-copy strong {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.install-banner-copy p {
+  font-size: 0.85rem;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.install-banner-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.install-banner-btn {
+  flex: 1;
+  font-size: 0.9rem;
+}
+
+.install-banner-btn.btn-secondary {
+  background: transparent;
+  color: white;
+  border: 1px solid rgba(255,255,255,0.5);
+}
+
+.install-banner-btn.btn-primary {
+  background: white;
+  color: #10b981;
+  border: none;
+}
+
+.home-lessons-section {
+  margin-top: 3rem;
+}
+
+.empty-state-icon {
+  color: var(--text-muted);
+  margin: 0 auto 1rem;
 }
 
 .btn {
@@ -1352,26 +1438,90 @@ a:hover { text-decoration: underline; }
 }
 
 /* Persona picker */
-.persona-section {
+.persona-panel {
   margin-bottom: 2.5rem;
   padding: 2rem;
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.05), rgba(236, 72, 153, 0.05));
-  border: 1px solid rgba(56, 189, 248, 0.15);
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.06), rgba(236, 72, 153, 0.06));
+  border: 1px solid rgba(56, 189, 248, 0.12);
   border-radius: var(--radius-lg);
 }
 
-.persona-title {
-  text-align: center;
-  font-size: 1.25rem;
-  font-weight: 700;
+.persona-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
   margin-bottom: 1.5rem;
+}
+
+.persona-panel-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0;
   color: var(--text);
 }
 
-.persona-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.25rem;
+.persona-panel-body {
+  display: flex;
+  align-items: stretch;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.persona-avatar {
+  text-align: center;
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  flex: 1 1 240px;
+}
+
+.persona-avatar-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--accent);
+}
+
+.persona-avatar-level {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 0.35rem;
+}
+
+.persona-avatar-progress {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.persona-avatar-meta {
+  flex: 1 1 240px;
+  padding: 1.5rem;
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.persona-meta-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.persona-meta-value {
+  font-weight: 700;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.persona-meta-note {
+  font-size: 0.9rem;
+  color: var(--text-muted);
 }
 
 .persona-card {

@@ -1,5 +1,8 @@
 node_modules/
 coverage/
+test-results.json
+allure-results/
+allure-report/
 *.log
 .DS_Store
 .env

@@ -39,6 +39,10 @@ This roadmap captures the next actionable steps for Null and Void QA, prioritize
 ## Immediate next steps
 
 - [ ] Commit roadmap and performance updates so the plan is saved and live.
+- [ ] Fix homepage track filter labels and remove broken `undefined` buttons.
+- [ ] Fix the "Trilhas carregando..." placeholder so tracks render correctly instead of staying in a loading state.
+- [ ] Clean the homepage visual hierarchy, CTA layout, and card spacing.
+- [ ] Resolve the PWA service worker scope warning.
 - [ ] Add `defer` attributes to scripts in `index.html`.
 - [ ] Extract large track data into smaller data modules.
 - [ ] Create explicit user feedback screens for progress import/export.

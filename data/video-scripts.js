@@ -101,8 +101,7 @@ Status: ⬜
 Conclusão: Bom caso de teste = qualquer um consegue executar e reproduzir resultado.`,
     keyPoints: ["Caso de Teste", "Estrutura", "Especificidade"],
     youtubeReady: true
-  }
-];
+  },
   {
     id: "v1-4",
     title: "Git Básico para QA: Clone, Commit, Push",
