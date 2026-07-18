@@ -82,6 +82,13 @@
       return;
     }
 
+    // Check if jwt_decode is available
+    if (typeof jwt_decode === 'undefined') {
+      console.error('jwt_decode library not loaded');
+      showAuthError('Biblioteca de autenticação não carregada. Recarregue a página.');
+      return;
+    }
+
     try {
       // Decode JWT token
       const decoded = jwt_decode(response.credential);
