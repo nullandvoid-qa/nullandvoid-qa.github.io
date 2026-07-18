@@ -556,21 +556,25 @@ export default function () {
   };
 
   function countLessons(track) {
-    return track.courses.reduce((s, c) => s + c.lessons.length, 0);
+    if (!track || !track.courses || !Array.isArray(track.courses)) return 0;
+    return track.courses.reduce((s, c) => s + (c.lessons ? c.lessons.length : 0), 0);
   }
 
   function getTrackProgress(track) {
+    if (!track || !track.courses) return { done: 0, total: 0, pct: 0 };
     const total = countLessons(track);
     const done = track.courses.reduce(
-      (s, c) => s + c.lessons.filter((l) => progress[l.id]).length,
+      (s, c) => s + (c.lessons ? c.lessons.filter((l) => progress[l.id]).length : 0),
       0,
     );
     return { done, total, pct: total ? Math.round((done / total) * 100) : 0 };
   }
 
   function getGlobalProgress() {
-    const all = tracks.flatMap((tr) => tr.courses.flatMap((c) => c.lessons));
-    const done = all.filter((l) => progress[l.id]).length;
+    const all = tracks
+      .filter(tr => tr && tr.courses && Array.isArray(tr.courses))
+      .flatMap((tr) => tr.courses.flatMap((c) => c.lessons || []));
+    const done = all.filter((l) => l && progress[l.id]).length;
     return {
       done,
       total: all.length,
@@ -581,8 +585,10 @@ export default function () {
   function getAllLessons() {
     const lessons = [];
     tracks.forEach((track) => {
+      if (!track || !track.courses || !Array.isArray(track.courses)) return;
       const lt = localizedTrack(track);
       track.courses.forEach((course) => {
+        if (!course || !course.lessons || !Array.isArray(course.lessons)) return;
         const lc = localizedCourse(course);
         course.lessons.forEach((lesson) => {
           lessons.push({
@@ -927,10 +933,12 @@ export default function () {
 
     const allLessonsFlat = [];
     tracks.forEach((track) => {
+      if (!track || !track.courses || !Array.isArray(track.courses)) return;
       if (homeLessonTrackFilter !== "all" && track.id !== homeLessonTrackFilter)
         return;
       const lt = localizedTrack(track);
       track.courses.forEach((course) => {
+        if (!course || !course.lessons || !Array.isArray(course.lessons)) return;
         const lc = localizedCourse(course);
         course.lessons.forEach((lesson) => {
           allLessonsFlat.push({
@@ -1617,8 +1625,10 @@ export default function () {
     const hasQuiz = !!quizzes[trackId];
 
     let coursesHtml = "";
-    raw.courses.forEach((rawCourse, idx) => {
-      const course = localizedCourse(rawCourse);
+    if (raw && raw.courses && Array.isArray(raw.courses)) {
+      raw.courses.forEach((rawCourse, idx) => {
+        if (!rawCourse || !rawCourse.lessons) return;
+        const course = localizedCourse(rawCourse);
       const lessonsHtml = rawCourse.lessons
         .map((rawLesson) => {
           const lesson = localizedLesson(rawLesson);
@@ -1736,7 +1746,9 @@ export default function () {
           .join("")}</div>`
       : "";
 
-    const allLessons = rawTrack.courses.flatMap((c) => c.lessons);
+    const allLessons = (rawTrack && rawTrack.courses && Array.isArray(rawTrack.courses))
+      ? rawTrack.courses.flatMap((c) => c.lessons || [])
+      : [];
     const idx = allLessons.findIndex((l) => l.id === rawLesson.id);
     const prev = allLessons[idx - 1];
     const next = allLessons[idx + 1];
@@ -2234,7 +2246,9 @@ export default function () {
     if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
     const found = findLesson(viewParams.lessonId);
     if (!found) return;
-    const allLessons = found.rawTrack.courses.flatMap((c) => c.lessons);
+    const allLessons = (found.rawTrack && found.rawTrack.courses && Array.isArray(found.rawTrack.courses))
+      ? found.rawTrack.courses.flatMap((c) => c.lessons || [])
+      : [];
     const idx = allLessons.findIndex((l) => l.id === viewParams.lessonId);
     if (e.key === "ArrowRight" && allLessons[idx + 1])
       navigate("lesson", { lessonId: allLessons[idx + 1].id });
