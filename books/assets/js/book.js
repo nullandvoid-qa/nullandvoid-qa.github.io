@@ -131,6 +131,9 @@ function renderBook(meta, markdown) {
       pre.appendChild(btn);
     }
   });
+
+  // Setup mark-as-read button
+  setupMarkAsReadButton(meta.id);
 }
 
 function generateTableOfContents() {
@@ -276,4 +279,78 @@ function addReadingProgress() {
     const scrolled = (window.scrollY / windowHeight) * 100;
     progressBar.style.width = scrolled + '%';
   });
+}
+
+/**
+ * Setup mark-as-read button functionality
+ */
+function setupMarkAsReadButton(bookId) {
+  const btn = document.getElementById('mark-as-read-btn');
+  if (!btn) return;
+
+  // Check if user is authenticated
+  if (!window.NVAuth || !window.NVAuth.isAuthenticated) {
+    btn.disabled = true;
+    btn.title = 'Faça login para marcar livros como lidos';
+    btn.style.opacity = '0.5';
+    return;
+  }
+
+  // Load current read status
+  updateMarkAsReadButton(bookId);
+
+  // Add click handler
+  btn.addEventListener('click', () => {
+    if (!window.NVAuth || !window.NVAuth.isAuthenticated) {
+      showToast('Faça login para marcar livros como lidos');
+      return;
+    }
+
+    const isRead = window.NVAuth.isBookRead(bookId);
+    
+    if (isRead) {
+      // Unmark as read
+      if (window.NVAuth.unmarkAsRead(bookId)) {
+        updateMarkAsReadButton(bookId);
+        showToast('Removido dos livros lidos');
+      }
+    } else {
+      // Mark as read
+      if (window.NVAuth.markAsRead(bookId)) {
+        updateMarkAsReadButton(bookId);
+        showToast('✓ Livro marcado como lido!');
+      }
+    }
+  });
+
+  // Listen for auth changes
+  document.addEventListener('nvauth:login', () => {
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.title = 'Marcar este livro como lido';
+    updateMarkAsReadButton(bookId);
+  });
+
+  document.addEventListener('nvauth:logout', () => {
+    btn.disabled = true;
+    btn.style.opacity = '0.5';
+    btn.title = 'Faça login para marcar livros como lidos';
+    btn.classList.remove('marked');
+  });
+}
+
+/**
+ * Update button visual state based on read status
+ */
+function updateMarkAsReadButton(bookId) {
+  const btn = document.getElementById('mark-as-read-btn');
+  if (!btn) return;
+
+  if (window.NVAuth && window.NVAuth.isBookRead(bookId)) {
+    btn.classList.add('marked');
+    btn.querySelector('.mark-text').textContent = 'Lido';
+  } else {
+    btn.classList.remove('marked');
+    btn.querySelector('.mark-text').textContent = 'Marcar como lido';
+  }
 }

@@ -958,6 +958,32 @@ a:hover { text-decoration: underline; }
     font-size: 0.5rem;
     padding: 0.18rem 0.33rem;
   }
+
+  .auth-user {
+    padding: 0.4rem 0.6rem;
+  }
+
+  .auth-picture {
+    width: 24px;
+    height: 24px;
+  }
+
+  .auth-name {
+    max-width: 80px;
+    font-size: 0.8rem;
+  }
+
+  #auth-signin {
+    width: 100%;
+  }
+
+  #mark-as-read-btn .mark-text {
+    display: none;
+  }
+
+  #mark-as-read-btn {
+    padding: 0.5rem !important;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1233,6 +1259,118 @@ a:hover { text-decoration: underline; }
   background: linear-gradient(90deg, var(--accent), var(--pink));
   z-index: 200;
   transition: width 0.1s linear;
+}
+
+/* Mark as read button styling */
+#mark-as-read-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all var(--transition);
+  position: relative;
+}
+
+#mark-as-read-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(0, 229, 255, 0.08);
+}
+
+#mark-as-read-btn.marked {
+  background: rgba(0, 229, 255, 0.15);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+#mark-as-read-btn.marked::before {
+  content: "✓";
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 20px;
+  height: 20px;
+  background: var(--accent);
+  color: #1a1a1a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 229, 255, 0.4);
+}
+
+#mark-as-read-btn .mark-icon {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+#mark-as-read-btn.marked .mark-icon {
+  transform: scale(1.15);
+  animation: mark-pulse 0.4s ease;
+}
+
+@keyframes mark-pulse {
+  0% { transform: scale(0.8); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1.15); }
+}
+
+/* Auth UI in book page */
+.auth-user {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.auth-user.hidden {
+  display: none !important;
+}
+
+.auth-picture {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border);
+}
+
+.auth-name {
+  color: var(--text);
+  font-weight: 600;
+  max-width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-logout {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.25rem;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-logout:hover {
+  color: var(--accent);
+  transform: scale(1.1);
+}
+
+#auth-signin {
+  display: flex;
+  align-items: center;
 }
 
 /* Improved typography for long-form reading */

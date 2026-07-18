@@ -26,6 +26,10 @@
     setProgress,
     logout,
     getStorageKey,
+    getReadBooks,
+    markAsRead,
+    unmarkAsRead,
+    isBookRead,
   };
 
   /**
@@ -265,4 +269,84 @@
       setTimeout(init, 1000);
     }
   });
+
+  /**
+   * Get all read books for current user
+   * @returns {Object} Map of book IDs to read status
+   */
+  function getReadBooks() {
+    if (!window.NVAuth.isAuthenticated || !window.NVAuth.user) {
+      return {};
+    }
+
+    const key = `nv_${window.NVAuth.user.id}_read_books`;
+    try {
+      const data = localStorage.getItem(key);
+      return data ? JSON.parse(data) : {};
+    } catch (e) {
+      console.error('Failed to parse read books:', e);
+      return {};
+    }
+  }
+
+  /**
+   * Mark a book as read
+   * @param {string} bookId - Book ID
+   * @returns {boolean} Success status
+   */
+  function markAsRead(bookId) {
+    if (!window.NVAuth.isAuthenticated || !window.NVAuth.user) {
+      console.warn('Cannot mark book as read: user not authenticated');
+      return false;
+    }
+
+    try {
+      const readBooks = getReadBooks();
+      readBooks[bookId] = {
+        readAt: new Date().toISOString(),
+        completed: true,
+      };
+      const key = `nv_${window.NVAuth.user.id}_read_books`;
+      localStorage.setItem(key, JSON.stringify(readBooks));
+      document.dispatchEvent(new CustomEvent('nvauth:bookmarked', { detail: { bookId, marked: true } }));
+      return true;
+    } catch (e) {
+      console.error('Failed to mark book as read:', e);
+      return false;
+    }
+  }
+
+  /**
+   * Unmark a book as read
+   * @param {string} bookId - Book ID
+   * @returns {boolean} Success status
+   */
+  function unmarkAsRead(bookId) {
+    if (!window.NVAuth.isAuthenticated || !window.NVAuth.user) {
+      console.warn('Cannot unmark book as read: user not authenticated');
+      return false;
+    }
+
+    try {
+      const readBooks = getReadBooks();
+      delete readBooks[bookId];
+      const key = `nv_${window.NVAuth.user.id}_read_books`;
+      localStorage.setItem(key, JSON.stringify(readBooks));
+      document.dispatchEvent(new CustomEvent('nvauth:bookmarked', { detail: { bookId, marked: false } }));
+      return true;
+    } catch (e) {
+      console.error('Failed to unmark book as read:', e);
+      return false;
+    }
+  }
+
+  /**
+   * Check if a book is marked as read
+   * @param {string} bookId - Book ID
+   * @returns {boolean} Whether book is read
+   */
+  function isBookRead(bookId) {
+    const readBooks = getReadBooks();
+    return readBooks[bookId]?.completed === true;
+  }
 })();

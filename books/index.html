@@ -10,6 +10,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="assets/css/style.css?v=4" />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='70'>📚</text></svg>" />
+    
+    <!-- Google OAuth2 -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- JWT Decoding -->
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@4/build/jwt-decode.min.js"></script>
   </head>
   <body>
     <a href="#main-content" class="skip-link">Pular para o conteúdo</a>
@@ -33,6 +38,12 @@
             <button type="button" id="theme-toggle" class="icon-toggle" title="Alternar tema" aria-label="Alternar tema">
               🌙
             </button>
+            <div id="auth-signin"></div>
+            <div id="auth-user" class="auth-user hidden">
+              <img id="auth-picture" class="auth-picture" alt="Profile" />
+              <span id="auth-name" class="auth-name"></span>
+              <button type="button" id="auth-logout" class="btn-logout" title="Desconectar" aria-label="Desconectar">↪️</button>
+            </div>
           </div>
         </div>
       </div>
@@ -124,6 +135,43 @@
 
     <div class="toast" id="toast" role="alert" aria-live="polite"></div>
 
+    <!-- Auth module (must load before main.js) -->
+    <script src="../js/auth.js"></script>
     <script src="assets/js/main.js?v=4"></script>
+    
+    <!-- Initialize Google Auth on page load -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        // Ensure auth initializes when Google API is ready
+        if (window.NVAuth && window.NVAuth.init) {
+          window.NVAuth.init();
+        }
+      });
+      
+      // Listen for auth events to update book cards
+      document.addEventListener('nvauth:login', (e) => {
+        const user = e.detail;
+        console.log('User logged in:', user.name);
+        // Re-render books to show read status
+        if (window.renderBooks) {
+          window.renderBooks();
+        }
+      });
+      
+      document.addEventListener('nvauth:logout', () => {
+        console.log('User logged out');
+        // Re-render books to hide read status
+        if (window.renderBooks) {
+          window.renderBooks();
+        }
+      });
+      
+      document.addEventListener('nvauth:bookmarked', (e) => {
+        // Update specific book card when read status changes
+        if (window.updateBookCardReadStatus) {
+          window.updateBookCardReadStatus(e.detail.bookId, e.detail.marked);
+        }
+      });
+    </script>
   </body>
 </html>

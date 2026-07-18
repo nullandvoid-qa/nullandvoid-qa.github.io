@@ -1646,6 +1646,7 @@ export default function () {
         .join("");
       coursesHtml += `<div class="course-block"><div class="course-header"><span class="course-num">${idx + 1}</span>${escapeHtml(course.title)}</div><ul class="lesson-list">${lessonsHtml}</ul></div>`;
     });
+    } // Close if (raw && raw.courses)
 
     const quizBtn = hasQuiz
       ? `<button class="btn btn-secondary" id="btn-take-quiz">🎯 ${t("quiz.takeQuiz")}</button>`
