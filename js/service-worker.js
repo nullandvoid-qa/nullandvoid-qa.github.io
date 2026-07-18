@@ -29,7 +29,12 @@ const CRITICAL_ASSETS = [
   "/data/labs.js",
   "/data/lesson-enrichment.js",
   "/data/translations-en.js",
-  "/data/lesson-quizzes.js"
+  "/data/lesson-quizzes.js",
+  "/data/performance-track.js",
+  "/data/mentorship.js",
+  "/data/mobile-labs.js",
+  "/data/daily-challenges.js",
+  "/data/video-scripts.js"
 ];
 
 // Install: cache critical assets

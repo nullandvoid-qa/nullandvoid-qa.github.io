@@ -343,8 +343,21 @@
     }
 
     function findTrackData(trackId) {
-      if (typeof window.TG_QAWAY_TRACKS === 'undefined') return null;
-      return window.TG_QAWAY_TRACKS.find(t => t.id === trackId);
+      // Search in main tracks
+      let track = window.TG_QAWAY_TRACKS?.find(t => t.id === trackId);
+      if (track) return track;
+      
+      // Search in new specialized tracks
+      track = window.TG_PERFORMANCE_TRACK?.find(t => t.id === trackId);
+      if (track) return track;
+      
+      track = window.TG_MENTORSHIP?.find(t => t.id === trackId);
+      if (track) return track;
+      
+      track = window.TG_MOBILE_LABS?.find(t => t.id === trackId);
+      if (track) return track;
+      
+      return null;
     }
 
     function showLeaderboard() {
@@ -401,6 +414,9 @@
 
   <!-- Carrega dados das trilhas e certificados -->
   <script src="data/tracks.js"></script>
+  <script src="data/performance-track.js"></script>
+  <script src="data/mentorship.js"></script>
+  <script src="data/mobile-labs.js"></script>
   <script src="data/translations-en.js"></script>
 </body>
 </html>
