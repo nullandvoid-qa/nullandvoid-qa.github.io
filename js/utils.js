@@ -86,6 +86,24 @@ function validateQuizzesPassedData(data) {
   return true;
 }
 
+function validateChecklistState(data) {
+  if (typeof data !== "object" || data === null || Array.isArray(data)) {
+    return false;
+  }
+  for (const key of Object.keys(data)) {
+    const item = data[key];
+    if (!Array.isArray(item)) {
+      return false;
+    }
+    for (const idx of item) {
+      if (typeof idx !== "number") {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 if (typeof module !== "undefined" && module.exports) {
   module.exports = {
     escapeHtml,
@@ -95,5 +113,6 @@ if (typeof module !== "undefined" && module.exports) {
     validateProgressData,
     validateBookmarksData,
     validateQuizzesPassedData,
+    validateChecklistState,
   };
 }

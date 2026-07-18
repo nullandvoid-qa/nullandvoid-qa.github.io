@@ -111,6 +111,71 @@
     localStorage.setItem(STORAGE_LAST_LESSON, id);
   }
 
+  function exportProgressToFile() {
+    try {
+      const payload = {
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        progress,
+        bookmarks,
+        quizzesPassed,
+        checklists: checklistState,
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], {
+        type: "application/json",
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "nullandvoid-qa-progress.json";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast(t("toast.exportProgressSuccess"));
+    } catch (error) {
+      console.error(error);
+      showToast(t("toast.exportProgressFail"));
+    }
+  }
+
+  async function importProgressFromFile(file) {
+    try {
+      const text = await file.text();
+      const payload = JSON.parse(text);
+      if (
+        typeof payload !== "object" ||
+        payload === null ||
+        !validateProgressData(payload.progress) ||
+        !validateBookmarksData(payload.bookmarks) ||
+        !validateQuizzesPassedData(payload.quizzesPassed) ||
+        !window.validateChecklistState(payload.checklists)
+      ) {
+        showToast(t("toast.invalidProgressFile"));
+        return;
+      }
+
+      if (!confirm(t("dashboard.importConfirm"))) return;
+
+      progress = payload.progress;
+      bookmarks.length = 0;
+      bookmarks.push(...payload.bookmarks);
+      Object.assign(quizzesPassed, payload.quizzesPassed);
+      Object.keys(checklistState).forEach((key) => delete checklistState[key]);
+      Object.assign(checklistState, payload.checklists);
+      saveProgress();
+      saveJson(STORAGE_BOOKMARKS, bookmarks);
+      saveJson(STORAGE_QUIZZES, quizzesPassed);
+      saveJson(STORAGE_CHECKLISTS, checklistState);
+      showToast(t("toast.importProgressSuccess"));
+      refreshCurrentView();
+      renderContinueBanner();
+    } catch (error) {
+      console.error(error);
+      showToast(t("toast.importProgressFail"));
+    }
+  }
+
   // ── i18n ──────────────────────────────────────────────────────────────────
   function t(key) {
     const parts = key.split(".");
@@ -177,7 +242,11 @@
   function applyTheme() {
     document.documentElement.setAttribute("data-theme", theme);
     const btn = document.getElementById("theme-toggle");
-    if (btn) btn.textContent = theme === "dark" ? "🌙" : "☀️";
+    if (btn) {
+      const iconName = theme === "dark" ? "moon" : "sun";
+      btn.innerHTML = window.NVIcons ? window.NVIcons.get(iconName, '', '18') : (theme === "dark" ? "🌙" : "☀️");
+      btn.setAttribute('aria-label', theme === "dark" ? "Switch to light theme" : "Switch to dark theme");
+    }
     localStorage.setItem(STORAGE_THEME, theme);
   }
 
@@ -698,8 +767,9 @@ export default function () {
       .map((ach) => {
         const isUnlocked = unlocked.includes(ach.id);
         const data = ach[lang] || ach.pt;
+        const lockedIcon = window.NVIcons ? window.NVIcons.get('lock', 'nv-icon-muted', '28') : '🔒';
         return `<div class="achievement-card ${isUnlocked ? "unlocked" : "locked"}" title="${isUnlocked ? data.desc : "?"}">
-        <div class="ach-icon">${isUnlocked ? ach.icon : "🔒"}</div>
+        <div class="ach-icon">${isUnlocked ? ach.icon : lockedIcon}</div>
         <div class="ach-title">${isUnlocked ? escapeHtml(data.title) : "???"}</div>
         <div class="ach-desc">${isUnlocked ? escapeHtml(data.desc) : lang === "en" ? "Keep learning to unlock" : "Continue estudando para desbloquear"}</div>
       </div>`;
@@ -1034,22 +1104,26 @@ export default function () {
       );
 
     // Update avatar display
-    const avatarEmoji = document.getElementById("avatar-emoji");
+    const avatarEmoji = document.getElementById("avatar-icon");
     const avatarLevel = document.getElementById("avatar-level");
     const avatarProgress = document.getElementById("avatar-progress");
     
     if (avatarEmoji && avatarLevel) {
       // Calculate level based on completion %
       if (global.pct >= 70) {
-        avatarEmoji.textContent = "👑";
+        avatarEmoji.setAttribute('data-icon', 'crown');
+        avatarEmoji.setAttribute('data-icon-size', '48');
+        avatarEmoji.innerHTML = window.NVIcons ? window.NVIcons.get('crown', 'nv-icon-accent', '48') : '👑';
         avatarLevel.textContent = "Sênior";
-        avatarProgress.textContent = "🎉 Parabéns! Você atingiu o nível máximo";
+        avatarProgress.textContent = "Parabéns! Você atingiu o nível máximo";
       } else if (global.pct >= 35) {
-        avatarEmoji.textContent = "⚡";
+        avatarEmoji.setAttribute('data-icon', 'bolt');
+        avatarEmoji.innerHTML = window.NVIcons ? window.NVIcons.get('bolt', 'nv-icon-pink', '48') : '⚡';
         avatarLevel.textContent = "Intermediário";
         avatarProgress.textContent = `${global.pct}% completado`;
       } else {
-        avatarEmoji.textContent = "🌱";
+        avatarEmoji.setAttribute('data-icon', 'seedling');
+        avatarEmoji.innerHTML = window.NVIcons ? window.NVIcons.get('seedling', 'nv-icon-accent', '48') : '🌱';
         avatarLevel.textContent = "Iniciante";
         avatarProgress.textContent = `${global.pct}% completado`;
       }
@@ -1782,7 +1856,7 @@ export default function () {
             <div style="display:flex;gap:0.5rem;align-items:center;flex-shrink:0">
               <span class="tier-badge tier-${enr.tier}">${tierLabel(enr.tier)}</span>
               <button class="btn-bookmark ${isBookmarked ? "bookmarked" : ""}" id="btn-bookmark" title="${isBookmarked ? t("lesson.unbookmark") : t("lesson.bookmark")}" aria-label="${isBookmarked ? t("lesson.unbookmark") : t("lesson.bookmark")}">
-                ${isBookmarked ? "⭐" : "☆"}
+                ${window.NVIcons ? window.NVIcons.get(isBookmarked ? 'bookmarkFilled' : 'bookmark', '', '18') : (isBookmarked ? "⭐" : "☆")}
               </button>
             </div>
           </div>
@@ -1798,9 +1872,9 @@ export default function () {
           <div id="lesson-quiz-zone"></div>
           <div class="lesson-actions">
             <button class="btn btn-primary" id="btn-complete">${done ? t("lesson.unmarkComplete") : t("lesson.markComplete")}</button>
-            ${prev ? `<button class="btn btn-secondary" id="btn-prev">${t("lesson.prev")}</button>` : ""}
-            ${next ? `<button class="btn btn-secondary" id="btn-next">${t("lesson.next")}</button>` : ""}
-            <button class="btn btn-outline" id="btn-feedback" style="margin-left: auto;">💬 ${lang === "en" ? "Feedback" : "Feedback"}</button>
+            ${prev ? `<button class="btn btn-secondary" id="btn-prev">${window.NVIcons ? window.NVIcons.get('arrowLeft','','16') + ' ' : '← '}${t("lesson.prev")}</button>` : ""}
+            ${next ? `<button class="btn btn-secondary" id="btn-next">${t("lesson.next")} ${window.NVIcons ? window.NVIcons.get('arrowRight','','16') : '→'}</button>` : ""}
+            <button class="btn btn-outline" id="btn-feedback" style="margin-left: auto; display:inline-flex; align-items:center; gap:0.4rem;">${window.NVIcons ? window.NVIcons.get('feedback','','16') : '💬'} ${lang === "en" ? "Feedback" : "Feedback"}</button>
           </div>
           
           <!-- Feedback Form -->
@@ -1986,7 +2060,7 @@ export default function () {
                   <h4 style="margin: 0 0 0.5rem 0;">${tr.icon} ${escapeHtml(lt.title)}</h4>
                   <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">${existingCert ? `Gerado em ${new Date(existingCert.generatedAt).toLocaleDateString("pt-BR")}` : "Certificado disponível"}</p>
                 </div>
-                <button class="btn btn-primary btn-sm" id="btn-cert-${tr.id}" data-track="${tr.id}">📄 ${lang === "en" ? "Download" : "Baixar"}</button>
+                <button class="btn btn-primary btn-sm" id="btn-cert-${tr.id}" data-track="${tr.id}" style="display:inline-flex;align-items:center;gap:0.4rem;">${window.NVIcons ? window.NVIcons.get('download','','14') : '📄'} ${lang === "en" ? "Download" : "Baixar"}</button>
               </div>
             </div>`;
           })
@@ -2241,6 +2315,27 @@ export default function () {
       }
     });
 
+  document
+    .getElementById("btn-export-progress")
+    ?.addEventListener("click", () => {
+      exportProgressToFile();
+    });
+
+  document
+    .getElementById("btn-import-progress")
+    ?.addEventListener("click", () => {
+      document.getElementById("progress-import-input").click();
+    });
+
+  document
+    .getElementById("progress-import-input")
+    ?.addEventListener("change", (event) => {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      importProgressFromFile(file);
+      event.target.value = "";
+    });
+
   // Keyboard shortcuts: ArrowLeft / ArrowRight to navigate lessons
   document.addEventListener("keydown", (e) => {
     if (currentView !== "lesson") return;
@@ -2282,29 +2377,54 @@ export default function () {
     // Load all tracks: merge main tracks + new specialized tracks
     tracks = window.TG_QAWAY_TRACKS || [];
     
-    // Merge new track structures (they are objects with courses, not track arrays)
-    // Convert them to track format
+    // Merge new track structures — ensure all required fields are present
     if (window.TG_PERFORMANCE_TRACK && window.TG_PERFORMANCE_TRACK.courses) {
-      tracks.push({
-        id: 'performance',
-        icon: '⚡',
-        title: 'Performance Testing',
-        tier: 'Sênior',
-        courses: window.TG_PERFORMANCE_TRACK.courses
-      });
+      const pt = window.TG_PERFORMANCE_TRACK;
+      if (!tracks.find(t => t.id === 'performance')) {
+        tracks.push({
+          id: pt.id || 'performance',
+          slug: pt.slug || 'performance-testing',
+          icon: 'perf',
+          title: pt.title || 'Arena de Carga',
+          color: pt.color || '#f59e0b',
+          description: pt.description || 'Performance testing com K6 e JMeter.',
+          level: pt.level || 'Sênior',
+          modules: pt.modules || 3,
+          hours: pt.hours || 40,
+          topics: pt.topics || ['Load Testing', 'K6', 'JMeter'],
+          courses: pt.courses
+        });
+      }
     }
     if (window.TG_MENTORSHIP && window.TG_MENTORSHIP.courses) {
-      tracks.push({
-        id: 'mentorship',
-        icon: '🎓',
-        title: 'Mentorship Program',
-        tier: 'Intermediário',
-        courses: window.TG_MENTORSHIP.courses
-      });
+      const mt = window.TG_MENTORSHIP;
+      if (!tracks.find(t => t.id === 'mentorship')) {
+        tracks.push({
+          id: mt.id || 'mentorship',
+          slug: mt.slug || 'mentorship',
+          icon: 'mentor',
+          title: mt.title || 'Mentorship',
+          color: mt.color || '#6366f1',
+          description: mt.description || 'Programa de mentoria e liderança.',
+          level: mt.level || 'Intermediário',
+          modules: mt.modules || 3,
+          hours: mt.hours || 30,
+          topics: mt.topics || ['Mentoring', 'Liderança'],
+          courses: mt.courses
+        });
+      }
     }
     if (window.TG_MOBILE_LABS && Array.isArray(window.TG_MOBILE_LABS)) {
-      // Mobile labs is an array of tracks, merge directly
-      tracks = tracks.concat(window.TG_MOBILE_LABS);
+      window.TG_MOBILE_LABS.forEach(ml => {
+        if (!tracks.find(t => t.id === ml.id)) {
+          tracks.push(Object.assign({
+            color: '#f59e0b',
+            modules: 3,
+            hours: 30,
+            topics: ['Mobile', 'Appium'],
+          }, ml));
+        }
+      });
     }
 
     window.lang = lang; // Sync with global for utility functions
@@ -2321,7 +2441,7 @@ export default function () {
     // Register Service Worker for PWA support
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/js/service-worker.js', { scope: '/' })
-        .then(registration => {
+        .then(() => {
           console.log('[PWA] Service Worker registered');
         })
         .catch(error => {

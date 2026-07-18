@@ -134,4 +134,30 @@ describe('Storage helpers', () => {
       expect(validateQuizzesPassedData(invalidData)).toBe(false);
     });
   });
+
+  describe('validateChecklistState', () => {
+    test('validates a checklist mapping with numeric indexes', () => {
+      const { validateChecklistState } = require('../utils.js');
+      const validData = {
+        starter: [0, 1, 2],
+        web: [0],
+      };
+      expect(validateChecklistState(validData)).toBe(true);
+    });
+
+    test('rejects invalid checklist state structures', () => {
+      const { validateChecklistState } = require('../utils.js');
+      expect(validateChecklistState(null)).toBe(false);
+      expect(validateChecklistState('string')).toBe(false);
+      expect(validateChecklistState([])).toBe(false);
+    });
+
+    test('rejects checklist items with non-numeric indexes', () => {
+      const { validateChecklistState } = require('../utils.js');
+      const invalidData = {
+        starter: ['a', 1],
+      };
+      expect(validateChecklistState(invalidData)).toBe(false);
+    });
+  });
 });
