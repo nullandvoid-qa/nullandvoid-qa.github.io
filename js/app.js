@@ -58,6 +58,9 @@
 
   const TRACK_AUDIENCE = {
     starter: "beginner",
+    intermediate: "intermediate",
+    senior: "senior",
+    mentorship: "intermediate",
     web: "intermediate",
     api: "intermediate",
     mobile: "intermediate",
@@ -66,6 +69,10 @@
     devops: "intermediate",
     accessibility: "intermediate",
     leadership: "senior",
+    "lab-android-basic": "intermediate",
+    "lab-ios-basic": "intermediate",
+    "lab-saucelabs": "intermediate",
+    "lab-browserstack": "intermediate",
   };
 
   // ── Storage helpers ───────────────────────────────────────────────────────
@@ -2415,14 +2422,24 @@ export default function () {
       }
     }
     if (window.TG_MOBILE_LABS && Array.isArray(window.TG_MOBILE_LABS)) {
-      window.TG_MOBILE_LABS.forEach(ml => {
-        if (!tracks.find(t => t.id === ml.id)) {
-          tracks.push(Object.assign({
-            color: '#f59e0b',
-            modules: 3,
-            hours: 30,
-            topics: ['Mobile', 'Appium'],
-          }, ml));
+      window.TG_MOBILE_LABS.forEach((ml) => {
+        if (!tracks.find((t) => t.id === ml.id)) {
+          tracks.push({
+            ...ml,
+            id: ml.id,
+            slug: ml.slug || ml.id,
+            icon: ml.icon || '📱',
+            title: ml.title || ml.name || 'Mobile Lab',
+            description:
+              ml.description ||
+              `Mobile lab for ${ml.device || 'mobile testing'}`,
+            color: ml.color || '#22c55e',
+            level: ml.level || 'intermediate',
+            modules: ml.modules || 3,
+            hours: ml.hours || 30,
+            topics: ml.topics || ['Mobile', 'Appium'],
+            courses: ml.courses || [],
+          });
         }
       });
     }
