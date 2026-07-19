@@ -260,6 +260,12 @@
     document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
       el.placeholder = t(el.dataset.i18nPlaceholder);
     });
+    document.querySelectorAll("[data-i18n-title]").forEach((el) => {
+      el.title = t(el.dataset.i18nTitle);
+    });
+    document.querySelectorAll("[data-i18n-label]").forEach((el) => {
+      el.setAttribute("aria-label", t(el.dataset.i18nLabel));
+    });
     const priceEl = document.getElementById("stat-price");
     if (priceEl) priceEl.textContent = t("price");
   }
@@ -782,7 +788,7 @@
         navigate,
         onBookmarkToggle: toggleBookmark,
         onCompleteToggle: (lessonIdToToggle) => {
-          window.NVViewHelpers.toggleLessonComplete(lessonIdToToggle, progress, saveProgress, checkAchievements, t);
+          window.NVViewHelpers.toggleLessonComplete(lessonIdToToggle, progress, () => saveProgress(progress), checkAchievements, t);
         },
         onReRender: renderLesson,
         onFeedbackSubmit: ({ lessonId: submittedLessonId, rating, text }) => {
@@ -934,7 +940,7 @@
     ?.addEventListener("click", () => {
       if (confirm(t("dashboard.resetConfirm"))) {
         progress = {};
-        saveProgress();
+        saveProgress(progress);
         localStorage.removeItem(STORAGE_LAST_LESSON);
         showToast(t("toast.progressReset"));
         refreshCurrentView();
@@ -945,7 +951,7 @@
   document
     .getElementById("btn-export-progress")
     ?.addEventListener("click", () => {
-      exportProgressToFile();
+      exportProgressToFile(progress, bookmarks, quizzesPassed, checklistState);
     });
 
   document
@@ -956,11 +962,26 @@
 
   document
     .getElementById("progress-import-input")
-    ?.addEventListener("change", (event) => {
+    ?.addEventListener("change", async (event) => {
       const file = event.target.files?.[0];
       if (!file) return;
-      importProgressFromFile(file);
+      const imported = await importProgressFromFile(file);
       event.target.value = "";
+      if (!imported) return;
+      progress = imported.progress;
+      bookmarks.length = 0;
+      bookmarks.push(...imported.bookmarks);
+      Object.keys(quizzesPassed).forEach((key) => delete quizzesPassed[key]);
+      Object.assign(quizzesPassed, imported.quizzesPassed);
+      Object.keys(checklistState).forEach((key) => delete checklistState[key]);
+      Object.assign(checklistState, imported.checklistState);
+      saveProgress(progress);
+      saveJson("testers-guild-bookmarks", bookmarks);
+      saveJson("testers-guild-quizzes", quizzesPassed);
+      saveJson("testers-guild-checklists", checklistState);
+      showToast(t("toast.importProgressSuccess"));
+      refreshCurrentView();
+      renderContinueBanner();
     });
 
   // Keyboard shortcuts: ArrowLeft / ArrowRight to navigate lessons
@@ -995,7 +1016,7 @@
 
   // Ao fazer logout, salva o progresso da sessão
   document.addEventListener("nvauth:logout", () => {
-    saveProgress();
+    saveProgress(progress);
     showToast(t("toast.progressSavedLocal"));
   });
 

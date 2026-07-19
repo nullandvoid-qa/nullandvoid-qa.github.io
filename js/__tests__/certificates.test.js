@@ -69,6 +69,25 @@ describe('TG_CERTIFICATES Module', () => {
     expect(window.lastPdf.calls.some((call) => call.text === '')).toBe(true);
   });
 
+  test('buildCertificatePayload maps track data into the new certificate engine shape', () => {
+    window.TG_QAWAY_TRACKS = [
+      {
+        id: 'web',
+        title: 'Web Automation',
+        description: 'Build reliable browser automation flows.',
+        level: 'Intermediate',
+        topics: ['Playwright', 'Assertions', 'Debugging'],
+      },
+    ];
+
+    const payload = window.TG_CERTIFICATES.buildCertificatePayload('web', 'Google User', new Date('2026-07-19T11:00:00Z'));
+
+    expect(payload.recipient.name).toBe('Google User');
+    expect(payload.course.name).toBe('Web Automation');
+    expect(payload.course.subtitle).toContain('reliable browser automation');
+    expect(payload.skills).toEqual(['Playwright', 'Assertions', 'Debugging']);
+  });
+
   test('saveCertificate persists certificate with the provided user name or blank string', () => {
     const first = window.TG_CERTIFICATES.saveCertificate('web', 'Google User', new Date('2026-07-19T11:00:00Z'));
     const second = window.TG_CERTIFICATES.saveCertificate('web', '', new Date('2026-07-19T11:00:00Z'));

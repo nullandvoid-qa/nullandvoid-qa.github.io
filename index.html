@@ -95,13 +95,13 @@
         <div class="install-banner-body">
           <span class="install-banner-icon">📲</span>
           <div class="install-banner-copy">
-            <strong>Instale nosso app</strong>
-            <p>Acesse offline + notificações</p>
+            <strong data-i18n="installBanner.title">Instale nosso app</strong>
+            <p data-i18n="installBanner.subtitle">Acesse offline + notificações</p>
           </div>
         </div>
         <div class="install-banner-actions">
-          <button id="dismiss-install-btn" class="btn btn-secondary install-banner-btn">Não agora</button>
-          <button id="install-app-btn" class="btn btn-primary install-banner-btn">Instalar</button>
+          <button id="dismiss-install-btn" class="btn btn-secondary install-banner-btn" data-i18n="installBanner.dismiss">Não agora</button>
+          <button id="install-app-btn" class="btn btn-primary install-banner-btn" data-i18n="installBanner.install">Instalar</button>
         </div>
       </div>
       <section id="view-home" class="view active">
@@ -109,44 +109,38 @@
           <div class="hero-inner">
             <div class="hero-copy">
               <div class="hero-badge">
-                <span class="badge-free" data-i18n="hero.badge">
-                  <span data-icon="certificate" data-icon-size="14"></span>
-                  Aprenda QA do zero ao sênior — sem pagar nada
-                </span>
+                <span class="badge-icon" data-icon="certificate" data-icon-size="14"></span>
+                <span class="badge-free" data-i18n="hero.badge">Aprenda QA do zero ao sênior — sem pagar nada</span>
               </div>
-              <h1 class="hero-title">
-                Formação QA com clareza, prática e caminho definido.
-              </h1>
-              <p class="hero-description">
-                Trilhas objetivas, aulas práticas, labs e apoio da comunidade. A melhor jornada gratuita para quem quer virar QA com confiança.
-              </p>
+              <h1 class="hero-title" data-i18n="hero.title">Formação QA com clareza, prática e caminho definido.</h1>
+              <p class="hero-description" data-i18n="hero.description">Trilhas objetivas, aulas práticas, labs e apoio da comunidade. A melhor jornada gratuita para quem quer virar QA com confiança.</p>
               <div class="hero-actions">
-                <button class="btn btn-primary" data-nav="tracks">Explorar trilhas</button>
-                <button class="btn btn-secondary" data-nav="roadmap">Ver rotas</button>
+                <button class="btn btn-primary" data-nav="tracks" data-i18n="hero.ctaExplore">Explorar trilhas</button>
+                <button class="btn btn-secondary" data-nav="roadmap" data-i18n="nav.roadmap">Ver rotas</button>
               </div>
             </div>
             <aside class="hero-panel">
               <div class="hero-panel-card">
-                <div class="hero-panel-label">Livre acesso</div>
-                <p>Sem paywall, sem taxa de assinatura, tudo aberto.</p>
+                <div class="hero-panel-label" data-i18n="hero.freeAccessLabel">Livre acesso</div>
+                <p data-i18n="hero.freeAccessDesc">Sem paywall, sem taxa de assinatura, tudo aberto.</p>
               </div>
               <div class="hero-panel-card hero-panel-stats">
                 <div class="hero-panel-stat">
                   <strong id="stat-tracks">—</strong>
-                  <span>Trilhas</span>
+                  <span data-i18n="hero.statTracks">Trilhas</span>
                 </div>
                 <div class="hero-panel-stat">
                   <strong id="stat-lessons">—</strong>
-                  <span>Aulas</span>
+                  <span data-i18n="hero.statLessons">Aulas</span>
                 </div>
                 <div class="hero-panel-stat">
                   <strong id="stat-price">R$ 0</strong>
-                  <span>Para sempre</span>
+                  <span data-i18n="hero.statPriceLabel">Para sempre</span>
                 </div>
               </div>
               <div class="hero-panel-card">
-                <div class="hero-panel-label">Apoio real</div>
-                <p>Comunidade, resumos e labs para aprender com confiança.</p>
+                <div class="hero-panel-label" data-i18n="hero.supportLabel">Apoio real</div>
+                <p data-i18n="hero.supportDesc">Comunidade, resumos e labs para aprender com confiança.</p>
               </div>
             </aside>
           </div>
@@ -179,19 +173,19 @@
 
         <div class="brand-grid">
           <article class="brand-card">
-            <span class="brand-card-label">Trilhas completas</span>
-            <h3>Jornada clara do iniciante ao sênior</h3>
-            <p>Aprenda QA com um caminho definido, sem pagar nada e com foco em prática real.</p>
+            <span class="brand-card-label" data-i18n="brand.fullPaths.label">Trilhas completas</span>
+            <h3 data-i18n="brand.fullPaths.title">Jornada clara do iniciante ao sênior</h3>
+            <p data-i18n="brand.fullPaths.desc">Aprenda QA com um caminho definido, sem pagar nada e com foco em prática real.</p>
           </article>
           <article class="brand-card">
-            <span class="brand-card-label">Labs práticos</span>
-            <h3>Exercícios reais de QA</h3>
-            <p>Testes manuais, automação e análise de resultados em ambientes que simulam o mercado.</p>
+            <span class="brand-card-label" data-i18n="brand.labs.label">Labs práticos</span>
+            <h3 data-i18n="brand.labs.title">Exercícios reais de QA</h3>
+            <p data-i18n="brand.labs.desc">Testes manuais, automação e análise de resultados em ambientes que simulam o mercado.</p>
           </article>
           <article class="brand-card">
-            <span class="brand-card-label">Comunidade ativa</span>
-            <h3>Suporte e networking</h3>
-            <p>Entre no Discord, tire dúvidas e cresça junto com outros estudantes e profissionais.</p>
+            <span class="brand-card-label" data-i18n="brand.community.label">Comunidade ativa</span>
+            <h3 data-i18n="brand.community.title">Suporte e networking</h3>
+            <p data-i18n="brand.community.desc">Entre no Discord, tire dúvidas e cresça junto com outros estudantes e profissionais.</p>
           </article>
         </div>
 
@@ -202,26 +196,28 @@
             rel="noopener noreferrer"
             class="quick-card"
             aria-label="Entrar na comunidade no Discord"
+            data-i18n-label="footer.discord"
           >
             <span class="quick-card-icon" data-icon="discord" data-icon-size="20"></span>
             <div class="quick-card-copy">
-              <h3>Comunidade oficial</h3>
-              <p>Suporte prático para dúvidas e estudos ao vivo.</p>
+              <h3 data-i18n="quick.community.title">Comunidade oficial</h3>
+              <p data-i18n="quick.community.desc">Suporte prático para dúvidas e estudos ao vivo.</p>
             </div>
-            <span class="quick-card-action">Entrar →</span>
+            <span class="quick-card-action" data-i18n="quick.community.action">Entrar →</span>
           </a>
 
           <a
             href="books/index.html"
             class="quick-card"
             aria-label="Acessar resumos de livros"
+            data-i18n-label="quick.summaries.action"
           >
             <span class="quick-card-icon" data-icon="books" data-icon-size="20"></span>
             <div class="quick-card-copy">
-              <h3>Resumos de livros</h3>
-              <p>Aprenda rápido com materiais selecionados para testers e QA.</p>
+              <h3 data-i18n="quick.summaries.title">Resumos de livros</h3>
+              <p data-i18n="quick.summaries.desc">Aprenda rápido com materiais selecionados para testers e QA.</p>
             </div>
-            <span class="quick-card-action">Ler agora →</span>
+            <span class="quick-card-action" data-i18n="quick.summaries.action">Ler agora →</span>
           </a>
         </div>
 
@@ -281,8 +277,8 @@
         <div id="home-tracks-grid" class="tracks-grid"></div>
         <div id="home-tracks-empty" class="empty-state hidden">
           <div class="empty-state-icon" data-icon="roadmap" data-icon-size="48"></div>
-          <h3>Trilhas carregando...</h3>
-          <p>As trilhas de aprendizado aparecerão aqui em breve.</p>
+          <h3 data-i18n="home.emptyTitle">Trilhas carregando...</h3>
+          <p data-i18n="home.emptyDesc">As trilhas de aprendizado aparecerão aqui em breve.</p>
         </div>
 
         <section class="features">
@@ -511,7 +507,7 @@
           Certificados
         </h3>
         <div id="dashboard-certificates" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;"></div>
-        <h3 class="section-title section-title-sm" style="margin-top: 2rem">
+        <h3 class="section-title section-title-sm" style="margin-top: 2rem" data-i18n="dashboard.tracksTitle">
           Trilhas
         </h3>
         <div id="dashboard-tracks" class="tracks-grid"></div>
@@ -528,7 +524,7 @@
       </p>
       <p class="footer-discord">
         <a href="https://discord.gg/evVQqq4rf" target="_blank" rel="noopener noreferrer"
-           style="display:inline-flex;align-items:center;gap:0.4rem;">
+           style="display:inline-flex;align-items:center;gap:0.4rem;" data-i18n="footer.discord">
           <span data-icon="discord" data-icon-size="16"></span> Comunidade no Discord
         </a>
       </p>
@@ -540,27 +536,27 @@
     <div id="onboarding-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="onboarding-title">
       <div class="modal-overlay"></div>
       <div class="modal-content" style="max-width: 500px;">
-        <button class="modal-close" id="onboarding-close">×</button>
+        <button class="modal-close" id="onboarding-close" data-i18n-title="onboarding.close">×</button>
         <div style="text-align: center; padding: 2rem;">
           <div style="margin-bottom: 1rem; color: var(--accent);" data-icon="starter" data-icon-size="48"></div>
-          <h2 id="onboarding-title" style="margin-bottom: 1rem; font-size: 1.5rem;">Bem-vindo(a)!</h2>
-          <p style="color: var(--text-muted); margin-bottom: 2rem; line-height: 1.6;">
+          <h2 id="onboarding-title" style="margin-bottom: 1rem; font-size: 1.5rem;" data-i18n="onboarding.title">Bem-vindo(a)!</h2>
+          <p style="color: var(--text-muted); margin-bottom: 2rem; line-height: 1.6;" data-i18n="onboarding.description">
             Esta é uma plataforma <strong>100% gratuita</strong> para você aprender QA do zero até senior. Sem cadastro, sem paywall.
           </p>
           
           <div style="background: var(--surface-2); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; text-align: left;">
-            <h3 style="margin-top: 0; margin-bottom: 1rem; font-size: 1.1rem;">Como começar:</h3>
+            <h3 style="margin-top: 0; margin-bottom: 1rem; font-size: 1.1rem;" data-i18n="onboarding.howToStart">Como começar:</h3>
             <ol style="margin: 0; padding-left: 1.5rem; line-height: 1.8; color: var(--text-muted);">
-              <li><strong>Escolha seu perfil:</strong> Iniciante ou Intermediário</li>
-              <li><strong>Siga uma rota recomendada</strong> ou explore trilhas</li>
-              <li><strong>Complete as aulas</strong> do seu ritmo (0 pré-requisitos)</li>
-              <li><strong>Ganhe certificados</strong> ao completar trilhas</li>
+              <li><strong data-i18n="onboarding.steps.step1.title">Escolha seu perfil:</strong> <span data-i18n="onboarding.steps.step1.desc">Iniciante ou Intermediário</span></li>
+              <li><strong data-i18n="onboarding.steps.step2.title">Siga uma rota recomendada</strong> <span data-i18n="onboarding.steps.step2.desc">ou explore trilhas</span></li>
+              <li><strong data-i18n="onboarding.steps.step3.title">Complete as aulas</strong> <span data-i18n="onboarding.steps.step3.desc">do seu ritmo (0 pré-requisitos)</span></li>
+              <li><strong data-i18n="onboarding.steps.step4.title">Ganhe certificados</strong> <span data-i18n="onboarding.steps.step4.desc">ao completar trilhas</span></li>
             </ol>
           </div>
 
           <div style="display: flex; gap: 1rem;">
-            <button class="btn btn-secondary" id="onboarding-close-btn" style="flex: 1;">Já entendi</button>
-            <button class="btn btn-primary" id="onboarding-start-btn" style="flex: 1;">Começar!</button>
+            <button class="btn btn-secondary" id="onboarding-close-btn" style="flex: 1;" data-i18n="onboarding.closeBtn">Já entendi</button>
+            <button class="btn btn-primary" id="onboarding-start-btn" style="flex: 1;" data-i18n="onboarding.startBtn">Começar!</button>
           </div>
         </div>
       </div>

@@ -19,7 +19,11 @@ window.TG_I18N = {
       ctaExplore: "Explorar trilhas",
       statBooks: "Livros",
       statCategories: "Categorias",
-      statTime: "min por livro"
+      statTime: "min por livro",
+      freeAccessLabel: "Livre acesso",
+      freeAccessDesc: "Sem paywall, sem taxa de assinatura, tudo aberto.",
+      supportLabel: "Apoio real",
+      supportDesc: "Comunidade, resumos e labs para aprender com confiança."
     },
     persona: { title: "Qual é o seu perfil?", beginner: "Iniciante", experienced: "Intermediário", senior: "Sênior", saved: "Perfil salvo" },
     sections: {
@@ -76,6 +80,7 @@ window.TG_I18N = {
     certificate: { title: "Certificado da Guilda", download: "Imprimir / Salvar PDF" },
     filter: { all: "Todos", beginner: "Iniciante", intermediate: "Intermediário", senior: "Avançado" },
     dashboard: {
+      tracksTitle: "Minhas trilhas",
       continueTitle: "Continuar de onde parou",
       continueBtn: "Retomar aula →",
       searchPlaceholder: "Buscar trilhas ou aulas…",
@@ -100,7 +105,8 @@ window.TG_I18N = {
       title: "Biblioteca 15min",
       disclaimer: "Resumos interpretativos para estudantes e profissionais.",
       about: "Sobre",
-      github: "GitHub"
+      github: "GitHub",
+      discord: "Discord"
     },
     section: { booksTitle: "Nossos Resumos", booksSub: "Selecione um livro para começar a ler em 15 minutos." },
     empty: { noResults: "Nenhum livro encontrado com esses filtros." },
@@ -126,14 +132,85 @@ window.TG_I18N = {
     },
     hero: {
       badge: "100% Free",
-      title: "Welcome to Null and Void",
-      subtitle: "QA training for everyone.",
+      title: "QA training made clear and practical.",
+      subtitle: "Paths, labs, and progress for every QA career.",
       ctaExplore: "Explore paths",
       statBooks: "Books",
       statCategories: "Categories",
-      statTime: "min per book"
+      statTime: "min per book",
+      freeAccessLabel: "Free access",
+      freeAccessDesc: "No paywall, no subscription fees, all open.",
+      supportLabel: "Real support",
+      supportDesc: "Community, summaries, and labs to learn with confidence."
     },
-    persona: { title: "What's your profile?", beginner: "Beginner", experienced: "Intermediate", senior: "Senior", saved: "Profile saved" },
+    installBanner: {
+      title: "Install our app",
+      subtitle: "Access offline + notifications",
+      dismiss: "Not now",
+      install: "Install"
+    },
+    guidance: {
+      title: "How to start your QA journey",
+      subtitle: "Choose a clear path, practice with labs, and track progress without losing direction.",
+      step1: { title: "Define your starting point", desc: "Use the recommended paths or routes to find the best fit for your level." },
+      step2: { title: "Practice with focus", desc: "Complete labs and short lessons to turn theory into real testing habits." },
+      step3: { title: "Track your progress", desc: "Monitor progress in the dashboard to stay motivated and clear about what comes next." }
+    },
+    brand: {
+      fullPaths: { title: "Clear journey from beginner to senior", desc: "Learn QA with a defined path, no cost, and real practical focus." },
+      labs: { title: "Real QA exercises", desc: "Manual tests, automation, and result analysis in market-like environments." },
+      community: { title: "Active community", desc: "Join Discord, ask questions, and grow with learners and professionals." }
+    },
+    quick: {
+      community: { title: "Official community", desc: "Practical support for questions and live study.", action: "Join →" },
+      summaries: { title: "Book summaries", desc: "Learn fast with materials picked for testers and QA.", action: "Read now →" }
+    },
+    home: {
+      emptyTitle: "Paths loading...",
+      emptyDesc: "Learning paths will appear here soon."
+    },
+    roadmap: {
+      recruitTitle: "Recruit Route",
+      recruitDesc: "For people new to QA",
+      recruitItems: [
+        "QA Fundamentals (40h)",
+        "Manual Testing (30h)",
+        "BDD & Gherkin (25h)",
+        "First Automation (40h)"
+      ],
+      recruitSummary: "Total: ~8 weeks",
+      masterTitle: "Master Route",
+      masterDesc: "From intermediate QA to senior",
+      masterItems: [
+        "Advanced Web Automation (50h)",
+        "API Testing + Performance (45h)",
+        "Security & Testing (40h)",
+        "Leadership & Architecture (50h)"
+      ],
+      masterSummary: "Total: ~12 weeks",
+      specialistTitle: "Specialist Route",
+      specialistDesc: "Deep dives into focused topics",
+      specialistItems: [
+        "Security (35h)",
+        "Mobile Automation (40h)",
+        "Performance & Load (40h)",
+        "Accessibility (30h)"
+      ],
+      specialistSummary: "Pick & mix"
+    },
+    glossary: {
+      title: "QA glossary",
+      subtitle: "Key terms and concepts explained clearly."
+    },
+    labs: {
+      title: "Practical labs",
+      subtitle: "Hands-on exercises in real testing environments."
+    },
+    dashboard: {
+      exportProgress: "Export",
+      importProgress: "Import",
+      resetProgress: "Reset"
+    },
     sections: {
       availableTracks: "Guild Paths",
       availableTracksSub: "Explore clear, free learning paths for QA step by step.",
