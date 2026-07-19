@@ -20,6 +20,38 @@
       .replace(/'/g, '&#39;');
   }
 
+  function getToastElement() {
+    return document.getElementById('toast');
+  }
+
+  function showToast(message, duration = 3000) {
+    const toast = getToastElement();
+    if (!toast) return;
+    toast.textContent = message;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), duration);
+  }
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    const toggle = document.getElementById('theme-toggle');
+    if (toggle) {
+      toggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+      toggle.title = theme === 'dark' ? 'Modo claro' : 'Modo escuro';
+    }
+  }
+
+  function getSavedTheme() {
+    return localStorage.getItem('theme') || 'dark';
+  }
+
+  function setExpandedState(toggle, expanded) {
+    if (!toggle) return;
+    toggle.classList.toggle('is-active', expanded);
+    toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+  }
+
   function bindSingleDelegateEvent(root, eventName, selector, handler) {
     if (!root || typeof handler !== 'function') return;
 
@@ -61,5 +93,17 @@
     `;
   }
 
-  return { bindSingleDelegateEvent, createCatalogStateMarkup };
+  function formatResultsSummary({ visibleCount, totalCount, searchQuery, currentFilter }) {
+    const parts = [];
+    parts.push(`${visibleCount} de ${totalCount} livros`);
+    if (currentFilter && currentFilter !== 'all') {
+      parts.push(`categoria: ${escapeHtml(currentFilter)}`);
+    }
+    if (searchQuery) {
+      parts.push(`busca: "${escapeHtml(searchQuery)}"`);
+    }
+    return parts.join(' · ');
+  }
+
+  return { bindSingleDelegateEvent, createCatalogStateMarkup, setExpandedState, formatResultsSummary, showToast, applyTheme, getSavedTheme };
 });

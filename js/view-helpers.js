@@ -102,13 +102,15 @@
 
     banner.classList.remove("hidden");
     banner.innerHTML = `
-      <div class="continue-inner">
-        <div>
+      <div class="continue-card">
+        <div class="continue-card-copy">
           <div class="continue-label">${t("dashboard.continueTitle")}</div>
           <div class="continue-lesson">${escapeHtml(found.lesson.title)}</div>
           <div class="continue-track">${icons ? icons.get(getTrackIcon(found.track), 'search-result-icon', '14') + ' ' : found.track.icon} ${escapeHtml(found.track.title)}</div>
         </div>
-        <button class="btn btn-primary" id="btn-continue">${t("dashboard.continueBtn")}</button>
+        <div class="continue-actions">
+          <button class="btn btn-primary" id="btn-continue">${t("dashboard.continueBtn")}</button>
+        </div>
       </div>`;
 
     const btn = document.getElementById("btn-continue");
@@ -705,7 +707,10 @@
         <div class="track-tags">${topicTags}</div>
         <div class="track-progress">
           <div class="progress-bar"><div class="progress-fill" style="width:${prog.pct}%"></div></div>
-          <div class="progress-text">${prog.done}/${prog.total} ${t("track.lessonsProgress")}${isComplete ? (icons ? icons.get('checkCircle','','16') : '✓') : ""}</div>
+          <div class="progress-text">
+            <span class="progress-pill">${prog.done}/${prog.total} ${t("track.lessonsProgress")}</span>
+            ${isComplete ? `<span class="progress-pill progress-pill-complete">${icons ? icons.get('checkCircle','','14') : '✓'} ${t("track.completed")}</span>` : `<span class="progress-pill progress-pill-active">${t("track.inProgress")}</span>`}
+          </div>
         </div>
       </article>`;
   }
@@ -728,7 +733,10 @@
         <div class="progress-bar track-hero-progress">
           <div class="progress-fill" style="width:${prog.pct}%"></div>
         </div>
-        <div class="progress-text">${prog.done}/${prog.total} ${t("track.lessonsDone")} ${prog.pct === 100 ? (icons ? icons.get('checkCircle','','16') : '✓') : ""}</div>
+        <div class="progress-text progress-text-hero">
+          <span class="progress-pill">${prog.done}/${prog.total} ${t("track.lessonsDone")}</span>
+          ${prog.pct === 100 ? `<span class="progress-pill progress-pill-complete">${icons ? icons.get('checkCircle','','14') : '✓'} ${t("track.completed")}</span>` : `<span class="progress-pill progress-pill-active">${Math.round(prog.pct)}% ${t("dashboard.overallProgress")}</span>`}
+        </div>
         <div class="track-hero-actions">
           ${quizBtnHtml}
         </div>
@@ -790,11 +798,35 @@
   }
 
   function buildDashboardCertificatesSectionHtml(completedTracks, userCerts, localizedTrack, icons, lang, escapeHtml, emptyMessage) {
+    // Determine first completed track and user name to make preview dynamic
+    const firstTrack = Array.isArray(completedTracks) && completedTracks.length ? completedTracks[0] : null;
+    const isAuthenticated = window.NVAuth && window.NVAuth.isAuthenticated;
+    const userName = isAuthenticated
+      ? ((typeof window.NVAuth.getUserName === 'function') ? (window.NVAuth.getUserName() || 'Ana Silva') : (window.NVAuth.user && window.NVAuth.user.name) || 'Ana Silva')
+      : 'Faça login para gerar seu certificado';
+    const trackTitle = firstTrack ? (localizedTrack ? localizedTrack(firstTrack).title : firstTrack.title) : 'Trilha de Testes Web • Nível Intermediário';
+    const issueDate = new Date().toLocaleDateString('pt-BR');
+
+    const previewActions = firstTrack && isAuthenticated
+      ? `<div style="margin-top:0.5rem"><button class="btn btn-secondary btn-sm" id="btn-cert-preview" data-track="${escapeHtml(firstTrack.id)}" data-action="preview">Visualizar</button> <button class="btn btn-primary btn-sm" id="btn-cert-download" data-track="${escapeHtml(firstTrack.id)}" data-action="download">Baixar</button></div>`
+      : `<div style="margin-top:0.5rem; color: #374151; font-size: 0.95rem;">Faça login para acessar seus certificados.</div>`;
+
+    const previewHtml = `
+      <div class="cert-preview" role="img" aria-label="Exemplo de certificado">
+        <div class="cert-preview__badge">${firstTrack ? 'Certificado' : 'Exemplo'}</div>
+        <div class="cert-preview__title">CERTIFICATE OF COMPLETION</div>
+        <div class="cert-preview__name">${escapeHtml(userName)}</div>
+        <div class="cert-preview__track">${escapeHtml(trackTitle)}</div>
+        <div class="cert-preview__footer">Emitido em ${issueDate}
+          ${previewActions}
+        </div>
+      </div>`;
+
     if (!Array.isArray(completedTracks) || completedTracks.length === 0) {
-      return buildDashboardEmptyStateHtml(emptyMessage || "", escapeHtml);
+      return `${previewHtml}${buildDashboardEmptyStateHtml(emptyMessage || "", escapeHtml)}`;
     }
 
-    return completedTracks
+    return `${previewHtml}${completedTracks
       .map((track) => {
         const existingCert = Array.isArray(userCerts) ? userCerts.find((c) => c.trackId === track.id) : null;
         const localized = localizedTrack ? localizedTrack(track) : track;
@@ -806,7 +838,7 @@
           escapeHtml,
         );
       })
-      .join("");
+      .join("")}`;
   }
 
   function buildAchievementsHtml(achievementsList, unlocked, lang, escapeHtml, icons) {
@@ -834,14 +866,112 @@
     });
   }
 
+  function notifyUser(message) {
+    if (typeof window.showToast === 'function') {
+      window.showToast(message);
+      return;
+    }
+    if (typeof window.alert === 'function') {
+      try {
+        window.alert(message);
+        return;
+      } catch (e) {
+        // alert is not implemented in this environment, fallback to console
+      }
+    }
+    if (typeof console !== 'undefined' && console.warn) {
+      console.warn(message);
+    }
+  }
+
   function bindDashboardCertificateHandlers(container, onDownload) {
     if (!container || typeof onDownload !== "function") return;
 
-    container.querySelectorAll("[id^='btn-cert-']").forEach((btn) => {
+    // Bind to any element with a data-track attribute inside the container.
+    container.querySelectorAll("[data-track]").forEach((btn) => {
       btn.addEventListener("click", async () => {
-        if (!btn.dataset.track) return;
-        await onDownload(btn.dataset.track);
+        const trackId = btn.dataset.track;
+        if (!trackId) return;
+        const action = btn.dataset.action || 'download';
+
+        if (!window.NVAuth || !window.NVAuth.isAuthenticated) {
+          notifyUser('Faça login para acessar seus certificados.');
+          return;
+        }
+
+        if (action === 'preview') {
+          if (!window.TG_CERTIFICATES) return;
+          try {
+            const userName = (typeof window.NVAuth.getUserName === 'function') ? (window.NVAuth.getUserName() || '') : (window.NVAuth.user && window.NVAuth.user.name) || '';
+            const blob = await window.TG_CERTIFICATES.generateCertificate(trackId, userName, new Date());
+            showCertificateModal(blob, `${trackId}-certificate.pdf`, trackId, onDownload);
+          } catch (e) {
+            console.error('Certificate preview failed:', e);
+          }
+          return;
+        }
+
+        await onDownload(trackId);
       });
+    });
+  }
+
+  // Show an inline modal with embedded PDF blob and download action
+  function showCertificateModal(blob, filename, trackId, onDownload) {
+    if (!blob) return;
+    // If modal already exists, remove it
+    const existing = document.getElementById('cert-modal-root');
+    if (existing) existing.remove();
+
+    const url = URL.createObjectURL(blob);
+    const root = document.createElement('div');
+    root.id = 'cert-modal-root';
+    root.className = 'cert-modal';
+    root.innerHTML = `
+      <div class="cert-modal__overlay" id="cert-modal-overlay"></div>
+      <div class="cert-modal__content" role="dialog" aria-modal="true">
+        <button class="cert-modal__close" id="cert-modal-close">×</button>
+        <div class="cert-modal__frame-wrap">
+          <iframe class="cert-modal__iframe" src="${url}" title="Certificate preview"></iframe>
+        </div>
+        <div class="cert-modal__actions">
+          <button class="btn btn-secondary" id="cert-modal-download">Baixar</button>
+          <button class="btn" id="cert-modal-close-2">Fechar</button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(root);
+
+    function close() {
+      root.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 200);
+    }
+
+    document.getElementById('cert-modal-overlay').addEventListener('click', close);
+    document.getElementById('cert-modal-close').addEventListener('click', close);
+    document.getElementById('cert-modal-close-2').addEventListener('click', close);
+    document.getElementById('cert-modal-download').addEventListener('click', () => {
+      // prefer using TG_CERTIFICATES.downloadCertificate if available to maintain naming
+      if (window.TG_CERTIFICATES && typeof window.TG_CERTIFICATES.downloadCertificate === 'function') {
+        // Trigger the same download flow (this will re-generate PDF) in background
+        window.TG_CERTIFICATES.downloadCertificate(trackId, (window.NVAuth && typeof window.NVAuth.getUserName === 'function') ? (window.NVAuth.getUserName() || '') : (window.NVAuth && window.NVAuth.user && window.NVAuth.user.name) || '', new Date()).catch((e) => {
+          // fallback to direct blob download
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename || 'certificate.pdf';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        });
+      } else {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename || 'certificate.pdf';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
     });
   }
 
@@ -996,88 +1126,6 @@
       </article>`,
       )
       .join("")}</div>`;
-  }
-
-  function buildSandboxExampleHtml(example, key, icons, escapeHtml, lang) {
-    const explanation = example.explanation?.[lang] || example.explanation?.pt || "";
-    const escapeHtmlFunc = (text) => {
-      const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" };
-      return String(text).replace(/[&<>"']/g, (m) => map[m]);
-    };
-
-    return `
-      <div class="sandbox-example-header">
-        <h2>${escapeHtml(example.title)}</h2>
-        <p class="sandbox-description">${escapeHtml(example.description)}</p>
-      </div>
-
-      <div class="sandbox-explanation">
-        <strong>${icons ? icons.get('info','','18') + ' ' : ''}O que você aprende:</strong>
-        <p>${escapeHtml(explanation)}</p>
-      </div>
-
-      <div class="sandbox-code-block">
-        <div class="sandbox-code-header">
-          <span class="sandbox-language">${escapeHtml(example.language)}</span>
-          <button type="button" class="btn-copy-sandbox" onclick="window.copySandboxCode('${key}')">
-            ${icons ? icons.get('copy','','18') + ' ' : ''}Copiar
-          </button>
-        </div>
-        <pre class="sandbox-code"><code>${escapeHtmlFunc(example.code)}</code></pre>
-      </div>
-
-      ${example.output ? `
-      <div class="sandbox-output">
-        <strong>Output esperado:</strong>
-        <pre>${escapeHtmlFunc(example.output)}</pre>
-      </div>
-      ` : ""}
-
-      <div class="sandbox-cta">
-        <p><strong>${icons ? icons.get('target','','18') + ' ' : ''}Próximos passos:</strong></p>
-        <ul>
-          <li>1. Copie o código acima (botão ${icons ? icons.get('copy','','18') : ''})</li>
-          <li>2. Cole em seu arquivo de teste local</li>
-          <li>3. Execute: <code>npm test</code> ou <code>k6 run</code></li>
-          <li>4. Observe o output e entenda cada linha</li>
-          <li>5. Modifique valores, experimente!</li>
-        </ul>
-      </div>`;
-  }
-
-  function buildSandboxPageHtml() {
-    return `
-      <div class="sandbox-view">
-        <div class="sandbox-header">
-          <h1>Interactive Sandbox</h1>
-          <p>Exemplos de código interativos — copie, estude, execute em seu ambiente</p>
-        </div>
-
-        <div class="sandbox-container">
-          <div class="sandbox-sidebar">
-            <h3>Exemplos por trilha</h3>
-            <div id="sandbox-menu" class="sandbox-menu"></div>
-          </div>
-
-          <div class="sandbox-main">
-            <div id="sandbox-example" class="sandbox-example"></div>
-          </div>
-        </div>
-      </div>`;
-  }
-
-  function buildSandboxMenuHtml(byTrack, trackTitles, escapeHtml) {
-    return Object.entries(byTrack)
-      .map(([track, examples]) => `
-        <div class="sandbox-track-group">
-          <div class="sandbox-track-title">${escapeHtml(trackTitles[track] || track)}</div>
-          ${examples
-            .map(
-              (ex) => `<button type="button" class="sandbox-item" data-key="${escapeHtml(ex.key)}">${escapeHtml(ex.title)}</button>`,
-            )
-            .join("")}
-        </div>`)
-      .join("");
   }
 
   function buildQuizResultHtml(passed, correct, total, icons, t, lang) {
@@ -1294,7 +1342,6 @@
     buildBookmarksHtml,
     buildGlossaryHtml,
     buildLabsHtml,
-    buildSandboxExampleHtml,
     buildQuizResultHtml,
     buildLessonQuizResultHtml,
     buildTrackQuizHtml,
@@ -1323,8 +1370,7 @@
     renderSearchResults,
     buildDashboardBookmarksSectionHtml,
     buildDashboardCertificatesSectionHtml,
-    buildSandboxPageHtml,
-    buildSandboxMenuHtml,
+    
     renderDashboardSections,
   };
 

@@ -57,9 +57,6 @@
             >
             <a href="#" data-nav="tracks" data-i18n="nav.tracks">Trilhas</a>
             <a href="#" data-nav="roadmap" data-i18n="nav.roadmap">Rotas</a>
-            <a href="#" data-nav="sandbox" class="badge-new" title="Novo!">
-              <span data-icon="sandbox" data-icon-size="16"></span> Sandbox
-            </a>
             <a href="#" data-nav="glossary" data-i18n="nav.glossary"
               >Glossário</a
             >
@@ -168,6 +165,31 @@
             </aside>
           </div>
         </div>
+
+        <section class="guidance-panel" id="home-guidance" aria-labelledby="home-guidance-title">
+          <div class="guidance-panel-header">
+            <span class="guidance-pill">Guia rápido</span>
+            <h2 id="home-guidance-title">Como começar na jornada QA</h2>
+            <p>Escolha um caminho claro, pratique com labs e acompanhe seu progresso sem perder o rumo.</p>
+          </div>
+          <div class="guidance-card-grid">
+            <article class="guidance-card">
+              <span class="guidance-index">01</span>
+              <h3>Defina seu ponto de partida</h3>
+              <p>Use as trilhas ou rotas recomendadas para encontrar o melhor caminho para o seu nível.</p>
+            </article>
+            <article class="guidance-card">
+              <span class="guidance-index">02</span>
+              <h3>Pratique com foco</h3>
+              <p>Complete labs e aulas curtas para transformar teoria em hábitos reais de teste.</p>
+            </article>
+            <article class="guidance-card">
+              <span class="guidance-index">03</span>
+              <h3>Acompanhe seu avanço</h3>
+              <p>Monitore o progresso no painel para manter motivação e clareza sobre o que vem a seguir.</p>
+            </article>
+          </div>
+        </section>
 
         <div class="brand-grid">
           <article class="brand-card">
@@ -395,8 +417,6 @@
         <div id="glossary-content" class="glossary-grid"></div>
       </section>
 
-      <section id="view-sandbox" class="view hidden"></section>
-
       <section id="view-labs" class="view">
         <h2 class="section-title" data-i18n="sections.labsTitle">
           Laboratórios de Prática
@@ -588,8 +608,12 @@
     </script>
 
     <script src="js/utils.js" defer></script>
+    <script src="js/app-storage.js" defer></script>
+    <script src="js/app-i18n.js" defer></script>
+    <script src="js/app-navigation.js" defer></script>
     <script src="js/view-helpers.js" defer></script>
     <script src="js/lesson-renderers.js" defer></script>
+    <script src="js/lesson-content.js" defer></script>
     <script src="js/icons.js?v=1.0.2" defer></script>
     <script src="js/certificates.js" defer></script>
     <script src="data/tracks.js" defer></script>
@@ -611,7 +635,11 @@
     <script src="https://unpkg.com/jwt-decode@3.1.2/build/jwt-decode.js" defer></script>
     <script src="js/auth.js?v=1.0.4" defer></script>
     <script src="js/discord-integration.js" defer></script>
+    <script src="js/app-home.js" defer></script>
+    <script src="js/app-track.js" defer></script>
     <script src="js/app.js?v=1784338953" defer></script>
+    <script src="js/app-lesson.js" defer></script>
+    <script src="js/app-dashboard.js" defer></script>
     <script src="js/debug-helpers.js" defer></script>
     <script>
       // Inline fallback to ensure a direct lesson renderer is always available for debugging

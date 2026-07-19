@@ -48,6 +48,7 @@
     isAuthenticated: false,
     init,
     getUser,
+    getUserName,
     getProgress,
     setProgress,
     logout,
@@ -138,6 +139,8 @@
   function renderLocalAuthFallback() {
     const signinDiv = document.getElementById('auth-signin');
     if (!signinDiv) return;
+    // Do not render guest fallback if Google Sign-In is available
+    if (window.google && window.google.accounts) return;
 
     let fallbackBtn = document.getElementById('auth-local-signin');
     if (!fallbackBtn) {
@@ -245,7 +248,9 @@
     } else {
       signinDiv.classList.remove('hidden');
       userDiv.classList.add('hidden');
-      if (isLocalDevelopment()) {
+      // Only show local guest fallback when running locally and Google Sign-In
+      // is not available. This prevents two login buttons appearing.
+      if (isLocalDevelopment() && !(window.google && window.google.accounts)) {
         renderLocalAuthFallback();
       }
     }
@@ -256,6 +261,16 @@
    */
   function getUser() {
     return window.NVAuth.user;
+  }
+
+  /**
+   * Get current user name
+   */
+  function getUserName() {
+    if (!window.NVAuth.isAuthenticated || !window.NVAuth.user) {
+      return null;
+    }
+    return window.NVAuth.user.name || null;
   }
 
   /**

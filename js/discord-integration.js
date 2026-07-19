@@ -111,8 +111,6 @@ window.TG_DISCORD = {
         }));
         localStorage.setItem('tg-discord-leaderboard', JSON.stringify(newLeaderboard));
         localStorage.setItem('tg-discord-last-reset', today.toISOString());
-        
-        console.log('[Discord] Leaderboard resetado (semanal)');
       }
     }
   },

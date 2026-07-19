@@ -250,6 +250,10 @@
       />
       <button onclick="verifyCertificate()">Verificar</button>
     </div>
+    <div id="loginPrompt" style="display:none; margin-top:1rem; text-align:center;">
+      <p style="color:#f0f0f0; margin-bottom:0.5rem;">Para verificar seus certificados faça login</p>
+      <a href="/" class="btn" style="background:#00e5ff; color:#000; padding:0.6rem 1rem; border-radius:8px; text-decoration:none;">Para verificar seus certificados faça login</a>
+    </div>
 
     <div id="result" class="result"></div>
 
@@ -267,8 +271,13 @@
     // Simulated certificate database (in production, seria backend)
     const CERTIFICATES = {};
 
+    function isAuthenticated() {
+      return window.NVAuth && window.NVAuth.isAuthenticated;
+    }
+
     // Quando página carrega, carrega certificados de localStorage
     function initCertificates() {
+      if (!isAuthenticated()) return;
       try {
         const certs = JSON.parse(localStorage.getItem('testers-guild-certificates') || '[]');
         certs.forEach(cert => {
@@ -282,6 +291,15 @@
     }
 
     function verifyCertificate() {
+      if (!isAuthenticated()) {
+        const resultDiv = document.getElementById('result');
+        resultDiv.classList.remove('valid');
+        resultDiv.classList.add('invalid');
+        resultDiv.style.display = 'block';
+        resultDiv.innerHTML = '<p class="error-message">Por favor, faça login para verificar certificados.</p>';
+        return;
+      }
+
       const code = document.getElementById('verifyCode').value.trim().toUpperCase();
       const resultDiv = document.getElementById('result');
 
@@ -300,6 +318,38 @@
           month: 'long',
           day: 'numeric'
         });
+
+        // Recompute verification code using both current demo secret (if present)
+        // and without secret to remain backwards-compatible with older certificates.
+        function computeHash(secret) {
+          const s = (typeof secret === 'string') ? secret : '';
+          const str = `${s}${cert.userName}${cert.trackId}${cert.completedDate}`;
+          let hash = 0;
+          for (let i = 0; i < str.length; i++) {
+            const char = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash;
+          }
+          return Math.abs(hash).toString(16).substring(0,8).toUpperCase();
+        }
+
+        const secretPresent = (typeof window.TG_CERT_SECRET !== 'undefined') ? String(window.TG_CERT_SECRET) : null;
+        const recomputedWith = secretPresent !== null ? computeHash(secretPresent) : null;
+        const recomputedWithout = computeHash('');
+
+        const matches = (recomputedWith === code) || (recomputedWithout === code);
+        if (!matches) {
+          resultDiv.classList.remove('valid');
+          resultDiv.classList.add('invalid');
+          resultDiv.style.display = 'block';
+          resultDiv.innerHTML = `
+            <div class="result-icon">❌</div>
+            <div class="result-title">Certificado Inválido</div>
+            <p class="error-message">O código não é compatível com os dados do certificado. Possível adulteração.</p>
+          `;
+          showLeaderboard();
+          return;
+        }
 
         resultDiv.classList.remove('invalid');
         resultDiv.classList.add('valid');
@@ -361,6 +411,7 @@
     }
 
     function showLeaderboard() {
+      if (!isAuthenticated()) return;
       const certs = Object.values(CERTIFICATES);
       if (certs.length === 0) return;
 
@@ -405,8 +456,39 @@
       if (e.key === 'Enter') verifyCertificate();
     });
 
+    // Restore login state from localStorage for this verification page.
+    if (!window.NVAuth) {
+      window.NVAuth = {
+        user: null,
+        isAuthenticated: false,
+        getUserName() {
+          return this.user ? this.user.name : null;
+        },
+      };
+      try {
+        const savedUser = localStorage.getItem('nv_auth_user');
+        if (savedUser) {
+          window.NVAuth.user = JSON.parse(savedUser);
+          window.NVAuth.isAuthenticated = true;
+        }
+      } catch (e) {
+        console.warn('Failed to restore auth state:', e);
+      }
+    }
+
     // Init na página carregar
     window.addEventListener('load', () => {
+      // If user is not authenticated, hide verification UI and show login prompt
+      const isAuthed = (window.NVAuth && window.NVAuth.isAuthenticated);
+      if (!isAuthed) {
+        const form = document.querySelector('.search-form');
+        if (form) form.style.display = 'none';
+        const loginPrompt = document.getElementById('loginPrompt');
+        if (loginPrompt) loginPrompt.style.display = 'block';
+        // Do not load certificates for unauthenticated users
+        return;
+      }
+
       initCertificates();
       showLeaderboard();
     });
@@ -414,6 +496,7 @@
 
   <!-- Carrega dados das trilhas e certificados -->
   <script src="data/tracks.js"></script>
+  <script src="data/cert-secret.js"></script>
   <script src="data/performance-track.js"></script>
   <script src="data/mentorship.js"></script>
   <script src="data/mobile-labs.js"></script>

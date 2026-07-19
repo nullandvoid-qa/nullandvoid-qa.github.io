@@ -130,6 +130,35 @@ describe('view helpers', () => {
     expect(bookmarks).toContain('Intro');
   });
 
+  test('renderContinueBanner renders a richer resume card with a primary action', () => {
+    const { renderContinueBanner } = require('../view-helpers.js');
+
+    localStorage.setItem('resume-test', 'lesson-1');
+    const banner = { classList: { add: jest.fn(), remove: jest.fn() }, innerHTML: '' };
+    const navigate = jest.fn();
+    const findLesson = jest.fn(() => ({
+      lesson: { title: 'Introdução ao QA' },
+      track: { title: 'Fundamentos', icon: 'web' },
+    }));
+
+    renderContinueBanner(
+      banner,
+      { id: 'lesson-1' },
+      findLesson,
+      () => 'web',
+      (value) => String(value),
+      (key) => key,
+      navigate,
+      { get: () => '' },
+      'resume-test',
+    );
+
+    expect(banner.classList.remove).toHaveBeenCalledWith('hidden');
+    expect(banner.innerHTML).toContain('continue-card');
+    expect(banner.innerHTML).toContain('continue-actions');
+    expect(banner.innerHTML).toContain('btn-continue');
+  });
+
   test('buildGlossaryHtml and buildLabsHtml render their sections', () => {
     const { buildGlossaryHtml, buildLabsHtml } = require('../view-helpers.js');
 
@@ -144,55 +173,6 @@ describe('view helpers', () => {
     expect(glossary).toContain('API');
     expect(labs).toContain('lab-card');
     expect(labs).toContain('Lab one');
-  });
-
-  test('buildSandboxExampleHtml renders the sandbox content shell', () => {
-    const { buildSandboxExampleHtml } = require('../view-helpers.js');
-
-    const html = buildSandboxExampleHtml(
-      {
-        title: 'Example',
-        description: 'Desc',
-        explanation: 'Learn',
-        language: 'javascript',
-        code: 'const x = 1;',
-        output: '1',
-      },
-      'demo',
-      { get: () => '' },
-      (value) => String(value),
-      'pt',
-    );
-
-    expect(html).toContain('sandbox-example-header');
-    expect(html).toContain('sandbox-code-block');
-    expect(html).toContain('Example');
-  });
-
-  test('buildSandboxPageHtml renders sandbox shell markup', () => {
-    const { buildSandboxPageHtml } = require('../view-helpers.js');
-
-    const html = buildSandboxPageHtml();
-
-    expect(html).toContain('sandbox-view');
-    expect(html).toContain('sandbox-menu');
-    expect(html).toContain('sandbox-example');
-  });
-
-  test('buildSandboxMenuHtml renders grouped examples', () => {
-    const { buildSandboxMenuHtml } = require('../view-helpers.js');
-
-    const html = buildSandboxMenuHtml(
-      {
-        web: [{ key: 'one', title: 'One' }],
-      },
-      { web: 'Web Testing' },
-      (value) => String(value),
-    );
-
-    expect(html).toContain('sandbox-track-group');
-    expect(html).toContain('Web Testing');
-    expect(html).toContain('data-key="one"');
   });
 
   test('buildQuizResultHtml renders pass and fail states', () => {
@@ -379,7 +359,7 @@ describe('view helpers', () => {
 
     const html = buildDashboardBookmarksSectionHtml(
       ['lesson-1'],
-      (lessonId) => ({ lesson: { title: 'Intro' }, track: { title: 'Web' } }),
+      (_lessonId) => ({ lesson: { title: 'Intro' }, track: { title: 'Web' } }),
       { get: () => '' },
       (value) => String(value),
       () => 'bookmark',
@@ -389,6 +369,24 @@ describe('view helpers', () => {
     expect(html).toContain('data-lesson="lesson-1"');
     expect(html).toContain('Intro');
     expect(html).toContain('Web');
+  });
+
+  test('buildDashboardCertificatesSectionHtml renders a certificate preview example', () => {
+    const { buildDashboardCertificatesSectionHtml } = require('../view-helpers.js');
+
+    const html = buildDashboardCertificatesSectionHtml(
+      [],
+      [],
+      (track) => track,
+      { get: () => '' },
+      'pt',
+      (value) => String(value),
+      'Conclua uma trilha para ganhar um certificado.',
+    );
+
+    expect(html).toContain('cert-preview');
+    expect(html).toContain('Exemplo');
+    expect(html).toContain('CERTIFICATE OF COMPLETION');
   });
 
   test('buildDashboardCertificatesSectionHtml renders empty state when no completed tracks exist', () => {
@@ -471,6 +469,11 @@ describe('view helpers', () => {
   test('bindDashboardCertificateHandlers calls onDownload with track ids', () => {
     const { bindDashboardCertificateHandlers } = require('../view-helpers.js');
     const onDownload = jest.fn();
+
+    window.NVAuth = {
+      isAuthenticated: true,
+      getUserName: () => 'Test User',
+    };
 
     document.body.innerHTML = `
       <button id="btn-cert-a" data-track="a"></button>

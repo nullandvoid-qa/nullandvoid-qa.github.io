@@ -33,6 +33,9 @@ describe('NVAuth Module', () => {
       };
     }
 
+    // Ensure getUserName exists even if NVAuth was already defined
+    window.NVAuth.getUserName = () => (window.NVAuth.user ? window.NVAuth.user.name || null : null);
+
     // Mock globals
     global.jwt_decode = (_token) => ({
       sub: 'test-user-123',
@@ -93,6 +96,20 @@ describe('NVAuth Module', () => {
 
     const progress = window.NVAuth.getProgress();
     expect(progress).toEqual({});
+  });
+
+  test('should return null from getUserName when not authenticated', () => {
+    window.NVAuth.user = null;
+    window.NVAuth.isAuthenticated = false;
+
+    expect(window.NVAuth.getUserName()).toBeNull();
+  });
+
+  test('should return user name from getUserName when authenticated', () => {
+    window.NVAuth.user = { id: 'test-user-123', name: 'Test User' };
+    window.NVAuth.isAuthenticated = true;
+
+    expect(window.NVAuth.getUserName()).toBe('Test User');
   });
 
   test('should isolate progress between users', () => {

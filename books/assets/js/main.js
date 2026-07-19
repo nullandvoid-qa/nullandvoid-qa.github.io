@@ -23,6 +23,7 @@
     emptyState: document.getElementById("empty-state"),
     searchInput: document.getElementById("global-search"),
     searchResults: document.getElementById("search-results"),
+    resultsSummary: document.getElementById("results-summary"),
     filterBar: document.getElementById("filter-bar"),
     themeToggle: document.getElementById("theme-toggle"),
     statBooks: document.getElementById("stat-books"),
@@ -62,10 +63,7 @@
   }
 
   function showToast(message, duration = 3000) {
-    if (!DOM.toast) return;
-    DOM.toast.textContent = message;
-    DOM.toast.classList.add("show");
-    setTimeout(() => DOM.toast.classList.remove("show"), duration);
+    window.BooksUtils?.showToast(message, duration);
   }
 
   function debounce(fn, delay) {
@@ -76,24 +74,6 @@
     };
   }
 
-  // THEME
-  function applyTheme(theme) {
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
-    STATE.currentTheme = theme;
-    if (DOM.themeToggle) {
-      DOM.themeToggle.textContent = theme === "dark" ? "☀️" : "🌙";
-      DOM.themeToggle.title = theme === "dark" ? "Modo claro" : "Modo escuro";
-    }
-    if (window.BooksDesignTokens) {
-      window.BooksDesignTokens.applyCSSVariables();
-    }
-  }
-
-  function toggleTheme() {
-    applyTheme(STATE.currentTheme === "dark" ? "light" : "dark");
-    showToast(t("toast.themeChanged"));
-  }
 
   // COLORS
   function getCategoryColor(category) {
@@ -118,18 +98,22 @@
   function renderFilterChips() {
     if (!DOM.filterBar) return;
     const categories = [...new Set(STATE.books.map((b) => b.categoria))].sort();
-    const allChip = `<button type="button" class="filter-chip active" data-filter="all">${t(
+    const allChip = `<button type="button" class="filter-chip active" data-filter="all" aria-pressed="${STATE.currentFilter === "all"}">${t(
       "filter.all"
     )}</button>`;
     const chips = categories
-      .map((cat) => `<button type="button" class="filter-chip" data-filter="${cat}">${escapeHtml(cat)}</button>`)
+      .map((cat) => `<button type="button" class="filter-chip" data-filter="${cat}" aria-pressed="${STATE.currentFilter === cat}">${escapeHtml(cat)}</button>`)
       .join("");
     DOM.filterBar.innerHTML = allChip + chips;
 
     if (window.BooksUtils?.bindSingleDelegateEvent) {
       window.BooksUtils.bindSingleDelegateEvent(DOM.filterBar, "click", ".filter-chip", (chip) => {
-        DOM.filterBar.querySelectorAll(".filter-chip").forEach((c) => c.classList.remove("active"));
+        DOM.filterBar.querySelectorAll(".filter-chip").forEach((c) => {
+          c.classList.remove("active");
+          c.setAttribute("aria-pressed", "false");
+        });
         chip.classList.add("active");
+        chip.setAttribute("aria-pressed", "true");
         STATE.currentFilter = chip.dataset.filter;
         renderBooks();
       });
@@ -143,8 +127,10 @@
     const isRead = window.NVAuth?.isAuthenticated && window.NVAuth?.isBookRead(book.id);
     const badge = isRead ? '<div class="book-read-badge">✓ Lido</div>' : "";
 
+    const label = `Abrir resumo de ${book.titulo} por ${book.autor}`;
+
     return `
-    <article class="book-item ${isRead ? "book-read" : ""}" role="button" data-id="${book.id}" tabindex="0" style="--book-accent: ${accent}; --book-accent-rgb: ${accentRgb};">
+    <article class="book-item ${isRead ? "book-read" : ""}" role="button" data-id="${book.id}" tabindex="0" aria-label="${escapeHtml(label)}" style="--book-accent: ${accent}; --book-accent-rgb: ${accentRgb};">
       <div class="book-wrapper">${badge}
         <div class="book-cover">
           <div class="book-3d" aria-hidden="true">
@@ -173,7 +159,7 @@
   function renderLoadingState() {
     if (!DOM.booksGrid) return;
     DOM.booksGrid.classList.remove("hidden");
-    DOM.booksGrid.innerHTML = Array.from({ length: 6 }, (_, index) => `
+    DOM.booksGrid.innerHTML = Array.from({ length: 6 }, () => `
       <div class="book-skeleton-card" aria-hidden="true">
         <div class="book-skeleton-cover"></div>
         <div class="book-skeleton-line short"></div>
@@ -182,6 +168,28 @@
       </div>
     `).join("");
     if (DOM.emptyState) DOM.emptyState.classList.add("hidden");
+    if (DOM.resultsSummary) DOM.resultsSummary.classList.add("hidden");
+  }
+
+  function renderResultsSummary(filteredCount, totalCount) {
+    if (!DOM.resultsSummary) return;
+
+    if (filteredCount === 0) {
+      DOM.resultsSummary.classList.add("hidden");
+      return;
+    }
+
+    const summary = window.BooksUtils?.formatResultsSummary
+      ? window.BooksUtils.formatResultsSummary({
+          visibleCount: filteredCount,
+          totalCount,
+          searchQuery: STATE.searchQuery,
+          currentFilter: STATE.currentFilter,
+        })
+      : `Mostrando ${filteredCount} de ${totalCount} livros`;
+
+    DOM.resultsSummary.textContent = summary;
+    DOM.resultsSummary.classList.remove("hidden");
   }
 
   function renderBooks() {
@@ -210,6 +218,7 @@
     if (filtered.length === 0) {
       if (DOM.booksGrid) DOM.booksGrid.innerHTML = "";
       if (DOM.booksGrid) DOM.booksGrid.classList.add("hidden");
+      if (DOM.resultsSummary) DOM.resultsSummary.classList.add("hidden");
       if (DOM.emptyState) {
         const hasActiveFilter = STATE.currentFilter !== "all" || STATE.searchQuery;
         DOM.emptyState.innerHTML = window.BooksUtils?.createCatalogStateMarkup({
@@ -238,6 +247,8 @@
     if (DOM.emptyState) DOM.emptyState.classList.add("hidden");
     if (DOM.booksGrid) DOM.booksGrid.classList.remove("hidden");
     if (DOM.booksGrid) DOM.booksGrid.innerHTML = filtered.map(createBookCard).join("");
+
+    renderResultsSummary(filtered.length, STATE.books.length);
 
     if (DOM.booksGrid) {
       DOM.booksGrid.querySelectorAll(".book-item").forEach((item) => {
@@ -328,6 +339,12 @@
       }
     });
 
+    DOM.searchInput.addEventListener("blur", () => {
+      window.setTimeout(() => {
+        if (DOM.searchResults) DOM.searchResults.classList.add("hidden");
+      }, 120);
+    });
+
     document.addEventListener("keydown", (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
@@ -344,10 +361,36 @@
     });
   }
 
-  function setupThemeToggle() {
-    if (DOM.themeToggle) {
-      DOM.themeToggle.addEventListener("click", toggleTheme);
-    }
+  function setupMobileMenu() {
+    const toggle = document.getElementById("mobile-menu-toggle");
+    const nav = document.getElementById("nav-links");
+    if (!toggle || !nav) return;
+
+    const closeMenu = () => {
+      nav.classList.remove("is-open");
+      if (window.BooksUtils?.setExpandedState) {
+        window.BooksUtils.setExpandedState(toggle, false);
+      }
+    };
+
+    toggle.addEventListener("click", () => {
+      const isOpen = nav.classList.toggle("is-open");
+      if (window.BooksUtils?.setExpandedState) {
+        window.BooksUtils.setExpandedState(toggle, isOpen);
+      }
+    });
+
+    nav.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMenu));
+
+    document.addEventListener("click", (event) => {
+      if (!nav.contains(event.target) && !toggle.contains(event.target)) {
+        closeMenu();
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 640) closeMenu();
+    });
   }
 
   // LOADING
@@ -385,15 +428,14 @@
 
   // INIT
   function init() {
-    applyTheme(STATE.currentTheme);
     setupSearchHandlers();
     setupClickOutsideHandler();
-    setupThemeToggle();
+    setupMobileMenu();
     loadBooks();
   }
 
   // EXPORTS
-  window.BooksApp = { STATE, renderBooks, toggleTheme, showToast };
+  window.BooksApp = { STATE, renderBooks, showToast };
   window.renderBooks = renderBooks;
   window.updateBookCardReadStatus = function (bookId, marked) {
     const card = document.querySelector(`.book-item[data-id="${bookId}"]`);

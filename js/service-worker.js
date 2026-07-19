@@ -52,10 +52,8 @@ function isNetworkFirstAsset(request) {
 
 // Install: cache critical assets
 self.addEventListener("install", (event) => {
-  console.log(`[SW] Installing ${CACHE_NAME}`);
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log("[SW] Caching critical assets");
       return cache.addAll(CRITICAL_ASSETS).catch((err) => {
         console.warn("[SW] Some assets failed to cache (normal):", err);
         // Don't fail install if some assets can't be cached
@@ -67,13 +65,11 @@ self.addEventListener("install", (event) => {
 
 // Activate: clean up old caches
 self.addEventListener("activate", (event) => {
-  console.log("[SW] Activating");
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
           if (cacheName !== CACHE_NAME && cacheName !== RUNTIME_CACHE) {
-            console.log(`[SW] Deleting old cache: ${cacheName}`);
             return caches.delete(cacheName);
           }
         })
@@ -220,8 +216,6 @@ async function networkFirst(request) {
 
 // Handle messages from clients (for push notifications later)
 self.addEventListener("message", (event) => {
-  console.log("[SW] Message received:", event.data);
-
   if (event.data && event.data.type === "SKIP_WAITING") {
     self.skipWaiting();
   }

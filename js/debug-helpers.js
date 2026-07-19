@@ -79,8 +79,8 @@ window.devHelpers.renderLessonDirect = function (lessonId) {
     // sanitize content to remove inline backgrounds that break dark theme
     const stripInlineBackgrounds = (html) => {
       if (!html) return html;
-      let cleaned = html.replace(/background(?:-color)?\s*:\s*[^;\"']+;?/gi, '');
-      cleaned = cleaned.replace(/style\s*=\s*\"\s*\"/gi, '');
+      let cleaned = html.replace(/background(?:-color)?\s*:\s*[^;"']+;?/gi, '');
+      cleaned = cleaned.replace(/style\s*=\s*"\s*"/gi, '');
       return cleaned;
     };
 

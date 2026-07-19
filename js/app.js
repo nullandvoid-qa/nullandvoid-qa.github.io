@@ -1,3 +1,4 @@
+/* global getStorage, getStoredProgress, persistProgress */
 (function () {
   "use strict";
 
@@ -41,7 +42,6 @@
   let trackFilter = "all";
   let homeFilter = "all";
   let searchTimeout = null;
-  let quizState = {};
 
   const PERSONA_TRACKS = {
     beginner: ["starter", "web", "api", "accessibility", "mobile"],
@@ -127,113 +127,10 @@
   }
 
   // ── Storage helpers ───────────────────────────────────────────────────────
-  function loadProgress() {
-    try {
-      // Se usuario está autenticado, carrega progresso dele
-      if (window.NVAuth && window.NVAuth.isAuthenticated) {
-        const userProgress = window.NVAuth.getProgress();
-        if (Object.keys(userProgress).length > 0) {
-          return validateProgressData(userProgress) ? userProgress : {};
-        }
-      }
-
-      return getStoredProgress([STORAGE_PROGRESS, "tg-qaway-progress"], {});
-    } catch {
-      return {};
-    }
-  }
-
-  function saveProgress() {
-    // Se usuario está autenticado, salva progresso dele
-    if (window.NVAuth && window.NVAuth.isAuthenticated) {
-      window.NVAuth.setProgress(progress);
-    }
-
-    // Também salva no storage padrão como backup
-    persistProgress([STORAGE_PROGRESS], progress);
-  }
-  function saveLastLesson(id) {
-    localStorage.setItem(STORAGE_LAST_LESSON, id);
-  }
-
-  function exportProgressToFile() {
-    try {
-      const payload = {
-        version: 1,
-        exportedAt: new Date().toISOString(),
-        progress,
-        bookmarks,
-        quizzesPassed,
-        checklists: checklistState,
-      };
-      const blob = new Blob([JSON.stringify(payload, null, 2)], {
-        type: "application/json",
-      });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "nullandvoid-qa-progress.json";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      showToast(t("toast.exportProgressSuccess"));
-    } catch (error) {
-      console.error(error);
-      showToast(t("toast.exportProgressFail"));
-    }
-  }
-
-  async function importProgressFromFile(file) {
-    try {
-      const text = await file.text();
-      const payload = JSON.parse(text);
-      if (
-        typeof payload !== "object" ||
-        payload === null ||
-        !validateProgressData(payload.progress) ||
-        !validateBookmarksData(payload.bookmarks) ||
-        !validateQuizzesPassedData(payload.quizzesPassed) ||
-        !window.validateChecklistState(payload.checklists)
-      ) {
-        showToast(t("toast.invalidProgressFile"));
-        return;
-      }
-
-      if (!confirm(t("dashboard.importConfirm"))) return;
-
-      progress = payload.progress;
-      bookmarks.length = 0;
-      bookmarks.push(...payload.bookmarks);
-      Object.assign(quizzesPassed, payload.quizzesPassed);
-      Object.keys(checklistState).forEach((key) => delete checklistState[key]);
-      Object.assign(checklistState, payload.checklists);
-      saveProgress();
-      saveJson(STORAGE_BOOKMARKS, bookmarks);
-      saveJson(STORAGE_QUIZZES, quizzesPassed);
-      saveJson(STORAGE_CHECKLISTS, checklistState);
-      showToast(t("toast.importProgressSuccess"));
-      refreshCurrentView();
-      renderContinueBanner();
-    } catch (error) {
-      console.error(error);
-      showToast(t("toast.importProgressFail"));
-    }
-  }
+  // Storage helpers are moved to js/app-storage.js to reduce app.js size.
 
   // ── i18n ──────────────────────────────────────────────────────────────────
-  function t(key) {
-    const parts = key.split(".");
-    let node = window.TG_I18N?.[lang];
-    for (const p of parts) {
-      if (!node || node[p] === undefined) return key;
-      node = node[p];
-    }
-    return node;
-  }
-
-  // Expose translation helper for auth and other external modules
-  window.t = t;
+  // Translation helper is defined in js/app-i18n.js and uses window.lang.
 
   function localizedTrack(track) {
     if (lang === "en" && enOverlay.tracks[track.id]) {
@@ -437,197 +334,7 @@
     });
   }
 
-  // ── Sandbox Examples ──────────────────────────────────────────────────────
-  const SANDBOX_EXAMPLES = {
-    "playwright-basics": {
-      title: "Playwright: Seu primeiro teste",
-      description: "Login e validação básica em Sauce Demo",
-      language: "javascript",
-      code: `// Playwright - Login Test
-import { test, expect } from '@playwright/test';
 
-test('Login to Sauce Demo', async ({ page }) => {
-  // 1. Navega para a URL
-  await page.goto('https://www.saucedemo.com');
-  
-  // 2. Preenche credenciais
-  await page.fill('[data-test="username"]', 'standard_user');
-  await page.fill('[data-test="password"]', 'secret_sauce');
-  
-  // 3. Clica login
-  await page.click('[data-test="login-button"]');
-  
-  // 4. Valida que chegou na página de produtos
-  await expect(page).toHaveURL('**/inventory.html');
-  const title = await page.locator('.title').textContent();
-  expect(title).toBe('Products');
-});`,
-      explanation: {
-        pt: "Este teste demonstra os passos básicos: navegar, preencher campos, clicar e validar.",
-        en: "This test demonstrates basic steps: navigate, fill fields, click, and assert."
-      },
-      output: "✓ Login to Sauce Demo (2.3s)",
-      track: "web"
-    },
-    "api-rest-basics": {
-      title: "API Testing: CRUD com Postman",
-      description: "Testar endpoints REST com validação",
-      language: "javascript",
-      code: `// Postman Collection JSON - GET User
-{
-  "info": { "name": "ReqRes API Tests" },
-  "item": [
-    {
-      "name": "Get User #1",
-      "request": {
-        "method": "GET",
-        "url": "https://reqres.in/api/users/1"
-      },
-      "test": [
-        "pm.test('Status 200', function() {",
-        "  pm.response.to.have.status(200);",
-        "});",
-        "pm.test('Response has id', function() {",
-        "  var json = pm.response.json();",
-        "  pm.expect(json.data.id).to.equal(1);",
-        "  pm.expect(json.data.email).to.include('@reqres.in');",
-        "});"
-      ]
-    }
-  ]
-}`,
-      explanation: {
-        pt: "Testes de API verificam status, headers, body e validações de schema.",
-        en: "API tests check status, headers, body, and schema validations."
-      },
-      output: "✓ Status 200\n✓ Response has id",
-      track: "api"
-    },
-    "performance-k6": {
-      title: "Performance: Load Test com K6",
-      description: "Simular carga em API/aplicação",
-      language: "javascript",
-      code: `// K6 Load Test Script
-import http from 'k6/http';
-import { check } from 'k6';
-
-export const options = {
-  vus: 10,           // 10 usuários virtuais
-  duration: '30s',   // 30 segundos de carga
-  thresholds: {
-    http_req_duration: ['p(95)<200'],  // 95% < 200ms
-    http_req_failed: ['<1%']            // < 1% de falhas
-  }
-};
-
-export default function () {
-  const res = http.get('https://api.example.com/users');
-  check(res, {
-    'status is 200': (r) => r.status === 200,
-    'response time < 300ms': (r) => r.timings.duration < 300,
-  });
-}`,
-      explanation: {
-        pt: "K6 simula múltiplos usuários para encontrar gargalos antes da produção.",
-        en: "K6 simulates multiple users to find bottlenecks before production."
-      },
-      output: null,
-      track: "performance"
-    },
-    "security-owasp": {
-      title: "Segurança: OWASP Top 10",
-      description: "Testando vulnerabilidades comuns",
-      language: "text",
-      code: `OWASP Top 10 — Vulnerabilidades mais críticas
-
-1. SQL Injection
-   Teste: ' OR '1'='1
-   Lab: DVWA, OWASP Juice Shop
-
-2. Broken Authentication
-   Teste: Força bruta de senha
-   Lab: OWASP Juice Shop
-
-3. Sensitive Data Exposure
-   Teste: Dados em HTTPS? Senhas hasheadas?
-   Lab: Inspecionar localStorage
-
-4. Broken Access Control
-   Teste: Alterar URL de ID (user/1 → user/admin)
-   Lab: OWASP Juice Shop profile bypass`,
-      explanation: {
-        pt: "Entender vulnerabilidades é parte essencial do job de QA sênior.",
-        en: "Understanding vulnerabilities is essential for senior QA role."
-      },
-      output: null,
-      track: "security"
-    }
-  };
-
-  function renderSandbox() {
-    const container = document.getElementById("view-sandbox");
-    if (!container) return;
-
-    container.innerHTML = window.NVViewHelpers.buildSandboxPageHtml();
-    renderSandboxMenu();
-
-    const firstKey = Object.keys(SANDBOX_EXAMPLES)[0];
-    if (firstKey) loadSandboxExample(firstKey);
-  }
-
-  function renderSandboxMenu() {
-    const menu = document.getElementById("sandbox-menu");
-    if (!menu) return;
-
-    const byTrack = {};
-    Object.entries(SANDBOX_EXAMPLES).forEach(([key, ex]) => {
-      if (!byTrack[ex.track]) byTrack[ex.track] = [];
-      byTrack[ex.track].push({ key, ...ex });
-    });
-
-    const trackTitles = {
-      web: "Web Testing",
-      api: "API Testing",
-      performance: "Performance",
-      security: "Segurança"
-    };
-
-    menu.innerHTML = window.NVViewHelpers.buildSandboxMenuHtml(
-      byTrack,
-      trackTitles,
-      escapeHtml,
-    );
-
-    menu.querySelectorAll(".sandbox-item").forEach((btn) => {
-      btn.addEventListener("click", () => loadSandboxExample(btn.dataset.key));
-    });
-  }
-
-  function loadSandboxExample(key) {
-    const example = SANDBOX_EXAMPLES[key];
-    if (!example) return;
-
-    const container = document.getElementById("sandbox-example");
-    if (!container) return;
-
-    const explanation = example.explanation[lang] || example.explanation.pt;
-
-    container.innerHTML = window.NVViewHelpers.buildSandboxExampleHtml(
-      example,
-      key,
-      window.NVIcons,
-      escapeHtml,
-      lang,
-    );
-  }
-
-  window.copySandboxCode = function(key) {
-    const example = SANDBOX_EXAMPLES[key];
-    if (!example) return;
-    navigator.clipboard.writeText(example.code).then(() => {
-      showToast(t("toast.copySuccess"));
-    });
-  };
 
   function countLessons(track) {
     if (!track || !track.courses || !Array.isArray(track.courses)) return 0;
@@ -823,178 +530,13 @@ export default function () {
   }
 
   // ── Navigation ────────────────────────────────────────────────────────────
-  function navigate(view, params = {}) {
-    currentView = view;
-    viewParams = params;
-    window.NVViewHelpers.setActiveView(document, view, "tracks");
-
-    if (view === "home") renderHome();
-    else if (view === "tracks") renderTracksPage();
-    else if (view === "roadmap") renderRoadmap();
-    else if (view === "glossary") renderGlossary();
-    else if (view === "sandbox") renderSandbox();
-    else if (view === "labs") renderLabs();
-    else if (view === "track" && params.trackId)
-      renderTrackDetail(params.trackId);
-    else if (view === "lesson" && params.lessonId)
-      renderLesson(params.lessonId);
-    else if (view === "quiz" && params.trackId) renderQuiz(params.trackId);
-    else if (view === "dashboard") renderDashboard();
-
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
-  function refreshCurrentView() {
-    navigate(currentView, viewParams);
-  }
+  // ── Navigation ────────────────────────────────────────────────────────────
+  // Navigation helpers are moved to js/app-navigation.js.
 
   // ── Track card ────────────────────────────────────────────────────────────
-  function renderTrackCard(track, containerId, opts = {}) {
-    const lt = localizedTrack(track);
-    const prog = getTrackProgress(track);
-    const container = document.getElementById(containerId);
-    if (!container) return;
-    const audience = TRACK_AUDIENCE[track.id] || "intermediate";
-    const isComplete = prog.pct === 100;
-
-    const iconName = getTrackIcon(track);
-    const iconHtml = window.NVIcons
-      ? window.NVIcons.get(iconName, "track-icon-svg", "28")
-      : escapeHtml(track.icon || "");
-    const title = normalizeTextLabel(lt.title);
-
-    const cardMarkup = window.NVViewHelpers.buildTrackCardHtml(track, {
-      prog: {
-        pct: prog.pct,
-        done: prog.done,
-        total: prog.total,
-      },
-      audience,
-      isComplete,
-      title,
-      iconHtml,
-      lang,
-      icons: window.NVIcons,
-      escapeHtml,
-      t,
-      tierLabel,
-    });
-
-    const card = document.createElement("div");
-    card.innerHTML = cardMarkup;
-    const cardElement = card.firstElementChild;
-    if (cardElement) {
-      cardElement.style.setProperty("--track-color", track.color);
-      const open = () => navigate("track", { trackId: track.id });
-      window.NVViewHelpers.bindAccessibleAction(cardElement, open);
-      container.appendChild(cardElement);
-    }
-  }
-
   // ── Continue banner ───────────────────────────────────────────────────────
-  function renderContinueBanner() {
-    const banner = document.getElementById("continue-banner");
-    window.NVViewHelpers.renderContinueBanner(
-      banner,
-      null,
-      findLesson,
-      getTrackIcon,
-      escapeHtml,
-      t,
-      navigate,
-      window.NVIcons,
-      STORAGE_LAST_LESSON,
-    );
-  }
-
-  // ── Home Lessons ──────────────────────────────────────────────────────────
-  function renderHomeLessons() {
-    // Recommendations are disabled, render nothing.
-  }
-
-  // ── Home ──────────────────────────────────────────────────────────────────
-  function renderHomeFilterBar() {
-    const bar = document.getElementById("home-filter-bar");
-    if (!bar) return;
-    const filters = ["all", "beginner", "intermediate", "senior"];
-    window.NVViewHelpers.wireFilterBar(
-      bar,
-      filters,
-      homeFilter,
-      t,
-      (nextFilter) => {
-        homeFilter = nextFilter;
-        renderHome();
-      },
-    );
-  }
-
-  function renderHome() {
-    const global = getGlobalProgress();
-    window.NVViewHelpers.renderHomeView(
-      {
-        global,
-        tracks,
-        persona,
-        homeFilter,
-        lang,
-        avatarIcons: window.NVIcons,
-        getTrackIcon,
-        escapeHtml,
-        t,
-        renderTrackCard,
-        renderHomeFilterBar,
-        renderContinueBanner,
-        renderHomeLessons,
-        renderInstallBanner,
-      },
-    );
-  }
-
-  /**
-   * Render PWA install prompt banner
-   */
-  function renderInstallBanner() {
-    const banner = document.getElementById("install-banner");
-    window.NVViewHelpers.renderInstallBanner(banner);
-  }
-
-  // ── Tracks page ───────────────────────────────────────────────────────────
-  function renderFilterBar() {
-    const bar = document.getElementById("track-filter-bar");
-    if (!bar) return;
-    const filters = ["all", "beginner", "intermediate", "senior"];
-    window.NVViewHelpers.wireFilterBar(
-      bar,
-      filters,
-      trackFilter,
-      t,
-      (nextFilter) => {
-        trackFilter = nextFilter;
-        renderTracksPage();
-      },
-    );
-  }
-
-  function renderTracksPage() {
-    renderFilterBar();
-    const grid = document.getElementById("tracks-grid");
-    grid.innerHTML = "";
-    const filtered =
-      trackFilter === "all"
-        ? sortTracksForPersona(tracks)
-        : tracks.filter((tr) => TRACK_AUDIENCE[tr.id] === trackFilter);
-    filtered.forEach((tr) =>
-      renderTrackCard(tr, "tracks-grid", { showRecommend: true }),
-    );
-  }
-
-  // ── Roadmap ───────────────────────────────────────────────────────────────
-  function renderRoadmap() {
-    const container = document.getElementById("roadmap-content");
-    const roadmaps = window.TG_ROADMAPS || {};
-    window.NVViewHelpers.renderRoadmap(container, roadmaps, lang, t, escapeHtml, navigate);
-  }
+  // ── Home / Tracks / Roadmap ─────────────────────────────────────────────────
+  // These renderers are implemented in js/app-home.js.
 
   // ── Glossary ──────────────────────────────────────────────────────────────
   function renderGlossary() {
@@ -1056,9 +598,6 @@ export default function () {
     const bc = document.getElementById("quiz-breadcrumb");
     if (bc) bc.textContent = lt.title;
 
-    // Reset quiz state for this track
-    quizState = { trackId, answers: {}, submitted: false };
-
     container.innerHTML = window.NVViewHelpers.buildTrackQuizHtml(
       { ...track, icon: track.icon },
       quizData,
@@ -1072,6 +611,7 @@ export default function () {
     window.NVViewHelpers.bindTrackQuizHandlers(
       container,
       quizData,
+      window.NVIcons,
       lang,
       t,
       () => navigate("track", { trackId }),
@@ -1089,108 +629,11 @@ export default function () {
     );
   }
 
-  // ── Checklist ─────────────────────────────────────────────────────────────
-  function renderChecklist(trackId, container) {
-    const langKey = lang === "en" ? "en" : "pt";
-    const data = checklists[trackId]?.[langKey] || checklists[trackId]?.pt;
-    if (!data) return "";
-
-    const savedItems = checklistState[trackId] || [];
-    const html = window.NVViewHelpers.buildChecklistHtml(
-      trackId,
-      data,
-      savedItems,
-      lang,
-      window.NVIcons,
-      escapeHtml,
-      t,
-    );
-
-    if (container) {
-      container.insertAdjacentHTML("beforeend", html);
-      window.NVViewHelpers.bindChecklistHandlers(
-        container,
-        trackId,
-        data,
-        checklistState,
-        t,
-        (updatedState) => saveJson(STORAGE_CHECKLISTS, updatedState),
-        () => {
-          checkAchievements();
-          showToast(
-            lang === "en"
-              ? "Project checklist complete!"
-              : "Checklist do projeto completo!",
-          );
-        },
-      );
-    }
-    return html;
-  }
-
-  // ── Lesson Quiz (inline) ──────────────────────────────────────────────────
-  function renderLessonQuiz(lessonId, container) {
-    const lessonQuizzes = window.TG_LESSON_QUIZZES || {};
-    const langKey = lang === "en" ? "en" : "pt";
-    const quizData = lessonQuizzes[lessonId]?.[langKey] || lessonQuizzes[lessonId]?.pt;
-    if (!quizData) return; // No quiz for this lesson
-
-    if (container) {
-      window.NVViewHelpers.renderLessonQuiz(
-        lessonId,
-        container,
-        quizData,
-        lang,
-        window.NVIcons,
-        escapeHtml,
-        t,
-      );
-    }
-  }
+  // ── Checklist and lesson rendering ─────────────────────────────────────────
+  // Lesson-specific rendering has been moved to js/app-lesson.js.
 
   // ── Track Detail ──────────────────────────────────────────────────────────
-  function renderTrackDetail(trackId) {
-    const raw = findTrack(trackId);
-    if (!raw) return;
-    const track = localizedTrack(raw);
-    document.getElementById("track-breadcrumb").textContent = track.title;
-    const prog = getTrackProgress(raw);
-    const hasQuiz = !!quizzes[trackId];
-
-    const coursesHtml = window.NVViewHelpers.buildTrackCoursesHtml(
-      raw,
-      progress,
-      getEnrichment,
-      localizedLesson,
-      localizedCourse,
-      escapeHtml,
-      t,
-      window.NVIcons,
-      getTrackIcon,
-    );
-
-    const container = document.getElementById("track-detail");
-    window.NVViewHelpers.renderTrackDetail(
-      container,
-      { ...track, icon: track.icon },
-      coursesHtml,
-      prog,
-      {
-        modules: getTrackModules(raw),
-        hours: getTrackHours(raw),
-        audience: TRACK_AUDIENCE[raw.id],
-      },
-      {
-        icons: window.NVIcons,
-        escapeHtml,
-        t,
-        tierLabel,
-        getTrackIcon,
-      },
-      navigate,
-      hasQuiz,
-    );
-  }
+  // Implemented in js/app-track.js.
 
   // ── Bookmarks ─────────────────────────────────────────────────────────────
   function toggleBookmark(lessonId) {
@@ -1207,19 +650,27 @@ export default function () {
   }
 
   // ── Lesson ────────────────────────────────────────────────────────────────
-  function renderLesson(lessonId) {
+  async function renderLesson(lessonId) {
     const found = findLesson(lessonId);
     if (!found) return;
     const { track, course, lesson, rawTrack, rawCourse, rawLesson } = found;
-      const done = !!progress[rawLesson.id];
       const enr = getEnrichment(rawLesson.id);
       const isBookmarked = bookmarks.includes(rawLesson.id);
       const langKey = lang === "en" ? "en" : "pt";
+      const lessonContent = window.NVLessonContent?.loadLessonContent
+        ? await window.NVLessonContent.loadLessonContent(rawLesson, { markdownMap: window.TG_LESSON_MARKDOWN_MAP })
+        : { content: lesson.content, title: lesson.title, duration: lesson.duration };
+      const contentLesson = {
+        ...lesson,
+        title: lessonContent.title || lesson.title,
+        duration: lessonContent.duration || lesson.duration,
+        content: lessonContent.content,
+      };
       window.NVViewHelpers.setupLessonHeader(
         lessonId,
         track,
         rawTrack.id,
-        lesson.title,
+        contentLesson.title,
         navigate,
         saveLastLesson,
         window.NVIcons,
@@ -1253,14 +704,14 @@ export default function () {
           rawCourse.id === "dev5" ||
           rawCourse.id === "a11y5" ||
           rawCourse.id === "lead4");
-      const sanitized = window.NVViewHelpers.cleanInlineBackgrounds(lesson.content);
+      const sanitized = window.NVViewHelpers.cleanInlineBackgrounds(contentLesson.content);
       const processedContent = highlightCode(sanitized);
       document.getElementById("lesson-detail").innerHTML = window.NVLessonRenderers.buildLessonPageHtml({
         rawCourse,
         rawLesson,
         course,
         track,
-        lesson,
+        lesson: contentLesson,
         progressMap: progress,
         isBookmarked,
         prev,
@@ -1361,10 +812,14 @@ export default function () {
         completedTracks,
         onCertDownload: async (trackId) => {
           if (!window.TG_CERTIFICATES) return;
+          if (!window.NVAuth || !window.NVAuth.isAuthenticated) {
+            showToast(lang === "en" ? "Please log in to download certificates." : "Faça login para baixar certificados.");
+            return;
+          }
           const track = completedTracks.find((tr) => tr.id === trackId);
           if (!track) return;
           try {
-            const userName = window.NVAuth?.getUserName?.() || "Learner";
+            const userName = window.NVAuth?.getUserName?.() || "";
             await window.TG_CERTIFICATES.downloadCertificate(track.id, userName, new Date());
             window.TG_CERTIFICATES.saveCertificate(track.id, userName, new Date());
             showToast(lang === "en" ? "Certificate downloaded!" : "Certificado baixado!");
@@ -1382,9 +837,9 @@ export default function () {
     const templatesSection = document.querySelector('[id$="templates"]');
     if (!templatesSection && global.pct >= 20) {  // Show after 20% progress
       const templatesHtml = window.NVViewHelpers.buildPortfolioTemplatesHtml(lang);
-
-      if (recSection) {
-        recSection.insertAdjacentHTML('afterend', templatesHtml);
+      const dashboardContent = document.getElementById('dashboard-content') || document.getElementById('dashboard-stats')?.parentElement;
+      if (dashboardContent) {
+        dashboardContent.insertAdjacentHTML('beforeend', templatesHtml);
       }
     }
   }
@@ -1514,6 +969,114 @@ export default function () {
     showToast(t("toast.progressSavedLocal"));
   });
 
+  window.NVApp = window.NVApp || { state: {}, helpers: {} };
+  window.NVApp.state = {
+      get lang() {
+        return lang;
+      },
+      set lang(value) {
+        lang = value;
+      },
+      get persona() {
+        return persona;
+      },
+      set persona(value) {
+        persona = value;
+      },
+      get tracks() {
+        return tracks;
+      },
+      set tracks(value) {
+        tracks = value;
+      },
+      get progress() {
+        return progress;
+      },
+      set progress(value) {
+        progress = value;
+      },
+      get bookmarks() {
+        return bookmarks;
+      },
+      get quizzesPassed() {
+        return quizzesPassed;
+      },
+      get checklistState() {
+        return checklistState;
+      },
+      get theme() {
+        return theme;
+      },
+      set theme(value) {
+        theme = value;
+      },
+      get seniorMode() {
+        return seniorMode;
+      },
+      set seniorMode(value) {
+        seniorMode = value;
+      },
+      get currentView() {
+        return currentView;
+      },
+      set currentView(value) {
+        currentView = value;
+      },
+      get viewParams() {
+        return viewParams;
+      },
+      set viewParams(value) {
+        viewParams = value;
+      },
+      get trackFilter() {
+        return trackFilter;
+      },
+      set trackFilter(value) {
+        trackFilter = value;
+      },
+      get homeFilter() {
+        return homeFilter;
+      },
+      set homeFilter(value) {
+        homeFilter = value;
+      },
+    };
+  window.NVApp.helpers = {
+      ...window.NVApp.helpers,
+      t,
+      navigate,
+      refreshCurrentView,
+      findLesson,
+      findTrack,
+      getEnrichment,
+      getTrackIcon,
+      localizedLesson,
+      localizedCourse,
+      checkAchievements,
+      renderAchievements,
+      saveLastLesson,
+      saveProgress,
+      saveJson,
+      getGlobalProgress,
+      renderTrackCard: window.NVAppTrack?.renderTrackCard,
+      renderContinueBanner: window.NVAppHome?.renderContinueBanner,
+      renderInstallBanner: window.NVViewHelpers?.renderInstallBanner,
+      STORAGE_LAST_LESSON,
+      getTrackProgress,
+      getTrackModules,
+      getTrackHours,
+      highlightCode,
+      attachCopyButtons,
+      toggleBookmark,
+      quizzes,
+      TRACK_AUDIENCE,
+      localizedTrack,
+      normalizeTextLabel,
+      escapeHtml,
+      tierLabel,
+      sortTracksForPersona,
+    };
+
   // ── Init ──────────────────────────────────────────────────────────────────
   function init() {
     // Load all tracks: merge main tracks + new specialized tracks
@@ -1598,9 +1161,6 @@ export default function () {
       const swUrl = new URL('service-worker.js', location.href).href;
 
       navigator.serviceWorker.register(swUrl, { scope: basePath })
-        .then(() => {
-          console.log('[PWA] Service Worker registered');
-        })
         .catch((error) => {
           console.warn('[PWA] Service Worker registration failed:', error);
         });
@@ -1608,13 +1168,13 @@ export default function () {
   }
 
     // Expose some internal helpers for debugging and integration tests
-    try {
-      window.renderLesson = renderLesson;
-      window.navigate = navigate;
-      window.findLesson = findLesson;
-    } catch (e) {
-      // ignore
-    }
+  try {
+    window.renderLesson = renderLesson;
+    window.navigate = navigate;
+    window.findLesson = findLesson;
+  } catch (e) {
+    // ignore
+  }
 
-    init();
+  init();
 })();

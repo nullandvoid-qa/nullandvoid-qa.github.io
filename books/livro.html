@@ -101,37 +101,20 @@
       </div>
     </footer>
 
-    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
-
     <!-- Auth module (must load before book.js) -->
     <script src="../js/auth.js"></script>
+    <script src="assets/js/books-utils.js"></script>
+    <script src="assets/js/books-page-init.js"></script>
     <script src="assets/js/book.js?v=4"></script>
     
-    <!-- Initialize Google Auth on page load -->
     <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        // Ensure auth initializes when Google API is ready
-        if (window.NVAuth && window.NVAuth.init) {
-          window.NVAuth.init();
-        }
-      });
-      
-      // Also listen for nvauth login events to update button state
-      document.addEventListener('nvauth:login', (e) => {
-        const user = e.detail;
-        console.log('User logged in:', user.name);
-        // Button state will be updated by book.js when it loads the book
-      });
-      
-      document.addEventListener('nvauth:logout', () => {
-        console.log('User logged out');
-        // Reset button state
+      window.onNVAuthLogout = () => {
         const btn = document.getElementById('mark-as-read-btn');
         if (btn) {
           btn.classList.remove('marked');
           btn.disabled = true;
         }
-      });
+      };
     </script>
   </body>
 </html>

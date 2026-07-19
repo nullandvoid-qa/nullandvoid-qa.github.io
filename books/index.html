@@ -32,8 +32,13 @@
           >
         </a>
         <div class="header-actions">
-          <nav class="nav-links" aria-label="Navegação principal">
-            <a href="index.html" class="active" data-i18n="nav.home">Início</a>
+          <button type="button" id="mobile-menu-toggle" class="mobile-menu-toggle" aria-controls="nav-links" aria-expanded="false" aria-label="Abrir menu de navegação">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          <nav class="nav-links" id="nav-links" aria-label="Navegação principal">
+            <a href="index.html" class="active" aria-current="page" data-i18n="nav.home">Início</a>
             <a href="index.html#categorias" data-i18n="nav.categories">Categorias</a>
             <a href="sobre.html" data-i18n="nav.about">Sobre</a>
           </nav>
@@ -53,6 +58,12 @@
     </header>
 
     <main id="main-content" class="main">
+      <nav class="breadcrumb" aria-label="Caminho de navegação">
+        <a href="../index.html">Início</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Biblioteca 15min</span>
+      </nav>
+
       <section class="hero">
         <div class="hero-badge">
           <span class="badge-free" data-i18n="hero.badge">100% Gratuito · Leia em 15 min</span>
@@ -83,6 +94,31 @@
         </div>
       </section>
 
+      <section class="guidance-panel" id="books-guidance" aria-labelledby="books-guidance-title">
+        <div class="guidance-panel-header">
+          <span class="guidance-pill">Guia rápido</span>
+          <h2 id="books-guidance-title">Como usar a biblioteca de resumos</h2>
+          <p>Busque ideias-chave, filtre por tema e retorne aos livros que mais fazem sentido para o seu estudo.</p>
+        </div>
+        <div class="guidance-card-grid">
+          <article class="guidance-card">
+            <span class="guidance-index">01</span>
+            <h3>Encontre rapidamente</h3>
+            <p>Use a busca por título, autor ou conceito para chegar ao conteúdo certo em segundos.</p>
+          </article>
+          <article class="guidance-card">
+            <span class="guidance-index">02</span>
+            <h3>Filtre por assunto</h3>
+            <p>Explore categorias para organizar sua leitura e manter o foco em temas específicos.</p>
+          </article>
+          <article class="guidance-card">
+            <span class="guidance-index">03</span>
+            <h3>Retome depois</h3>
+            <p>Marque livros preferidos para voltar a eles quando precisar revisar uma ideia importante.</p>
+          </article>
+        </div>
+      </section>
+
       <div class="search-bar-wrap">
         <input
           type="search"
@@ -105,8 +141,11 @@
         </div>
       </section>
 
-      <div class="filter-bar" id="filter-bar" role="group" aria-label="Filtros por categoria">
-        <button type="button" class="filter-chip active" data-filter="all" data-i18n="filter.all">Todos</button>
+      <div class="catalog-controls">
+        <div class="filter-bar" id="filter-bar" role="group" aria-label="Filtros por categoria">
+          <button type="button" class="filter-chip active" data-filter="all" data-i18n="filter.all">Todos</button>
+        </div>
+        <div id="results-summary" class="results-summary hidden" aria-live="polite"></div>
       </div>
 
       <section id="books-section" aria-labelledby="books-title">
@@ -136,47 +175,31 @@
       </footer>
     </main>
 
-    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
-
     <!-- Auth module (must load before main.js) -->
     <script src="../js/auth.js"></script>
     <script src="assets/js/books-data.js"></script>
     <script src="assets/js/books-utils.js"></script>
+    <script src="assets/js/books-page-init.js"></script>
     <script src="assets/js/main.js?v=4"></script>
     
-    <!-- Initialize Google Auth on page load -->
     <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        // Ensure auth initializes when Google API is ready
-        if (window.NVAuth && window.NVAuth.init) {
-          window.NVAuth.init();
-        }
-      });
-      
-      // Listen for auth events to update book cards
-      document.addEventListener('nvauth:login', (e) => {
-        const user = e.detail;
-        console.log('User logged in:', user.name);
-        // Re-render books to show read status
+      window.onNVAuthLogin = () => {
         if (window.renderBooks) {
           window.renderBooks();
         }
-      });
-      
-      document.addEventListener('nvauth:logout', () => {
-        console.log('User logged out');
-        // Re-render books to hide read status
+      };
+
+      window.onNVAuthLogout = () => {
         if (window.renderBooks) {
           window.renderBooks();
         }
-      });
-      
-      document.addEventListener('nvauth:bookmarked', (e) => {
-        // Update specific book card when read status changes
+      };
+
+      window.onNVAuthBookmarked = (detail) => {
         if (window.updateBookCardReadStatus) {
-          window.updateBookCardReadStatus(e.detail.bookId, e.detail.marked);
+          window.updateBookCardReadStatus(detail.bookId, detail.marked);
         }
-      });
+      };
     </script>
   </body>
 </html>

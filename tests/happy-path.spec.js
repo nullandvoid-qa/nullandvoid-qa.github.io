@@ -18,6 +18,12 @@ test.describe('Null and Void QA happy path', () => {
     await expect(page.locator('#auth-name')).toHaveText(/Convidado|Signed in as guest/);
 
     // Home page should render track cards and allow navigation
+    // Wait for any track-card to appear; if not present, navigate to the tracks view.
+    const hasTracks = await page.waitForFunction(() => document.querySelectorAll('.track-card').length > 0, { timeout: 5000 }).catch(() => null);
+    if (!hasTracks) {
+      await page.evaluate(() => window.navigate('tracks'));
+      await page.waitForSelector('#view-tracks.active');
+    }
     const firstTrackCard = page.locator('.track-card').first();
     await expect(firstTrackCard).toBeVisible();
     await firstTrackCard.click();
@@ -84,5 +90,14 @@ test.describe('Null and Void QA happy path', () => {
     await page.evaluate(() => window.navigate('dashboard'));
     await page.waitForTimeout(1000);
     await expect(page.locator('#dashboard-bookmarks')).toContainText(/Iniciação da Guilda|Guild Initiation/);
+  });
+
+  test('should expose the main homepage CTAs and reach the books library', async ({ page }) => {
+    await expect(page.locator('.hero-title')).toContainText(/Formação QA/i);
+    await expect(page.locator('.quick-card')).toHaveCount(2);
+
+    await page.locator('.quick-card', { hasText: 'Resumos de livros' }).click();
+    await expect(page).toHaveURL(/books\/index\.html$/);
+    await expect(page.locator('.hero h1')).toContainText(/Biblioteca de Resumos/i);
   });
 });

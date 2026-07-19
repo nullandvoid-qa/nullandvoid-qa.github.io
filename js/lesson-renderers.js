@@ -17,7 +17,7 @@
       </aside>`;
   }
 
-  function buildLessonBodyHtml({ lesson, processedContent, primerHtml: primerMarkup, seniorHtml: seniorMarkup, resourcesHtml, rawLesson, rawTrack, rawCourse, done, isBookmarked, prev, next, lang, t, tierLabel, escapeHtml, icons, getTrackIcon, getEnrichment }) {
+  function buildLessonBodyHtml({ lesson, processedContent, primerHtml: primerMarkup, seniorHtml: seniorMarkup, resourcesHtml: _resourcesHtml, rawLesson, rawTrack: _rawTrack, rawCourse: _rawCourse, done, isBookmarked, prev, next, lang, t, tierLabel, escapeHtml, icons, getTrackIcon: _getTrackIcon, getEnrichment }) {
     const enr = getEnrichment(rawLesson.id);
     const primerText = enr.primer?.[lang === "en" ? "en" : "pt"] || enr.primer?.pt;
     const seniorText = enr.seniorNote?.[lang === "en" ? "en" : "pt"] || enr.seniorNote?.pt;

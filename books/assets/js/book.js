@@ -1,21 +1,47 @@
 // Biblioteca 15min - Book Page JavaScript
 
 // State
-let currentBook = null;
-let currentTheme = localStorage.getItem('theme') || 'dark';
-let currentLang = 'pt';
+const STATE = {
+  currentBook: null,
+};
 
-// DOM Elements
-const bookContent = document.getElementById('book-content');
-const bookTitle = document.getElementById('book-title');
-const bookTitleMain = document.getElementById('book-title-main');
-const bookAuthor = document.getElementById('book-author');
-const bookYear = document.getElementById('book-year');
-const bookCategory = document.getElementById('book-category');
-const bookTime = document.getElementById('book-time');
-const breadcrumbTitle = document.getElementById('breadcrumb-title');
-const themeToggle = document.getElementById('theme-toggle');
-const toast = document.getElementById('toast');
+const DOM = {
+  get bookContent() {
+    return document.getElementById('book-content');
+  },
+  get lessonTitle() {
+    return document.getElementById('lesson-title');
+  },
+  get lessonMeta() {
+    return document.getElementById('lesson-meta');
+  },
+  get breadcrumbTitle() {
+    return document.getElementById('breadcrumb-title');
+  },
+  get sidebarTrack() {
+    return document.getElementById('sidebar-track');
+  },
+  get sidebarCourse() {
+    return document.getElementById('sidebar-course');
+  },
+  get sidebarLessons() {
+    return document.getElementById('sidebar-lessons');
+  },
+  get themeToggle() {
+    return document.getElementById('theme-toggle');
+  },
+  get toast() {
+    return document.getElementById('toast');
+  },
+  get markAsReadBtn() {
+    return document.getElementById('mark-as-read-btn');
+  },
+  get bookmarkBtn() {
+    return document.getElementById('bookmark-btn');
+  },
+};
+
+/* global marked */
 
 // URL parsing
 function getBookId() {
@@ -23,24 +49,85 @@ function getBookId() {
   return params.get('id');
 }
 
-// Theme handling
-function applyTheme(theme) {
-  document.documentElement.setAttribute('data-theme', theme);
-  localStorage.setItem('theme', theme);
-  themeToggle.textContent = theme === 'dark' ? 'Modo claro' : 'Modo escuro';
-  themeToggle.title = theme === 'dark' ? 'Modo claro' : 'Modo escuro';
-}
-
-function toggleTheme() {
-  applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
-}
-
 // Toast
 function showToast(message, duration = 3000) {
-  const toast = document.getElementById('toast');
-  toast.textContent = message;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), duration);
+  window.BooksUtils?.showToast(message, duration);
+}
+
+const BOOKMARK_STORAGE_KEY = 'nv_saved_books';
+
+function getBookmarkStorageKey() {
+  if (window.NVAuth?.isAuthenticated && window.NVAuth?.user?.id) {
+    return `nv_${window.NVAuth.user.id}_saved_books`;
+  }
+  return BOOKMARK_STORAGE_KEY;
+}
+
+function getSavedBooks() {
+  try {
+    const storage = localStorage.getItem(getBookmarkStorageKey());
+    return storage ? JSON.parse(storage) : [];
+  } catch (error) {
+    console.warn('Failed to parse saved books:', error);
+    return [];
+  }
+}
+
+function setSavedBooks(bookmarks) {
+  try {
+    const uniqueBookmarks = Array.from(new Set(bookmarks));
+    localStorage.setItem(getBookmarkStorageKey(), JSON.stringify(uniqueBookmarks));
+  } catch (error) {
+    console.error('Failed to save bookmarks:', error);
+  }
+}
+
+function isBookBookmarked(bookId) {
+  if (!bookId) return false;
+  return getSavedBooks().includes(bookId);
+}
+
+function updateBookmarkButton(bookId) {
+  const btn = DOM.bookmarkBtn;
+  if (!btn || !bookId) return;
+
+  const bookmarked = isBookBookmarked(bookId);
+  btn.classList.toggle('bookmarked', bookmarked);
+  btn.setAttribute('aria-pressed', bookmarked ? 'true' : 'false');
+  btn.setAttribute('title', bookmarked ? 'Remover dos favoritos' : 'Salvar nos favoritos');
+  btn.setAttribute('aria-label', bookmarked ? 'Remover dos favoritos' : 'Salvar nos favoritos');
+}
+
+function toggleBookmark(bookId) {
+  if (!bookId) return;
+
+  const bookmarks = getSavedBooks();
+  const currentIndex = bookmarks.indexOf(bookId);
+  let message = 'Livro salvo nos favoritos';
+
+  if (currentIndex >= 0) {
+    bookmarks.splice(currentIndex, 1);
+    message = 'Removido dos favoritos';
+  } else {
+    bookmarks.push(bookId);
+  }
+
+  setSavedBooks(bookmarks);
+  updateBookmarkButton(bookId);
+  showToast(message);
+}
+
+function setupBookmarkButton(bookId) {
+  const btn = DOM.bookmarkBtn;
+  if (!btn) return;
+
+  btn.type = 'button';
+  updateBookmarkButton(bookId);
+
+  btn.addEventListener('click', () => toggleBookmark(bookId));
+
+  document.addEventListener('nvauth:login', () => updateBookmarkButton(bookId));
+  document.addEventListener('nvauth:logout', () => updateBookmarkButton(bookId));
 }
 
 // Load book data
@@ -77,22 +164,22 @@ async function loadBook() {
 }
 
 function renderBook(meta, markdown) {
-  currentBook = meta;
+  STATE.currentBook = window.BooksData?.normalizeBook ? window.BooksData.normalizeBook(meta) : meta;
 
   // Calculate reading time based on word count
-  const wordCount = markdown.split(/\s+/).length;
-  const readingTime = Math.max(10, Math.ceil(wordCount / 200)); // ~200 words per minute
+  const wordCount = markdown.trim().split(/\s+/).filter(Boolean).length;
+  const readingTime = Math.max(10, Math.ceil(wordCount / 200));
   
   // Update meta tags
   document.title = `${meta.titulo} — Biblioteca 15min`;
   document.querySelector('meta[name="description"]').content = `Resumo de ${meta.titulo} por ${meta.autor} - Biblioteca 15min`;
 
   // Update breadcrumb
-  document.getElementById('breadcrumb-title').textContent = meta.titulo;
+  DOM.breadcrumbTitle.textContent = meta.titulo;
 
   // Update header info with calculated reading time
-  document.getElementById('lesson-title').textContent = meta.titulo;
-  document.getElementById('lesson-meta').innerHTML = `
+  DOM.lessonTitle.textContent = meta.titulo;
+  DOM.lessonMeta.innerHTML = `
     <div class="book-author-info">por ${meta.autor}</div>
     <div class="lesson-meta-row">
       <span>${window.NVIcons ? window.NVIcons.get('clock','','14') + ' ' : ''}${readingTime} min de leitura</span> · <span>${meta.categoria}</span> · <span>${meta.ano}</span>
@@ -100,13 +187,18 @@ function renderBook(meta, markdown) {
   `;
   
   // Update sidebar
-  document.getElementById('sidebar-track').textContent = meta.categoria;
-  document.getElementById('sidebar-course').textContent = meta.titulo;
-  document.getElementById('sidebar-lessons').innerHTML = `<li><strong>${meta.autor}</strong></li>`;
+  DOM.sidebarTrack.textContent = meta.categoria;
+  DOM.sidebarCourse.textContent = meta.titulo;
+  DOM.sidebarLessons.innerHTML = `<li><strong>${meta.autor}</strong></li>`;
 
   // Render markdown content
+  if (typeof marked === 'undefined') {
+    showError('O renderizador de markdown não está disponível.');
+    return;
+  }
+
   const html = marked.parse(markdown);
-  document.getElementById('book-content').innerHTML = html;
+  DOM.bookContent.innerHTML = html;
 
   // Generate Table of Contents from H2/H3 headings (both in content AND sidebar)
   generateTableOfContents();
@@ -134,12 +226,14 @@ function renderBook(meta, markdown) {
     }
   });
 
-  // Setup mark-as-read button
+  // Setup action buttons
+  setupBookmarkButton(meta.id);
   setupMarkAsReadButton(meta.id);
 }
 
 function generateTableOfContents() {
-  const contentEl = document.getElementById('book-content');
+  const contentEl = DOM.bookContent;
+  if (!contentEl) return;
   const headings = contentEl.querySelectorAll('h2, h3');
   
   if (headings.length === 0) return;
@@ -180,14 +274,15 @@ function generateTableOfContents() {
 }
 
 function populateSidebarTOC() {
-  const contentEl = document.getElementById('book-content');
+  const contentEl = DOM.bookContent;
+  if (!contentEl) return;
   const headings = contentEl.querySelectorAll('h2, h3');
   
   if (headings.length === 0) return;
 
   // Build sidebar TOC
   let sidebarHTML = '<li><strong>Seções:</strong></li>';
-  headings.forEach((heading, index) => {
+  headings.forEach((heading) => {
     const level = heading.tagName === 'H2' ? 2 : 3;
     const indent = level === 2 ? '' : 'style="margin-left:1rem; font-size:0.9rem;"';
     const className = level === 2 ? 'sidebar-section-h2' : 'sidebar-section-h3';
@@ -195,7 +290,8 @@ function populateSidebarTOC() {
   });
 
   // Update sidebar
-  const sidebarLessons = document.getElementById('sidebar-lessons');
+  const sidebarLessons = DOM.sidebarLessons;
+  if (!sidebarLessons) return;
   sidebarLessons.innerHTML = sidebarHTML;
 
   // Add click handlers
@@ -214,7 +310,9 @@ function populateSidebarTOC() {
 }
 
 function showError(message) {
-  document.getElementById('book-content').innerHTML = `
+  const contentEl = DOM.bookContent;
+  if (!contentEl) return;
+  contentEl.innerHTML = `
     <div class="empty-state">
       <h2>Erro</h2>
       <p>${message}</p>
@@ -223,51 +321,9 @@ function showError(message) {
   `;
 }
 
-function getTierClass(category) {
-  const tierMap = {
-    'Psicologia':    'tier-beginner',
-    'Produtividade': 'tier-beginner',
-    'Ciência':       'tier-beginner',
-    'Economia':      'tier-beginner',
-    'Biografia':     'tier-beginner',
-    'Negócios':      'tier-intermediate',
-    'Finanças':      'tier-intermediate',
-    'Tecnologia':    'tier-intermediate',
-    'Filosofia':     'tier-intermediate',
-    'História':      'tier-intermediate',
-    'Autoajuda':     'tier-intermediate',
-    'Marketing':     'tier-intermediate',
-    'Liderança':     'tier-intermediate',
-  };
-  return tierMap[category] || 'tier-beginner';
-}
-
-// Toast
-function showToast(message, duration = 3000) {
-  const toast = document.getElementById('toast');
-  toast.textContent = message;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), duration);
-}
-
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
-  const savedTheme = localStorage.getItem('theme') || 'dark';
-  document.documentElement.setAttribute('data-theme', savedTheme);
-  document.getElementById('theme-toggle').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
-  document.getElementById('theme-toggle').title = savedTheme === 'dark' ? 'Modo claro' : 'Modo escuro';
-
-  document.getElementById('theme-toggle').addEventListener('click', () => {
-    const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-    document.getElementById('theme-toggle').textContent = newTheme === 'dark' ? '☀️' : '🌙';
-    document.getElementById('theme-toggle').title = newTheme === 'dark' ? 'Modo claro' : 'Modo escuro';
-  });
-
-  // Add reading progress bar
   addReadingProgress();
-
   loadBook();
 });
 
@@ -338,7 +394,20 @@ function setupMarkAsReadButton(bookId) {
     btn.style.opacity = '0.5';
     btn.title = 'Faça login para marcar livros como lidos';
     btn.classList.remove('marked');
+    btn.setAttribute('aria-pressed', 'false');
   });
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    getBookId,
+    getSavedBooks,
+    setSavedBooks,
+    isBookBookmarked,
+    toggleBookmark,
+    updateBookmarkButton,
+    getBookmarkStorageKey,
+  };
 }
 
 /**
@@ -348,11 +417,8 @@ function updateMarkAsReadButton(bookId) {
   const btn = document.getElementById('mark-as-read-btn');
   if (!btn) return;
 
-  if (window.NVAuth && window.NVAuth.isBookRead(bookId)) {
-    btn.classList.add('marked');
-    btn.querySelector('.mark-text').textContent = 'Lido';
-  } else {
-    btn.classList.remove('marked');
-    btn.querySelector('.mark-text').textContent = 'Marcar como lido';
-  }
+  const isRead = window.NVAuth && window.NVAuth.isBookRead(bookId);
+  btn.classList.toggle('marked', Boolean(isRead));
+  btn.setAttribute('aria-pressed', isRead ? 'true' : 'false');
+  btn.querySelector('.mark-text').textContent = isRead ? 'Lido' : 'Marcar como lido';
 }
