@@ -51,22 +51,8 @@
           >
         </a>
         <div class="header-actions">
-          <nav class="nav-links" aria-label="Main navigation">
-            <a href="#" data-nav="home" class="active" data-i18n="nav.home"
-              >Início</a
-            >
-            <a href="#" data-nav="tracks" data-i18n="nav.tracks">Trilhas</a>
-            <a href="#" data-nav="roadmap" data-i18n="nav.roadmap">Rotas</a>
-            <a href="#" data-nav="glossary" data-i18n="nav.glossary"
-              >Glossário</a
-            >
-            <a href="#" data-nav="labs" data-i18n="nav.labs">Labs</a>
-            <a href="#" data-nav="dashboard" data-i18n="nav.dashboard"
-              >Progresso</a
-            >
-            <span class="badge-free" data-i18n="nav.allUnlocked">
-              <span data-icon="unlock" data-icon-size="14"></span> Tudo Liberado
-            </span>
+          <nav class="nav-links" id="nav-links" aria-label="Main navigation">
+            <!-- Navigation items injected dynamically -->
           </nav>
           <div class="header-toggles">
             <button
@@ -618,6 +604,7 @@
     <script src="js/certificates.js" defer></script>
     <script src="data/tracks.js" defer></script>
     <script src="data/translations-en.js" defer></script>
+    <script src="data/nav-items.js" defer></script>
     <script src="data/lesson-enrichment.js" defer></script>
     <script src="data/quizzes.js" defer></script>
     <script src="data/lesson-quizzes.js" defer></script>

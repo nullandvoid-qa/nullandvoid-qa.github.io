@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Verificar certificado de conclusão — Null and Void QA Course" />
-  <title>Verificar Certificado — Null and Void QA</title>
+  <meta name="description" content="Verify your certificate authenticity — Null and Void QA Course" />
+  <title>Certificate Verification — Null and Void QA</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -237,45 +237,45 @@
   <div class="container">
     <div class="header">
       <div class="logo">🎓</div>
-      <h1>Verificar Certificado</h1>
-      <p class="subtitle">Confirme a autenticidade de um certificado</p>
+      <h1>Certificate Verification</h1>
+      <p class="subtitle">Confirm the authenticity of a certificate</p>
     </div>
 
     <div class="search-form">
       <input
         type="text"
         id="verifyCode"
-        placeholder="Cole o código de verificação (8 dígitos)"
+        placeholder="Paste verification code (8 characters)"
         maxlength="8"
       />
-      <button onclick="verifyCertificate()">Verificar</button>
+      <button onclick="verifyCertificate()">Verify</button>
     </div>
     <div id="loginPrompt" style="display:none; margin-top:1rem; text-align:center;">
-      <p style="color:#f0f0f0; margin-bottom:0.5rem;">Para verificar seus certificados faça login</p>
-      <a href="/" class="btn" style="background:#00e5ff; color:#000; padding:0.6rem 1rem; border-radius:8px; text-decoration:none;">Para verificar seus certificados faça login</a>
+      <p style="color:#f0f0f0; margin-bottom:0.5rem;">Please sign in to verify certificates.</p>
+      <a href="/" class="btn" style="background:#00e5ff; color:#000; padding:0.6rem 1rem; border-radius:8px; text-decoration:none;">Sign in to verify certificates</a>
     </div>
 
     <div id="result" class="result"></div>
 
-    <div id="leaderboard" class="leaderboard" style="display:none;">
-      <div class="leaderboard-title">🏆 Certificados Recentes</div>
+      <div id="leaderboard" class="leaderboard" style="display:none;">
+      <div class="leaderboard-title">🏆 Recent Certificates</div>
       <div id="leaderboardList" class="leaderboard-list"></div>
     </div>
 
     <div class="back-link">
-      <a href="/">← Voltar para o curso</a>
+      <a href="/">← Back to course</a>
     </div>
   </div>
 
   <script>
-    // Simulated certificate database (in production, seria backend)
+    // Simulated certificate database (in production, this would be handled by a backend)
     const CERTIFICATES = {};
 
     function isAuthenticated() {
       return window.NVAuth && window.NVAuth.isAuthenticated;
     }
 
-    // Quando página carrega, carrega certificados de localStorage
+    // When page loads, load certificates from localStorage
     function initCertificates() {
       if (!isAuthenticated()) return;
       try {
@@ -296,7 +296,7 @@
         resultDiv.classList.remove('valid');
         resultDiv.classList.add('invalid');
         resultDiv.style.display = 'block';
-        resultDiv.innerHTML = '<p class="error-message">Por favor, faça login para verificar certificados.</p>';
+        resultDiv.innerHTML = '<p class="error-message">Please sign in to verify certificates.</p>';
         return;
       }
 
@@ -304,16 +304,16 @@
       const resultDiv = document.getElementById('result');
 
       if (!code || code.length !== 8) {
-        resultDiv.innerHTML = '<p class="error-message">Por favor, digite um código válido (8 dígitos)</p>';
+        resultDiv.innerHTML = '<p class="error-message">Please enter a valid code (8 characters).</p>';
         return;
       }
 
       const cert = CERTIFICATES[code];
 
       if (cert) {
-        // Certificado válido
+        // Valid certificate
         const trackData = findTrackData(cert.trackId);
-        const completedDate = new Date(cert.completedDate).toLocaleDateString('pt-BR', {
+        const completedDate = new Date(cert.completedDate).toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'long',
           day: 'numeric'
@@ -344,8 +344,8 @@
           resultDiv.style.display = 'block';
           resultDiv.innerHTML = `
             <div class="result-icon">❌</div>
-            <div class="result-title">Certificado Inválido</div>
-            <p class="error-message">O código não é compatível com os dados do certificado. Possível adulteração.</p>
+            <div class="result-title">Invalid Certificate</div>
+            <p class="error-message">The code does not match the certificate data. Possible tampering.</p>
           `;
           showLeaderboard();
           return;
@@ -356,36 +356,36 @@
         resultDiv.style.display = 'block';
         resultDiv.innerHTML = `
           <div class="result-icon">✅</div>
-          <div class="result-title">Certificado Verificado!</div>
+          <div class="result-title">Certificate Verified!</div>
           <div class="result-details">
             <div class="detail-row">
-              <span class="detail-label">Nome:</span>
+              <span class="detail-label">Name:</span>
               <span class="detail-value">${escapeHtml(cert.userName)}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">Trilha:</span>
+              <span class="detail-label">Path:</span>
               <span class="detail-value">${trackData ? trackData.icon + ' ' + trackData.title : cert.trackId}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">Data:</span>
+              <span class="detail-label">Date:</span>
               <span class="detail-value">${completedDate}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">Código:</span>
+              <span class="detail-label">Code:</span>
               <span class="detail-value">${code}</span>
             </div>
           </div>
-          <p class="success-message">✓ Este certificado é autêntico e foi gerado em ${new Date(cert.generatedAt).toLocaleDateString('pt-BR')}</p>
+          <p class="success-message">✓ This certificate is authentic and was generated on ${new Date(cert.generatedAt).toLocaleDateString('en-US')}</p>
         `;
       } else {
-        // Certificado inválido
+        // Certificate not found
         resultDiv.classList.remove('valid');
         resultDiv.classList.add('invalid');
         resultDiv.style.display = 'block';
         resultDiv.innerHTML = `
           <div class="result-icon">❌</div>
-          <div class="result-title">Certificado Não Encontrado</div>
-          <p class="error-message">Este código não corresponde a nenhum certificado verificado. Verifique se digitou corretamente.</p>
+          <div class="result-title">Certificate Not Found</div>
+          <p class="error-message">This code does not match any verified certificate. Please check your input.</p>
         `;
       }
 
@@ -393,20 +393,28 @@
     }
 
     function findTrackData(trackId) {
-      // Search in main tracks
-      let track = window.TG_QAWAY_TRACKS?.find(t => t.id === trackId);
-      if (track) return track;
-      
-      // Search in new specialized tracks
-      track = window.TG_PERFORMANCE_TRACK?.find(t => t.id === trackId);
-      if (track) return track;
-      
-      track = window.TG_MENTORSHIP?.find(t => t.id === trackId);
-      if (track) return track;
-      
-      track = window.TG_MOBILE_LABS?.find(t => t.id === trackId);
-      if (track) return track;
-      
+      // Search in main tracks array
+      if (Array.isArray(window.TG_QAWAY_TRACKS)) {
+        const track = window.TG_QAWAY_TRACKS.find(t => t.id === trackId);
+        if (track) return track;
+      }
+
+      // Search performance track object
+      if (window.TG_PERFORMANCE_TRACK && window.TG_PERFORMANCE_TRACK.id === trackId) {
+        return window.TG_PERFORMANCE_TRACK;
+      }
+
+      // Search mentorship track object if it exists
+      if (window.TG_MENTORSHIP && window.TG_MENTORSHIP.id === trackId) {
+        return window.TG_MENTORSHIP;
+      }
+
+      // Search mobile labs array
+      if (Array.isArray(window.TG_MOBILE_LABS)) {
+        const mobileTrack = window.TG_MOBILE_LABS.find(t => t.id === trackId);
+        if (mobileTrack) return mobileTrack;
+      }
+
       return null;
     }
 
@@ -415,7 +423,7 @@
       const certs = Object.values(CERTIFICATES);
       if (certs.length === 0) return;
 
-      // Ordena por data decrescente
+      // Sort by newest first
       const sorted = certs.sort((a, b) => 
         new Date(b.generatedAt) - new Date(a.generatedAt)
       ).slice(0, 5);
@@ -451,7 +459,7 @@
       return String(text).replace(/[&<>"']/g, m => map[m]);
     }
 
-    // Suportar Enter key
+    // Support Enter key
     document.getElementById('verifyCode').addEventListener('keypress', (e) => {
       if (e.key === 'Enter') verifyCertificate();
     });
@@ -476,7 +484,7 @@
       }
     }
 
-    // Init na página carregar
+    // Init on page load
     window.addEventListener('load', () => {
       // If user is not authenticated, hide verification UI and show login prompt
       const isAuthed = (window.NVAuth && window.NVAuth.isAuthenticated);
@@ -494,7 +502,7 @@
     });
   </script>
 
-  <!-- Carrega dados das trilhas e certificados -->
+  <!-- Load track and certificate data -->
   <script src="data/tracks.js"></script>
   <script src="data/cert-secret.js"></script>
   <script src="data/performance-track.js"></script>

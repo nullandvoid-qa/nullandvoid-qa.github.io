@@ -41,6 +41,8 @@
         const trackData = this.getTrackData(trackId);
         if (!trackData) throw new Error("Track not found");
 
+        const localizedTrackData = this.getLocalizedTrackData(trackId, trackData, window.lang || 'en');
+
         // Create PDF
         const pdf = new jsPDFConstructor({
           orientation: "landscape",
@@ -51,99 +53,104 @@
         const width = pdf.internal.pageSize.getWidth();
         const height = pdf.internal.pageSize.getHeight();
 
-        const bgColor = [7, 11, 24];
-        const darkPanel = [18, 28, 48];
-        const lightPanel = [248, 250, 252];
-        const titleColor = [17, 24, 39];
-        const accentColor = [96, 165, 250];
-        const accentColorDark = [139, 92, 246];
-        const mutedColor = [100, 116, 139];
+        const bgColor = [10, 15, 38];
+        const panelColor = [18, 26, 52];
+        const cardColor = [22, 34, 72];
+        const titleColor = [236, 72, 153];
+        const accentBlue = [96, 165, 250];
+        const neonPink = [255, 115, 168];
+        const mutedColor = [179, 189, 212];
+        const textColor = [235, 238, 245];
 
         // Full-page background
         pdf.setFillColor(...bgColor);
         pdf.rect(0, 0, width, height, "F");
 
-        // Top gradient accent band
-        pdf.setFillColor(...accentColor);
-        pdf.rect(0, 0, width, 16, "F");
-        pdf.setFillColor(...accentColorDark);
-        pdf.rect(0, 16, width * 0.3, 10, "F");
+        // Border accent lines
+        pdf.setDrawColor(...accentBlue);
+        pdf.setLineWidth(1.5);
+        pdf.line(8, 8, width - 8, 8);
+        pdf.line(8, height - 8, width - 8, height - 8);
+        pdf.line(8, 8, 8, height - 8);
+        pdf.line(width - 8, 8, width - 8, height - 8);
 
         // Main certificate panel
-        const panelX = 14;
+        const panelX = 16;
         const panelY = 22;
         const panelWidth = width - panelX * 2;
         const panelHeight = height - panelY * 2;
-        pdf.setFillColor(...lightPanel);
+        pdf.setFillColor(...panelColor);
         if (typeof pdf.roundedRect === 'function') {
-          pdf.roundedRect(panelX, panelY, panelWidth, panelHeight, 6, 6, "F");
+          pdf.roundedRect(panelX, panelY, panelWidth, panelHeight, 8, 8, "F");
         } else {
           pdf.rect(panelX, panelY, panelWidth, panelHeight, "F");
         }
-        pdf.setDrawColor(...accentColor);
-        pdf.setLineWidth(1.5);
+        pdf.setDrawColor(...accentBlue);
+        pdf.setLineWidth(2);
         if (typeof pdf.roundedRect === 'function') {
-          pdf.roundedRect(panelX, panelY, panelWidth, panelHeight, 6, 6);
+          pdf.roundedRect(panelX, panelY, panelWidth, panelHeight, 8, 8);
         } else {
           pdf.rect(panelX, panelY, panelWidth, panelHeight);
         }
 
         // Header block
         pdf.setTextColor(...titleColor);
-        pdf.setFontSize(22);
+        pdf.setFontSize(24);
         pdf.setFont(undefined, "bold");
-        pdf.text("CERTIFICATE OF COMPLETION", width / 2, panelY + 28, { align: "center" });
+        pdf.text("CERTIFICATE of ACHIEVEMENT", width / 2, panelY + 32, { align: "center" });
 
-        pdf.setFontSize(9);
+        pdf.setFontSize(10);
         pdf.setFont(undefined, "normal");
         pdf.setTextColor(...mutedColor);
-        pdf.text("Certificado de Conclusão", width / 2, panelY + 34, { align: "center" });
+        pdf.text("Recognizes", width / 2, panelY + 40, { align: "center" });
 
         // Title badge
-        pdf.setFillColor(...accentColor);
-        pdf.rect(panelX + 18, panelY + 38, 70, 10, "F");
+        pdf.setFillColor(...neonPink);
+        pdf.rect(panelX + 18, panelY + 42, 76, 10, "F");
         pdf.setTextColor(255, 255, 255);
         pdf.setFontSize(8);
-        pdf.text("Null and Void QA Course", panelX + 22, panelY + 45);
+        pdf.text("Null and Void QA Course", panelX + 22, panelY + 49);
 
         // Recipient section
         pdf.setFontSize(12);
-        pdf.setTextColor(...titleColor);
-        pdf.text("This certifies that", width / 2, panelY + 55, { align: "center" });
+        pdf.setTextColor(...mutedColor);
+        pdf.text("Presented to", width / 2, panelY + 64, { align: "center" });
 
-        pdf.setFontSize(40);
+        pdf.setFontSize(42);
         pdf.setFont(undefined, "bold");
-        pdf.setTextColor(...titleColor);
-        pdf.text(userName, width / 2, panelY + 82, { align: "center" });
+        pdf.setTextColor(...textColor);
+        pdf.text(userName, width / 2, panelY + 88, { align: "center" });
 
         pdf.setFontSize(11);
         pdf.setFont(undefined, "normal");
         pdf.setTextColor(...mutedColor);
-        pdf.text("has successfully completed the following learning track", width / 2, panelY + 92, { align: "center" });
+        pdf.text("For successfully completing the following learning path", width / 2, panelY + 102, { align: "center" });
 
         // Track detail card
         const trackBoxY = panelY + 100;
         const trackBoxHeight = 42;
-        pdf.setFillColor(235, 247, 255);
+        pdf.setFillColor(...cardColor);
         pdf.rect(panelX + 25, trackBoxY, panelWidth - 50, trackBoxHeight, "F");
-        pdf.setDrawColor(...accentColorDark);
-        pdf.setLineWidth(0.8);
+        pdf.setDrawColor(...neonPink);
+        pdf.setLineWidth(0.9);
         pdf.rect(panelX + 25, trackBoxY, panelWidth - 50, trackBoxHeight);
 
-        pdf.setTextColor(...accentColorDark);
+        pdf.setTextColor(...textColor);
         pdf.setFontSize(15);
         pdf.setFont(undefined, "bold");
-        pdf.text(`${trackData.icon || ""} ${trackData.title}`, width / 2, trackBoxY + 15, { align: "center" });
+        pdf.text(`${localizedTrackData.icon || ""} ${localizedTrackData.title}`, width / 2, trackBoxY + 15, { align: "center" });
 
         pdf.setTextColor(...mutedColor);
         pdf.setFontSize(9.5);
         pdf.setFont(undefined, "normal");
-        const description = trackData.description || "Avance sua carreira em QA com habilidades práticas e mindset crítico.";
+        const description = localizedTrackData.description || "Advance your QA career with practical skills and critical thinking.";
         pdf.text(description, width / 2, trackBoxY + 28, { align: "center" });
 
-        pdf.setTextColor(...titleColor);
+        pdf.setTextColor(...textColor);
         pdf.setFontSize(10);
-        pdf.text(`Level: ${trackData.level || "N/A"} • Topics: ${Array.isArray(trackData.topics) ? trackData.topics.slice(0, 4).join(', ') : 'QA'}`, width / 2, trackBoxY + 38, { align: "center" });
+        const levelLabel = localizedTrackData.level || "N/A";
+        const topicsLabel = Array.isArray(localizedTrackData.topics) ? localizedTrackData.topics.slice(0, 4).join(', ') : 'QA';
+        pdf.text(`Level: ${levelLabel.toUpperCase()} • Topics: ${topicsLabel}`, width / 2, trackBoxY + 38, { align: "center" });
 
         // Detail columns
         const detailY = trackBoxY + trackBoxHeight + 12;
@@ -157,7 +164,7 @@
         pdf.text("VERIFICATION", detailX + detailGap * 2, detailY);
 
         const issueDate = completedDate ? new Date(completedDate) : new Date();
-        const issueDateStr = issueDate.toLocaleDateString("pt-BR", {
+        const issueDateStr = issueDate.toLocaleDateString("en-US", {
           year: "numeric",
           month: "long",
           day: "numeric"
@@ -174,16 +181,16 @@
 
         // Bottom signature section
         const signY = height - 38;
-        pdf.setDrawColor(...accentColor);
+        pdf.setDrawColor(...accentBlue);
         pdf.setLineWidth(0.7);
         pdf.line(panelX + 35, signY, panelX + 85, signY);
         pdf.line(width - panelX - 85, signY, width - panelX - 35, signY);
 
         pdf.setFont(undefined, "normal");
         pdf.setFontSize(9);
-        pdf.setTextColor(...titleColor);
-        pdf.text("Kaio Garcia", panelX + 60, signY + 5);
-        pdf.text("Program Coordinator", width - panelX - 60, signY + 5);
+        pdf.setTextColor(...textColor);
+        pdf.text("Kaio Garcia", panelX + 40, signY + 5);
+        pdf.text("Program Coordinator", width - panelX - 40, signY + 5, { align: "right" });
 
         pdf.setFontSize(8);
         pdf.setTextColor(...mutedColor);
@@ -192,10 +199,10 @@
         // PDF metadata (helpful for printing/indexing)
         if (typeof pdf.setProperties === 'function') {
           pdf.setProperties({
-            title: `${trackData.title} - Certificate of Completion`,
+            title: `${trackData.title} - Certificate of Achievement`,
             subject: `Certificate for ${userName}`,
             author: 'Null and Void QA Course',
-            keywords: 'certificate,qa,completion',
+            keywords: 'certificate,qa,achievement',
             creator: 'Null and Void QA Course'
           });
         }
@@ -213,6 +220,21 @@
     getTrackData: function(trackId) {
       const tracks = window.TG_QAWAY_TRACKS || [];
       return tracks.find(t => t.id === trackId);
+    },
+
+    getLocalizedTrackData: function(trackId, trackData, currentLang) {
+      const enOverlay = window.TG_QAWAY_EN || { tracks: {} };
+      if (trackData && currentLang === "en" && enOverlay.tracks && enOverlay.tracks[trackId]) {
+        const overlay = enOverlay.tracks[trackId];
+        return {
+          ...trackData,
+          title: overlay.title || trackData.title,
+          description: overlay.description || trackData.description,
+          level: overlay.level || trackData.level,
+          topics: overlay.topics || trackData.topics,
+        };
+      }
+      return trackData;
     },
 
     /**
@@ -255,7 +277,7 @@
       try {
         // If NVAuth is present, require authentication to download certificates.
         if (window.NVAuth && !window.NVAuth.isAuthenticated) {
-          this.notifyUser('Por favor, faça login para gerar e baixar certificados.');
+          this.notifyUser('Please sign in to generate and download certificates.');
           return;
         }
         const trackData = this.getTrackData(trackId);
@@ -272,7 +294,7 @@
         URL.revokeObjectURL(url);
       } catch (error) {
         console.error("Download failed:", error);
-        this.notifyUser("Falha ao gerar o certificado. O jsPDF pode não estar carregado.");
+        this.notifyUser("Failed to generate certificate. Please ensure jsPDF is loaded.");
       }
     },
 

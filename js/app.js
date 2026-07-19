@@ -242,6 +242,7 @@
     document.title = t("meta.title");
     document.querySelector('meta[name="description"]').content =
       t("meta.description");
+    renderNavLinks();
     applyStaticI18n();
     updateLangToggle();
     refreshCurrentView();
@@ -261,6 +262,42 @@
     });
     const priceEl = document.getElementById("stat-price");
     if (priceEl) priceEl.textContent = t("price");
+  }
+
+  function bindNavLinks() {
+    document.querySelectorAll("[data-nav]").forEach((el) => {
+      el.removeEventListener("click", handleNavClick);
+      el.addEventListener("click", handleNavClick);
+    });
+  }
+
+  function handleNavClick(e) {
+    e.preventDefault();
+    const nav = e.currentTarget.dataset.nav;
+    navigate(nav);
+  }
+
+  function renderNavLinks() {
+    const navLinksEl = document.getElementById("nav-links");
+    if (!navLinksEl) return;
+
+    const navItems = window.TG_NAV_ITEMS || [];
+    const navHtml = navItems
+      .map((item) => `
+        <a href="${item.href}" data-nav="${item.nav}" data-i18n="${item.i18n}">
+          ${t(item.i18n)}
+        </a>
+      `)
+      .join("");
+
+    const badgeHtml = `
+      <span class="badge-free" data-i18n="nav.allUnlocked">
+        <span data-icon="unlock" data-icon-size="14"></span> ${t("nav.allUnlocked")}
+      </span>
+    `;
+
+    navLinksEl.innerHTML = navHtml + badgeHtml;
+    bindNavLinks();
   }
 
   function updateLangToggle() {
@@ -861,13 +898,6 @@
   }
 
   // ── Event Listeners ───────────────────────────────────────────────────────
-  document.querySelectorAll("[data-nav]").forEach((el) => {
-    el.addEventListener("click", (e) => {
-      e.preventDefault();
-      navigate(el.dataset.nav);
-    });
-  });
-
   document.querySelectorAll(".persona-card").forEach((el) => {
     el.addEventListener("click", () => setPersona(el.dataset.persona));
   });
@@ -1146,6 +1176,7 @@
     document.documentElement.lang = lang === "en" ? "en" : "pt-BR";
     // sync homeFilter with saved persona on load
     homeFilter = PERSONA_FILTER[persona] || "all";
+    renderNavLinks();
     applyTheme();
     applySeniorMode();
     applyStaticI18n();
