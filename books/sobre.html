@@ -9,20 +9,31 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="assets/css/style.css?v=4" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='70'>📚</text></svg>" />
+    <!-- Design Tokens System (must load first) -->
+    <script src="assets/js/books-design-tokens.js"></script>
   </head>
   <body>
     <a href="#main-content" class="skip-link">Pular para o conteúdo</a>
+    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
     <header class="header">
       <div class="header-inner">
         <a href="index.html" class="logo" aria-label="Biblioteca 15min Home">
           <div class="logo-icon">📚</div>
           <span class="logo-text"><span>Biblioteca 15min</span><span class="logo-suffix">Resumos de 15 min</span></span>
         </a>
-        <nav class="nav-links" aria-label="Navegação principal">
-          <a href="index.html">Início</a>
-          <a href="index.html#categorias">Categorias</a>
-          <a href="sobre.html" class="active">Sobre</a>
-        </nav>
+        <div class="header-actions">
+          <nav class="nav-links" aria-label="Navegação principal">
+            <a href="index.html" data-i18n="nav.home">Início</a>
+            <a href="index.html#categorias" data-i18n="nav.categories">Categorias</a>
+            <a href="sobre.html" class="active" data-i18n="nav.about">Sobre</a>
+          </nav>
+          <div class="header-toggles">
+            <button type="button" id="theme-toggle" class="icon-toggle" title="Alternar tema" aria-label="Alternar tema">
+              🌙
+            </button>
+          </div>
+        </div>
       </div>
     </header>
     <main id="main-content" class="main">
@@ -51,3 +62,32 @@
     </main>
   </body>
 </html>
+
+    <!-- Auth module (must load before main script) -->
+    <script src="../js/auth.js"></script>
+    <!-- Simple theme toggle script -->
+    <script>
+      const themeToggle = document.getElementById('theme-toggle');
+      if (themeToggle) {
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        themeToggle.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+        themeToggle.addEventListener('click', () => {
+          const theme = document.documentElement.getAttribute('data-theme');
+          const newTheme = theme === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', newTheme);
+          localStorage.setItem('theme', newTheme);
+          themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+          if (window.BooksDesignTokens) {
+            window.BooksDesignTokens.applyCSSVariables();
+          }
+        });
+      }
+
+      // Initialize auth
+      document.addEventListener('DOMContentLoaded', () => {
+        if (window.NVAuth && window.NVAuth.init) {
+          window.NVAuth.init();
+        }
+      });
+    </script>

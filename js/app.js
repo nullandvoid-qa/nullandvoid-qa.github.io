@@ -75,16 +75,58 @@
     "lab-browserstack": "intermediate",
   };
 
-  // ── Storage helpers ───────────────────────────────────────────────────────
-  function getStorage(key, legacyKey) {
-    let val = localStorage.getItem(key);
-    if (!val && legacyKey) {
-      val = localStorage.getItem(legacyKey);
-      if (val) localStorage.setItem(key, val);
-    }
-    return val;
+  const TRACK_ICON_MAP = {
+    starter: "starter",
+    intermediate: "bolt",
+    senior: "crown",
+    mentorship: "mentor",
+    web: "web",
+    api: "api",
+    mobile: "mobile",
+    performance: "perf",
+    security: "security",
+    devops: "devops",
+    accessibility: "accessibility",
+    leadership: "leadership",
+    "lab-android-basic": "android",
+    "lab-ios-basic": "ios",
+    "lab-saucelabs": "externalLink",
+    "lab-browserstack": "cloud",
+  };
+
+  function normalizeTextLabel(text) {
+    return String(text || "").replace(/^[^\wÀ-ž]+\s*/, "").trim();
   }
 
+  function getTrackIcon(track) {
+    const rawIcon = String(track.icon || "").trim();
+    // If icon name matches a known NVIcons key, use it directly
+    if (window.NVIcons && window.NVIcons.icons[rawIcon]) return rawIcon;
+    // If the stored icon is an emoji or other decorative character,
+    // prefer the canonical mapping from TRACK_ICON_MAP to ensure SVG icons.
+    try {
+      if (/\p{Emoji}/u.test(rawIcon)) return TRACK_ICON_MAP[track.id] || "tracks";
+    } catch (e) {
+      // If the runtime doesn't support Unicode property escapes, ignore
+    }
+    // Fallback to mapped icon name or generic 'tracks'
+    return TRACK_ICON_MAP[track.id] || "tracks";
+  }
+
+  function getHomeTrackSummary(filteredCount = tracks.length) {
+    const global = getGlobalProgress();
+    const total = tracks.length;
+    const lessons = global.total;
+    if (lang === "en") {
+      const base = `${filteredCount} of ${total} paths · ${lessons} lessons`;
+      return filteredCount === total ? `${total} paths · ${lessons} lessons` : `Showing ${base}`;
+    }
+    return filteredCount === total
+      ? `${total} trilhas · ${lessons} aulas`
+      : `Mostrando ${filteredCount} de ${total} trilhas · ${lessons} aulas`;
+  }
+
+  // ── Storage helpers ───────────────────────────────────────────────────────
   function loadProgress() {
     try {
       // Se usuario está autenticado, carrega progresso dele
@@ -95,11 +137,7 @@
         }
       }
 
-      // Fallback: carrega do storage padrão (compatibilidade)
-      const raw = getStorage(STORAGE_PROGRESS, "tg-qaway-progress");
-      if (!raw) return {};
-      const parsed = JSON.parse(raw);
-      return validateProgressData(parsed) ? parsed : {};
+      return getStoredProgress([STORAGE_PROGRESS, "tg-qaway-progress"], {});
     } catch {
       return {};
     }
@@ -112,7 +150,7 @@
     }
 
     // Também salva no storage padrão como backup
-    localStorage.setItem(STORAGE_PROGRESS, JSON.stringify(progress));
+    persistProgress([STORAGE_PROGRESS], progress);
   }
   function saveLastLesson(id) {
     localStorage.setItem(STORAGE_LAST_LESSON, id);
@@ -194,6 +232,9 @@
     return node;
   }
 
+  // Expose translation helper for auth and other external modules
+  window.t = t;
+
   function localizedTrack(track) {
     if (lang === "en" && enOverlay.tracks[track.id]) {
       const o = enOverlay.tracks[track.id];
@@ -251,7 +292,7 @@
     const btn = document.getElementById("theme-toggle");
     if (btn) {
       const iconName = theme === "dark" ? "moon" : "sun";
-      btn.innerHTML = window.NVIcons ? window.NVIcons.get(iconName, '', '18') : (theme === "dark" ? "🌙" : "☀️");
+      btn.innerHTML = window.NVIcons ? window.NVIcons.get(iconName, '', '18') : '';
       btn.setAttribute('aria-label', theme === "dark" ? "Switch to light theme" : "Switch to dark theme");
     }
     localStorage.setItem(STORAGE_THEME, theme);
@@ -260,7 +301,7 @@
   function toggleTheme() {
     theme = theme === "dark" ? "light" : "dark";
     applyTheme();
-    showToast(theme === "dark" ? "🌙 Tema escuro" : "☀️ Tema claro");
+    showToast(theme === "dark" ? "Tema escuro" : "Tema claro");
   }
 
   // ── Senior Mode ───────────────────────────────────────────────────────────
@@ -286,11 +327,11 @@
     showToast(
       seniorMode
         ? lang === "en"
-          ? "👑 Senior Mode ON — beginner tips hidden"
-          : "👑 Modo Sênior ativado — dicas iniciante ocultas"
+          ? "Senior Mode ON — beginner tips hidden"
+          : "Modo Sênior ativado — dicas iniciante ocultas"
         : lang === "en"
-          ? "👑 Senior Mode OFF"
-          : "👑 Modo Sênior desativado",
+          ? "Senior Mode OFF"
+          : "Modo Sênior desativado",
     );
     if (currentView === "lesson") renderLesson(viewParams.lessonId);
   }
@@ -335,20 +376,40 @@
 
   // ── Utilities ─────────────────────────────────────────────────────────────
 
+  window.nvToast = window.nvToast || { queue: [], isShowing: false, timer: null };
   function showToast(msg) {
     const el = document.getElementById("toast");
-    el.textContent = msg;
-    el.classList.add("show");
-    clearTimeout(showToast._timer);
-    showToast._timer = setTimeout(() => el.classList.remove("show"), 2800);
+    if (!el) return;
+    window.nvToast.queue.push(msg);
+    if (window.nvToast.isShowing) return;
+
+    const showNext = () => {
+      if (window.nvToast.queue.length === 0) {
+        window.nvToast.isShowing = false;
+        return;
+      }
+      const nextMsg = window.nvToast.queue.shift();
+      el.textContent = nextMsg;
+      el.classList.add("show");
+      window.nvToast.isShowing = true;
+      clearTimeout(window.nvToast.timer);
+      window.nvToast.timer = setTimeout(() => {
+        el.classList.remove("show");
+        window.nvToast.isShowing = false;
+        showNext();
+      }, 2800);
+    };
+
+    showNext();
   }
+  window.showToast = showToast;
 
   function highlightCode(html) {
     // Wrap <pre> blocks with a copy button and language detection
     return html.replace(/<pre>([\s\S]*?)<\/pre>/g, (_, code) => {
       const safe = code.trim();
       return `<div class="code-block">
-        <button class="code-copy-btn" aria-label="Copy code" title="Copy">📋</button>
+        <button class="code-copy-btn" aria-label="Copy code" title="Copy">${window.NVIcons ? window.NVIcons.get('copy','','18') : ''}</button>
         <pre>${safe}</pre>
       </div>`;
     });
@@ -361,15 +422,15 @@
         navigator.clipboard
           .writeText(pre.textContent)
           .then(() => {
-            btn.textContent = "✅";
+            btn.innerHTML = window.NVIcons ? window.NVIcons.get('check','','18') : '✓';
             setTimeout(() => {
-              btn.textContent = "📋";
+              btn.innerHTML = window.NVIcons ? window.NVIcons.get('copy','','18') : '';
             }, 1500);
           })
           .catch(() => {
-            btn.textContent = "❌";
+            btn.innerHTML = window.NVIcons ? window.NVIcons.get('close','','18') : '×';
             setTimeout(() => {
-              btn.textContent = "📋";
+              btn.innerHTML = window.NVIcons ? window.NVIcons.get('copy','','18') : '';
             }, 1500);
           });
       });
@@ -507,28 +568,9 @@ export default function () {
     const container = document.getElementById("view-sandbox");
     if (!container) return;
 
-    container.innerHTML = `
-      <div class="sandbox-view">
-        <div class="sandbox-header">
-          <h1>🧪 Interactive Sandbox</h1>
-          <p>Exemplos de código interativos — copie, estude, execute em seu ambiente</p>
-        </div>
-
-        <div class="sandbox-container">
-          <div class="sandbox-sidebar">
-            <h3>Exemplos por trilha</h3>
-            <div id="sandbox-menu" class="sandbox-menu"></div>
-          </div>
-
-          <div class="sandbox-main">
-            <div id="sandbox-example" class="sandbox-example"></div>
-          </div>
-        </div>
-      </div>
-    `;
-
+    container.innerHTML = window.NVViewHelpers.buildSandboxPageHtml();
     renderSandboxMenu();
-    // Carrega primeiro exemplo
+
     const firstKey = Object.keys(SANDBOX_EXAMPLES)[0];
     if (firstKey) loadSandboxExample(firstKey);
   }
@@ -544,27 +586,20 @@ export default function () {
     });
 
     const trackTitles = {
-      web: "⚡ Web Testing",
-      api: "🔧 API Testing",
-      performance: "📊 Performance",
-      security: "🔒 Segurança"
+      web: "Web Testing",
+      api: "API Testing",
+      performance: "Performance",
+      security: "Segurança"
     };
 
-    Object.entries(byTrack).forEach(([track, examples]) => {
-      const trackGroup = document.createElement("div");
-      trackGroup.className = "sandbox-track-group";
-      trackGroup.innerHTML = `<div class="sandbox-track-title">${trackTitles[track] || track}</div>`;
-      
-      examples.forEach(ex => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "sandbox-item";
-        btn.textContent = ex.title;
-        btn.onclick = () => loadSandboxExample(ex.key);
-        trackGroup.appendChild(btn);
-      });
+    menu.innerHTML = window.NVViewHelpers.buildSandboxMenuHtml(
+      byTrack,
+      trackTitles,
+      escapeHtml,
+    );
 
-      menu.appendChild(trackGroup);
+    menu.querySelectorAll(".sandbox-item").forEach((btn) => {
+      btn.addEventListener("click", () => loadSandboxExample(btn.dataset.key));
     });
   }
 
@@ -577,63 +612,38 @@ export default function () {
 
     const explanation = example.explanation[lang] || example.explanation.pt;
 
-    const escapeHtmlFunc = (text) => {
-      const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" };
-      return String(text).replace(/[&<>"']/g, m => map[m]);
-    };
-
-    container.innerHTML = `
-      <div class="sandbox-example-header">
-        <h2>${example.title}</h2>
-        <p class="sandbox-description">${example.description}</p>
-      </div>
-
-      <div class="sandbox-explanation">
-        <strong>💡 O que você aprende:</strong>
-        <p>${explanation}</p>
-      </div>
-
-      <div class="sandbox-code-block">
-        <div class="sandbox-code-header">
-          <span class="sandbox-language">${example.language}</span>
-          <button type="button" class="btn-copy-sandbox" onclick="window.copySandboxCode('${key}')">
-            📋 Copiar
-          </button>
-        </div>
-        <pre class="sandbox-code"><code>${escapeHtmlFunc(example.code)}</code></pre>
-      </div>
-
-      ${example.output ? `
-      <div class="sandbox-output">
-        <strong>📤 Output esperado:</strong>
-        <pre>${escapeHtmlFunc(example.output)}</pre>
-      </div>
-      ` : ""}
-
-      <div class="sandbox-cta">
-        <p><strong>🎯 Próximos passos:</strong></p>
-        <ul>
-          <li>1. Copie o código acima (botão 📋)</li>
-          <li>2. Cole em seu arquivo de teste local</li>
-          <li>3. Execute: <code>npm test</code> ou <code>k6 run</code></li>
-          <li>4. Observe o output e entenda cada linha</li>
-          <li>5. Modifique valores, experimente!</li>
-        </ul>
-      </div>
-    `;
+    container.innerHTML = window.NVViewHelpers.buildSandboxExampleHtml(
+      example,
+      key,
+      window.NVIcons,
+      escapeHtml,
+      lang,
+    );
   }
 
   window.copySandboxCode = function(key) {
     const example = SANDBOX_EXAMPLES[key];
     if (!example) return;
     navigator.clipboard.writeText(example.code).then(() => {
-      showToast("✓ Código copiado! Cole em seu projeto.");
+      showToast(t("toast.copySuccess"));
     });
   };
 
   function countLessons(track) {
     if (!track || !track.courses || !Array.isArray(track.courses)) return 0;
     return track.courses.reduce((s, c) => s + (c.lessons ? c.lessons.length : 0), 0);
+  }
+
+  function getTrackModules(track) {
+    if (!track) return 0;
+    return track.modules || countLessons(track);
+  }
+
+  function getTrackHours(track) {
+    if (!track) return 0;
+    if (typeof track.hours === 'number' && track.hours > 0) return track.hours;
+    const lessons = countLessons(track);
+    return lessons > 0 ? lessons : 0;
   }
 
   function getTrackProgress(track) {
@@ -770,18 +780,14 @@ export default function () {
     const grid = document.getElementById("achievements-grid");
     if (!grid) return;
     const unlocked = loadJson("testers-guild-unlocked-achievements", []);
-    grid.innerHTML = achievementsList
-      .map((ach) => {
-        const isUnlocked = unlocked.includes(ach.id);
-        const data = ach[lang] || ach.pt;
-        const lockedIcon = window.NVIcons ? window.NVIcons.get('lock', 'nv-icon-muted', '28') : '🔒';
-        return `<div class="achievement-card ${isUnlocked ? "unlocked" : "locked"}" title="${isUnlocked ? data.desc : "?"}">
-        <div class="ach-icon">${isUnlocked ? ach.icon : lockedIcon}</div>
-        <div class="ach-title">${isUnlocked ? escapeHtml(data.title) : "???"}</div>
-        <div class="ach-desc">${isUnlocked ? escapeHtml(data.desc) : lang === "en" ? "Keep learning to unlock" : "Continue estudando para desbloquear"}</div>
-      </div>`;
-      })
-      .join("");
+    grid.innerHTML = window.NVViewHelpers.buildAchievementsHtml(
+      achievementsList,
+      unlocked,
+      lang,
+      escapeHtml,
+      window.NVIcons,
+      t,
+    );
   }
 
   // ── Persona & filters ─────────────────────────────────────────────────────
@@ -804,10 +810,6 @@ export default function () {
     if (currentView === "home") renderHome();
   }
 
-  function isRecommended(trackId) {
-    return (PERSONA_TRACKS[persona] || []).includes(trackId);
-  }
-
   function sortTracksForPersona(list) {
     const order = PERSONA_TRACKS[persona] || [];
     return [...list].sort((a, b) => {
@@ -824,20 +826,7 @@ export default function () {
   function navigate(view, params = {}) {
     currentView = view;
     viewParams = params;
-    document
-      .querySelectorAll(".view")
-      .forEach((v) => v.classList.remove("active"));
-    const viewEl = document.getElementById("view-" + view);
-    if (viewEl) viewEl.classList.add("active");
-    document.querySelectorAll(".nav-links a[data-nav]").forEach((a) => {
-      const nav = a.dataset.nav;
-      a.classList.toggle(
-        "active",
-        nav === view ||
-          ((view === "track" || view === "lesson" || view === "quiz") &&
-            nav === "tracks"),
-      );
-    });
+    window.NVViewHelpers.setActiveView(document, view, "tracks");
 
     if (view === "home") renderHome();
     else if (view === "tracks") renderTracksPage();
@@ -865,220 +854,62 @@ export default function () {
     const prog = getTrackProgress(track);
     const container = document.getElementById(containerId);
     if (!container) return;
-    const rec = opts.showRecommend && isRecommended(track.id);
     const audience = TRACK_AUDIENCE[track.id] || "intermediate";
     const isComplete = prog.pct === 100;
 
-    const card = document.createElement("article");
-    card.className =
-      "track-card" +
-      (rec ? " track-recommended" : "") +
-      (isComplete ? " track-complete" : "");
-    card.style.setProperty("--track-color", track.color);
-    card.setAttribute("role", "button");
-    card.setAttribute("tabindex", "0");
-    card.innerHTML = `
-      <div class="track-card-header">
-        <span class="track-icon">${track.icon}</span>
-        <div class="track-badges">
-          ${isComplete ? `<span class="badge-complete">✅ ${lang === "en" ? "Complete" : "Completo"}</span>` : ""}
-          ${rec && !isComplete ? `<span class="badge-rec">${t("track.recommended")}</span>` : ""}
-          <span class="tier-badge tier-${audience}">${tierLabel(audience)}</span>
-        </div>
-      </div>
-      <h3>${escapeHtml(lt.title)}</h3>
-      <p>${escapeHtml(lt.description)}</p>
-      <div class="track-meta">
-        <span>📦 ${track.modules} ${t("track.modules")}</span>
-        <span>⏱ ~${track.hours}${t("track.hours")}</span>
-      </div>
-      <div class="track-tags">${lt.topics
-        .slice(0, 3)
-        .map((topic) => `<span class="tag">${escapeHtml(topic)}</span>`)
-        .join("")}</div>
-      <div class="track-progress">
-        <div class="progress-bar"><div class="progress-fill" style="width:${prog.pct}%"></div></div>
-        <div class="progress-text">${prog.done}/${prog.total} ${t("track.lessonsProgress")} ${isComplete ? "🎉" : ""}</div>
-      </div>`;
+    const iconName = getTrackIcon(track);
+    const iconHtml = window.NVIcons
+      ? window.NVIcons.get(iconName, "track-icon-svg", "28")
+      : escapeHtml(track.icon || "");
+    const title = normalizeTextLabel(lt.title);
 
-    const open = () => navigate("track", { trackId: track.id });
-    card.addEventListener("click", open);
-    card.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        open();
-      }
+    const cardMarkup = window.NVViewHelpers.buildTrackCardHtml(track, {
+      prog: {
+        pct: prog.pct,
+        done: prog.done,
+        total: prog.total,
+      },
+      audience,
+      isComplete,
+      title,
+      iconHtml,
+      lang,
+      icons: window.NVIcons,
+      escapeHtml,
+      t,
+      tierLabel,
     });
-    container.appendChild(card);
+
+    const card = document.createElement("div");
+    card.innerHTML = cardMarkup;
+    const cardElement = card.firstElementChild;
+    if (cardElement) {
+      cardElement.style.setProperty("--track-color", track.color);
+      const open = () => navigate("track", { trackId: track.id });
+      window.NVViewHelpers.bindAccessibleAction(cardElement, open);
+      container.appendChild(cardElement);
+    }
   }
 
   // ── Continue banner ───────────────────────────────────────────────────────
   function renderContinueBanner() {
     const banner = document.getElementById("continue-banner");
-    const lastId = getStorage(STORAGE_LAST_LESSON, "tg-qaway-last-lesson");
-    if (!lastId) {
-      banner.classList.add("hidden");
-      return;
-    }
-    const found = findLesson(lastId);
-    if (!found) {
-      banner.classList.add("hidden");
-      return;
-    }
-    banner.classList.remove("hidden");
-    banner.innerHTML = `
-      <div class="continue-inner">
-        <div>
-          <div class="continue-label">${t("dashboard.continueTitle")}</div>
-          <div class="continue-lesson">${escapeHtml(found.lesson.title)}</div>
-          <div class="continue-track">${found.track.icon} ${escapeHtml(found.track.title)}</div>
-        </div>
-        <button class="btn btn-primary" id="btn-continue">${t("dashboard.continueBtn")}</button>
-      </div>`;
-    document
-      .getElementById("btn-continue")
-      .addEventListener("click", () =>
-        navigate("lesson", { lessonId: lastId }),
-      );
+    window.NVViewHelpers.renderContinueBanner(
+      banner,
+      null,
+      findLesson,
+      getTrackIcon,
+      escapeHtml,
+      t,
+      navigate,
+      window.NVIcons,
+      STORAGE_LAST_LESSON,
+    );
   }
 
   // ── Home Lessons ──────────────────────────────────────────────────────────
-  let homeLessonTrackFilter = "all";
-  let homeLessonLevelFilter = "all"; // Filter by lesson level (beginner/intermediate/senior)
-
-  function renderHomeLessonsFilterBar() {
-    const bar = document.getElementById("home-lessons-filter-row");
-    if (!bar) return;
-
-    // Build track options from loaded tracks
-    const allTrackOption = `<button type="button" class="filter-chip ${homeLessonTrackFilter === "all" ? "active" : ""}" data-ltf="all" title="Mostrar todas as trilhas">Todas as trilhas</button>`;
-    const trackOptions = tracks
-      .map(
-        (tr) =>
-          `<button type="button" class="filter-chip ${homeLessonTrackFilter === tr.id ? "active" : ""}" data-ltf="${tr.id}" title="${escapeHtml(localizedTrack(tr).description)}">${tr.icon} ${escapeHtml(localizedTrack(tr).title)}</button>`,
-      )
-      .join("");
-
-    // Build level filter options
-    const levelOptions = ["all", "beginner", "intermediate", "senior"]
-      .map(
-        (level) =>
-          `<button type="button" class="filter-chip ${homeLessonLevelFilter === level ? "active" : ""}" data-llf="${level}" title="${level === 'all' ? 'Todas as dificuldades' : level === 'beginner' ? 'Aulas para iniciantes' : level === 'intermediate' ? 'Aulas intermediárias' : 'Aulas sênior'}">${t("filter." + level)}</button>`,
-      )
-      .join("");
-
-    bar.innerHTML = `
-      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
-        <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-right: 0.5rem;">Trilha:</div>
-        ${allTrackOption}
-        ${trackOptions}
-        <div style="width: 1px; height: 24px; background: var(--border); margin: 0 0.5rem;"></div>
-        <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-right: 0.5rem;">Nível:</div>
-        ${levelOptions}
-      </div>
-    `;
-    
-    // Track filter listeners
-    bar.querySelectorAll(".filter-chip[data-ltf]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        homeLessonTrackFilter = btn.dataset.ltf;
-        renderHomeLessons();
-        // sync chip active state
-        bar
-          .querySelectorAll(".filter-chip[data-ltf]")
-          .forEach((b) => b.classList.toggle("active", b === btn));
-      });
-    });
-
-    // Level filter listeners
-    bar.querySelectorAll(".filter-chip[data-llf]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        homeLessonLevelFilter = btn.dataset.llf;
-        renderHomeLessons();
-        // sync chip active state
-        bar
-          .querySelectorAll(".filter-chip[data-llf]")
-          .forEach((b) => b.classList.toggle("active", b === btn));
-      });
-    });
-  }
-
   function renderHomeLessons() {
-    const grid = document.getElementById("home-lessons-grid");
-    const empty = document.getElementById("home-lessons-empty");
-    if (!grid) return;
-
-    const allLessonsFlat = [];
-    tracks.forEach((track) => {
-      if (!track || !track.courses || !Array.isArray(track.courses)) return;
-      if (homeLessonTrackFilter !== "all" && track.id !== homeLessonTrackFilter)
-        return;
-      const lt = localizedTrack(track);
-      track.courses.forEach((course) => {
-        if (!course || !course.lessons || !Array.isArray(course.lessons)) return;
-        const lc = localizedCourse(course);
-        course.lessons.forEach((lesson) => {
-          allLessonsFlat.push({
-            lesson: localizedLesson(lesson),
-            rawLesson: lesson,
-            track: lt,
-            rawTrack: track,
-            course: lc,
-          });
-        });
-      });
-    });
-
-    // Filter by level if selected
-    let filtered = allLessonsFlat;
-    if (homeLessonLevelFilter !== "all") {
-      filtered = allLessonsFlat.filter(({ rawLesson }) => {
-        const enr = getEnrichment(rawLesson.id);
-        return enr.tier === homeLessonLevelFilter;
-      });
-    }
-
-    if (!filtered.length) {
-      grid.innerHTML = "";
-      empty?.classList.remove("hidden");
-      return;
-    }
-
-    empty?.classList.add("hidden");
-    grid.innerHTML = filtered
-      .map(({ lesson, rawLesson, track, rawTrack, course }) => {
-        const done = !!progress[rawLesson.id];
-        const enr = getEnrichment(rawLesson.id);
-        return `<article
-          class="lesson-card${done ? " lesson-card-done" : ""}"
-          role="listitem"
-          tabindex="0"
-          data-lesson="${rawLesson.id}"
-          style="--lc-color:${rawTrack.color}"
-          aria-label="${escapeHtml(lesson.title)}"
-        >
-          <div class="lesson-card-track">${rawTrack.icon} ${escapeHtml(track.title)}</div>
-          <div class="lesson-card-title">${escapeHtml(lesson.title)}</div>
-          <div class="lesson-card-course">${escapeHtml(course.title)}</div>
-          <div class="lesson-card-meta">
-            <span>⏱ ${escapeHtml(lesson.duration)}</span>
-            <span class="tier-badge tier-${enr.tier}">${tierLabel(enr.tier)}</span>
-          </div>
-        </article>`;
-      })
-      .join("");
-
-    grid.querySelectorAll(".lesson-card").forEach((card) => {
-      const open = () =>
-        navigate("lesson", { lessonId: card.dataset.lesson });
-      card.addEventListener("click", open);
-      card.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          open();
-        }
-      });
-    });
+    // Recommendations are disabled, render nothing.
   }
 
   // ── Home ──────────────────────────────────────────────────────────────────
@@ -1086,87 +917,38 @@ export default function () {
     const bar = document.getElementById("home-filter-bar");
     if (!bar) return;
     const filters = ["all", "beginner", "intermediate", "senior"];
-    bar.innerHTML = filters
-      .map(
-        (f) =>
-          `<button type="button" class="filter-chip ${homeFilter === f ? "active" : ""}" data-filter="${f}">${t("filter." + f)}</button>`,
-      )
-      .join("");
-    bar.querySelectorAll(".filter-chip").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        homeFilter = btn.dataset.filter;
+    window.NVViewHelpers.wireFilterBar(
+      bar,
+      filters,
+      homeFilter,
+      t,
+      (nextFilter) => {
+        homeFilter = nextFilter;
         renderHome();
-      });
-    });
+      },
+    );
   }
 
   function renderHome() {
     const global = getGlobalProgress();
-    document.getElementById("stat-lessons").textContent = global.total;
-    document.getElementById("stat-tracks").textContent = tracks.length;
-    document
-      .querySelectorAll(".persona-card")
-      .forEach((el) =>
-        el.classList.toggle("active", el.dataset.persona === persona),
-      );
-
-    // Update avatar display
-    const avatarEmoji = document.getElementById("avatar-icon");
-    const avatarLevel = document.getElementById("avatar-level");
-    const avatarProgress = document.getElementById("avatar-progress");
-    
-    if (avatarEmoji && avatarLevel) {
-      // Calculate level based on completion %
-      if (global.pct >= 70) {
-        avatarEmoji.setAttribute('data-icon', 'crown');
-        avatarEmoji.setAttribute('data-icon-size', '48');
-        avatarEmoji.innerHTML = window.NVIcons ? window.NVIcons.get('crown', 'nv-icon-accent', '48') : '👑';
-        avatarLevel.textContent = "Sênior";
-        avatarProgress.textContent = "Parabéns! Você atingiu o nível máximo";
-      } else if (global.pct >= 35) {
-        avatarEmoji.setAttribute('data-icon', 'bolt');
-        avatarEmoji.innerHTML = window.NVIcons ? window.NVIcons.get('bolt', 'nv-icon-pink', '48') : '⚡';
-        avatarLevel.textContent = "Intermediário";
-        avatarProgress.textContent = `${global.pct}% completado`;
-      } else {
-        avatarEmoji.setAttribute('data-icon', 'seedling');
-        avatarEmoji.innerHTML = window.NVIcons ? window.NVIcons.get('seedling', 'nv-icon-accent', '48') : '🌱';
-        avatarLevel.textContent = "Iniciante";
-        avatarProgress.textContent = `${global.pct}% completado`;
-      }
-    }
-
-    renderHomeFilterBar();
-
-    const filtered =
-      homeFilter === "all"
-        ? sortTracksForPersona(tracks)
-        : tracks.filter((tr) => TRACK_AUDIENCE[tr.id] === homeFilter);
-
-    const grid = document.getElementById("home-tracks-grid");
-    const emptyState = document.getElementById("home-tracks-empty");
-    
-    grid.innerHTML = "";
-    
-    if (filtered.length === 0) {
-      grid.classList.add("hidden");
-      if (emptyState) emptyState.classList.remove("hidden");
-    } else {
-      grid.classList.remove("hidden");
-      if (emptyState) emptyState.classList.add("hidden");
-      filtered.forEach((tr) =>
-        renderTrackCard(tr, "home-tracks-grid", { showRecommend: true }),
-      );
-    }
-    
-    renderContinueBanner();
-    
-    // Render lessons section
-    renderHomeLessonsFilterBar();
-    renderHomeLessons();
-    
-    // PWA Install Banner
-    renderInstallBanner();
+    window.NVViewHelpers.renderHomeView(
+      {
+        global,
+        tracks,
+        persona,
+        homeFilter,
+        lang,
+        avatarIcons: window.NVIcons,
+        getTrackIcon,
+        escapeHtml,
+        t,
+        renderTrackCard,
+        renderHomeFilterBar,
+        renderContinueBanner,
+        renderHomeLessons,
+        renderInstallBanner,
+      },
+    );
   }
 
   /**
@@ -1174,66 +956,7 @@ export default function () {
    */
   function renderInstallBanner() {
     const banner = document.getElementById("install-banner");
-    if (!banner) return;
-
-    // Hide on desktop (only show on mobile)
-    const mediaQuery = window.matchMedia("(max-width: 768px)");
-    const updateBannerVisibility = () => {
-      if (!mediaQuery.matches) {
-        banner.style.display = "none";
-        return;
-      }
-    };
-    
-    // Check initial and on resize
-    updateBannerVisibility();
-    mediaQuery.addEventListener("change", updateBannerVisibility);
-
-    // Check if PWA is installable
-    let deferredPrompt = null;
-
-    window.addEventListener("beforeinstallprompt", (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      // Show install banner only on mobile
-      if (mediaQuery.matches) {
-        banner.style.display = "flex";
-      }
-    });
-
-    // Hide when installed
-    window.addEventListener("appinstalled", () => {
-      banner.style.display = "none";
-      deferredPrompt = null;
-    });
-
-    const btnInstall = document.getElementById("install-app-btn");
-    const btnDismiss = document.getElementById("dismiss-install-btn");
-
-    if (btnInstall) {
-      btnInstall.addEventListener("click", async () => {
-        if (!deferredPrompt) return;
-        deferredPrompt.prompt();
-        const result = await deferredPrompt.userChoice;
-        if (result.outcome === "accepted") {
-          banner.style.display = "none";
-        }
-        deferredPrompt = null;
-      });
-    }
-
-    if (btnDismiss) {
-      btnDismiss.addEventListener("click", () => {
-        banner.style.display = "none";
-        localStorage.setItem("pwa-dismissed", "true");
-      });
-    }
-
-    // Don't show if already dismissed
-    const dismissed = localStorage.getItem("pwa-dismissed") === "true";
-    if (dismissed || !("serviceWorker" in navigator)) {
-      banner.style.display = "none";
-    }
+    window.NVViewHelpers.renderInstallBanner(banner);
   }
 
   // ── Tracks page ───────────────────────────────────────────────────────────
@@ -1241,18 +964,16 @@ export default function () {
     const bar = document.getElementById("track-filter-bar");
     if (!bar) return;
     const filters = ["all", "beginner", "intermediate", "senior"];
-    bar.innerHTML = filters
-      .map(
-        (f) =>
-          `<button type="button" class="filter-chip ${trackFilter === f ? "active" : ""}" data-filter="${f}">${t("filter." + f)}</button>`,
-      )
-      .join("");
-    bar.querySelectorAll(".filter-chip").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        trackFilter = btn.dataset.filter;
+    window.NVViewHelpers.wireFilterBar(
+      bar,
+      filters,
+      trackFilter,
+      t,
+      (nextFilter) => {
+        trackFilter = nextFilter;
         renderTracksPage();
-      });
-    });
+      },
+    );
   }
 
   function renderTracksPage() {
@@ -1272,57 +993,13 @@ export default function () {
   function renderRoadmap() {
     const container = document.getElementById("roadmap-content");
     const roadmaps = window.TG_ROADMAPS || {};
-    const routes = [
-      { key: "beginner", icon: "🌱" },
-      { key: "senior", icon: "👑" },
-    ];
-    container.innerHTML = routes
-      .map(({ key, icon }) => {
-        const data =
-          roadmaps[key]?.[lang === "en" ? "en" : "pt"] || roadmaps[key]?.pt;
-        if (!data) return "";
-        const steps = data.steps
-          .map(
-            (step, i) => `
-        <div class="roadmap-step">
-          <div class="roadmap-step-num">${i + 1}</div>
-          <div class="roadmap-step-body">
-            <strong>${escapeHtml(step.label)}</strong>
-            <p class="roadmap-why"><em>${t("roadmap.why")}:</em> ${escapeHtml(step.why)}</p>
-            <button type="button" class="btn btn-secondary btn-sm roadmap-go" data-track="${step.trackId}" data-lesson="${step.lessonId || ""}">${t("roadmap.start")}</button>
-          </div>
-        </div>`,
-          )
-          .join("");
-        return `<article class="roadmap-card">
-        <h3>${icon} ${escapeHtml(data.title)}</h3>
-        <p>${escapeHtml(data.desc)}</p>
-        <div class="roadmap-steps">${steps}</div>
-      </article>`;
-      })
-      .join("");
-
-    container.querySelectorAll(".roadmap-go").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        if (btn.dataset.lesson)
-          navigate("lesson", { lessonId: btn.dataset.lesson });
-        else navigate("track", { trackId: btn.dataset.track });
-      });
-    });
+    window.NVViewHelpers.renderRoadmap(container, roadmaps, lang, t, escapeHtml, navigate);
   }
 
   // ── Glossary ──────────────────────────────────────────────────────────────
   function renderGlossary() {
     const items = window.TG_GLOSSARY?.[lang === "en" ? "en" : "pt"] || [];
-    document.getElementById("glossary-content").innerHTML = items
-      .map(
-        (item) => `
-      <article class="glossary-card">
-        <h3>${escapeHtml(item.term)}</h3>
-        <p>${escapeHtml(item.def)}</p>
-      </article>`,
-      )
-      .join("");
+    document.getElementById("glossary-content").innerHTML = window.NVViewHelpers.buildGlossaryHtml(items, escapeHtml);
   }
 
   // ── Labs ──────────────────────────────────────────────────────────────────
@@ -1331,53 +1008,26 @@ export default function () {
     if (!container) return;
     const labs = labsData[lang === "en" ? "en" : "pt"] || labsData.pt || [];
     if (!labs.length) {
-      container.innerHTML = `<p class="empty-state">${lang === "en" ? "No labs available." : "Nenhum lab disponível."}</p>`;
+      container.innerHTML = window.NVViewHelpers.buildEmptyStateHtml(
+        lang === "en" ? "No labs available." : "Nenhum lab disponível.",
+        "",
+        escapeHtml,
+      );
       return;
     }
 
-    // Group by track
-    const grouped = {};
-    labs.forEach((lab) => {
-      (lab.tracks || ["other"]).forEach((trackId) => {
-        if (!grouped[trackId]) grouped[trackId] = [];
-        grouped[trackId].push(lab);
-      });
-    });
+    const trackMap = Object.fromEntries(
+      (tracks || []).map((track) => [track.id, localizedTrack(track)]),
+    );
 
-    const typeColors = {
-      "Web E2E": "#3b82f6",
-      Web: "#3b82f6",
-      API: "#8b5cf6",
-      Security: "#6366f1",
-      Performance: "#ef4444",
-      A11y: "#a855f7",
-      Mobile: "#f59e0b",
-      "Web + API": "#10b981",
-    };
-
-    container.innerHTML = `<div class="labs-grid">${labs
-      .map(
-        (lab) => `
-      <article class="lab-card">
-        <div class="lab-header">
-          <span class="lab-type-badge" style="background:${typeColors[lab.type] || "#10b981"}22;color:${typeColors[lab.type] || "#10b981"};border-color:${typeColors[lab.type] || "#10b981"}44">${escapeHtml(lab.type)}</span>
-          <div class="lab-track-tags">${(lab.tracks || [])
-            .map((tid) => {
-              const tr = findTrack(tid);
-              return tr
-                ? `<span class="tag">${tr.icon} ${escapeHtml(localizedTrack(tr).title)}</span>`
-                : "";
-            })
-            .join("")}</div>
-        </div>
-        <h3><a href="${escapeHtml(lab.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(lab.name)}</a></h3>
-        <p>${escapeHtml(lab.desc)}</p>
-        <a href="${escapeHtml(lab.url)}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm lab-open-btn">
-          ${lang === "en" ? "Open lab ↗" : "Abrir lab ↗"}
-        </a>
-      </article>`,
-      )
-      .join("")}</div>`;
+    container.innerHTML = window.NVViewHelpers.buildLabsHtml(
+      labs,
+      trackMap,
+      window.NVIcons,
+      escapeHtml,
+      getTrackIcon,
+      lang,
+    );
   }
 
   // ── Quiz ──────────────────────────────────────────────────────────────────
@@ -1391,7 +1041,11 @@ export default function () {
     const langKey = lang === "en" ? "en" : "pt";
     const quizData = quizzes[trackId]?.[langKey] || quizzes[trackId]?.pt;
     if (!quizData) {
-      container.innerHTML = `<p class="empty-state">${lang === "en" ? "No quiz available for this track yet." : "Nenhum quiz disponível para esta trilha ainda."}</p>`;
+      container.innerHTML = window.NVViewHelpers.buildEmptyStateHtml(
+        lang === "en" ? "No quiz available for this track yet." : "Nenhum quiz disponível para esta trilha ainda.",
+        "",
+        escapeHtml,
+      );
       return;
     }
 
@@ -1405,83 +1059,25 @@ export default function () {
     // Reset quiz state for this track
     quizState = { trackId, answers: {}, submitted: false };
 
-    const questionsHtml = quizData.questions
-      .map(
-        (q, qi) => `
-      <div class="quiz-question" data-qi="${qi}">
-        <p class="quiz-q-text"><strong>${qi + 1}.</strong> ${escapeHtml(q.q)}</p>
-        <div class="quiz-options">
-          ${q.options
-            .map(
-              (opt, oi) => `
-            <label class="quiz-option" data-qi="${qi}" data-oi="${oi}">
-              <input type="radio" name="q${qi}" value="${oi}" class="quiz-radio">
-              <span class="quiz-option-text">${escapeHtml(opt)}</span>
-            </label>`,
-            )
-            .join("")}
-        </div>
-        <div class="quiz-explain hidden" id="explain-${qi}"></div>
-      </div>`,
-      )
-      .join("");
+    container.innerHTML = window.NVViewHelpers.buildTrackQuizHtml(
+      { ...track, icon: track.icon },
+      quizData,
+      { alreadyPassed },
+      lang,
+      window.NVIcons,
+      escapeHtml,
+      t,
+    );
 
-    container.innerHTML = `
-      <div class="quiz-card">
-        <div class="quiz-track-header" style="border-left-color:${track.color}">
-          <span class="track-icon">${track.icon}</span>
-          <div>
-            <h2>${escapeHtml(quizData.title)}</h2>
-            <p class="quiz-meta">${quizData.questions.length} ${lang === "en" ? "questions" : "perguntas"} · ${lang === "en" ? "Pass" : "Aprovação"}: ${quizData.passScore}/${quizData.questions.length}</p>
-          </div>
-        </div>
-        ${alreadyPassed ? `<div class="quiz-passed-banner">🎯 ${lang === "en" ? "You already passed this quiz!" : "Você já passou neste quiz!"}</div>` : ""}
-        <form id="quiz-form" class="quiz-form">
-          ${questionsHtml}
-          <div class="quiz-actions">
-            <button type="submit" class="btn btn-primary">${t("quiz.submit")}</button>
-            <button type="button" class="btn btn-secondary" id="btn-quiz-back">${t("quiz.backTrack")}</button>
-          </div>
-        </form>
-        <div id="quiz-result" class="quiz-result hidden"></div>
-      </div>`;
-
-    document
-      .getElementById("btn-quiz-back")
-      .addEventListener("click", () => navigate("track", { trackId }));
-
-    document.getElementById("quiz-form").addEventListener("submit", (e) => {
-      e.preventDefault();
-      if (quizState.submitted) return;
-      quizState.submitted = true;
-
-      let correct = 0;
-      quizData.questions.forEach((q, qi) => {
-        const selected = quizState.answers[qi];
-        const explainEl = document.getElementById(`explain-${qi}`);
-        const qBlock = container.querySelector(
-          `.quiz-question[data-qi="${qi}"]`,
-        );
-
-        // Highlight options
-        qBlock.querySelectorAll(".quiz-option").forEach((lbl) => {
-          const oi = parseInt(lbl.dataset.oi);
-          lbl.classList.add(oi === q.correct ? "correct" : "wrong-opt");
-          if (oi === selected) lbl.classList.add("selected-opt");
-        });
-        qBlock
-          .querySelectorAll("input[type=radio]")
-          .forEach((r) => (r.disabled = true));
-
-        if (selected === q.correct) correct++;
-        if (explainEl && q.explain) {
-          explainEl.textContent = q.explain;
-          explainEl.classList.remove("hidden");
-        }
-      });
-
-      const passed = correct >= quizData.passScore;
-      if (passed && !quizzesPassed[trackId]) {
+    window.NVViewHelpers.bindTrackQuizHandlers(
+      container,
+      quizData,
+      lang,
+      t,
+      () => navigate("track", { trackId }),
+      () => renderQuiz(trackId),
+      (correct) => {
+        if (quizzesPassed[trackId]) return;
         quizzesPassed[trackId] = {
           passedAt: new Date().toISOString(),
           score: correct,
@@ -1489,31 +1085,8 @@ export default function () {
         saveJson(STORAGE_QUIZZES, quizzesPassed);
         checkAchievements();
         showToast(t("toast.quizPassed"));
-      }
-
-      const resultEl = document.getElementById("quiz-result");
-      resultEl.className = `quiz-result ${passed ? "quiz-passed" : "quiz-failed"}`;
-      resultEl.innerHTML = `
-        <div class="quiz-result-icon">${passed ? "🎯" : "📚"}</div>
-        <div class="quiz-result-title">${passed ? t("quiz.passed") : t("quiz.failed")}</div>
-        <div class="quiz-result-score">${t("quiz.score")}: ${correct}/${quizData.questions.length}</div>
-        ${!passed ? `<button class="btn btn-primary btn-sm" id="btn-quiz-retry">${lang === "en" ? "Try Again" : "Tentar Novamente"}</button>` : ""}`;
-      resultEl.classList.remove("hidden");
-
-      if (!passed) {
-        document
-          .getElementById("btn-quiz-retry")
-          ?.addEventListener("click", () => renderQuiz(trackId));
-      }
-    });
-
-    // Capture radio changes
-    container.querySelectorAll(".quiz-radio").forEach((radio) => {
-      radio.addEventListener("change", () => {
-        const qi = parseInt(radio.closest(".quiz-option").dataset.qi);
-        quizState.answers[qi] = parseInt(radio.value);
-      });
-    });
+      },
+    );
   }
 
   // ── Checklist ─────────────────────────────────────────────────────────────
@@ -1523,63 +1096,34 @@ export default function () {
     if (!data) return "";
 
     const savedItems = checklistState[trackId] || [];
-    const allDone = savedItems.length >= data.items.length;
-
-    const itemsHtml = data.items
-      .map((item, i) => {
-        const checked = savedItems.includes(i);
-        return `<label class="checklist-item ${checked ? "checked" : ""}">
-        <input type="checkbox" class="checklist-check" data-track="${trackId}" data-idx="${i}" ${checked ? "checked" : ""}>
-        <span>${escapeHtml(item)}</span>
-      </label>`;
-      })
-      .join("");
-
-    const html = `<div class="checklist-box" id="checklist-${trackId}">
-      <div class="checklist-header">
-        <h3>📋 ${escapeHtml(data.title)}</h3>
-        <span class="checklist-progress" id="ck-progress-${trackId}">${savedItems.length}/${data.items.length} ${t("checklist.progress")}</span>
-      </div>
-      <div class="checklist-items">${itemsHtml}</div>
-      ${allDone ? `<div class="checklist-complete">🎉 ${lang === "en" ? "Project complete! Great work." : "Projeto concluído! Parabéns."}</div>` : ""}
-    </div>`;
+    const html = window.NVViewHelpers.buildChecklistHtml(
+      trackId,
+      data,
+      savedItems,
+      lang,
+      window.NVIcons,
+      escapeHtml,
+      t,
+    );
 
     if (container) {
       container.insertAdjacentHTML("beforeend", html);
-      container
-        .querySelectorAll(`.checklist-check[data-track="${trackId}"]`)
-        .forEach((cb) => {
-          cb.addEventListener("change", () => {
-            const idx = parseInt(cb.dataset.idx);
-            if (!checklistState[trackId]) checklistState[trackId] = [];
-            if (cb.checked) {
-              if (!checklistState[trackId].includes(idx))
-                checklistState[trackId].push(idx);
-            } else {
-              checklistState[trackId] = checklistState[trackId].filter(
-                (x) => x !== idx,
-              );
-            }
-            saveJson(STORAGE_CHECKLISTS, checklistState);
-            const progressEl = document.getElementById(
-              `ck-progress-${trackId}`,
-            );
-            if (progressEl)
-              progressEl.textContent = `${checklistState[trackId].length}/${data.items.length} ${t("checklist.progress")}`;
-            cb.closest(".checklist-item").classList.toggle(
-              "checked",
-              cb.checked,
-            );
-            if (checklistState[trackId].length >= data.items.length) {
-              checkAchievements();
-              showToast(
-                lang === "en"
-                  ? "✅ Project checklist complete!"
-                  : "✅ Checklist do projeto completo!",
-              );
-            }
-          });
-        });
+      window.NVViewHelpers.bindChecklistHandlers(
+        container,
+        trackId,
+        data,
+        checklistState,
+        t,
+        (updatedState) => saveJson(STORAGE_CHECKLISTS, updatedState),
+        () => {
+          checkAchievements();
+          showToast(
+            lang === "en"
+              ? "Project checklist complete!"
+              : "Checklist do projeto completo!",
+          );
+        },
+      );
     }
     return html;
   }
@@ -1589,110 +1133,18 @@ export default function () {
     const lessonQuizzes = window.TG_LESSON_QUIZZES || {};
     const langKey = lang === "en" ? "en" : "pt";
     const quizData = lessonQuizzes[lessonId]?.[langKey] || lessonQuizzes[lessonId]?.pt;
-    
     if (!quizData) return; // No quiz for this lesson
-    
-    const quizState = { answered: {}, submitted: false };
-    
-    const questionsHtml = quizData.questions
-      .map((q, qi) => `
-      <div class="lesson-quiz-question">
-        <p><strong>${qi + 1}.</strong> ${escapeHtml(q.q)}</p>
-        <div class="lesson-quiz-options">
-          ${q.options
-            .map((opt, oi) => `
-            <label class="lesson-quiz-option">
-              <input type="radio" name="lq${lessonId}-q${qi}" value="${oi}" class="lesson-quiz-radio">
-              <span>${escapeHtml(opt)}</span>
-            </label>`)
-            .join("")}
-        </div>
-        <div class="lesson-quiz-explain hidden" id="lq-explain-${qi}"></div>
-      </div>`)
-      .join("");
-    
-    const quizHtml = `
-      <div class="lesson-quiz-box" style="margin-top: 2rem; padding: 1.5rem; background: rgba(139, 92, 246, 0.1); border-left: 4px solid #8b5cf6; border-radius: 12px;">
-        <h3 style="margin-top: 0; display: flex; align-items: center; gap: 0.5rem;">🎯 ${escapeHtml(quizData.title)}</h3>
-        <p style="color: var(--text-muted); margin: 0.5rem 0 1rem 0; font-size: 0.9rem;">${quizData.questions.length} ${lang === "en" ? "quick question(s)" : "pergunta(s) rápida(s)"} — ${lang === "en" ? "test your understanding" : "teste seu entendimento"}</p>
-        <form id="lq-form-${lessonId}" class="lesson-quiz-form">
-          ${questionsHtml}
-          <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
-            <button type="submit" class="btn btn-primary btn-sm">✓ ${lang === "en" ? "Check" : "Verificar"}</button>
-            <button type="button" class="btn btn-secondary btn-sm" id="lq-reset-${lessonId}">${lang === "en" ? "Reset" : "Resetar"}</button>
-          </div>
-        </form>
-        <div id="lq-result-${lessonId}" class="lesson-quiz-result hidden" style="margin-top: 1rem;"></div>
-      </div>
-    `;
-    
+
     if (container) {
-      container.insertAdjacentHTML("beforeend", quizHtml);
-      
-      // Attach listeners
-      const form = document.getElementById(`lq-form-${lessonId}`);
-      if (!form) return;
-      
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        if (quizState.submitted) return;
-        quizState.submitted = true;
-        
-        let correct = 0;
-        quizData.questions.forEach((q, qi) => {
-          const selected = document.querySelector(
-            `input[name="lq${lessonId}-q${qi}"]:checked`
-          )?.value;
-          const selectedIdx = selected ? parseInt(selected) : -1;
-          const explainEl = document.getElementById(`lq-explain-${qi}`);
-          
-          // Disable options
-          form.querySelectorAll(`input[name="lq${lessonId}-q${qi}"]`).forEach((r) => {
-            r.disabled = true;
-            const label = r.closest(".lesson-quiz-option");
-            if (label) {
-              if (selectedIdx === parseInt(r.value)) label.classList.add("selected-opt");
-              if (selectedIdx === q.correct) label.classList.add("correct-opt");
-              else if (selectedIdx !== -1 && parseInt(r.value) === q.correct)
-                label.classList.add("correct-opt");
-              else if (selectedIdx !== -1 && selectedIdx !== q.correct)
-                label.classList.add("wrong-opt");
-            }
-          });
-          
-          if (selectedIdx === q.correct) correct++;
-          if (explainEl && q.explain) {
-            explainEl.textContent = q.explain;
-            explainEl.classList.remove("hidden");
-          }
-        });
-        
-        const passed = correct >= quizData.passScore;
-        const resultEl = document.getElementById(`lq-result-${lessonId}`);
-        resultEl.className = `lesson-quiz-result ${passed ? "quiz-passed" : "quiz-failed"}`;
-        resultEl.innerHTML = `
-          <div style="padding: 1rem; background: ${passed ? "rgba(16, 185, 129, 0.1)" : "rgba(239, 68, 68, 0.1)"}; border-left: 3px solid ${passed ? "#10b981" : "#ef4444"}; border-radius: 8px;">
-            <div style="font-weight: 600; margin-bottom: 0.5rem;">${passed ? "✅ " + (lang === "en" ? "Great! You understand this." : "Ótimo! Você entendeu.") : "📚 " + (lang === "en" ? "Try again or review the lesson." : "Revise e tente novamente.")}</div>
-            <div style="font-size: 0.9rem; color: var(--text-muted);">${correct}/${quizData.questions.length} ${lang === "en" ? "correct" : "correto"}</div>
-          </div>
-        `;
-        resultEl.classList.remove("hidden");
-      });
-      
-      document.getElementById(`lq-reset-${lessonId}`)?.addEventListener("click", () => {
-        form.querySelectorAll("input[type='radio']").forEach((r) => {
-          r.checked = false;
-          r.disabled = false;
-        });
-        form.querySelectorAll(".lesson-quiz-option").forEach((opt) => {
-          opt.classList.remove("selected-opt", "correct-opt", "wrong-opt");
-        });
-        form.querySelectorAll(".lesson-quiz-explain").forEach((e) => {
-          e.classList.add("hidden");
-        });
-        document.getElementById(`lq-result-${lessonId}`)?.classList.add("hidden");
-        quizState.submitted = false;
-      });
+      window.NVViewHelpers.renderLessonQuiz(
+        lessonId,
+        container,
+        quizData,
+        lang,
+        window.NVIcons,
+        escapeHtml,
+        t,
+      );
     }
   }
 
@@ -1705,67 +1157,39 @@ export default function () {
     const prog = getTrackProgress(raw);
     const hasQuiz = !!quizzes[trackId];
 
-    let coursesHtml = "";
-    if (raw && raw.courses && Array.isArray(raw.courses)) {
-      raw.courses.forEach((rawCourse, idx) => {
-        if (!rawCourse || !rawCourse.lessons) return;
-        const course = localizedCourse(rawCourse);
-      const lessonsHtml = rawCourse.lessons
-        .map((rawLesson) => {
-          const lesson = localizedLesson(rawLesson);
-          const enr = getEnrichment(rawLesson.id);
-          const done = progress[rawLesson.id];
-          return `<li class="lesson-item ${done ? "completed" : ""}" data-lesson="${rawLesson.id}" tabindex="0" role="button" aria-label="${escapeHtml(lesson.title)}">
-          <div class="lesson-check">${done ? "✓" : ""}</div>
-          <div class="lesson-info">
-            <div class="lesson-title">${escapeHtml(lesson.title)}</div>
-            <div class="lesson-duration">${escapeHtml(lesson.duration)} · <span class="tier-badge tier-${enr.tier}">${tierLabel(enr.tier)}</span></div>
-          </div>
-          <span class="lesson-unlock">${t("track.free")}</span>
-        </li>`;
-        })
-        .join("");
-      coursesHtml += `<div class="course-block"><div class="course-header"><span class="course-num">${idx + 1}</span>${escapeHtml(course.title)}</div><ul class="lesson-list">${lessonsHtml}</ul></div>`;
-    });
-    } // Close if (raw && raw.courses)
+    const coursesHtml = window.NVViewHelpers.buildTrackCoursesHtml(
+      raw,
+      progress,
+      getEnrichment,
+      localizedLesson,
+      localizedCourse,
+      escapeHtml,
+      t,
+      window.NVIcons,
+      getTrackIcon,
+    );
 
-    const quizBtn = hasQuiz
-      ? `<button class="btn btn-secondary" id="btn-take-quiz">🎯 ${t("quiz.takeQuiz")}</button>`
-      : "";
-
-    document.getElementById("track-detail").innerHTML = `
-      <div class="track-hero" style="--track-color:${raw.color};border-left-color:${raw.color}">
-        <h1>${raw.icon} ${escapeHtml(track.title)}</h1>
-        <p class="track-hero-desc">${escapeHtml(track.description)}</p>
-        <div class="track-meta">
-          <span>📦 ${raw.modules} ${t("track.modules")}</span>
-          <span>⏱ ~${raw.hours} ${t("track.hoursLong")}</span>
-          <span class="tier-badge tier-${TRACK_AUDIENCE[raw.id]}">${tierLabel(TRACK_AUDIENCE[raw.id])}</span>
-        </div>
-        <div class="progress-bar" style="margin-top:1rem;max-width:400px">
-          <div class="progress-fill" style="width:${prog.pct}%;background:${raw.color}"></div>
-        </div>
-        <div class="progress-text">${prog.done}/${prog.total} ${t("track.lessonsDone")} ${prog.pct === 100 ? "🎉" : ""}</div>
-        <div class="track-hero-actions" style="margin-top:1rem;display:flex;gap:0.75rem;flex-wrap:wrap">
-          ${quizBtn}
-        </div>
-      </div>
-      <div class="course-list">${coursesHtml}</div>`;
-
-    document.querySelectorAll(".lesson-item").forEach((el) => {
-      const open = () => navigate("lesson", { lessonId: el.dataset.lesson });
-      el.addEventListener("click", open);
-      el.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          open();
-        }
-      });
-    });
-
-    document
-      .getElementById("btn-take-quiz")
-      ?.addEventListener("click", () => navigate("quiz", { trackId }));
+    const container = document.getElementById("track-detail");
+    window.NVViewHelpers.renderTrackDetail(
+      container,
+      { ...track, icon: track.icon },
+      coursesHtml,
+      prog,
+      {
+        modules: getTrackModules(raw),
+        hours: getTrackHours(raw),
+        audience: TRACK_AUDIENCE[raw.id],
+      },
+      {
+        icons: window.NVIcons,
+        escapeHtml,
+        t,
+        tierLabel,
+        getTrackIcon,
+      },
+      navigate,
+      hasQuiz,
+    );
   }
 
   // ── Bookmarks ─────────────────────────────────────────────────────────────
@@ -1787,234 +1211,122 @@ export default function () {
     const found = findLesson(lessonId);
     if (!found) return;
     const { track, course, lesson, rawTrack, rawCourse, rawLesson } = found;
-    const done = !!progress[rawLesson.id];
-    const enr = getEnrichment(rawLesson.id);
-    const isBookmarked = bookmarks.includes(rawLesson.id);
-    const langKey = lang === "en" ? "en" : "pt";
-    saveLastLesson(lessonId);
-
-    document.getElementById("lesson-track-link").textContent = track.title;
-    document.getElementById("lesson-track-link").onclick = (e) => {
-      e.preventDefault();
-      navigate("track", { trackId: rawTrack.id });
-    };
-    document.getElementById("lesson-breadcrumb").textContent = lesson.title;
-
-    const primerText = !seniorMode
-      ? enr.primer?.[langKey] || enr.primer?.pt
-      : null;
-    const seniorText = enr.seniorNote?.[langKey] || enr.seniorNote?.pt;
-
-    const primerHtml = primerText
-      ? `<aside class="lesson-box lesson-box-beginner"><h3>${t("lesson.primerTitle")}</h3><p>${escapeHtml(primerText)}</p></aside>`
-      : "";
-    const seniorHtml = seniorText
-      ? `<aside class="lesson-box lesson-box-senior"><h3>${t("lesson.seniorTitle")}</h3><p>${escapeHtml(seniorText)}</p></aside>`
-      : "";
-
-    const sidebarLessons = rawCourse.lessons
-      .map((rl) => {
-        const ll = localizedLesson(rl);
-        return `<li class="sidebar-lesson ${rl.id === rawLesson.id ? "active" : ""} ${progress[rl.id] ? "done" : ""}" data-lesson="${rl.id}" tabindex="0" role="button">${escapeHtml(ll.title)}</li>`;
-      })
-      .join("");
-
-    const resourcesHtml = rawLesson.resources?.length
-      ? `<div class="lesson-resources"><h3>📎 ${t("lesson.resources")}</h3>${rawLesson.resources
-          .map(
-            (r) =>
-              `<a class="resource-link" href="${escapeHtml(r.url)}" target="_blank" rel="noopener noreferrer">↗ ${escapeHtml(r.label)}</a>`,
-          )
-          .join("")}</div>`
-      : "";
-
-    const allLessons = (rawTrack && rawTrack.courses && Array.isArray(rawTrack.courses))
-      ? rawTrack.courses.flatMap((c) => c.lessons || [])
-      : [];
-    const idx = allLessons.findIndex((l) => l.id === rawLesson.id);
-    const prev = allLessons[idx - 1];
-    const next = allLessons[idx + 1];
-
-    // Detect if this is a final project lesson — show checklist
-    const isFinalProject =
-      rawLesson.id.endsWith("-l1") &&
-      (rawCourse.id === "s12" ||
-        rawCourse.id === "w10" ||
-        rawCourse.id === "a9" ||
-        rawCourse.id === "m8" ||
-        rawCourse.id === "p8" ||
-        rawCourse.id === "sec6" ||
-        rawCourse.id === "dev5" ||
-        rawCourse.id === "a11y5" ||
-        rawCourse.id === "lead4");
-
-    const processedContent = highlightCode(lesson.content);
-
-    document.getElementById("lesson-detail").innerHTML = `
-      <div class="lesson-layout">
-        <aside class="lesson-sidebar">
-          <div class="sidebar-track">${rawTrack.icon} ${escapeHtml(track.title)}</div>
-          <div class="sidebar-course">${escapeHtml(course.title)}</div>
-          <ul class="sidebar-lessons">${sidebarLessons}</ul>
-        </aside>
-        <article class="lesson-content">
-          <div class="lesson-header-row">
-            <h1>${escapeHtml(lesson.title)}</h1>
-            <div style="display:flex;gap:0.5rem;align-items:center;flex-shrink:0">
-              <span class="tier-badge tier-${enr.tier}">${tierLabel(enr.tier)}</span>
-              <button class="btn-bookmark ${isBookmarked ? "bookmarked" : ""}" id="btn-bookmark" title="${isBookmarked ? t("lesson.unbookmark") : t("lesson.bookmark")}" aria-label="${isBookmarked ? t("lesson.unbookmark") : t("lesson.bookmark")}">
-                ${window.NVIcons ? window.NVIcons.get(isBookmarked ? 'bookmarkFilled' : 'bookmark', '', '18') : (isBookmarked ? "⭐" : "☆")}
-              </button>
-            </div>
-          </div>
-          <div class="lesson-meta-row">
-            <span class="lesson-meta-item">⏱ ${escapeHtml(lesson.duration)}</span>
-            <span class="lesson-meta-item">${done ? "✅ " + t("lesson.completed") : "📖 " + t("lesson.inProgress")}</span>
-          </div>
-          ${primerHtml}
-          <div class="lesson-body">${processedContent}</div>
-          ${seniorHtml}
-          ${resourcesHtml}
-          <div id="lesson-checklist-zone"></div>
-          <div id="lesson-quiz-zone"></div>
-          <div class="lesson-actions">
-            <button class="btn btn-primary" id="btn-complete">${done ? t("lesson.unmarkComplete") : t("lesson.markComplete")}</button>
-            ${prev ? `<button class="btn btn-secondary" id="btn-prev">${window.NVIcons ? window.NVIcons.get('arrowLeft','','16') + ' ' : '← '}${t("lesson.prev")}</button>` : ""}
-            ${next ? `<button class="btn btn-secondary" id="btn-next">${t("lesson.next")} ${window.NVIcons ? window.NVIcons.get('arrowRight','','16') : '→'}</button>` : ""}
-            <button class="btn btn-outline" id="btn-feedback" style="margin-left: auto; display:inline-flex; align-items:center; gap:0.4rem;">${window.NVIcons ? window.NVIcons.get('feedback','','16') : '💬'} ${lang === "en" ? "Feedback" : "Feedback"}</button>
-          </div>
-          
-          <!-- Feedback Form -->
-          <div id="lesson-feedback-form" style="margin-top: 2rem; padding: 1.5rem; background: var(--surface-2); border-radius: 12px; display: none;">
-            <h3 style="margin-top: 0;">💡 ${lang === "en" ? "Feedback rápido" : "Feedback rápido"}</h3>
-            <p style="color: var(--text-muted); margin-bottom: 1rem;">Ajude a melhorar esta aula (30 segundos):</p>
-            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
-              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                <input type="radio" name="feedback-rating" value="helpful" /> ✅ Muito útil
-              </label>
-              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                <input type="radio" name="feedback-rating" value="ok" /> 😐 Mais ou menos
-              </label>
-              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                <input type="radio" name="feedback-rating" value="confusing" /> ❌ Confusa
-              </label>
-            </div>
-            <textarea id="feedback-text" placeholder="Alguma sugestão?" style="width: 100%; min-height: 80px; padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); font-family: inherit; resize: vertical;"></textarea>
-            <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
-              <button class="btn btn-primary btn-sm" id="btn-feedback-submit">Enviar</button>
-              <button class="btn btn-secondary btn-sm" id="btn-feedback-cancel">Cancelar</button>
-            </div>
-          </div>
-        </article>
-      </div>`;
-
-    // Attach copy buttons to code blocks
-    attachCopyButtons(document.getElementById("lesson-detail"));
-
-    // Render checklist if final project lesson
-    if (isFinalProject) {
-      const zone = document.getElementById("lesson-checklist-zone");
-      renderChecklist(rawTrack.id, zone);
-    }
-
-    // Render inline quiz if available
-    const quizZone = document.getElementById("lesson-quiz-zone");
-    if (quizZone) {
-      renderLessonQuiz(rawLesson.id, quizZone);
-    }
-
-    document.getElementById("btn-bookmark").addEventListener("click", () => {
-      toggleBookmark(rawLesson.id);
-      renderLesson(lessonId);
-    });
-
-    document.getElementById("btn-complete").addEventListener("click", () => {
-      if (progress[rawLesson.id]) {
-        delete progress[rawLesson.id];
-        showToast(t("toast.lessonUndone"));
-      } else {
-        progress[rawLesson.id] = { completedAt: new Date().toISOString() };
-        showToast(t("toast.lessonDone"));
+      const done = !!progress[rawLesson.id];
+      const enr = getEnrichment(rawLesson.id);
+      const isBookmarked = bookmarks.includes(rawLesson.id);
+      const langKey = lang === "en" ? "en" : "pt";
+      window.NVViewHelpers.setupLessonHeader(
+        lessonId,
+        track,
+        rawTrack.id,
+        lesson.title,
+        navigate,
+        saveLastLesson,
+        window.NVIcons,
+        getTrackIcon,
+        escapeHtml,
+      );
+      const primerText = !seniorMode
+        ? enr.primer?.[langKey] || enr.primer?.pt
+        : null;
+      const seniorText = enr.seniorNote?.[langKey] || enr.seniorNote?.pt;
+      const primerHtml = primerText
+        ? `<aside class="lesson-box lesson-box-beginner"><h3>${t("lesson.primerTitle")}</h3><p>${escapeHtml(primerText)}</p></aside>`
+        : "";
+      const seniorHtml = seniorText
+        ? `<aside class="lesson-box lesson-box-senior"><h3>${t("lesson.seniorTitle")}</h3><p>${escapeHtml(seniorText)}</p></aside>`
+        : "";
+      const allLessons = (rawTrack && rawTrack.courses && Array.isArray(rawTrack.courses))
+        ? rawTrack.courses.flatMap((c) => c.lessons || [])
+        : [];
+      const idx = allLessons.findIndex((l) => l.id === rawLesson.id);
+      const prev = allLessons[idx - 1];
+      const next = allLessons[idx + 1];
+      const isFinalProject =
+        rawLesson.id.endsWith("-l1") &&
+        (rawCourse.id === "s12" ||
+          rawCourse.id === "w10" ||
+          rawCourse.id === "a9" ||
+          rawCourse.id === "m8" ||
+          rawCourse.id === "p8" ||
+          rawCourse.id === "sec6" ||
+          rawCourse.id === "dev5" ||
+          rawCourse.id === "a11y5" ||
+          rawCourse.id === "lead4");
+      const sanitized = window.NVViewHelpers.cleanInlineBackgrounds(lesson.content);
+      const processedContent = highlightCode(sanitized);
+      document.getElementById("lesson-detail").innerHTML = window.NVLessonRenderers.buildLessonPageHtml({
+        rawCourse,
+        rawLesson,
+        course,
+        track,
+        lesson,
+        progressMap: progress,
+        isBookmarked,
+        prev,
+        next,
+        lang,
+        t,
+        tierLabel,
+        escapeHtml,
+        icons: window.NVIcons,
+        getTrackIcon,
+        getEnrichment,
+        localizedLesson,
+        processedContent,
+        primerHtml,
+        seniorHtml,
+      });
+      attachCopyButtons(document.getElementById("lesson-detail"));
+      if (isFinalProject) {
+        const zone = document.getElementById("lesson-checklist-zone");
+        renderChecklist(rawTrack.id, zone);
       }
-      saveProgress();
-      checkAchievements();
-      renderLesson(lessonId);
-    });
-
-    if (prev)
-      document
-        .getElementById("btn-prev")
-        .addEventListener("click", () =>
-          navigate("lesson", { lessonId: prev.id }),
-        );
-    if (next)
-      document
-        .getElementById("btn-next")
-        .addEventListener("click", () =>
-          navigate("lesson", { lessonId: next.id }),
-        );
-
-    // Feedback button
-    const feedbackBtn = document.getElementById("btn-feedback");
-    const feedbackForm = document.getElementById("lesson-feedback-form");
-    const feedbackSubmitBtn = document.getElementById("btn-feedback-submit");
-    const feedbackCancelBtn = document.getElementById("btn-feedback-cancel");
-    
-    if (feedbackBtn) {
-      feedbackBtn.addEventListener("click", () => {
-        feedbackForm.style.display = feedbackForm.style.display === "none" ? "block" : "none";
+      const quizZone = document.getElementById("lesson-quiz-zone");
+      if (quizZone) {
+        renderLessonQuiz(rawLesson.id, quizZone);
+      }
+      window.NVViewHelpers.bindLessonPageActions({
+        lessonId,
+        rawLesson,
+        prevLessonId: prev?.id,
+        nextLessonId: next?.id,
+        navigate,
+        onBookmarkToggle: toggleBookmark,
+        onCompleteToggle: (lessonIdToToggle) => {
+          window.NVViewHelpers.toggleLessonComplete(lessonIdToToggle, progress, saveProgress, checkAchievements, t);
+        },
+        onReRender: renderLesson,
+        onFeedbackSubmit: ({ lessonId: submittedLessonId, rating, text }) => {
+          window.NVViewHelpers.submitLessonFeedback({ lessonId: submittedLessonId, rating, text }, { onAfter: () => {
+            const ft = document.getElementById('feedback-text'); if (ft) ft.value = '';
+            document.querySelectorAll('input[name="feedback-rating"]').forEach((r) => (r.checked = false));
+          }, t });
+        },
+        t,
       });
-      
-      feedbackSubmitBtn.addEventListener("click", () => {
-        const rating = document.querySelector('input[name="feedback-rating"]:checked')?.value || "unrated";
-        const text = document.getElementById("feedback-text").value;
-        
-        // Save feedback to localStorage
-        const feedbacks = JSON.parse(localStorage.getItem("nvqa_feedbacks") || "[]");
-        feedbacks.push({
-          lessonId: rawLesson.id,
-          rating,
-          text,
-          timestamp: new Date().toISOString()
-        });
-        localStorage.setItem("nvqa_feedbacks", JSON.stringify(feedbacks));
-        
-        showToast(lang === "en" ? "✅ Obrigado pelo feedback!" : "✅ Obrigado pelo feedback!");
-        feedbackForm.style.display = "none";
-        document.getElementById("feedback-text").value = "";
-        document.querySelectorAll('input[name="feedback-rating"]').forEach(r => r.checked = false);
-      });
-      
-      feedbackCancelBtn.addEventListener("click", () => {
-        feedbackForm.style.display = "none";
-      });
-    }
-
-    document.querySelectorAll(".sidebar-lesson").forEach((el) => {
-      const open = () => navigate("lesson", { lessonId: el.dataset.lesson });
-      el.addEventListener("click", open);
-      el.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          open();
-        }
-      });
-    });
   }
 
+  // Expose core navigation/render APIs early so external test helpers
+  // can call them before full `init()` completes.
+  try {
+    window.renderLesson = renderLesson;
+    window.navigate = navigate;
+    window.findLesson = findLesson;
+  } catch (e) {
+    // noop
+  }
   // ── Dashboard ─────────────────────────────────────────────────────────────
   function renderDashboard() {
     const global = getGlobalProgress();
     const passedCount = Object.keys(quizzesPassed).length;
 
-    document.getElementById("dashboard-stats").innerHTML = `
-      <div class="dash-card"><h3>${t("dashboard.lessonsCompleted")}</h3><div class="value">${global.done}/${global.total}</div></div>
-      <div class="dash-card"><h3>${t("dashboard.overallProgress")}</h3>
-        <div class="value">${global.pct}%</div>
-        <div class="progress-bar" style="margin-top:0.5rem"><div class="progress-fill" style="width:${global.pct}%"></div></div>
-      </div>
-      <div class="dash-card"><h3>${lang === "en" ? "Quizzes passed" : "Quizzes aprovados"}</h3><div class="value">${passedCount}/9</div></div>
-      <div class="dash-card"><h3>${t("dashboard.totalCost")}</h3><div class="value">${t("price")}</div></div>`;
+    document.getElementById("dashboard-stats").innerHTML = window.NVViewHelpers.buildDashboardStatsHtml(
+      { ...global, passedCount },
+      t("price"),
+      t,
+      t,
+    );
 
     renderAchievements();
 
@@ -2022,174 +1334,55 @@ export default function () {
     grid.innerHTML = "";
     tracks.forEach((tr) => renderTrackCard(tr, "dashboard-tracks"));
 
-    // Bookmarks section
+    const achievementsGrid = document.getElementById("achievements-grid");
     const bmSection = document.getElementById("dashboard-bookmarks");
-    if (bmSection) {
-      if (!bookmarks.length) {
-        bmSection.innerHTML = `<p class="empty-state" style="padding:1rem;color:var(--text-muted)">${lang === "en" ? "No bookmarked lessons yet." : "Nenhuma aula favoritada ainda."}</p>`;
-      } else {
-        bmSection.innerHTML = bookmarks
-          .map((lid) => {
-            const found = findLesson(lid);
-            if (!found) return "";
-            return `<button class="search-result-item" data-lesson="${lid}">
-            <span class="search-result-title">⭐ ${escapeHtml(found.lesson.title)}</span>
-            <span class="search-result-meta">${found.track.icon} ${escapeHtml(found.track.title)}</span>
-          </button>`;
-          })
-          .join("");
-        bmSection
-          .querySelectorAll("[data-lesson]")
-          .forEach((btn) =>
-            btn.addEventListener("click", () =>
-              navigate("lesson", { lessonId: btn.dataset.lesson }),
-            ),
-          );
-      }
-    }
-
-    // Certificates section
     const certSection = document.getElementById("dashboard-certificates");
-    if (certSection && window.TG_CERTIFICATES) {
-      const userCerts = window.TG_CERTIFICATES.getUserCertificates();
-      const completedTracks = tracks.filter((tr) => getTrackProgress(tr).pct === 100);
-      
-      if (!completedTracks.length) {
-        certSection.innerHTML = `<p class="empty-state" style="padding:1rem;color:var(--text-muted)">${lang === "en" ? "Complete a track to earn a certificate." : "Conclua uma trilha para ganhar um certificado."}</p>`;
-      } else {
-        certSection.innerHTML = completedTracks
-          .map((tr) => {
-            const existingCert = userCerts.find(c => c.trackId === tr.id);
-            const lt = localizedTrack(tr);
-            return `<div class="cert-card" style="border-left: 4px solid ${tr.color}; padding: 1rem; background: var(--surface-2); border-radius: 8px;">
-              <div style="display: flex; justify-content: space-between; align-items: start;">
-                <div>
-                  <h4 style="margin: 0 0 0.5rem 0;">${tr.icon} ${escapeHtml(lt.title)}</h4>
-                  <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">${existingCert ? `Gerado em ${new Date(existingCert.generatedAt).toLocaleDateString("pt-BR")}` : "Certificado disponível"}</p>
-                </div>
-                <button class="btn btn-primary btn-sm" id="btn-cert-${tr.id}" data-track="${tr.id}" style="display:inline-flex;align-items:center;gap:0.4rem;">${window.NVIcons ? window.NVIcons.get('download','','14') : '📄'} ${lang === "en" ? "Download" : "Baixar"}</button>
-              </div>
-            </div>`;
-          })
-          .join("");
-        
-        completedTracks.forEach((tr) => {
-          const btn = document.getElementById(`btn-cert-${tr.id}`);
-          if (btn) {
-            btn.addEventListener("click", async () => {
-              try {
-                const userName = window.NVAuth?.getUserName?.() || "Learner";
-                await window.TG_CERTIFICATES.downloadCertificate(
-                  tr.id,
-                  userName,
-                  new Date()
-                );
-                window.TG_CERTIFICATES.saveCertificate(tr.id, userName, new Date());
-                showToast(lang === "en" ? "Certificate downloaded!" : "Certificado baixado!");
-              } catch (error) {
-                showToast(`Erro: ${error.message}`);
-              }
-            });
+    const completedTracks = tracks.filter((tr) => getTrackProgress(tr).pct === 100);
+    const getUserCertificates = window.TG_CERTIFICATES?.getUserCertificates?.bind(window.TG_CERTIFICATES);
+    const unlocked = loadJson("testers-guild-unlocked-achievements", []);
+
+    window.NVViewHelpers.renderDashboardSections(
+      {
+        achievementsGrid,
+        bookmarksSection: bmSection,
+        certificatesSection: certSection,
+      },
+      {
+        achievementsList,
+        unlocked,
+        bookmarks,
+        findLesson,
+        icons: window.NVIcons,
+        escapeHtml,
+        getTrackIcon,
+        lang,
+        t,
+        getUserCertificates,
+        completedTracks,
+        onCertDownload: async (trackId) => {
+          if (!window.TG_CERTIFICATES) return;
+          const track = completedTracks.find((tr) => tr.id === trackId);
+          if (!track) return;
+          try {
+            const userName = window.NVAuth?.getUserName?.() || "Learner";
+            await window.TG_CERTIFICATES.downloadCertificate(track.id, userName, new Date());
+            window.TG_CERTIFICATES.saveCertificate(track.id, userName, new Date());
+            showToast(lang === "en" ? "Certificate downloaded!" : "Certificado baixado!");
+          } catch (error) {
+            showToast(`Erro: ${error.message}`);
           }
-        });
-      }
-    }
+        },
+        navigate,
+      },
+    );
 
-    // Recommendations section
-    const recSection = document.getElementById("dashboard-recommendations");
-    if (recSection) {
-      const inProgressTracks = tracks.filter((tr) => {
-        const p = getTrackProgress(tr);
-        return p.pct > 0 && p.pct < 100;
-      });
-      const nextTracks = tracks.filter((tr) => getTrackProgress(tr).pct === 0).slice(0, 2);
-      const completedTracks = tracks.filter((tr) => getTrackProgress(tr).pct === 100);
-      
-      let recHtml = "";
-      
-      // Show current progress
-      if (inProgressTracks.length > 0) {
-        inProgressTracks.forEach(tr => {
-          const p = getTrackProgress(tr);
-          const lt = localizedTrack(tr);
-          recHtml += `<div style="padding: 1rem; background: linear-gradient(135deg, ${tr.color}22, ${tr.color}11); border-left: 4px solid ${tr.color}; border-radius: 8px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-              <p style="margin: 0; font-weight: 600;">🚀 ${escapeHtml(lt.title)}</p>
-              <span style="font-size: 0.85rem; color: var(--text-muted);">${p.pct}% completo</span>
-            </div>
-            <div class="progress-bar" style="margin: 0.5rem 0;"><div class="progress-fill" style="width:${p.pct}%"></div></div>
-            <button class="btn btn-secondary btn-sm" style="margin-top: 0.5rem;" data-nav="track" data-track-id="${tr.id}">
-              Continuar →
-            </button>
-          </div>`;
-        });
-      }
-      
-      // Show next recommendations
-      if (nextTracks.length > 0 && (inProgressTracks.length === 0 || completedTracks.length > 0)) {
-        nextTracks.forEach(tr => {
-          const lt = localizedTrack(tr);
-          recHtml += `<div style="padding: 1rem; background: var(--surface-2); border-left: 4px solid var(--accent); border-radius: 8px;">
-            <p style="margin: 0 0 0.5rem 0; font-weight: 600;">✨ ${lang === "en" ? "Próximo recomendado" : "Próximo recomendado"}</p>
-            <p style="margin: 0 0 1rem 0; color: var(--text-muted);">${escapeHtml(lt.description)}</p>
-            <button class="btn btn-primary btn-sm" style="width: 100%;" data-nav="track" data-track-id="${tr.id}">
-              Começar trilha →
-            </button>
-          </div>`;
-        });
-      }
-
-      if (!recHtml) {
-        recHtml = `<div style="padding: 2rem; text-align: center; background: var(--surface-2); border-radius: 8px;">
-          <p style="margin: 0; font-size: 3rem; margin-bottom: 1rem;">🎉</p>
-          <p style="margin: 0; font-weight: 600; margin-bottom: 0.5rem;">${lang === "en" ? "Parabéns!" : "Parabéns!"}</p>
-          <p style="margin: 0; color: var(--text-muted);">${lang === "en" ? "Você completou todas as trilhas! Volta quando quiser revisar." : "Você completou todas as trilhas! Volta quando quiser revisar."}</p>
-        </div>`;
-      }
-      
-      recSection.innerHTML = recHtml;
-      
-      // Add click handlers for continue/start buttons
-      recSection.querySelectorAll('[data-track-id]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          navigate('track', { trackId: btn.dataset.trackId });
-        });
-      });
-    }
+    // Recommendations section intentionally removed.
 
     // Portfolio Templates section
     const templatesSection = document.querySelector('[id$="templates"]');
     if (!templatesSection && global.pct >= 20) {  // Show after 20% progress
-      const templatesHtml = `
-        <h3 class="section-title section-title-sm" style="margin-top: 2rem;">📦 Projetos para Portfólio</h3>
-        <p class="section-sub">Templates prontos para você ganhar experiência prática</p>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
-          <div style="padding: 1.5rem; background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.05)); border: 1px solid rgba(16,185,129,0.3); border-radius: 12px;">
-            <h4 style="margin-top: 0; color: #10b981;">🚀 Starter QA Project</h4>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">10 testes manuais + 3 automatizados. Perfeito para começar.</p>
-            <a href="https://github.com/nullandvoid-qa/qa-templates/tree/main/starter-qa-project" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="width: 100%;">
-              Acessar template →
-            </a>
-          </div>
-          
-          <div style="padding: 1.5rem; background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(245,158,11,0.05)); border: 1px solid rgba(245,158,11,0.3); border-radius: 12px;">
-            <h4 style="margin-top: 0; color: #f59e0b;">⚡ Web Automation Project</h4>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">20+ testes E2E com Page Object Model. Profissional.</p>
-            <a href="https://github.com/nullandvoid-qa/qa-templates/tree/main/web-automation-project" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="width: 100%;">
-              Acessar template →
-            </a>
-          </div>
-          
-          <div style="padding: 1.5rem; background: linear-gradient(135deg, rgba(139,92,246,0.1), rgba(139,92,246,0.05)); border: 1px solid rgba(139,92,246,0.3); border-radius: 12px;">
-            <h4 style="margin-top: 0; color: #8b5cf6;">🎓 Ver todos os templates</h4>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">API, Performance, Mobile, Security, e mais.</p>
-            <a href="https://github.com/nullandvoid-qa/qa-templates#-templates-dispon%C3%ADveis" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="width: 100%;">
-              Explorar →
-            </a>
-          </div>
-        </div>
-      `;
-      
+      const templatesHtml = window.NVViewHelpers.buildPortfolioTemplatesHtml(lang);
+
       if (recSection) {
         recSection.insertAdjacentHTML('afterend', templatesHtml);
       }
@@ -2199,75 +1392,17 @@ export default function () {
   // ── Search ────────────────────────────────────────────────────────────────
   function handleSearch(query) {
     const resultsEl = document.getElementById("search-results");
-    const q = query.trim().toLowerCase();
-    if (!q) {
-      resultsEl.classList.add("hidden");
-      resultsEl.innerHTML = "";
-      return;
-    }
-
-    const lessonMatches = getAllLessons().filter(
-      (l) =>
-        l.title.toLowerCase().includes(q) ||
-        l.trackTitle.toLowerCase().includes(q) ||
-        l.courseTitle.toLowerCase().includes(q),
+    const glossaryItems = window.TG_GLOSSARY?.[lang === "en" ? "en" : "pt"] || [];
+    window.NVViewHelpers.searchAndRender(
+      resultsEl,
+      query,
+      getAllLessons,
+      glossaryItems,
+      window.NVIcons,
+      escapeHtml,
+      t,
+      navigate,
     );
-
-    const glossaryItems =
-      window.TG_GLOSSARY?.[lang === "en" ? "en" : "pt"] || [];
-    const glossaryMatches = glossaryItems.filter(
-      (g) =>
-        g.term.toLowerCase().includes(q) || g.def.toLowerCase().includes(q),
-    );
-
-    if (!lessonMatches.length && !glossaryMatches.length) {
-      resultsEl.innerHTML = `<div class="search-empty">${t("dashboard.noResults")}</div>`;
-      resultsEl.classList.remove("hidden");
-      return;
-    }
-
-    const lessonHtml = lessonMatches
-      .slice(0, 8)
-      .map(
-        (l) => `
-      <button type="button" class="search-result-item" data-lesson="${l.id}">
-        <span class="search-result-title">${escapeHtml(l.title)}</span>
-        <span class="search-result-meta">${escapeHtml(l.trackTitle)} · ${escapeHtml(l.courseTitle)}</span>
-      </button>`,
-      )
-      .join("");
-
-    const glossaryHtml = glossaryMatches
-      .slice(0, 3)
-      .map(
-        (g) => `
-      <button type="button" class="search-result-item search-glossary-item" data-glossary="1">
-        <span class="search-result-title">📖 ${escapeHtml(g.term)}</span>
-        <span class="search-result-meta">${escapeHtml(g.def.substring(0, 80))}…</span>
-      </button>`,
-      )
-      .join("");
-
-    resultsEl.innerHTML = lessonHtml + glossaryHtml;
-    resultsEl.classList.remove("hidden");
-
-    resultsEl
-      .querySelectorAll(".search-result-item[data-lesson]")
-      .forEach((btn) => {
-        btn.addEventListener("click", () => {
-          document.getElementById("global-search").value = "";
-          resultsEl.classList.add("hidden");
-          navigate("lesson", { lessonId: btn.dataset.lesson });
-        });
-      });
-
-    resultsEl.querySelectorAll(".search-glossary-item").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        document.getElementById("global-search").value = "";
-        resultsEl.classList.add("hidden");
-        navigate("glossary");
-      });
-    });
   }
 
   // ── Event Listeners ───────────────────────────────────────────────────────
@@ -2365,7 +1500,7 @@ export default function () {
     const userProgress = window.NVAuth.getProgress();
     if (Object.keys(userProgress).length > 0) {
       progress = userProgress;
-      showToast(`✅ Progresso restaurado para ${e.detail.name}`);
+      showToast(`Progresso restaurado para ${e.detail.name}`);
     } else {
       // Se não tem progresso salvo, salva o atual
       window.NVAuth.setProgress(progress);
@@ -2376,7 +1511,7 @@ export default function () {
   // Ao fazer logout, salva o progresso da sessão
   document.addEventListener("nvauth:logout", () => {
     saveProgress();
-    showToast("Progresso salvo localmente");
+    showToast(t("toast.progressSavedLocal"));
   });
 
   // ── Init ──────────────────────────────────────────────────────────────────
@@ -2428,7 +1563,7 @@ export default function () {
             ...ml,
             id: ml.id,
             slug: ml.slug || ml.id,
-            icon: ml.icon || '📱',
+            icon: ml.icon || '',
             title: ml.title || ml.name || 'Mobile Lab',
             description:
               ml.description ||
@@ -2457,15 +1592,29 @@ export default function () {
 
     // Register Service Worker for PWA support
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/js/service-worker.js', { scope: '/' })
+      const basePath = location.pathname.endsWith('/')
+        ? location.pathname
+        : location.pathname.replace(/\/[^/]+$/, '/');
+      const swUrl = new URL('service-worker.js', location.href).href;
+
+      navigator.serviceWorker.register(swUrl, { scope: basePath })
         .then(() => {
           console.log('[PWA] Service Worker registered');
         })
-        .catch(error => {
+        .catch((error) => {
           console.warn('[PWA] Service Worker registration failed:', error);
         });
     }
   }
 
-  init();
+    // Expose some internal helpers for debugging and integration tests
+    try {
+      window.renderLesson = renderLesson;
+      window.navigate = navigate;
+      window.findLesson = findLesson;
+    } catch (e) {
+      // ignore
+    }
+
+    init();
 })();

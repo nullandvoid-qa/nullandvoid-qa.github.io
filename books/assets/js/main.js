@@ -1,441 +1,420 @@
-// Biblioteca 15min - Main JavaScript
+/**
+ * Biblioteca 15min - Main JavaScript (Refactored)
+ * ─────────────────────────────────────────────────────────────────
+ * Modular book library system with unified design patterns.
+ */
 
-// State
-let books = [];
-let currentFilter = 'all';
-let searchQuery = '';
-let currentTheme = localStorage.getItem('theme') || 'dark';
+(function () {
+  "use strict";
 
-// DOM Elements
-const booksGrid = document.getElementById('books-grid');
-const emptyState = document.getElementById('empty-state');
-const searchInput = document.getElementById('global-search');
-const searchResults = document.getElementById('search-results');
-const filterBar = document.getElementById('filter-bar');
-const themeToggle = document.getElementById('theme-toggle');
-const statBooks = document.getElementById('stat-books');
-const statCategories = document.getElementById('stat-categories');
-const toast = document.getElementById('toast');
+  // STATE
+  const STATE = {
+    books: [],
+    currentFilter: "all",
+    searchQuery: "",
+    currentTheme: localStorage.getItem("theme") || "dark",
+    currentLang: localStorage.getItem("lang") || "pt",
+    isLoading: true,
+  };
 
-// i18n strings
-const i18n = {
-  pt: {
-    filter: { all: 'Todos' },
-    section: {
-      booksTitle: 'Nossos Resumos',
-      booksSub: 'Selecione um livro para começar a ler em 15 minutos'
+  // DOM
+  const DOM = {
+    booksGrid: document.getElementById("books-grid"),
+    emptyState: document.getElementById("empty-state"),
+    searchInput: document.getElementById("global-search"),
+    searchResults: document.getElementById("search-results"),
+    filterBar: document.getElementById("filter-bar"),
+    themeToggle: document.getElementById("theme-toggle"),
+    statBooks: document.getElementById("stat-books"),
+    statCategories: document.getElementById("stat-categories"),
+    toast: document.getElementById("toast"),
+  };
+
+  // I18N
+  const I18N = {
+    pt: {
+      filter: { all: "Todos" },
+      empty: { noResults: "Nenhum livro encontrado." },
+      toast: { themeChanged: "Tema alterado", errorLoading: "Erro ao carregar livros" },
     },
-    empty: { noResults: 'Nenhum livro encontrado com esses filtros.' },
-    footer: {
-      title: 'Biblioteca 15min',
-      disclaimer: 'Estes são resumos interpretativos e não substituem a leitura da obra original. Todos os direitos pertencem aos respectivos autores e editoras.',
-      about: 'Sobre',
-      github: 'GitHub'
+    en: {
+      filter: { all: "All" },
+      empty: { noResults: "No books found." },
+      toast: { themeChanged: "Theme changed", errorLoading: "Error loading books" },
     },
-    hero: {
-      badge: '100% Gratuito · Leia em 15 min',
-      title: 'Biblioteca de Resumos de 15 Minutos',
-      subtitle: 'Resumos de livros de não-ficção para ler em 15 minutos, mantendo a essência das ideias principais. Sem fluff, sem enrolação — só o que importa.',
-      statBooks: 'Livros',
-      statCategories: 'Categorias',
-      statTime: 'min por livro',
-      ctaExplore: 'Explorar Livros →'
-    },
-    filter: { all: 'Todos' }
-  },
-  en: {
-    filter: { all: 'All' },
-    section: {
-      booksTitle: 'Our Summaries',
-      booksSub: 'Select a book to start reading in 15 minutes'
-    },
-    empty: { noResults: 'No books found with these filters.' },
-    footer: {
-      title: 'Biblioteca 15min',
-      disclaimer: 'These are interpretive summaries and do not substitute reading the original work. All rights belong to their respective authors and publishers.',
-      about: 'About',
-      github: 'GitHub'
-    },
-    hero: {
-      badge: '100% Free · Read in 15 min',
-      title: '15-Minute Book Summaries Library',
-      subtitle: 'Non-fiction book summaries to read in 15 minutes, keeping the essence of the main ideas. No fluff, no filler — just what matters.',
-      statBooks: 'Books',
-      statCategories: 'Categories',
-      statTime: 'min per book',
-      ctaExplore: 'Explore Books →'
-    },
-    filter: { all: 'All' }
+  };
+
+  // UTILITIES
+  function t(keyPath) {
+    const lang = I18N[STATE.currentLang] || I18N.pt;
+    const keys = keyPath.split(".");
+    let value = lang;
+    for (const key of keys) {
+      value = value?.[key];
+    }
+    return value || keyPath;
   }
-};
 
-// Current language
-let currentLang = 'pt';
+  function escapeHtml(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+  }
 
-// Utility functions
-function showToast(message, duration = 3000) {
-  toast.textContent = message;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), duration);
-}
+  function showToast(message, duration = 3000) {
+    if (!DOM.toast) return;
+    DOM.toast.textContent = message;
+    DOM.toast.classList.add("show");
+    setTimeout(() => DOM.toast.classList.remove("show"), duration);
+  }
 
-function applyTheme(theme) {
-  document.documentElement.setAttribute('data-theme', theme);
-  localStorage.setItem('theme', theme);
-  currentTheme = theme;
-  themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
-  themeToggle.title = theme === 'dark' ? 'Modo claro' : 'Modo escuro';
-}
+  function debounce(fn, delay) {
+    let timer;
+    return function (...args) {
+      clearTimeout(timer);
+      timer = setTimeout(() => fn(...args), delay);
+    };
+  }
 
-function toggleTheme() {
-  applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
-}
+  // THEME
+  function applyTheme(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+    STATE.currentTheme = theme;
+    if (DOM.themeToggle) {
+      DOM.themeToggle.textContent = theme === "dark" ? "☀️" : "🌙";
+      DOM.themeToggle.title = theme === "dark" ? "Modo claro" : "Modo escuro";
+    }
+    if (window.BooksDesignTokens) {
+      window.BooksDesignTokens.applyCSSVariables();
+    }
+  }
 
-// Render functions
-function renderStats() {
-  const categories = new Set(books.map(b => b.categoria)).size;
-  statBooks.textContent = books.length;
-  statCategories.textContent = categories;
-}
+  function toggleTheme() {
+    applyTheme(STATE.currentTheme === "dark" ? "light" : "dark");
+    showToast(t("toast.themeChanged"));
+  }
 
-function getCategoryFilterChips() {
-  const categories = [...new Set(books.map(b => b.categoria))].sort();
-  const allChip = `<button type="button" class="filter-chip active" data-filter="all">${i18n[currentLang].filter.all}</button>`;
-  const categoryChips = categories.map(cat =>
-    `<button type="button" class="filter-chip" data-filter="${cat}">${cat}</button>`
-  ).join('');
-  filterBar.innerHTML = allChip + categoryChips;
+  // COLORS
+  function getCategoryColor(category) {
+    return window.BooksDesignTokens
+      ? window.BooksDesignTokens.getCategoryColor(category)
+      : "#00e5ff";
+  }
 
-  // Add click listeners
-  filterBar.querySelectorAll('.filter-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      filterBar.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      currentFilter = chip.dataset.filter;
-      renderBooks();
-    });
-  });
-}
+  function getCategoryColorRgb(category) {
+    return window.BooksDesignTokens
+      ? window.BooksDesignTokens.getCategoryColorRgb(category)
+      : "0,229,255";
+  }
 
-function createBookCard(book) {
-  const accent      = getCategoryColor(book.categoria);
-  const accentRgb   = getCategoryColorRgb(book.categoria);
-  const titleGrad   = getCategoryTitleGradient(book.categoria);
-  const emoji       = getCategoryEmoji(book.categoria);
-  const spineLabel  = escapeHtml(book.titulo);
-  const tagsHtml    = book.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('');
-  
-  // Check if book is marked as read
-  const isRead = window.NVAuth && window.NVAuth.isAuthenticated && window.NVAuth.isBookRead(book.id);
-  const readBadge = isRead ? '<div class="book-read-badge" title="Lido">✓ Lido</div>' : '';
+  // RENDERING
+  function renderStats() {
+    const categories = new Set(STATE.books.map((b) => b.categoria)).size;
+    if (DOM.statBooks) DOM.statBooks.textContent = STATE.books.length;
+    if (DOM.statCategories) DOM.statCategories.textContent = categories;
+  }
 
-  return `
-    <article
-      class="book-item ${isRead ? 'book-read' : ''}"
-      role="listitem"
-      data-id="${book.id}"
-      tabindex="0"
-      style="
-        --book-color: ${accent};
-        --book-accent: ${accent};
-        --book-accent-rgb: ${accentRgb};
-        --book-title-gradient: ${titleGrad};
-      "
-    >
-      <div class="book-wrapper">
-        ${readBadge}
+  function renderFilterChips() {
+    if (!DOM.filterBar) return;
+    const categories = [...new Set(STATE.books.map((b) => b.categoria))].sort();
+    const allChip = `<button type="button" class="filter-chip active" data-filter="all">${t(
+      "filter.all"
+    )}</button>`;
+    const chips = categories
+      .map((cat) => `<button type="button" class="filter-chip" data-filter="${cat}">${escapeHtml(cat)}</button>`)
+      .join("");
+    DOM.filterBar.innerHTML = allChip + chips;
+
+    if (window.BooksUtils?.bindSingleDelegateEvent) {
+      window.BooksUtils.bindSingleDelegateEvent(DOM.filterBar, "click", ".filter-chip", (chip) => {
+        DOM.filterBar.querySelectorAll(".filter-chip").forEach((c) => c.classList.remove("active"));
+        chip.classList.add("active");
+        STATE.currentFilter = chip.dataset.filter;
+        renderBooks();
+      });
+    }
+  }
+
+  function createBookCard(book) {
+    const accent = getCategoryColor(book.categoria);
+    const accentRgb = getCategoryColorRgb(book.categoria);
+    const tags = book.tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("");
+    const isRead = window.NVAuth?.isAuthenticated && window.NVAuth?.isBookRead(book.id);
+    const badge = isRead ? '<div class="book-read-badge">✓ Lido</div>' : "";
+
+    return `
+    <article class="book-item ${isRead ? "book-read" : ""}" role="button" data-id="${book.id}" tabindex="0" style="--book-accent: ${accent}; --book-accent-rgb: ${accentRgb};">
+      <div class="book-wrapper">${badge}
         <div class="book-cover">
           <div class="book-3d" aria-hidden="true">
             <div class="book-back"></div>
             <div class="book-top-edge"></div>
-            <div class="book-spine">
-              <span class="book-spine-label">${spineLabel}</span>
-            </div>
+            <div class="book-spine"><span class="book-spine-label">${escapeHtml(book.titulo)}</span></div>
             <div class="book-front">
               <div class="book-shine"></div>
               <span class="book-cover-category">${escapeHtml(book.categoria)}</span>
               <div class="book-cover-divider"></div>
-              <span class="book-cover-icon">${emoji}</span>
+              <span class="book-cover-icon">📖</span>
               <div class="book-cover-divider"></div>
               <span class="book-cover-title">${escapeHtml(book.titulo)}</span>
               <span class="book-cover-author">${escapeHtml(book.autor)}</span>
               <div class="book-cover-bottom">
-                <div class="book-tags-inside">${tagsHtml}</div>
+                <div class="book-tags-inside">${tags}</div>
                 <span class="book-cover-year">${book.ano} · ${book.tempoLeitura} min</span>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </article>
-  `;
-}
-
-function renderBooks() {
-  let filtered = books;
-
-  // Apply category filter
-  if (currentFilter !== 'all') {
-    filtered = filtered.filter(b => b.categoria === currentFilter);
+    </article>`;
   }
 
-  // Apply search filter
-  if (searchQuery) {
-    const q = searchQuery.toLowerCase();
-    filtered = filtered.filter(b =>
-      b.titulo.toLowerCase().includes(q) ||
-      b.autor.toLowerCase().includes(q) ||
-      b.categoria.toLowerCase().includes(q) ||
-      b.tags.some(t => t.toLowerCase().includes(q))
-    );
+  function renderLoadingState() {
+    if (!DOM.booksGrid) return;
+    DOM.booksGrid.classList.remove("hidden");
+    DOM.booksGrid.innerHTML = Array.from({ length: 6 }, (_, index) => `
+      <div class="book-skeleton-card" aria-hidden="true">
+        <div class="book-skeleton-cover"></div>
+        <div class="book-skeleton-line short"></div>
+        <div class="book-skeleton-line"></div>
+        <div class="book-skeleton-line"></div>
+      </div>
+    `).join("");
+    if (DOM.emptyState) DOM.emptyState.classList.add("hidden");
   }
 
-  if (filtered.length === 0) {
-    booksGrid.innerHTML = '';
-    booksGrid.classList.add('hidden');
-    emptyState.classList.remove('hidden');
-    return;
+  function renderBooks() {
+    if (STATE.isLoading) {
+      renderLoadingState();
+      return;
+    }
+
+    let filtered = STATE.books;
+
+    if (STATE.currentFilter !== "all") {
+      filtered = filtered.filter((b) => b.categoria === STATE.currentFilter);
+    }
+
+    if (STATE.searchQuery) {
+      const q = STATE.searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        (b) =>
+          b.titulo.toLowerCase().includes(q) ||
+          b.autor.toLowerCase().includes(q) ||
+          b.categoria.toLowerCase().includes(q) ||
+          b.tags.some((t) => t.toLowerCase().includes(q))
+      );
+    }
+
+    if (filtered.length === 0) {
+      if (DOM.booksGrid) DOM.booksGrid.innerHTML = "";
+      if (DOM.booksGrid) DOM.booksGrid.classList.add("hidden");
+      if (DOM.emptyState) {
+        const hasActiveFilter = STATE.currentFilter !== "all" || STATE.searchQuery;
+        DOM.emptyState.innerHTML = window.BooksUtils?.createCatalogStateMarkup({
+          type: "empty",
+          title: hasActiveFilter ? "Nenhum livro combina com seus filtros" : "A biblioteca ainda está sendo organizada",
+          message: hasActiveFilter
+            ? "Tente limpar os filtros ou buscar por outro termo para encontrar mais resumos."
+            : "Estamos adicionando novos resumos com mais frequência. Volte em breve para descobrir novos livros.",
+          actionLabel: hasActiveFilter ? "Mostrar todos os livros" : "",
+        });
+        DOM.emptyState.classList.remove("hidden");
+        const actionButton = DOM.emptyState.querySelector(".state-action");
+        if (actionButton) {
+          actionButton.addEventListener("click", () => {
+            STATE.currentFilter = "all";
+            STATE.searchQuery = "";
+            if (DOM.searchInput) DOM.searchInput.value = "";
+            renderFilterChips();
+            renderBooks();
+          });
+        }
+      }
+      return;
+    }
+
+    if (DOM.emptyState) DOM.emptyState.classList.add("hidden");
+    if (DOM.booksGrid) DOM.booksGrid.classList.remove("hidden");
+    if (DOM.booksGrid) DOM.booksGrid.innerHTML = filtered.map(createBookCard).join("");
+
+    if (DOM.booksGrid) {
+      DOM.booksGrid.querySelectorAll(".book-item").forEach((item) => {
+        const handleClick = () => {
+          window.location.href = `livro.html?id=${encodeURIComponent(item.dataset.id)}`;
+        };
+        item.addEventListener("click", handleClick);
+        item.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            handleClick();
+          }
+        });
+      });
+    }
   }
 
-  emptyState.classList.add('hidden');
-  booksGrid.classList.remove('hidden');
-  booksGrid.innerHTML = filtered.map(createBookCard).join('');
+  function renderSearchResults() {
+    if (!DOM.searchResults) return;
 
-  // Add click listeners
-  booksGrid.querySelectorAll('.book-item').forEach(item => {
-    const handleClick = () => {
-      const id = item.dataset.id;
-      window.location.href = `livro.html?id=${encodeURIComponent(id)}`;
-    };
-    item.addEventListener('click', handleClick);
-    item.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        handleClick();
+    if (!STATE.searchQuery) {
+      DOM.searchResults.classList.add("hidden");
+      return;
+    }
+
+    const q = STATE.searchQuery.toLowerCase();
+    const results = STATE.books
+      .filter(
+        (b) =>
+          b.titulo.toLowerCase().includes(q) ||
+          b.autor.toLowerCase().includes(q) ||
+          b.categoria.toLowerCase().includes(q) ||
+          b.tags.some((t) => t.toLowerCase().includes(q))
+      )
+      .slice(0, 8);
+
+    if (results.length === 0) {
+      DOM.searchResults.innerHTML = `<div class="search-empty">${t("empty.noResults")}</div>`;
+      DOM.searchResults.classList.remove("hidden");
+      return;
+    }
+
+    DOM.searchResults.innerHTML = results
+      .map(
+        (book) =>
+          `<button type="button" class="search-result-item" data-id="${book.id}"><span class="search-result-title">${escapeHtml(
+            book.titulo
+          )}</span><span class="search-result-meta">${escapeHtml(book.autor)} · ${escapeHtml(
+            book.categoria
+          )} · ${book.tempoLeitura} min</span></button>`
+      )
+      .join("");
+
+    DOM.searchResults.classList.remove("hidden");
+
+    DOM.searchResults.querySelectorAll(".search-result-item").forEach((item) => {
+      item.addEventListener("click", () => {
+        window.location.href = `livro.html?id=${encodeURIComponent(item.dataset.id)}`;
+        if (DOM.searchResults) DOM.searchResults.classList.add("hidden");
+        if (DOM.searchInput) DOM.searchInput.value = "";
+        STATE.searchQuery = "";
+      });
+    });
+  }
+
+  // EVENTS
+  function setupSearchHandlers() {
+    if (!DOM.searchInput) return;
+
+    const debouncedSearch = debounce(() => {
+      renderSearchResults();
+      renderBooks();
+    }, 150);
+
+    DOM.searchInput.addEventListener("input", (e) => {
+      STATE.searchQuery = e.target.value.trim();
+      debouncedSearch();
+    });
+
+    DOM.searchInput.addEventListener("focus", () => {
+      if (STATE.searchQuery) renderSearchResults();
+    });
+
+    DOM.searchInput.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        if (DOM.searchResults) DOM.searchResults.classList.add("hidden");
+        DOM.searchInput.blur();
       }
     });
-    item.setAttribute('role', 'button');
-    item.setAttribute('aria-label', `Ler resumo de ${item.querySelector('.book-cover-title')?.textContent || ''}`);
-  });
-}
 
-function renderSearchResults() {
-  if (!searchQuery) {
-    searchResults.classList.add('hidden');
-    return;
-  }
-
-  const q = searchQuery.toLowerCase();
-  const results = books.filter(b =>
-    b.titulo.toLowerCase().includes(q) ||
-    b.autor.toLowerCase().includes(q) ||
-    b.categoria.toLowerCase().includes(q) ||
-    b.tags.some(t => t.toLowerCase().includes(q))
-  ).slice(0, 8);
-
-  if (results.length === 0) {
-    searchResults.innerHTML = `<div class="search-empty">Nenhum resultado para "${escapeHtml(searchQuery)}"</div>`;
-    searchResults.classList.remove('hidden');
-    return;
-  }
-
-  searchResults.innerHTML = results.map(book => `
-    <button type="button" class="search-result-item" data-id="${book.id}">
-      <span class="search-result-title">${escapeHtml(book.titulo)}</span>
-      <span class="search-result-meta">${escapeHtml(book.autor)} · ${book.categoria} · ${book.tempoLeitura} min</span>
-    </button>
-  `).join('');
-
-  searchResults.classList.remove('hidden');
-
-  searchResults.querySelectorAll('.search-result-item').forEach(item => {
-    item.addEventListener('click', () => {
-      window.location.href = `livro.html?id=${encodeURIComponent(item.dataset.id)}`;
-      searchResults.classList.add('hidden');
-      searchInput.value = '';
+    document.addEventListener("keydown", (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        DOM.searchInput.focus();
+      }
     });
-  });
-}
-
-// Utility functions
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
-
-function getCategoryColor(category) {
-  const colors = {
-    'Psicologia':    '#00e5ff',
-    'Negócios':      '#ff2d78',
-    'Produtividade': '#00e5ff',
-    'Finanças':      '#ff2d78',
-    'Tecnologia':    '#ff2d78',
-    'Filosofia':     '#ff2d78',
-    'Ciência':       '#00e5ff',
-    'História':      '#ff2d78',
-    'Biografia':     '#00e5ff',
-    'Autoajuda':     '#ff2d78',
-    'Economia':      '#00e5ff',
-    'Marketing':     '#ff2d78',
-    'Liderança':     '#00e5ff',
-  };
-  return colors[category] || '#00e5ff';
-}
-
-function getCategoryColorRgb(category) {
-  const map = {
-    'Psicologia':    '0,229,255',
-    'Negócios':      '255,45,120',
-    'Produtividade': '0,229,255',
-    'Finanças':      '255,45,120',
-    'Tecnologia':    '255,45,120',
-    'Filosofia':     '255,45,120',
-    'Ciência':       '0,229,255',
-    'História':      '255,45,120',
-    'Biografia':     '0,229,255',
-    'Autoajuda':     '255,45,120',
-    'Economia':      '0,229,255',
-    'Marketing':     '255,45,120',
-    'Liderança':     '0,229,255',
-  };
-  return map[category] || '0,229,255';
-}
-
-function getCategoryTitleGradient(category) {
-  const cyan  = 'linear-gradient(135deg, #00e5ff 20%, #ff2d78 90%)';
-  const pink  = 'linear-gradient(135deg, #ff2d78 20%, #00e5ff 90%)';
-  const map = {
-    'Psicologia':    cyan,
-    'Negócios':      pink,
-    'Produtividade': cyan,
-    'Finanças':      pink,
-    'Tecnologia':    pink,
-    'Filosofia':     pink,
-    'Ciência':       cyan,
-    'História':      pink,
-    'Biografia':     cyan,
-    'Autoajuda':     pink,
-    'Economia':      cyan,
-    'Marketing':     pink,
-    'Liderança':     cyan,
-  };
-  return map[category] || cyan;
-}
-
-function getCategoryEmoji(category) {
-  const emojis = {
-    'Psicologia':    '🧠',
-    'Negócios':      '💼',
-    'Produtividade': '⚡',
-    'Finanças':      '💰',
-    'Tecnologia':    '💻',
-    'Filosofia':     '📜',
-    'Ciência':       '🔬',
-    'História':      '🏛️',
-    'Biografia':     '👤',
-    'Autoajuda':     '🌱',
-    'Economia':      '📊',
-    'Marketing':     '📈',
-    'Liderança':     '👑',
-  };
-  return emojis[category] || '📖';
-}
-
-function getCategoryGradient(category) {
-  const gradients = {
-    'Psicologia':    'linear-gradient(135deg, rgba(0,229,255,0.15), rgba(0,180,255,0.05))',
-    'Negócios':      'linear-gradient(135deg, rgba(255,45,120,0.15), rgba(224,0,92,0.05))',
-    'Produtividade': 'linear-gradient(135deg, rgba(0,229,255,0.15), rgba(0,180,255,0.05))',
-    'Finanças':      'linear-gradient(135deg, rgba(255,45,120,0.15), rgba(224,0,92,0.05))',
-    'Tecnologia':    'linear-gradient(135deg, rgba(255,45,120,0.15), rgba(224,0,92,0.05))',
-    'Filosofia':     'linear-gradient(135deg, rgba(255,45,120,0.15), rgba(224,0,92,0.05))',
-    'Ciência':       'linear-gradient(135deg, rgba(0,229,255,0.15), rgba(0,180,255,0.05))',
-    'História':      'linear-gradient(135deg, rgba(255,45,120,0.15), rgba(224,0,92,0.05))',
-    'Biografia':     'linear-gradient(135deg, rgba(0,229,255,0.15), rgba(0,180,255,0.05))',
-    'Autoajuda':     'linear-gradient(135deg, rgba(255,45,120,0.15), rgba(224,0,92,0.05))',
-    'Economia':      'linear-gradient(135deg, rgba(0,229,255,0.15), rgba(0,180,255,0.05))',
-    'Marketing':     'linear-gradient(135deg, rgba(255,45,120,0.15), rgba(224,0,92,0.05))',
-    'Liderança':     'linear-gradient(135deg, rgba(0,229,255,0.15), rgba(0,180,255,0.05))',
-  };
-  return gradients[category] || 'linear-gradient(135deg, rgba(0,229,255,0.15), rgba(0,180,255,0.05))';
-}
-
-// Search handling
-let searchDebounceTimer = null;
-
-searchInput.addEventListener('input', (e) => {
-  clearTimeout(searchDebounceTimer);
-  searchQuery = e.target.value.trim();
-  searchDebounceTimer = setTimeout(() => {
-    renderSearchResults();
-    renderBooks();
-  }, 150);
-});
-
-searchInput.addEventListener('focus', () => {
-  if (searchQuery) renderSearchResults();
-});
-
-document.addEventListener('click', (e) => {
-  if (!e.target.closest('.search-bar-wrap')) {
-    searchResults.classList.add('hidden');
   }
-});
 
-searchInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    searchResults.classList.add('hidden');
-    searchInput.blur();
+  function setupClickOutsideHandler() {
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".search-bar-wrap") && DOM.searchResults) {
+        DOM.searchResults.classList.add("hidden");
+      }
+    });
   }
-});
 
-// Theme toggle
-themeToggle.addEventListener('click', toggleTheme);
-
-// Load books data
-async function loadBooks() {
-  try {
-    const response = await fetch('./data/livros.json');
-    if (!response.ok) throw new Error('Failed to load books');
-    books = await response.json();
-    renderStats();
-    getCategoryFilterChips();
-    renderBooks();
-  } catch (error) {
-    console.error('Error loading books:', error);
-    showToast('Erro ao carregar livros');
-    booksGrid.innerHTML = '<div class="empty-state"><p>Erro ao carregar livros. Verifique o console.</p></div>';
-  }
-}
-
-// Initialize
-function init() {
-  applyTheme(currentTheme);
-  loadBooks();
-}
-
-// Export functions for use in HTML inline scripts
-window.renderBooks = renderBooks;
-window.updateBookCardReadStatus = function(bookId, marked) {
-  const bookCard = document.querySelector(`.book-item[data-id="${bookId}"]`);
-  if (!bookCard) return;
-  
-  if (marked) {
-    bookCard.classList.add('book-read');
-    if (!bookCard.querySelector('.book-read-badge')) {
-      const badge = document.createElement('div');
-      badge.className = 'book-read-badge';
-      badge.title = 'Lido';
-      badge.textContent = '✓ Lido';
-      bookCard.querySelector('.book-wrapper').insertAdjacentElement('afterbegin', badge);
+  function setupThemeToggle() {
+    if (DOM.themeToggle) {
+      DOM.themeToggle.addEventListener("click", toggleTheme);
     }
-  } else {
-    bookCard.classList.remove('book-read');
-    const badge = bookCard.querySelector('.book-read-badge');
-    if (badge) badge.remove();
   }
-};
 
-// Start
-init();
+  // LOADING
+  async function loadBooks() {
+    STATE.isLoading = true;
+    renderBooks();
+
+    try {
+      const response = await fetch("./data/livros.json");
+      if (!response.ok) throw new Error("Failed to load books");
+      const rawBooks = await response.json();
+      const normalizedBooks = window.BooksData?.normalizeBooks ? window.BooksData.normalizeBooks(rawBooks) : rawBooks;
+      STATE.books = normalizedBooks;
+      STATE.isLoading = false;
+      renderStats();
+      renderFilterChips();
+      renderBooks();
+    } catch (error) {
+      console.error("Error loading books:", error);
+      STATE.isLoading = false;
+      showToast(t("toast.errorLoading"));
+      if (DOM.booksGrid) {
+        DOM.booksGrid.classList.remove("hidden");
+        DOM.booksGrid.innerHTML = window.BooksUtils?.createCatalogStateMarkup({
+          type: "empty",
+          title: "Não foi possível carregar a biblioteca",
+          message: "Tente recarregar a página para buscar os resumos novamente.",
+        });
+      }
+      if (DOM.emptyState) {
+        DOM.emptyState.classList.add("hidden");
+      }
+    }
+  }
+
+  // INIT
+  function init() {
+    applyTheme(STATE.currentTheme);
+    setupSearchHandlers();
+    setupClickOutsideHandler();
+    setupThemeToggle();
+    loadBooks();
+  }
+
+  // EXPORTS
+  window.BooksApp = { STATE, renderBooks, toggleTheme, showToast };
+  window.renderBooks = renderBooks;
+  window.updateBookCardReadStatus = function (bookId, marked) {
+    const card = document.querySelector(`.book-item[data-id="${bookId}"]`);
+    if (!card) return;
+    if (marked) {
+      card.classList.add("book-read");
+      if (!card.querySelector(".book-read-badge")) {
+        const badge = document.createElement("div");
+        badge.className = "book-read-badge";
+        badge.textContent = "✓ Lido";
+        card.querySelector(".book-wrapper").prepend(badge);
+      }
+    } else {
+      card.classList.remove("book-read");
+      card.querySelector(".book-read-badge")?.remove();
+    }
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();

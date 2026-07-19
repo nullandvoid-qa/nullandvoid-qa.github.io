@@ -6,9 +6,16 @@
  * @global clients
  */
 
-const CACHE_VERSION = "v1.0.0";
+const CACHE_VERSION = "v1.0.4";
 const CACHE_NAME = `nullandvoid-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `nullandvoid-runtime-${CACHE_VERSION}`;
+
+const NETWORK_FIRST_ASSETS = [
+  "/js/i18n.js",
+  "/js/icons.js",
+  "/js/auth.js",
+  "/data/translations-en.js"
+];
 
 // Assets to cache on install
 const CRITICAL_ASSETS = [
@@ -17,6 +24,7 @@ const CRITICAL_ASSETS = [
   "/verify.html",
   "/css/styles.css",
   "/js/app.js",
+  "/js/icons.js",
   "/js/utils.js",
   "/js/i18n.js",
   "/js/auth.js",
@@ -36,6 +44,11 @@ const CRITICAL_ASSETS = [
   "/data/daily-challenges.js",
   "/data/video-scripts.js"
 ];
+
+function isNetworkFirstAsset(request) {
+  const url = new URL(request.url);
+  return NETWORK_FIRST_ASSETS.includes(url.pathname);
+}
 
 // Install: cache critical assets
 self.addEventListener("install", (event) => {
@@ -85,8 +98,11 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Strategy: Cache first for static assets, Network first for dynamic content
-  if (
+  // Strategy: Network first for translation assets, cache first for most static assets,
+  // and network first for anything else that may change frequently.
+  if (isNetworkFirstAsset(request)) {
+    event.respondWith(networkFirst(request));
+  } else if (
     request.url.includes("/css/") ||
     request.url.includes("/js/") ||
     request.url.includes("/data/") ||

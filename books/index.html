@@ -15,9 +15,12 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <!-- JWT Decoding -->
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode@4/build/jwt-decode.min.js"></script>
+    <!-- Design Tokens System (must load first) -->
+    <script src="assets/js/books-design-tokens.js"></script>
   </head>
   <body>
     <a href="#main-content" class="skip-link">Pular para o conteúdo</a>
+    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
 
     <header class="header">
       <div class="header-inner">
@@ -137,6 +140,8 @@
 
     <!-- Auth module (must load before main.js) -->
     <script src="../js/auth.js"></script>
+    <script src="assets/js/books-data.js"></script>
+    <script src="assets/js/books-utils.js"></script>
     <script src="assets/js/main.js?v=4"></script>
     
     <!-- Initialize Google Auth on page load -->

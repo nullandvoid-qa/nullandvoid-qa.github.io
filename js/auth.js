@@ -12,9 +12,35 @@
 
   // Configuration
   const GOOGLE_CLIENT_ID = '891864212965-ka68deqed5he142866v3eul9f7plq19k.apps.googleusercontent.com'; // User must set this
+  const GOOGLE_SIGNIN_URL = 'https://accounts.google.com/gsi/client';
   const STORAGE_KEY_USER = 'nv_auth_user';
   const STORAGE_KEY_TOKEN = 'nv_auth_token';
   const STORAGE_KEY_PROGRESS_SUFFIX = '_progress'; // user_id + suffix
+  const GUEST_USER_ID = 'guest_user';
+
+  function isLocalDevelopment() {
+    const host = window.location.hostname;
+    return host === 'localhost' || host === '127.0.0.1' || host === '::1';
+  }
+
+  function loadGoogleSignInScript() {
+    return new Promise((resolve) => {
+      if (window.google && window.google.accounts) return resolve(true);
+      const existing = document.querySelector(`script[src="${GOOGLE_SIGNIN_URL}"]`);
+      if (existing) {
+        existing.addEventListener('load', () => resolve(true));
+        existing.addEventListener('error', () => resolve(false));
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = GOOGLE_SIGNIN_URL;
+      script.async = true;
+      script.defer = true;
+      script.addEventListener('load', () => resolve(true));
+      script.addEventListener('error', () => resolve(false));
+      document.head.appendChild(script);
+    });
+  }
 
   // Export to global
   window.NVAuth = {
@@ -51,7 +77,7 @@
     }
 
     // Initialize Google Sign-In button
-    if (window.google && window.google.accounts) {
+    const initializeGoogleSignIn = () => {
       try {
         google.accounts.id.initialize({
           client_id: GOOGLE_CLIENT_ID,
@@ -71,10 +97,59 @@
       } catch (e) {
         console.error('Google Sign-In initialization failed:', e);
         showAuthError('Google Sign-In não disponível');
+        renderLocalAuthFallback();
       }
+    };
+
+    if (window.google && window.google.accounts) {
+      initializeGoogleSignIn();
+    } else {
+      loadGoogleSignInScript().then((loaded) => {
+        if (loaded && window.google && window.google.accounts) {
+          initializeGoogleSignIn();
+        } else {
+          console.warn('Google Sign-In library failed to load or is unavailable.');
+          showAuthError('Google Sign-In não disponível');
+          renderLocalAuthFallback();
+        }
+      });
     }
 
     renderAuthUI();
+  }
+
+  function loginGuest() {
+    const user = {
+      id: GUEST_USER_ID,
+      name: 'Convidado',
+      picture: '',
+      email: '',
+    };
+
+    window.NVAuth.user = user;
+    window.NVAuth.isAuthenticated = true;
+    localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(user));
+    localStorage.removeItem(STORAGE_KEY_TOKEN);
+    document.dispatchEvent(new CustomEvent('nvauth:login', { detail: user }));
+    renderAuthUI();
+    showToast(window.t ? window.t('auth.localSignInSuccess') : 'Entrou como convidado');
+  }
+
+  function renderLocalAuthFallback() {
+    const signinDiv = document.getElementById('auth-signin');
+    if (!signinDiv) return;
+
+    let fallbackBtn = document.getElementById('auth-local-signin');
+    if (!fallbackBtn) {
+      fallbackBtn = document.createElement('button');
+      fallbackBtn.id = 'auth-local-signin';
+      fallbackBtn.type = 'button';
+      fallbackBtn.className = 'btn btn-secondary';
+      fallbackBtn.style.marginTop = '0.75rem';
+      fallbackBtn.textContent = window.t ? window.t('auth.localSignIn') : 'Entrar como convidado';
+      fallbackBtn.addEventListener('click', loginGuest);
+      signinDiv.appendChild(fallbackBtn);
+    }
   }
 
   /**
@@ -117,7 +192,7 @@
       document.dispatchEvent(new CustomEvent('nvauth:login', { detail: user }));
 
       renderAuthUI();
-      showToast(`Bem-vindo, ${user.name}! 👋`);
+      showToast(`Bem-vindo, ${user.name}!`);
     } catch (e) {
       console.error('Failed to decode credential:', e);
       showAuthError('Falha ao processar login');
@@ -160,12 +235,19 @@
 
       document.getElementById('auth-name').textContent = window.NVAuth.user.name;
       const picture = document.getElementById('auth-picture');
-      if (window.NVAuth.user.picture) {
-        picture.src = window.NVAuth.user.picture;
+      if (picture) {
+        if (window.NVAuth.user.picture) {
+          picture.src = window.NVAuth.user.picture;
+        } else {
+          picture.src = '';
+        }
       }
     } else {
       signinDiv.classList.remove('hidden');
       userDiv.classList.add('hidden');
+      if (isLocalDevelopment()) {
+        renderLocalAuthFallback();
+      }
     }
   }
 
@@ -225,19 +307,42 @@
    * Show toast notification
    */
   function showToast(message) {
-    const toast = document.getElementById('toast');
-    if (toast) {
-      toast.textContent = message;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 3000);
+    if (typeof window.showToast === 'function') {
+      window.showToast(message);
+      return;
     }
+
+    const toast = document.getElementById('toast');
+    if (!toast) return;
+    if (!showToast.queue) showToast.queue = [];
+    showToast.queue.push(message);
+    if (showToast.isShowing) return;
+
+    const showNext = () => {
+      if (!showToast.queue.length) {
+        showToast.isShowing = false;
+        return;
+      }
+      const nextMessage = showToast.queue.shift();
+      toast.textContent = nextMessage;
+      toast.classList.add('show');
+      showToast.isShowing = true;
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => {
+        toast.classList.remove('show');
+        showToast.isShowing = false;
+        showNext();
+      }, 3000);
+    };
+
+    showNext();
   }
 
   /**
    * Show auth error
    */
   function showAuthError(message) {
-    showToast(`❌ ${message}`);
+    showToast(message);
   }
 
   /**
@@ -260,15 +365,27 @@
   }
 
   // Auto-init when script loads
-  window.addEventListener('load', () => {
-    // Wait for Google to be available
+  function bootstrapAuth() {
     if (window.google && window.google.accounts) {
       init();
-    } else {
-      // Retry after delay
-      setTimeout(init, 1000);
+      return;
     }
-  });
+
+    loadGoogleSignInScript().then((loaded) => {
+      if (loaded && window.google && window.google.accounts) {
+        init();
+      } else {
+        console.warn('Google Sign-In library failed to load or is unavailable.');
+        init();
+      }
+    });
+  }
+
+  if (document.readyState === 'complete') {
+    bootstrapAuth();
+  } else {
+    window.addEventListener('load', bootstrapAuth);
+  }
 
   /**
    * Get all read books for current user

@@ -5,7 +5,10 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "QA não é só 'testar'. Antes de continuar, anote: qual produto você usa todo dia que tem bugs que te irritam? Esse produto precisava de um QA melhor. É esse problema que você vai aprender a resolver.",
       "en": "QA isn't just 'testing'. Before continuing, note: what product do you use daily that has bugs that annoy you? That product needed a better QA. That's the problem you'll learn to solve."
     },
-    "seniorNote": null
+    "seniorNote": {
+      "pt": "Para sêniors: A frase 'QA custa caro' é um mito. Um QA em requirements custa $50k/ano e economiza $500k em bugs. ROI de 10x. Use essa métrica na conversa com C-level sobre investimento em qualidade.",
+      "en": "For seniors: 'QA is expensive' is a myth. A QA in requirements costs $50k/year but saves $500k in bugs. 10x ROI. Use this metric when discussing quality investment with leadership."
+    }
   },
   "s1-l2": {
     "tier": "beginner",
@@ -13,7 +16,10 @@ window.TG_LESSON_ENRICHMENT = {
       "pt": "Na entrevista, quando perguntarem 'qual a diferença entre QA e Tester?', a resposta esperada é: QA é proativo (previne), Tester é reativo (verifica). Use os exemplos desta aula para ilustrar.",
       "en": "In interviews, when asked 'what's the difference between QA and Tester?', the expected answer is: QA is proactive (prevents), Tester is reactive (verifies). Use examples from this lesson to illustrate."
     },
-    "seniorNote": null
+    "seniorNote": {
+      "pt": "Para sêniors: Times modernos estão unificando QA+QC+Tester em 'Test Engineer'. Se você lidera esse movimento, comece colocando sêniors em automação (não só manual). Requer treinamento, mas economia é significativa.",
+      "en": "For seniors: Modern teams are unifying QA+QC+Tester into 'Test Engineer'. If you're leading this, start putting seniors on automation (not just manual). Requires training but savings are significant."
+    }
   },
   "s1-l3": {
     "tier": "beginner",

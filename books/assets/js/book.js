@@ -27,7 +27,7 @@ function getBookId() {
 function applyTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
   localStorage.setItem('theme', theme);
-  themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+  themeToggle.textContent = theme === 'dark' ? 'Modo claro' : 'Modo escuro';
   themeToggle.title = theme === 'dark' ? 'Modo claro' : 'Modo escuro';
 }
 
@@ -95,7 +95,7 @@ function renderBook(meta, markdown) {
   document.getElementById('lesson-meta').innerHTML = `
     <div class="book-author-info">por ${meta.autor}</div>
     <div class="lesson-meta-row">
-      <span>⏱ ${readingTime} min de leitura</span> · <span>${meta.categoria}</span> · <span>${meta.ano}</span>
+      <span>${window.NVIcons ? window.NVIcons.get('clock','','14') + ' ' : ''}${readingTime} min de leitura</span> · <span>${meta.categoria}</span> · <span>${meta.ano}</span>
     </div>
   `;
   
@@ -121,7 +121,9 @@ function renderBook(meta, markdown) {
       pre.classList.add('code-block');
       const btn = document.createElement('button');
       btn.className = 'code-copy-btn';
-      btn.textContent = '📋';
+      btn.type = 'button';
+      btn.innerHTML = window.NVIcons ? window.NVIcons.get('copy','','14') : '';
+      btn.setAttribute('aria-label', 'Copiar código');
       btn.style.cssText = 'position:absolute;top:0.5rem;right:0.5rem;padding:0.4rem 0.6rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;cursor:pointer;font-size:0.9rem;';
       btn.addEventListener('click', () => {
         navigator.clipboard.writeText(block.textContent).then(() => {

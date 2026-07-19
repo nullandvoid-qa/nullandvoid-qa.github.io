@@ -26,8 +26,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Null and Void" />
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%2310b981' width='180' height='180' rx='40'/><text x='90' y='120' font-size='70' font-weight='bold' fill='white' text-anchor='middle'>🎓</text></svg>" />
-    <!-- Google Sign-In Library -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <!-- jsPDF for Certificate Generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <!-- QR Code Generation -->
@@ -125,140 +123,116 @@
       </div>
       <section id="view-home" class="view active">
         <div class="hero">
-          <div class="hero-badge">
-            <span class="badge-free" data-i18n="hero.badge">
-              <span data-icon="certificate" data-icon-size="14"></span>
-              Aprenda do zero até senior — 100% grátis
-            </span>
-          </div>
-          <h1 class="hero-title" data-i18n="hero.title">
-            Torne-se um QA competente.<br />Sem pagar nada.
-          </h1>
-          <p class="hero-copy" data-i18n="hero.subtitle">
-            Trilhas estruturadas, conteúdo profundo, labs práticos. Do iniciante ao sênior — mesma qualidade dos cursos que custam R$500-2000. Comece agora, sem cadastro.
-          </p>
-          <div class="hero-stats">
-            <div class="stat">
-              <div class="stat-value" id="stat-tracks">—</div>
-              <div class="stat-label" data-i18n="hero.statTracks">Trilhas</div>
-            </div>
-            <div class="stat">
-              <div class="stat-value" id="stat-lessons">—</div>
-              <div class="stat-label" data-i18n="hero.statLessons">Aulas</div>
-            </div>
-            <div class="stat">
-              <div class="stat-value" id="stat-price">R$ 0</div>
-              <div class="stat-label" data-i18n="hero.statPrice">
-                Para sempre
+          <div class="hero-inner">
+            <div class="hero-copy">
+              <div class="hero-badge">
+                <span class="badge-free" data-i18n="hero.badge">
+                  <span data-icon="certificate" data-icon-size="14"></span>
+                  Aprenda QA do zero ao sênior — sem pagar nada
+                </span>
+              </div>
+              <h1 class="hero-title">
+                Formação QA com clareza, prática e caminho definido.
+              </h1>
+              <p class="hero-description">
+                Trilhas objetivas, aulas práticas, labs e apoio da comunidade. A melhor jornada gratuita para quem quer virar QA com confiança.
+              </p>
+              <div class="hero-actions">
+                <button class="btn btn-primary" data-nav="tracks">Explorar trilhas</button>
+                <button class="btn btn-secondary" data-nav="roadmap">Ver rotas</button>
               </div>
             </div>
+            <aside class="hero-panel">
+              <div class="hero-panel-card">
+                <div class="hero-panel-label">Livre acesso</div>
+                <p>Sem paywall, sem taxa de assinatura, tudo aberto.</p>
+              </div>
+              <div class="hero-panel-card hero-panel-stats">
+                <div class="hero-panel-stat">
+                  <strong id="stat-tracks">—</strong>
+                  <span>Trilhas</span>
+                </div>
+                <div class="hero-panel-stat">
+                  <strong id="stat-lessons">—</strong>
+                  <span>Aulas</span>
+                </div>
+                <div class="hero-panel-stat">
+                  <strong id="stat-price">R$ 0</strong>
+                  <span>Para sempre</span>
+                </div>
+              </div>
+              <div class="hero-panel-card">
+                <div class="hero-panel-label">Apoio real</div>
+                <p>Comunidade, resumos e labs para aprender com confiança.</p>
+              </div>
+            </aside>
           </div>
         </div>
 
-        <!-- Discord Banner -->
-        <a
-          href="https://discord.gg/evVQqq4rf"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="discord-banner"
-          aria-label="Entrar na comunidade no Discord"
-        >
-          <div class="discord-banner-inner">
-            <span class="discord-icon">
-              <svg
-                width="28"
-                height="22"
-                viewBox="0 0 127.14 96.36"
-                fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                <path
-                  d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"
-                />
-              </svg>
-            </span>
-            <div class="discord-text">
-              <span class="discord-label">Comunidade oficial</span>
-              <span class="discord-cta"
-                >Entrar no Discord da Null and Void →</span
-              >
-            </div>
-            <span class="discord-pulse"></span>
-          </div>
-        </a>
+        <div class="brand-grid">
+          <article class="brand-card">
+            <span class="brand-card-label">Trilhas completas</span>
+            <h3>Jornada clara do iniciante ao sênior</h3>
+            <p>Aprenda QA com um caminho definido, sem pagar nada e com foco em prática real.</p>
+          </article>
+          <article class="brand-card">
+            <span class="brand-card-label">Labs práticos</span>
+            <h3>Exercícios reais de QA</h3>
+            <p>Testes manuais, automação e análise de resultados em ambientes que simulam o mercado.</p>
+          </article>
+          <article class="brand-card">
+            <span class="brand-card-label">Comunidade ativa</span>
+            <h3>Suporte e networking</h3>
+            <p>Entre no Discord, tire dúvidas e cresça junto com outros estudantes e profissionais.</p>
+          </article>
+        </div>
 
-        <!-- Books Banner -->
-        <a
-          href="books/index.html"
-          class="books-banner"
-          aria-label="Acessar resumos de livros"
-        >
-          <div class="books-banner-inner">
-            <span class="books-icon" data-icon="books" data-icon-size="28"></span>
-            <div class="books-text">
-              <span class="books-label">Biblioteca de Livros</span>
-              <span class="books-cta">Resumos de 130+ livros — leia em 15 min →</span>
+        <div class="home-quick-actions">
+          <a
+            href="https://discord.gg/evVQqq4rf"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="quick-card"
+            aria-label="Entrar na comunidade no Discord"
+          >
+            <span class="quick-card-icon" data-icon="discord" data-icon-size="20"></span>
+            <div class="quick-card-copy">
+              <h3>Comunidade oficial</h3>
+              <p>Suporte prático para dúvidas e estudos ao vivo.</p>
             </div>
-            <span class="books-pulse"></span>
-          </div>
-        </a>
+            <span class="quick-card-action">Entrar →</span>
+          </a>
 
-        <div class="persona-section">
-          <h2 class="persona-title" data-i18n="persona.title">
-            Qual é o seu perfil?
-          </h2>
-          <div class="persona-grid" id="persona-grid">
-            <button type="button" class="persona-card" data-persona="beginner">
-              <span class="persona-icon" data-icon="seedling" data-icon-size="32"></span>
-              <span class="persona-name" data-i18n="persona.beginner">Iniciante</span>
-              <span class="persona-desc" data-i18n="persona.beginnerDesc">Nunca trabalhei com QA</span>
-            </button>
-            <button type="button" class="persona-card" data-persona="experienced">
-              <span class="persona-icon" data-icon="bolt" data-icon-size="32"></span>
-              <span class="persona-name" data-i18n="persona.experienced">Intermediário</span>
-              <span class="persona-desc" data-i18n="persona.experiencedDesc">Já testo, quero evoluir</span>
-            </button>
-          </div>
+          <a
+            href="books/index.html"
+            class="quick-card"
+            aria-label="Acessar resumos de livros"
+          >
+            <span class="quick-card-icon" data-icon="books" data-icon-size="20"></span>
+            <div class="quick-card-copy">
+              <h3>Resumos de livros</h3>
+              <p>Aprenda rápido com materiais selecionados para testers e QA.</p>
+            </div>
+            <span class="quick-card-action">Ler agora →</span>
+          </a>
         </div>
 
         <div id="continue-banner" class="continue-banner hidden"></div>
 
-        <!-- Persona Display with Avatar -->
-        <section class="persona-panel">
-          <div class="persona-panel-header">
-            <h3 class="persona-panel-title" data-i18n="dashboard.profileTitle">
-              <span data-icon="dashboard" data-icon-size="20"></span>
-              Seu Perfil de Aprendizado
-            </h3>
+        <div class="home-discovery-panel">
+          <div class="search-bar-wrap">
+            <span class="search-icon" data-icon="search" data-icon-size="18"></span>
+            <input
+              type="search"
+              id="global-search"
+              class="search-input"
+              data-i18n-placeholder="dashboard.searchPlaceholder"
+              placeholder="Buscar…"
+              autocomplete="off"
+            />
+            <div id="search-results" class="search-results hidden"></div>
           </div>
-          <div id="persona-display" class="persona-panel-body">
-            <div id="avatar-container" class="persona-avatar">
-              <div id="avatar-icon" class="persona-avatar-icon" data-icon="seedling" data-icon-size="48"></div>
-              <div id="avatar-level" class="persona-avatar-level">Iniciante</div>
-              <div id="avatar-progress" class="persona-avatar-progress">0% completado</div>
-            </div>
-            <div class="persona-avatar-meta">
-              <div class="persona-meta-label" data-i18n="dashboard.nextLevelLabel">Próximo nível:</div>
-              <div class="persona-meta-value">
-                <span data-icon="bolt" data-icon-size="16"></span>
-                Intermediário
-              </div>
-              <div class="persona-meta-note">Falta completar 3 trilhas</div>
-            </div>
-          </div>
-        </section>
-
-        <div class="search-bar-wrap">
-          <input
-            type="search"
-            id="global-search"
-            class="search-input"
-            data-i18n-placeholder="dashboard.searchPlaceholder"
-            placeholder="Buscar…"
-            autocomplete="off"
-          />
-          <div id="search-results" class="search-results hidden"></div>
+          <div class="filter-bar" id="home-filter-bar"></div>
         </div>
 
         <div class="cta-group hero-cta-group">
@@ -285,13 +259,17 @@
           </button>
         </div>
 
-        <h2 class="section-title" data-i18n="sections.availableTracks">
-          Trilhas da Guilda
-        </h2>
-        <p class="section-sub" data-i18n="sections.availableTracksSub">
-          Filtradas pelo seu perfil.
-        </p>
-        <div class="filter-bar" id="home-filter-bar"></div>
+        <div class="section-heading-row">
+          <div>
+            <h2 class="section-title" data-i18n="sections.availableTracks">
+              Trilhas da Guilda
+            </h2>
+            <div id="home-tracks-summary" class="section-meta"></div>
+          </div>
+          <p class="section-sub" data-i18n="sections.availableTracksSub">
+            Filtradas pelo seu perfil.
+          </p>
+        </div>
         <div id="home-tracks-grid" class="tracks-grid"></div>
         <div id="home-tracks-empty" class="empty-state hidden">
           <div class="empty-state-icon" data-icon="roadmap" data-icon-size="48"></div>
@@ -299,22 +277,8 @@
           <p>As trilhas de aprendizado aparecerão aqui em breve.</p>
         </div>
 
-        <!-- Lessons section -->
-        <section id="home-lessons-section" aria-labelledby="home-lessons-title" class="home-lessons-section">
-          <div class="section-header">
-            <div>
-              <h2 id="home-lessons-title" class="section-title">Todas as Aulas</h2>
-              <p class="section-sub">Navegue direto para a aula que precisar.</p>
-            </div>
-          </div>
-          <div class="lessons-filter-row" id="home-lessons-filter-row"></div>
-          <div id="home-lessons-grid" class="lessons-list-grid" role="list"></div>
-          <div id="home-lessons-empty" class="empty-state hidden">
-            <p>Nenhuma aula encontrada com esse filtro.</p>
-          </div>
-        </section>
-
         <section class="features">
+
           <h2 class="section-title" data-i18n="sections.whyTitle">
             Por que a Null and Void?
           </h2>
@@ -542,11 +506,6 @@
         </h3>
         <div id="dashboard-certificates" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;"></div>
         <h3 class="section-title section-title-sm" style="margin-top: 2rem">
-          <span data-icon="roadmap" data-icon-size="18" style="color:var(--accent);vertical-align:middle;margin-right:0.4rem;"></span>
-          <span data-i18n="dashboard.recommendations">Recomendações de Aprendizado</span>
-        </h3>
-        <div id="dashboard-recommendations" style="display: grid; gap: 1rem;"></div>
-        <h3 class="section-title section-title-sm" style="margin-top: 2rem">
           Trilhas
         </h3>
         <div id="dashboard-tracks" class="tracks-grid"></div>
@@ -629,7 +588,9 @@
     </script>
 
     <script src="js/utils.js" defer></script>
-    <script src="js/icons.js" defer></script>
+    <script src="js/view-helpers.js" defer></script>
+    <script src="js/lesson-renderers.js" defer></script>
+    <script src="js/icons.js?v=1.0.2" defer></script>
     <script src="js/certificates.js" defer></script>
     <script src="data/tracks.js" defer></script>
     <script src="data/translations-en.js" defer></script>
@@ -645,11 +606,35 @@
     <script src="data/daily-challenges.js" defer></script>
     <script src="data/mentorship.js" defer></script>
     <script src="data/mobile-labs.js" defer></script>
-    <script src="js/i18n.js" defer></script>
+    <script src="js/i18n.js?v=1.0.4" defer></script>
     <!-- JWT Decode must load before auth.js -->
     <script src="https://unpkg.com/jwt-decode@3.1.2/build/jwt-decode.js" defer></script>
-    <script src="js/auth.js" defer></script>
+    <script src="js/auth.js?v=1.0.4" defer></script>
     <script src="js/discord-integration.js" defer></script>
     <script src="js/app.js?v=1784338953" defer></script>
+    <script src="js/debug-helpers.js" defer></script>
+    <script>
+      // Inline fallback to ensure a direct lesson renderer is always available for debugging
+      (function(){
+        try {
+          window.devHelpers = window.devHelpers || {};
+          window.devHelpers.renderLessonDirect = window.devHelpers.renderLessonDirect || function(lessonId){
+            try {
+              const tracks = window.TG_QAWAY_TRACKS || [];
+              let found = null;
+              for (const t of tracks) for (const c of (t.courses||[])) for (const l of (c.lessons||[])) if (l.id===lessonId) { found = {track:t, course:c, lesson:l}; break; }
+              if (!found) return {ok:false, error:'lesson not found'};
+              const sidebar = (found.course.lessons||[]).map(ll=>`<li class="sidebar-lesson" data-lesson="${ll.id}" tabindex="0" role="button">${ll.title}</li>`).join('');
+              const content = `<div class="lesson-layout"><aside class="lesson-sidebar"><div class="sidebar-track">${found.track.title}</div><div class="sidebar-course">${found.course.title}</div><ul class="sidebar-lessons">${sidebar}</ul></aside><article class="lesson-content"><div class="lesson-header-row"><h1>${found.lesson.title}</h1></div><div class="lesson-meta-row"><span class="lesson-meta-item">${found.lesson.duration||''}</span></div><div class="lesson-body">${found.lesson.content}</div></article></div>`;
+              let zone = document.getElementById('lesson-detail');
+              if (!zone) { zone = document.createElement('div'); zone.id='lesson-detail'; document.body.appendChild(zone); }
+              zone.innerHTML = content;
+              zone.querySelectorAll('.sidebar-lesson').forEach(el=>el.addEventListener('click', ()=>window.devHelpers.renderLessonDirect(el.dataset.lesson)));
+              return {ok:true};
+            } catch(e) { return {ok:false, error:String(e)}; }
+          };
+        } catch(e) { /* ignore */ }
+      })();
+    </script>
   </body>
 </html>

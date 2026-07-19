@@ -44,6 +44,20 @@ describe('Storage helpers', () => {
     });
   });
 
+  describe('getStorage', () => {
+    test('returns value for the primary storage key', () => {
+      localStorage.setItem('primary-key', 'primary-value');
+      const { getStorage } = require('../utils.js');
+      expect(getStorage('primary-key')).toBe('primary-value');
+    });
+
+    test('falls back to a legacy key when the primary key is missing', () => {
+      localStorage.setItem('legacy-key', 'legacy-value');
+      const { getStorage } = require('../utils.js');
+      expect(getStorage('primary-key', 'legacy-key')).toBe('legacy-value');
+    });
+  });
+
   describe('saveJson', () => {
     test('saves data as JSON string', () => {
       const { saveJson } = require('../utils.js');

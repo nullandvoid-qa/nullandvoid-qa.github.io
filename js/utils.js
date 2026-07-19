@@ -20,6 +20,17 @@ function getCurrentLangKey() {
   return g.lang === "en" ? "en" : "pt";
 }
 
+function getStorage(key, legacyKey) {
+  let value = localStorage.getItem(key);
+  if (!value && legacyKey) {
+    value = localStorage.getItem(legacyKey);
+    if (value) {
+      localStorage.setItem(key, value);
+    }
+  }
+  return value;
+}
+
 function loadJson(key, fallback, validator) {
   try {
     const raw = localStorage.getItem(key);
@@ -40,6 +51,25 @@ function saveJson(key, data) {
   } catch (e) {
     console.error(e);
   }
+}
+
+function getStoredProgress(storageKeys, fallback = {}, validator = validateProgressData) {
+  const [primaryKey, legacyKey] = storageKeys;
+  const raw = getStorage(primaryKey, legacyKey);
+  if (!raw) return fallback;
+
+  try {
+    const parsed = JSON.parse(raw);
+    return validator(parsed) ? parsed : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function persistProgress(storageKeys, progressState) {
+  const [primaryKey] = storageKeys;
+  saveJson(primaryKey, progressState);
+  return progressState;
 }
 
 function validateProgressData(data) {
@@ -108,8 +138,11 @@ if (typeof module !== "undefined" && module.exports) {
   module.exports = {
     escapeHtml,
     getCurrentLangKey,
+    getStorage,
     loadJson,
     saveJson,
+    getStoredProgress,
+    persistProgress,
     validateProgressData,
     validateBookmarksData,
     validateQuizzesPassedData,
