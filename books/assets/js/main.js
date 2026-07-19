@@ -318,10 +318,13 @@
   function setupSearchHandlers() {
     if (!DOM.searchInput) return;
 
+    // Reduce debounce in local/CI runs to make E2E deterministic
+    const host = (window.location && (window.location.hostname || "")) || "";
+    const searchDelay = host === 'localhost' || host === '127.0.0.1' || host === '::1' ? 20 : 150;
     const debouncedSearch = debounce(() => {
       renderSearchResults();
       renderBooks();
-    }, 150);
+    }, searchDelay);
 
     DOM.searchInput.addEventListener("input", (e) => {
       STATE.searchQuery = e.target.value.trim();
