@@ -170,7 +170,7 @@
         window.NVViewHelpers.toggleLessonComplete(
           lessonIdToToggle,
           state.progress,
-          helpers.saveProgress,
+          () => helpers.saveProgress(state.progress),
           helpers.checkAchievements,
           helpers.t,
         );

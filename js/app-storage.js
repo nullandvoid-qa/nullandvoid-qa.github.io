@@ -13,7 +13,7 @@ function loadProgress() {
   }
 }
 
-function saveProgress() {
+function saveProgress(progress) {
   if (window.NVAuth && window.NVAuth.isAuthenticated) {
     window.NVAuth.setProgress(progress);
   }
@@ -25,7 +25,7 @@ function saveLastLesson(id) {
   localStorage.setItem("testers-guild-last-lesson", id);
 }
 
-function exportProgressToFile() {
+function exportProgressToFile(progress, bookmarks, quizzesPassed, checklistState) {
   try {
     const payload = {
       version: 1,
@@ -67,26 +67,20 @@ async function importProgressFromFile(file) {
       !window.validateChecklistState(payload.checklists)
     ) {
       showToast(t("toast.invalidProgressFile"));
-      return;
+      return null;
     }
 
-    if (!confirm(t("dashboard.importConfirm"))) return;
+    if (!confirm(t("dashboard.importConfirm"))) return null;
 
-    progress = payload.progress;
-    bookmarks.length = 0;
-    bookmarks.push(...payload.bookmarks);
-    Object.assign(quizzesPassed, payload.quizzesPassed);
-    Object.keys(checklistState).forEach((key) => delete checklistState[key]);
-    Object.assign(checklistState, payload.checklists);
-    saveProgress();
-    saveJson("testers-guild-bookmarks", bookmarks);
-    saveJson("testers-guild-quizzes", quizzesPassed);
-    saveJson("testers-guild-checklists", checklistState);
-    showToast(t("toast.importProgressSuccess"));
-    refreshCurrentView();
-    renderContinueBanner();
+    return {
+      progress: payload.progress,
+      bookmarks: payload.bookmarks,
+      quizzesPassed: payload.quizzesPassed,
+      checklistState: payload.checklists,
+    };
   } catch (error) {
     console.error(error);
     showToast(t("toast.importProgressFail"));
+    return null;
   }
 }
