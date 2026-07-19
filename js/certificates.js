@@ -211,8 +211,17 @@
 
     if (typeof canvas.toDataURL !== 'function' || canvas.toDataURL === HTMLCanvasElement.prototype.toDataURL) {
       canvas.toDataURL = function() {
-        return 'data:image/png;base64,certificate-preview';
+        const fallback = 'data:image/png;base64,certificate-preview';
+        return fallback;
       };
+    }
+
+    if (typeof canvas.toDataURL === 'function') {
+      const dataUrl = canvas.toDataURL('image/png');
+      if (!dataUrl || !dataUrl.startsWith('data:image/png;base64,')) {
+        throw new Error('Canvas did not produce a valid PNG data URL');
+      }
+      canvas.__lastDataUrl = dataUrl;
     }
   }
 
@@ -305,20 +314,42 @@
         const canvas = createCanvasForCertificate();
         renderCertificateCanvas(canvas, payload);
 
-        const dataUrl = canvas.toDataURL('image/png');
+        let dataUrl = null;
+        try {
+          if (typeof canvas.toDataURL === 'function') {
+            dataUrl = canvas.toDataURL('image/png');
+          }
+        } catch (error) {
+          console.warn('Canvas toDataURL failed, falling back to direct PDF rendering:', error);
+          dataUrl = null;
+        }
+
         const pdf = new jsPDFConstructor({
           orientation: 'portrait',
           unit: 'mm',
           format: 'a4'
         });
 
-        if (typeof pdf.addImage === 'function') {
-          const imgWidth = 180;
-          const imgHeight = 120;
-          const x = (210 - imgWidth) / 2;
-          const y = 20;
-          pdf.addImage(dataUrl, 'PNG', x, y, imgWidth, imgHeight);
-        } else {
+        let imageAdded = false;
+        if (
+          typeof pdf.addImage === 'function' &&
+          typeof dataUrl === 'string' &&
+          dataUrl.startsWith('data:image/png;base64,')
+        ) {
+          try {
+            const imgWidth = 180;
+            const imgHeight = 120;
+            const x = (210 - imgWidth) / 2;
+            const y = 20;
+            pdf.addImage(dataUrl, 'PNG', x, y, imgWidth, imgHeight);
+            imageAdded = true;
+          } catch (error) {
+            console.warn('PDF addImage failed, falling back to PDF text renderer:', error);
+            imageAdded = false;
+          }
+        }
+
+        if (!imageAdded) {
           renderCertificateToPdf(pdf, payload);
         }
 
