@@ -139,8 +139,10 @@
   function renderLocalAuthFallback() {
     const signinDiv = document.getElementById('auth-signin');
     if (!signinDiv) return;
-    // Do not render guest fallback if Google Sign-In is available
-    if (window.google && window.google.accounts) return;
+    // In production we avoid duplicating Google Sign-In and guest fallback.
+    // For local development (and tests) always show the guest fallback so
+    // automated tests can use the local sign-in flow.
+    if (!isLocalDevelopment() && window.google && window.google.accounts) return;
 
     let fallbackBtn = document.getElementById('auth-local-signin');
     if (!fallbackBtn) {
@@ -248,9 +250,10 @@
     } else {
       signinDiv.classList.remove('hidden');
       userDiv.classList.add('hidden');
-      // Only show local guest fallback when running locally and Google Sign-In
-      // is not available. This prevents two login buttons appearing.
-      if (isLocalDevelopment() && !(window.google && window.google.accounts)) {
+      // Show guest fallback during local development so tests and local dev
+      // environments can sign in as a guest reliably. In production we avoid
+      // rendering both Google and guest buttons.
+      if (isLocalDevelopment()) {
         renderLocalAuthFallback();
       }
     }

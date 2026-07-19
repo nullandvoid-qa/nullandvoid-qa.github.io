@@ -311,17 +311,30 @@
         }
 
         const payload = this.buildCertificatePayload(trackId, userName, completedDate);
-        const canvas = createCanvasForCertificate();
-        renderCertificateCanvas(canvas, payload);
 
+        // Prefer template renderer if available (returns Promise<string> dataUrl)
         let dataUrl = null;
-        try {
-          if (typeof canvas.toDataURL === 'function') {
-            dataUrl = canvas.toDataURL('image/png');
+        if (window.CertificateRenderer && typeof window.CertificateRenderer.renderCertificate === 'function') {
+          try {
+            dataUrl = await window.CertificateRenderer.renderCertificate(payload);
+          } catch (err) {
+            console.warn('CertificateRenderer failed, falling back to canvas renderer', err);
+            dataUrl = null;
           }
-        } catch (error) {
-          console.warn('Canvas toDataURL failed, falling back to direct PDF rendering:', error);
-          dataUrl = null;
+        }
+
+        // Fallback: use existing canvas-based renderer
+        if (!dataUrl) {
+          const canvas = createCanvasForCertificate();
+          try {
+            renderCertificateCanvas(canvas, payload);
+            if (typeof canvas.toDataURL === 'function') {
+              dataUrl = canvas.toDataURL('image/png');
+            }
+          } catch (error) {
+            console.warn('Canvas toDataURL failed, falling back to direct PDF rendering:', error);
+            dataUrl = null;
+          }
         }
 
         const pdf = new jsPDFConstructor({
