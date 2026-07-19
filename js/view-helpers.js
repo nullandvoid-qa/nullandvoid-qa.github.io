@@ -186,14 +186,14 @@
       homeFilter,
       lang,
       avatarIcons,
-      getTrackIcon,
-      escapeHtml,
-      t,
       renderTrackCard,
       renderHomeFilterBar,
       renderContinueBanner,
       renderHomeLessons,
       renderInstallBanner,
+      sortTracksForPersona,
+      trackAudience,
+      getHomeTrackSummary,
     } = options;
 
     const avatarState = getAvatarState(global.pct, lang);
@@ -223,12 +223,12 @@
     const filtered =
       homeFilter === "all"
         ? sortTracksForPersona(tracks)
-        : tracks.filter((tr) => TRACK_AUDIENCE[tr.id] === homeFilter);
+        : tracks.filter((tr) => trackAudience[tr.id] === homeFilter);
 
     const grid = document.getElementById("home-tracks-grid");
     const emptyState = document.getElementById("home-tracks-empty");
     const summary = document.getElementById("home-tracks-summary");
-    if (summary) summary.textContent = getHomeTrackSummary(filtered.length);
+    if (summary && typeof getHomeTrackSummary === "function") summary.textContent = getHomeTrackSummary(filtered.length);
 
     grid.innerHTML = "";
 
@@ -252,13 +252,13 @@
       ? `Gerado em ${new Date(existingCert.generatedAt).toLocaleDateString("pt-BR")}`
       : (lang === "en" ? "Certificate available" : "Certificado disponível");
 
-    return `<div class="cert-card" style="border-left: 4px solid ${track.color}; padding: 1rem; background: var(--surface-2); border-radius: 8px;">
-      <div style="display: flex; justify-content: space-between; align-items: start;">
+    return `<div class="cert-card" style="--cert-accent:${track.color};">
+      <div class="cert-card__header">
         <div>
-          <h4 style="margin: 0 0 0.5rem 0;">${track.icon} ${title}</h4>
-          <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">${label}</p>
+          <h4>${track.icon} ${title}</h4>
+          <p>${label}</p>
         </div>
-        <button class="btn btn-primary btn-sm" id="btn-cert-${track.id}" data-track="${track.id}" style="display:inline-flex;align-items:center;gap:0.4rem;">${icons ? icons.get('download','','14') : ''} ${lang === "en" ? "Download" : "Baixar"}</button>
+        <button class="btn btn-primary btn-sm cert-card__action" id="btn-cert-${track.id}" data-track="${track.id}">${icons ? icons.get('download','','14') : ''} ${lang === "en" ? "Download" : "Baixar"}</button>
       </div>
     </div>`;
   }
@@ -266,24 +266,24 @@
   function buildPortfolioTemplatesHtml(lang) {
     const isEn = lang === "en";
     return `
-      <h3 class="section-title section-title-sm" style="margin-top: 2rem;">${isEn ? "Portfolio projects" : "Projetos para Portfólio"}</h3>
+      <h3 class="section-title section-title-sm section-title-margin-top">${isEn ? "Portfolio projects" : "Projetos para Portfólio"}</h3>
       <p class="section-sub">${isEn ? "Ready-made templates to build practical experience" : "Templates prontos para você ganhar experiência prática"}</p>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
-        <div style="padding: 1.5rem; background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.05)); border: 1px solid rgba(16,185,129,0.3); border-radius: 12px;">
-          <h4 style="margin-top: 0; color: #10b981;">${isEn ? "Starter QA Project" : "Starter QA Project"}</h4>
-          <p style="color: var(--text-muted); font-size: 0.9rem;">${isEn ? "10 manual tests + 3 automated ones. Great for getting started." : "10 testes manuais + 3 automatizados. Perfeito para começar."}</p>
-          <a href="https://github.com/nullandvoid-qa/qa-templates/tree/main/starter-qa-project" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="width: 100%;">${isEn ? "Open template →" : "Acessar template →"}</a>
-        </div>
-        <div style="padding: 1.5rem; background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(245,158,11,0.05)); border: 1px solid rgba(245,158,11,0.3); border-radius: 12px;">
-          <h4 style="margin-top: 0; color: #f59e0b;">${isEn ? "Web Automation Project" : "Web Automation Project"}</h4>
-          <p style="color: var(--text-muted); font-size: 0.9rem;">${isEn ? "20+ E2E tests with Page Object Model. Professional." : "20+ testes E2E com Page Object Model. Profissional."}</p>
-          <a href="https://github.com/nullandvoid-qa/qa-templates/tree/main/web-automation-project" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="width: 100%;">${isEn ? "Open template →" : "Acessar template →"}</a>
-        </div>
-        <div style="padding: 1.5rem; background: linear-gradient(135deg, rgba(139,92,246,0.1), rgba(139,92,246,0.05)); border: 1px solid rgba(139,92,246,0.3); border-radius: 12px;">
-          <h4 style="margin-top: 0; color: #8b5cf6;">${isEn ? "View all templates" : "Ver todos os templates"}</h4>
-          <p style="color: var(--text-muted); font-size: 0.9rem;">${isEn ? "API, Performance, Mobile, Security, and more." : "API, Performance, Mobile, Security, e mais."}</p>
-          <a href="https://github.com/nullandvoid-qa/qa-templates#-templates-dispon%C3%ADveis" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="width: 100%;">${isEn ? "Explore →" : "Explorar →"}</a>
-        </div>
+      <div class="portfolio-grid">
+        <article class="portfolio-template-card portfolio-template-card--green">
+          <h4 class="portfolio-template-card__title">${isEn ? "Starter QA Project" : "Starter QA Project"}</h4>
+          <p class="portfolio-template-card__desc">${isEn ? "10 manual tests + 3 automated ones. Great for getting started." : "10 testes manuais + 3 automatizados. Perfeito para começar."}</p>
+          <a href="https://github.com/nullandvoid-qa/qa-templates/tree/main/starter-qa-project" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm portfolio-template-card__link">${isEn ? "Open template →" : "Acessar template →"}</a>
+        </article>
+        <article class="portfolio-template-card portfolio-template-card--yellow">
+          <h4 class="portfolio-template-card__title">${isEn ? "Web Automation Project" : "Web Automation Project"}</h4>
+          <p class="portfolio-template-card__desc">${isEn ? "20+ E2E tests with Page Object Model. Professional." : "20+ testes E2E com Page Object Model. Profissional."}</p>
+          <a href="https://github.com/nullandvoid-qa/qa-templates/tree/main/web-automation-project" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm portfolio-template-card__link">${isEn ? "Open template →" : "Acessar template →"}</a>
+        </article>
+        <article class="portfolio-template-card portfolio-template-card--purple">
+          <h4 class="portfolio-template-card__title">${isEn ? "View all templates" : "Ver todos os templates"}</h4>
+          <p class="portfolio-template-card__desc">${isEn ? "API, Performance, Mobile, Security, and more." : "API, Performance, Mobile, Security, e mais."}</p>
+          <a href="https://github.com/nullandvoid-qa/qa-templates#-templates-dispon%C3%ADveis" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm portfolio-template-card__link">${isEn ? "Explore →" : "Explorar →"}</a>
+        </article>
       </div>`;
   }
 
@@ -601,7 +601,6 @@
       onCompleteToggle,
       onReRender,
       onFeedbackSubmit,
-      t,
     } = options;
 
     const bookmarkBtn = document.getElementById("btn-bookmark");
@@ -677,7 +676,6 @@
       isComplete,
       title,
       iconHtml,
-      lang,
       icons,
       escapeHtml,
       t,
@@ -719,7 +717,7 @@
     const trackDescription = escapeHtml(track.description || "");
 
     return `
-      <div class="track-hero" style="--track-color:${track.color};border-left-color:${track.color}">
+      <div class="track-hero" style="--track-color:${track.color};">
         <h1>${trackIconHtml} ${trackTitle}</h1>
         <p class="track-hero-desc">${trackDescription}</p>
         <div class="track-meta">
@@ -727,11 +725,11 @@
           <span>${icons ? icons.get('clock','','14') : ''} ~${meta.hours} ${t("track.hoursLong")}</span>
           <span class="tier-badge tier-${meta.audience}">${tierLabel(meta.audience)}</span>
         </div>
-        <div class="progress-bar" style="margin-top:1rem;max-width:400px">
-          <div class="progress-fill" style="width:${prog.pct}%;background:${track.color}"></div>
+        <div class="progress-bar track-hero-progress">
+          <div class="progress-fill" style="width:${prog.pct}%"></div>
         </div>
         <div class="progress-text">${prog.done}/${prog.total} ${t("track.lessonsDone")} ${prog.pct === 100 ? (icons ? icons.get('checkCircle','','16') : '✓') : ""}</div>
-        <div class="track-hero-actions" style="margin-top:1rem;display:flex;gap:0.75rem;flex-wrap:wrap">
+        <div class="track-hero-actions">
           ${quizBtnHtml}
         </div>
       </div>
@@ -744,7 +742,7 @@
       <div class="dash-card"><h3>${statsLabel("dashboard.lessonsCompleted")}</h3><div class="value">${global.done}/${global.total}</div></div>
       <div class="dash-card"><h3>${statsLabel("dashboard.overallProgress")}</h3>
         <div class="value">${global.pct}%</div>
-        <div class="progress-bar" style="margin-top:0.5rem"><div class="progress-fill" style="width:${global.pct}%"></div></div>
+        <div class="progress-bar dash-progress-bar"><div class="progress-fill" style="width:${global.pct}%"></div></div>
       </div>
       <div class="dash-card"><h3>${statsLabel("dashboard.quizzesPassed")}</h3><div class="value">${global.passedCount}/9</div></div>
       <div class="dash-card"><h3>${statsLabel("dashboard.totalCost")}</h3><div class="value">${priceLabel}</div></div>`;
@@ -811,7 +809,7 @@
       .join("");
   }
 
-  function buildAchievementsHtml(achievementsList, unlocked, lang, escapeHtml, icons, t) {
+  function buildAchievementsHtml(achievementsList, unlocked, lang, escapeHtml, icons) {
     if (!Array.isArray(achievementsList)) return "";
 
     return achievementsList
@@ -909,7 +907,7 @@
     }
   }
 
-  function setupLessonHeader(lessonId, track, rawTrackId, lessonTitle, navigate, saveLastLesson, icons, getTrackIcon, escapeHtml) {
+  function setupLessonHeader(lessonId, track, rawTrackId, lessonTitle, navigate, saveLastLesson) {
     if (typeof saveLastLesson === 'function') saveLastLesson(lessonId);
 
     const trackLinkEl = document.getElementById('lesson-track-link');
@@ -929,10 +927,10 @@
     if (!lessonId || typeof progressObj !== 'object') return;
     if (progressObj[lessonId]) {
       delete progressObj[lessonId];
-      showToast(t("toast.lessonUndone"));
+      window.showToast?.(t("toast.lessonUndone"));
     } else {
       progressObj[lessonId] = { completedAt: new Date().toISOString() };
-      showToast(t("toast.lessonDone"));
+      window.showToast?.(t("toast.lessonDone"));
     }
     if (typeof saveProgressFn === 'function') saveProgressFn();
     if (typeof checkAchievementsFn === 'function') checkAchievementsFn();
@@ -945,7 +943,7 @@
       feedbacks.push({ lessonId, rating, text, timestamp: new Date().toISOString() });
       localStorage.setItem('nvqa_feedbacks', JSON.stringify(feedbacks));
       if (opts && typeof opts.onAfter === 'function') opts.onAfter();
-      showToast(opts?.t ? opts.t('lesson.feedbackThanks') : 'Thanks for the feedback');
+      window.showToast?.(opts?.t ? opts.t('lesson.feedbackThanks') : 'Thanks for the feedback');
     } catch (e) {
       console.error(e);
     }
@@ -980,7 +978,7 @@
         (lab) => `
       <article class="lab-card">
         <div class="lab-header">
-          <span class="lab-type-badge" style="background:${typeColors[lab.type] || "#10b981"}22;color:${typeColors[lab.type] || "#10b981"};border-color:${typeColors[lab.type] || "#10b981"}44">${escapeHtml(lab.type)}</span>
+          <span class="lab-type-badge" style="--lab-badge-color:${typeColors[lab.type] || "#10b981"}">${escapeHtml(lab.type)}</span>
           <div class="lab-track-tags">${(lab.tracks || [])
             .map((tid) => {
               const tr = trackMap[tid];
@@ -1103,9 +1101,9 @@
     const scoreText = `${correct}/${total} ${lang === "en" ? "correct" : "correto"}`;
 
     return `
-      <div class="lesson-quiz-result" style="padding: 1rem; background: ${passed ? "rgba(16, 185, 129, 0.1)" : "rgba(239, 68, 68, 0.1)"}; border-left: 3px solid ${passed ? "#10b981" : "#ef4444"}; border-radius: 8px;">
-        <div style="font-weight: 600; margin-bottom: 0.5rem;">${message}</div>
-        <div style="font-size: 0.9rem; color: var(--text-muted);">${scoreText}</div>
+      <div class="lesson-quiz-result ${passed ? 'quiz-passed' : 'quiz-failed'}">
+        <div class="lesson-quiz-result__message">${message}</div>
+        <div class="lesson-quiz-result__score">${scoreText}</div>
       </div>`;
   }
 
@@ -1133,7 +1131,7 @@
 
     return `
       <div class="quiz-card">
-        <div class="quiz-track-header" style="border-left-color:${track.color}">
+        <div class="quiz-track-header" style="--quiz-border-color:${track.color}">
           <span class="track-icon">${track.icon}</span>
           <div>
             <h2>${escapeHtml(quizData.title)}</h2>
@@ -1174,7 +1172,7 @@
     </div>`;
   }
 
-  function buildTrackCoursesHtml(track, progressMap, getEnrichment, localizedLesson, localizedCourse, escapeHtml, t, icons, getTrackIcon) {
+  function buildTrackCoursesHtml(track, progressMap, getEnrichment, localizedLesson, localizedCourse, escapeHtml, t, icons) {
     if (!track?.courses?.length) return "";
 
     return track.courses
@@ -1221,17 +1219,17 @@
       .join("");
 
     return `
-      <div class="lesson-quiz-box" style="margin-top: 2rem; padding: 1.5rem; background: rgba(139, 92, 246, 0.1); border-left: 4px solid #8b5cf6; border-radius: 12px;">
-        <h3 style="margin-top: 0; display: flex; align-items: center; gap: 0.5rem;">${icons ? icons.get('target','','18') + ' ' : ''}${escapeHtml(quizData.title)}</h3>
-        <p style="color: var(--text-muted); margin: 0.5rem 0 1rem 0; font-size: 0.9rem;">${quizData.questions.length} ${lang === "en" ? "quick question(s)" : "pergunta(s) rápida(s)"} — ${lang === "en" ? "test your understanding" : "teste seu entendimento"}</p>
+      <div class="lesson-quiz-box">
+        <h3 class="lesson-quiz-box__title">${icons ? icons.get('target','','18') + ' ' : ''}${escapeHtml(quizData.title)}</h3>
+        <p class="lesson-quiz-box__subtitle">${quizData.questions.length} ${lang === "en" ? "quick question(s)" : "pergunta(s) rápida(s)"} — ${lang === "en" ? "test your understanding" : "teste seu entendimento"}</p>
         <form id="lq-form-${lessonId}" class="lesson-quiz-form">
           ${questionsHtml}
-          <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+          <div class="lesson-quiz-actions">
             <button type="submit" class="btn btn-primary btn-sm">✓ ${lang === "en" ? "Check" : "Verificar"}</button>
             <button type="button" class="btn btn-secondary btn-sm" id="lq-reset-${lessonId}">${lang === "en" ? "Reset" : "Resetar"}</button>
           </div>
         </form>
-        <div id="lq-result-${lessonId}" class="lesson-quiz-result hidden" style="margin-top: 1rem;"></div>
+        <div id="lq-result-${lessonId}" class="lesson-quiz-result hidden"></div>
       </div>`;
   }
 
@@ -1286,6 +1284,7 @@
     setActiveView,
     renderContinueBanner,
     renderInstallBanner,
+    renderHomeView,
     buildCertificateCard,
     buildPortfolioTemplatesHtml,
     buildSearchResultsHtml,
@@ -1326,6 +1325,7 @@
     buildDashboardCertificatesSectionHtml,
     buildSandboxPageHtml,
     buildSandboxMenuHtml,
+    renderDashboardSections,
   };
 
   window.NVViewHelpers = api;
