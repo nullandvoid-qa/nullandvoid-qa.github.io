@@ -304,4 +304,75 @@
     "tempoLeitura": 15,
     "arquivo": "resumos/deep-work.md"
   }
+  ,
+  {
+    "id": "psico-1",
+    "titulo": "Fundamentos da Psicologia",
+    "autor": "Maria Silva",
+    "ano": 2015,
+    "categoria": "Psicologia",
+    "tags": ["psicologia", "comportamento"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/psico-1.md"
+  },
+  {
+    "id": "psico-2",
+    "titulo": "Psicologia do Cotidiano",
+    "autor": "João Pereira",
+    "ano": 2012,
+    "categoria": "Psicologia",
+    "tags": ["psicologia", "vida"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/psico-2.md"
+  },
+  {
+    "id": "psico-3",
+    "titulo": "Cérebro e Comportamento",
+    "autor": "Ana Costa",
+    "ano": 2018,
+    "categoria": "Psicologia",
+    "tags": ["psicologia", "neurociência"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/psico-3.md"
+  },
+  {
+    "id": "psico-4",
+    "titulo": "Psicologia Social",
+    "autor": "Ricardo Alves",
+    "ano": 2011,
+    "categoria": "Psicologia",
+    "tags": ["psicologia", "social"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/psico-4.md"
+  },
+  {
+    "id": "psico-5",
+    "titulo": "Terapias Contemporâneas",
+    "autor": "Laura Mendes",
+    "ano": 2019,
+    "categoria": "Psicologia",
+    "tags": ["psicologia", "terapia"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/psico-5.md"
+  },
+  {
+    "id": "psico-6",
+    "titulo": "Psicologia Positiva",
+    "autor": "Fernando Rocha",
+    "ano": 2014,
+    "categoria": "Psicologia",
+    "tags": ["psicologia", "felicidade"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/psico-6.md"
+  },
+  {
+    "id": "psico-7",
+    "titulo": "Compreendendo as Emoções",
+    "autor": "Mariana Gomes",
+    "ano": 2017,
+    "categoria": "Psicologia",
+    "tags": ["psicologia", "emoções"],
+    "tempoLeitura": 15,
+    "arquivo": "resumos/psico-7.md"
+  }
 ]
