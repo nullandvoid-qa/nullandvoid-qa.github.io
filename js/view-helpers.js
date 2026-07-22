@@ -3,11 +3,16 @@
 
   function createFilterChipMarkup(filters, activeFilter, t) {
     return filters
-      .map(
-        (filter) =>
-          `<button type="button" class="filter-chip ${activeFilter === filter ? "active" : ""}" data-filter="${filter}">${t("filter." + filter)}</button>`,
-      )
+      .map((filter) => {
+        const isActive = activeFilter === filter;
+        return `<button type="button" class="filter-chip ${isActive ? "active" : ""}" data-filter="${filter}">${t("filter." + filter)}</button>`;
+      })
       .join("");
+  }
+
+  function createIconHtml(icons, name, className = "", size = "14") {
+    if (!icons || typeof icons.get !== "function") return "";
+    return icons.get(name, className, size);
   }
 
   function getAvatarState(progressPercent, lang) {
@@ -115,12 +120,13 @@
     }
 
     banner.classList.remove("hidden");
+    const trackIcon = createIconHtml(icons, getTrackIcon(found.track), "search-result-icon", "14");
     banner.innerHTML = `
       <div class="continue-card">
         <div class="continue-card-copy">
           <div class="continue-label">${t("dashboard.continueTitle")}</div>
           <div class="continue-lesson">${escapeHtml(found.lesson.title)}</div>
-          <div class="continue-track">${icons ? icons.get(getTrackIcon(found.track), 'search-result-icon', '14') + ' ' : found.track.icon} ${escapeHtml(found.track.title)}</div>
+          <div class="continue-track">${trackIcon ? `${trackIcon} ` : ""}${escapeHtml(found.track.title)}</div>
         </div>
         <div class="continue-actions">
           <button class="btn btn-primary" id="btn-continue">${t("dashboard.continueBtn")}</button>
@@ -267,11 +273,14 @@
     const label = existingCert
       ? `Gerado em ${new Date(existingCert.generatedAt).toLocaleDateString("pt-BR")}`
       : (lang === "en" ? "Certificate available" : "Certificado disponível");
+    const iconHtml = icons
+      ? icons.get(track.icon || 'certificate', 'track-icon-svg', '18')
+      : escapeHtml(track.icon || '');
 
     return `<div class="cert-card" style="--cert-accent:${track.color};">
       <div class="cert-card__header">
         <div>
-          <h4>${track.icon} ${title}</h4>
+          <h4>${iconHtml} ${title}</h4>
           <p>${label}</p>
         </div>
         <button class="btn btn-primary btn-sm cert-card__action" id="btn-cert-${track.id}" data-track="${track.id}">${icons ? icons.get('download','','14') : ''} ${lang === "en" ? "Download" : "Baixar"}</button>

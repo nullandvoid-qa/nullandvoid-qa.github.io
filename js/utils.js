@@ -21,6 +21,10 @@ function getCurrentLangKey() {
 }
 
 function getStorage(key, legacyKey) {
+  if (typeof localStorage === "undefined") {
+    return null;
+  }
+
   let value = localStorage.getItem(key);
   if (!value && legacyKey) {
     value = localStorage.getItem(legacyKey);
@@ -33,6 +37,10 @@ function getStorage(key, legacyKey) {
 
 function loadJson(key, fallback, validator) {
   try {
+    if (typeof localStorage === "undefined") {
+      return fallback;
+    }
+
     const raw = localStorage.getItem(key);
     if (raw === null) return fallback;
     const data = JSON.parse(raw);
@@ -47,7 +55,9 @@ function loadJson(key, fallback, validator) {
 
 function saveJson(key, data) {
   try {
-    localStorage.setItem(key, JSON.stringify(data));
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem(key, JSON.stringify(data));
+    }
   } catch (e) {
     console.error(e);
   }
@@ -72,16 +82,16 @@ function persistProgress(storageKeys, progressState) {
   return progressState;
 }
 
+function isPlainObject(value) {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
 function validateProgressData(data) {
-  if (typeof data !== "object" || data === null || Array.isArray(data)) {
+  if (!isPlainObject(data)) {
     return false;
   }
-  for (const key of Object.keys(data)) {
-    const val = data[key];
-    if (typeof val !== "object" || val === null || Array.isArray(val)) {
-      return false;
-    }
-    if (typeof val.completedAt !== "string") {
+  for (const val of Object.values(data)) {
+    if (!isPlainObject(val) || typeof val.completedAt !== "string") {
       return false;
     }
   }
@@ -101,15 +111,11 @@ function validateBookmarksData(data) {
 }
 
 function validateQuizzesPassedData(data) {
-  if (typeof data !== "object" || data === null || Array.isArray(data)) {
+  if (!isPlainObject(data)) {
     return false;
   }
-  for (const key of Object.keys(data)) {
-    const val = data[key];
-    if (typeof val !== "object" || val === null || Array.isArray(val)) {
-      return false;
-    }
-    if (typeof val.passedAt !== "string" || typeof val.score !== "number") {
+  for (const val of Object.values(data)) {
+    if (!isPlainObject(val) || typeof val.passedAt !== "string" || typeof val.score !== "number") {
       return false;
     }
   }
@@ -117,11 +123,10 @@ function validateQuizzesPassedData(data) {
 }
 
 function validateChecklistState(data) {
-  if (typeof data !== "object" || data === null || Array.isArray(data)) {
+  if (!isPlainObject(data)) {
     return false;
   }
-  for (const key of Object.keys(data)) {
-    const item = data[key];
+  for (const item of Object.values(data)) {
     if (!Array.isArray(item)) {
       return false;
     }

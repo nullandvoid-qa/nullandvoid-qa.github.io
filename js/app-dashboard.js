@@ -26,19 +26,24 @@
     const helpers = getHelpers();
     const global = helpers.getGlobalProgress();
     const passedCount = Object.keys(state.quizzesPassed || {}).length;
+    const statsEl = document.getElementById("dashboard-stats");
 
-    document.getElementById("dashboard-stats").innerHTML = window.NVViewHelpers.buildDashboardStatsHtml(
-      { ...global, passedCount },
-      helpers.t("price"),
-      helpers.t,
-      helpers.t,
-    );
+    if (statsEl && window.NVViewHelpers?.buildDashboardStatsHtml) {
+      statsEl.innerHTML = window.NVViewHelpers.buildDashboardStatsHtml(
+        { ...global, passedCount },
+        helpers.t("price"),
+        helpers.t,
+        helpers.t,
+      );
+    }
 
     helpers.renderAchievements();
 
     const grid = document.getElementById("dashboard-tracks");
-    grid.innerHTML = "";
-    state.tracks.forEach((tr) => helpers.renderTrackCard(tr, "dashboard-tracks"));
+    if (grid) {
+      grid.innerHTML = "";
+      state.tracks.forEach((tr) => helpers.renderTrackCard(tr, "dashboard-tracks"));
+    }
 
     const achievementsGrid = document.getElementById("achievements-grid");
     const bmSection = document.getElementById("dashboard-bookmarks");
@@ -47,28 +52,30 @@
     const getUserCertificates = window.TG_CERTIFICATES?.getUserCertificates?.bind(window.TG_CERTIFICATES);
     const unlocked = window.loadJson("testers-guild-unlocked-achievements", []);
 
-    window.NVViewHelpers.renderDashboardSections(
-      {
-        achievementsGrid,
-        bookmarksSection: bmSection,
-        certificatesSection: certSection,
-      },
-      {
-        achievementsList: state.achievementsList,
-        unlocked,
-        bookmarks: state.bookmarks,
-        findLesson: helpers.findLesson,
-        icons: window.NVIcons,
-        escapeHtml: window.escapeHtml,
-        getTrackIcon: helpers.getTrackIcon,
-        lang: state.lang,
-        t: helpers.t,
-        getUserCertificates,
-        completedTracks,
-        onCertDownload: (trackId) => onCertDownload(trackId, completedTracks),
-        navigate: helpers.navigate,
-      },
-    );
+    if (window.NVViewHelpers?.renderDashboardSections) {
+      window.NVViewHelpers.renderDashboardSections(
+        {
+          achievementsGrid,
+          bookmarksSection: bmSection,
+          certificatesSection: certSection,
+        },
+        {
+          achievementsList: state.achievementsList,
+          unlocked,
+          bookmarks: state.bookmarks,
+          findLesson: helpers.findLesson,
+          icons: window.NVIcons,
+          escapeHtml: window.escapeHtml,
+          getTrackIcon: helpers.getTrackIcon,
+          lang: state.lang,
+          t: helpers.t,
+          getUserCertificates,
+          completedTracks,
+          onCertDownload: (trackId) => onCertDownload(trackId, completedTracks),
+          navigate: helpers.navigate,
+        },
+      );
+    }
 
     const templatesSection = document.querySelector('[id$="templates"]');
     if (!templatesSection && global.pct >= 20 && typeof window.NVViewHelpers?.buildPortfolioTemplatesHtml === "function") {

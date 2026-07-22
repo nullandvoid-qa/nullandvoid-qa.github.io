@@ -52,21 +52,27 @@
       else el.textContent = value || el.textContent;
     };
 
-    if (data.id) setText('cert-id-val', data.id);
-    if (data.recipient) setText('student-name', data.recipient);
-    if (data.course) setText('course-title', data.course);
-    if (data.duration) setText('duration', data.duration);
-    if (data.score) setText('score', data.score);
-    if (data.issued) setText('issued', data.issued);
-    if (data.description) setText('description', data.description);
+    const recipientName = data?.recipient?.name || data?.recipient || '';
+    const courseTitle = data?.course?.name || data?.course || '';
+    const courseDescription = data?.course?.description || data?.course?.subtitle || '';
+    const durationValue = data?.course?.duration || data?.duration || '';
+    const issuedValue = data?.credential?.issued ? new Date(data.credential.issued).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-    const clone = root.cloneNode(true);
+    if (data.id) setText('cert-id-val', data.id);
+    if (recipientName) setText('student-name', recipientName);
+    if (courseTitle) setText('course-title', courseTitle);
+    if (durationValue) setText('duration', durationValue);
+    if (data.score) setText('score', data.score);
+    setText('issued', issuedValue);
+    if (courseDescription) setText('course-description', courseDescription);
+
     const width = 1200;
     const height = 850;
 
-    // If html2canvas is present use it for full fidelity rendering
+    // If html2canvas is present use it for full fidelity rendering.
+    // Render the actual DOM node attached to the hidden wrapper.
     if (window.html2canvas) {
-      const c = await window.html2canvas(clone, { width, height });
+      const c = await window.html2canvas(root, { width, height });
       if (wrapper && wrapper.parentNode) wrapper.parentNode.removeChild(wrapper);
       return c.toDataURL('image/png');
     }

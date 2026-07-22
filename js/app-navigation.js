@@ -1,19 +1,40 @@
 function navigate(view, params = {}) {
-  window.currentView = view;
-  window.viewParams = params;
-  window.NVViewHelpers?.setActiveView(document, view, "tracks");
+  const safeView = typeof view === "string" && view ? view : "home";
+  const safeParams = params && typeof params === "object" ? params : {};
 
-  if (view === "home") renderHome();
-  else if (view === "tracks") renderTracksPage();
-  else if (view === "roadmap") renderRoadmap();
-  else if (view === "glossary") renderGlossary();
-  else if (view === "labs") renderLabs();
-  else if (view === "track" && params.trackId) renderTrackDetail(params.trackId);
-  else if (view === "lesson" && params.lessonId) renderLesson(params.lessonId);
-  else if (view === "quiz" && params.trackId) renderQuiz(params.trackId);
-  else if (view === "dashboard") renderDashboard();
+  if (typeof window !== "undefined") {
+    window.currentView = safeView;
+    window.viewParams = safeParams;
+  }
 
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  if (typeof currentView !== "undefined") {
+    currentView = safeView;
+  }
+  if (typeof viewParams !== "undefined") {
+    viewParams = safeParams;
+  }
+
+  if (window.NVViewHelpers && typeof window.NVViewHelpers.setActiveView === "function") {
+    window.NVViewHelpers.setActiveView(document, safeView, "tracks");
+  }
+
+  const handlers = {
+    home: () => typeof renderHome === "function" && renderHome(),
+    tracks: () => typeof renderTracksPage === "function" && renderTracksPage(),
+    roadmap: () => typeof renderRoadmap === "function" && renderRoadmap(),
+    glossary: () => typeof renderGlossary === "function" && renderGlossary(),
+    labs: () => typeof renderLabs === "function" && renderLabs(),
+    track: () => safeParams.trackId && typeof renderTrackDetail === "function" && renderTrackDetail(safeParams.trackId),
+    lesson: () => safeParams.lessonId && typeof renderLesson === "function" && renderLesson(safeParams.lessonId),
+    quiz: () => safeParams.trackId && typeof renderQuiz === "function" && renderQuiz(safeParams.trackId),
+    dashboard: () => typeof renderDashboard === "function" && renderDashboard(),
+  };
+
+  handlers[safeView]?.();
+
+  if (typeof window.scrollTo === "function") {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 }
 
 function refreshCurrentView() {

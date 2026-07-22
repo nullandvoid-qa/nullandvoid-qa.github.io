@@ -116,6 +116,16 @@ window.TG_QAWAY_EN = {
         "Architecture",
         "Quality culture"
       ]
+    },
+    "senior": {
+      "title": "Advanced Testing",
+      "description": "Sophisticated testing techniques: automation, performance, security.",
+      "level": "Advanced",
+      "topics": [
+        "Automation",
+        "Performance",
+        "Security"
+      ]
     }
   },
   "courses": {

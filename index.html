@@ -23,6 +23,7 @@
     <meta name="theme-color" content="#1a1a1a" />
     <link rel="manifest" href="manifest.json" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Null and Void" />
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%2310b981' width='180' height='180' rx='40'/><text x='90' y='120' font-size='70' font-weight='bold' fill='white' text-anchor='middle'>🎓</text></svg>" />
@@ -71,7 +72,7 @@
               aria-label="Switch language"
             >
               <span class="lang-flag">🇧🇷</span>
-              <span id="lang-label">ENG</span>
+              <span id="lang-label" data-i18n="lang.toggle">ENG</span>
             </button>
             <!-- Auth Section -->
             <div id="auth-section" class="auth-section">
@@ -148,25 +149,25 @@
 
         <section class="guidance-panel" id="home-guidance" aria-labelledby="home-guidance-title">
           <div class="guidance-panel-header">
-            <span class="guidance-pill">Guia rápido</span>
-            <h2 id="home-guidance-title">Como começar na jornada QA</h2>
-            <p>Escolha um caminho claro, pratique com labs e acompanhe seu progresso sem perder o rumo.</p>
+            <span class="guidance-pill" data-i18n="guidance.pill">Guia rápido</span>
+            <h2 id="home-guidance-title" data-i18n="guidance.title">Como começar na jornada QA</h2>
+            <p data-i18n="guidance.subtitle">Escolha um caminho claro, pratique com labs e acompanhe seu progresso sem perder o rumo.</p>
           </div>
           <div class="guidance-card-grid">
             <article class="guidance-card">
-              <span class="guidance-index">01</span>
-              <h3>Defina seu ponto de partida</h3>
-              <p>Use as trilhas ou rotas recomendadas para encontrar o melhor caminho para o seu nível.</p>
+              <span class="guidance-index" aria-hidden="true">01</span>
+              <h3 data-i18n="guidance.step1.title">Defina seu ponto de partida</h3>
+              <p data-i18n="guidance.step1.desc">Use as trilhas ou rotas recomendadas para encontrar o melhor caminho para o seu nível.</p>
             </article>
             <article class="guidance-card">
-              <span class="guidance-index">02</span>
-              <h3>Pratique com foco</h3>
-              <p>Complete labs e aulas curtas para transformar teoria em hábitos reais de teste.</p>
+              <span class="guidance-index" aria-hidden="true">02</span>
+              <h3 data-i18n="guidance.step2.title">Pratique com foco</h3>
+              <p data-i18n="guidance.step2.desc">Complete labs e aulas curtas para transformar teoria em hábitos reais de teste.</p>
             </article>
             <article class="guidance-card">
-              <span class="guidance-index">03</span>
-              <h3>Acompanhe seu avanço</h3>
-              <p>Monitore o progresso no painel para manter motivação e clareza sobre o que vem a seguir.</p>
+              <span class="guidance-index" aria-hidden="true">03</span>
+              <h3 data-i18n="guidance.step3.title">Acompanhe seu avanço</h3>
+              <p data-i18n="guidance.step3.desc">Monitore o progresso no painel para manter motivação e clareza sobre o que vem a seguir.</p>
             </article>
           </div>
         </section>
@@ -597,6 +598,8 @@
     <script src="js/lesson-renderers.js" defer></script>
     <script src="js/lesson-content.js" defer></script>
     <script src="js/icons.js?v=1.0.2" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+    <script src="certificate/render.js" defer></script>
     <script src="js/certificates.js" defer></script>
     <script src="data/tracks.js" defer></script>
     <script src="data/translations-en.js" defer></script>
@@ -614,38 +617,11 @@
     <script src="data/mentorship.js" defer></script>
     <script src="data/mobile-labs.js" defer></script>
     <script src="js/i18n.js?v=1.0.4" defer></script>
-    <!-- JWT Decode must load before auth.js -->
-    <script src="https://unpkg.com/jwt-decode@3.1.2/build/jwt-decode.js" defer></script>
     <script src="js/auth.js?v=1.0.4" defer></script>
-    <script src="js/discord-integration.js" defer></script>
     <script src="js/app-home.js" defer></script>
     <script src="js/app-track.js" defer></script>
     <script src="js/app.js?v=1784338953" defer></script>
     <script src="js/app-lesson.js" defer></script>
     <script src="js/app-dashboard.js" defer></script>
-    <script src="js/debug-helpers.js" defer></script>
-    <script>
-      // Inline fallback to ensure a direct lesson renderer is always available for debugging
-      (function(){
-        try {
-          window.devHelpers = window.devHelpers || {};
-          window.devHelpers.renderLessonDirect = window.devHelpers.renderLessonDirect || function(lessonId){
-            try {
-              const tracks = window.TG_QAWAY_TRACKS || [];
-              let found = null;
-              for (const t of tracks) for (const c of (t.courses||[])) for (const l of (c.lessons||[])) if (l.id===lessonId) { found = {track:t, course:c, lesson:l}; break; }
-              if (!found) return {ok:false, error:'lesson not found'};
-              const sidebar = (found.course.lessons||[]).map(ll=>`<li class="sidebar-lesson" data-lesson="${ll.id}" tabindex="0" role="button">${ll.title}</li>`).join('');
-              const content = `<div class="lesson-layout"><aside class="lesson-sidebar"><div class="sidebar-track">${found.track.title}</div><div class="sidebar-course">${found.course.title}</div><ul class="sidebar-lessons">${sidebar}</ul></aside><article class="lesson-content"><div class="lesson-header-row"><h1>${found.lesson.title}</h1></div><div class="lesson-meta-row"><span class="lesson-meta-item">${found.lesson.duration||''}</span></div><div class="lesson-body">${found.lesson.content}</div></article></div>`;
-              let zone = document.getElementById('lesson-detail');
-              if (!zone) { zone = document.createElement('div'); zone.id='lesson-detail'; document.body.appendChild(zone); }
-              zone.innerHTML = content;
-              zone.querySelectorAll('.sidebar-lesson').forEach(el=>el.addEventListener('click', ()=>window.devHelpers.renderLessonDirect(el.dataset.lesson)));
-              return {ok:true};
-            } catch(e) { return {ok:false, error:String(e)}; }
-          };
-        } catch(e) { /* ignore */ }
-      })();
-    </script>
   </body>
 </html>

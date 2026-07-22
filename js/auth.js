@@ -23,6 +23,26 @@
     return host === 'localhost' || host === '127.0.0.1' || host === '::1';
   }
 
+  function readStoredJson(key, fallback = {}) {
+    try {
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch (e) {
+      console.error('Failed to parse storage value:', e);
+      return fallback;
+    }
+  }
+
+  function saveStoredJson(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+      return true;
+    } catch (e) {
+      console.error('Failed to save storage value:', e);
+      return false;
+    }
+  }
+
   function loadGoogleSignInScript() {
     return new Promise((resolve) => {
       if (window.google && window.google.accounts) return resolve(true);
@@ -129,7 +149,7 @@
 
     window.NVAuth.user = user;
     window.NVAuth.isAuthenticated = true;
-    localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(user));
+    saveStoredJson(STORAGE_KEY_USER, user);
     localStorage.removeItem(STORAGE_KEY_TOKEN);
     document.dispatchEvent(new CustomEvent('nvauth:login', { detail: user }));
     renderAuthUI();
@@ -189,9 +209,10 @@
       window.NVAuth.user = user;
       window.NVAuth.isAuthenticated = true;
 
-      // Save to localStorage
-      localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(user));
-      localStorage.setItem(STORAGE_KEY_TOKEN, response.credential);
+      // Save only the minimal session payload locally.
+      // Avoid persisting the raw credential token when not strictly needed.
+      saveStoredJson(STORAGE_KEY_USER, user);
+      localStorage.removeItem(STORAGE_KEY_TOKEN);
 
       // Trigger custom event for other modules
       document.dispatchEvent(new CustomEvent('nvauth:login', { detail: user }));
@@ -285,13 +306,7 @@
     }
 
     const key = getStorageKey();
-    try {
-      const data = localStorage.getItem(key);
-      return data ? JSON.parse(data) : {};
-    } catch (e) {
-      console.error('Failed to parse progress:', e);
-      return {};
-    }
+    return readStoredJson(key, {});
   }
 
   /**
@@ -304,13 +319,7 @@
     }
 
     const key = getStorageKey();
-    try {
-      localStorage.setItem(key, JSON.stringify(progressData));
-      return true;
-    } catch (e) {
-      console.error('Failed to save progress:', e);
-      return false;
-    }
+    return saveStoredJson(key, progressData);
   }
 
   /**
@@ -415,13 +424,7 @@
     }
 
     const key = `nv_${window.NVAuth.user.id}_read_books`;
-    try {
-      const data = localStorage.getItem(key);
-      return data ? JSON.parse(data) : {};
-    } catch (e) {
-      console.error('Failed to parse read books:', e);
-      return {};
-    }
+    return readStoredJson(key, {});
   }
 
   /**
@@ -442,7 +445,7 @@
         completed: true,
       };
       const key = `nv_${window.NVAuth.user.id}_read_books`;
-      localStorage.setItem(key, JSON.stringify(readBooks));
+      saveStoredJson(key, readBooks);
       document.dispatchEvent(new CustomEvent('nvauth:bookmarked', { detail: { bookId, marked: true } }));
       return true;
     } catch (e) {
@@ -466,7 +469,7 @@
       const readBooks = getReadBooks();
       delete readBooks[bookId];
       const key = `nv_${window.NVAuth.user.id}_read_books`;
-      localStorage.setItem(key, JSON.stringify(readBooks));
+      saveStoredJson(key, readBooks);
       document.dispatchEvent(new CustomEvent('nvauth:bookmarked', { detail: { bookId, marked: false } }));
       return true;
     } catch (e) {

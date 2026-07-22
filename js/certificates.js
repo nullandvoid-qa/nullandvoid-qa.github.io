@@ -120,7 +120,7 @@
     const skillY = 645;
     const chipW = 180;
     const gap = 16;
-    let startX = (w - (Math.min(skills.length, 5) * chipW + (Math.min(skills.length, 5) - 1) * gap)) / 2;
+    const startX = (w - (Math.min(skills.length, 5) * chipW + (Math.min(skills.length, 5) - 1) * gap)) / 2;
     skills.slice(0, 5).forEach((skill, index) => {
       const x = startX + index * (chipW + gap);
       ctx.fillStyle = '#111827';
@@ -139,15 +139,15 @@
     ctx.fillStyle = '#64748b';
     ctx.font = '500 18px Arial';
     ctx.fillText(`Verification ID: ${payload?.credential?.id || 'NVA-XXXX'}`, w / 2, 840);
-    ctx.fillText('NullAndVoid QA Academy • Founder & Lead QA Instructor', w / 2, 900);
   }
 
   function renderCertificateToPdf(pdf, payload) {
     const recipientName = payload?.recipient?.name ?? '';
     const courseName = payload?.course?.name || 'Professional QA Engineering';
     const courseSubtitle = payload?.course?.subtitle || 'Software Testing, Automation and Quality Engineering';
+    const courseDuration = payload?.course?.duration || '40 Hours';
     const credentialId = payload?.credential?.id || 'NVA-XXXX';
-    const issuedDate = payload?.credential?.issued ? new Date(payload.credential.issued).toLocaleDateString() : new Date().toLocaleDateString();
+    const issuedDate = payload?.credential?.issued ? new Date(payload.credential.issued).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
     const skills = Array.isArray(payload?.skills) && payload.skills.length ? payload.skills : ['Testing', 'Automation', 'Strategy'];
 
     if (typeof pdf.setFont === 'function') pdf.setFont('helvetica', 'bold');
@@ -171,9 +171,9 @@
 
     if (typeof pdf.setFontSize === 'function') pdf.setFontSize(11);
     if (typeof pdf.setTextColor === 'function') pdf.setTextColor(71, 85, 105);
-    pdf.text(`Issued: ${issuedDate}`, 105, 118, { align: 'center' });
-    pdf.text(`Verification ID: ${credentialId}`, 105, 128, { align: 'center' });
-    pdf.text('NullAndVoid QA Academy • Founder & Lead QA Instructor', 105, 138, { align: 'center' });
+    pdf.text(`Duration: ${courseDuration}`, 105, 118, { align: 'center' });
+    pdf.text(`Issued: ${issuedDate}`, 105, 128, { align: 'center' });
+    pdf.text(`Verification ID: ${credentialId}`, 105, 138, { align: 'center' });
 
     if (typeof pdf.setFontSize === 'function') pdf.setFontSize(10);
     pdf.text(`Skills: ${skills.slice(0, 5).join(' • ')}`, 105, 150, { align: 'center' });
@@ -209,20 +209,15 @@
       renderProfessionalCertificate(ctx, payload);
     }
 
-    if (typeof canvas.toDataURL !== 'function' || canvas.toDataURL === HTMLCanvasElement.prototype.toDataURL) {
-      canvas.toDataURL = function() {
-        const fallback = 'data:image/png;base64,certificate-preview';
-        return fallback;
-      };
+    if (typeof canvas.toDataURL !== 'function') {
+      throw new Error('Canvas toDataURL is not available');
     }
 
-    if (typeof canvas.toDataURL === 'function') {
-      const dataUrl = canvas.toDataURL('image/png');
-      if (!dataUrl || !dataUrl.startsWith('data:image/png;base64,')) {
-        throw new Error('Canvas did not produce a valid PNG data URL');
-      }
-      canvas.__lastDataUrl = dataUrl;
+    const dataUrl = canvas.toDataURL('image/png');
+    if (!dataUrl || !/^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(dataUrl)) {
+      throw new Error('Canvas did not produce a valid PNG data URL');
     }
+    canvas.__lastDataUrl = dataUrl;
   }
 
   window.NullAndVoidCertificate = window.NullAndVoidCertificate || {};
@@ -235,10 +230,12 @@
      */
     buildCertificatePayload: function(trackId, userName, completedDate) {
       const trackData = this.getTrackData(trackId);
-      const localizedTrackData = this.getLocalizedTrackData(trackId, trackData, window.lang || 'en');
+      const localizedTrackData = this.getLocalizedTrackData(trackId, trackData, 'en');
       const resolvedName = normalizeUserName(userName);
       const courseName = localizedTrackData?.title || trackData?.title || trackId;
-      const courseDescription = localizedTrackData?.description || trackData?.description || 'Advance your QA career with practical skills and critical thinking.';
+      const courseDescription = localizedTrackData?.description || trackData?.description || 'demonstrating practical knowledge in software quality assurance and modern testing practices.';
+      const courseDuration = localizedTrackData?.duration || trackData?.duration || this.getTrackDuration(trackData);
+      const trackName = localizedTrackData?.title || trackData?.title || trackId;
       const topics = Array.isArray(localizedTrackData?.topics) && localizedTrackData.topics.length ? localizedTrackData.topics : (Array.isArray(trackData?.topics) ? trackData.topics : ['Automation', 'Testing', 'Strategy']);
       const certificateId = this.generateVerificationCode(resolvedName, trackId, completedDate);
 
@@ -249,9 +246,10 @@
         course: {
           name: courseName,
           subtitle: courseDescription,
-          level: localizedTrackData?.level || trackData?.level || 'Professional Level',
-          duration: localizedTrackData?.duration || trackData?.duration || '40 Hours',
-          category: localizedTrackData?.category || trackData?.category || 'Software Quality Assurance'
+          description: courseDescription,
+          duration: courseDuration,
+          category: localizedTrackData?.category || trackData?.category || 'Software Quality Assurance',
+          trackName: trackName
         },
         skills: topics.slice(0, 5),
         credential: {
@@ -259,11 +257,6 @@
           issued: completedDate ? new Date(completedDate).toISOString() : new Date().toISOString(),
           status: 'Verified',
           verificationUrl: `https://nullandvoid-qa.github.io/verify.html?code=${certificateId}`
-        },
-        authority: {
-          organization: 'NullAndVoid QA Academy',
-          signer: 'Kaio Garcia',
-          role: 'Founder & Lead QA Instructor'
         },
         design: {
           theme: 'professional',
@@ -314,16 +307,18 @@
 
         // Prefer template renderer if available (returns Promise<string> dataUrl)
         let dataUrl = null;
+        let templateError = null;
         if (window.CertificateRenderer && typeof window.CertificateRenderer.renderCertificate === 'function') {
           try {
             dataUrl = await window.CertificateRenderer.renderCertificate(payload);
           } catch (err) {
+            templateError = err;
             console.warn('CertificateRenderer failed, falling back to canvas renderer', err);
             dataUrl = null;
           }
         }
 
-        // Fallback: use existing canvas-based renderer
+        // Fallback: use existing canvas-based renderer only if template rendering fails or is unavailable
         if (!dataUrl) {
           const canvas = createCanvasForCertificate();
           try {
@@ -350,9 +345,11 @@
           dataUrl.startsWith('data:image/png;base64,')
         ) {
           try {
-            const imgWidth = 180;
-            const imgHeight = 120;
-            const x = (210 - imgWidth) / 2;
+            const pageWidth = pdf.internal.pageSize.getWidth ? pdf.internal.pageSize.getWidth() : 210;
+            const pageHeight = pdf.internal.pageSize.getHeight ? pdf.internal.pageSize.getHeight() : 297;
+            const imgWidth = pageWidth - 20;
+            const imgHeight = Math.min((imgWidth * 850) / 1200, pageHeight - 40);
+            const x = (pageWidth - imgWidth) / 2;
             const y = 20;
             pdf.addImage(dataUrl, 'PNG', x, y, imgWidth, imgHeight);
             imageAdded = true;
@@ -427,6 +424,44 @@
         hash = hash & hash;
       }
       return Math.abs(hash).toString(16).substring(0, 8).toUpperCase();
+    },
+
+    parseDurationToMinutes: function(durationString) {
+      if (!durationString || typeof durationString !== 'string') return 0;
+      const normalized = durationString.trim().toLowerCase().replace(',', '.');
+      let minutes = 0;
+      const hourMatch = normalized.match(/(\d+(?:\.\d+)?)\s*h(?:ours?)?/);
+      if (hourMatch) {
+        minutes += Math.round(parseFloat(hourMatch[1]) * 60);
+      }
+      const minMatch = normalized.match(/(\d+(?:\.\d+)?)\s*min/);
+      if (minMatch) {
+        minutes += Math.round(parseFloat(minMatch[1]));
+      }
+      return minutes;
+    },
+
+    formatMinutesToDuration: function(totalMinutes) {
+      if (typeof totalMinutes !== 'number' || totalMinutes <= 0) return '';
+      const hours = Math.floor(totalMinutes / 60);
+      const minutes = totalMinutes % 60;
+      if (hours > 0 && minutes > 0) return `${hours}h ${minutes}m`;
+      if (hours > 0) return `${hours}h`;
+      return `${minutes} min`;
+    },
+
+    getTrackDuration: function(trackData) {
+      if (!trackData) return '40 Hours';
+      if (typeof trackData.duration === 'string' && trackData.duration.trim()) {
+        return trackData.duration.trim();
+      }
+      const totalMinutes = (Array.isArray(trackData.courses) ? trackData.courses.reduce((trackSum, course) => {
+        if (!course || !Array.isArray(course.lessons)) return trackSum;
+        return trackSum + course.lessons.reduce((lessonSum, lesson) => {
+          return lessonSum + this.parseDurationToMinutes(lesson.duration);
+        }, 0);
+      }, 0) : 0);
+      return totalMinutes > 0 ? this.formatMinutesToDuration(totalMinutes) : '40 Hours';
     },
 
     notifyUser: function(message) {

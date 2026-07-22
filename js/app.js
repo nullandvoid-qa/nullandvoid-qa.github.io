@@ -1,4 +1,3 @@
-/* global getStorage, getStoredProgress, persistProgress */
 (function () {
   "use strict";
 
@@ -94,6 +93,10 @@
     "lab-browserstack": "cloud",
   };
 
+  function getElementById(id) {
+    return document ? document.getElementById(id) : null;
+  }
+
   function normalizeTextLabel(text) {
     return String(text || "").replace(/^[^\wÀ-ž]+\s*/, "").trim();
   }
@@ -111,6 +114,10 @@
     }
     // Fallback to mapped icon name or generic 'tracks'
     return TRACK_ICON_MAP[track.id] || "tracks";
+  }
+
+  function getLangKey() {
+    return lang === "en" ? "en" : "pt";
   }
 
   function getHomeTrackSummary(filteredCount = tracks.length) {
@@ -186,11 +193,15 @@
   // ── Theme ─────────────────────────────────────────────────────────────────
   function applyTheme() {
     document.documentElement.setAttribute("data-theme", theme);
-    const btn = document.getElementById("theme-toggle");
+    const btn = getElementById("theme-toggle");
     if (btn) {
       const iconName = theme === "dark" ? "moon" : "sun";
-      btn.innerHTML = window.NVIcons ? window.NVIcons.get(iconName, '', '18') : '';
-      btn.setAttribute('aria-label', theme === "dark" ? "Switch to light theme" : "Switch to dark theme");
+      btn.innerHTML = getIconMarkup(iconName, "18");
+      const nextThemeLabel = theme === "dark"
+        ? t("settings.toggleThemeLight")
+        : t("settings.toggleThemeDark");
+      btn.setAttribute("aria-label", nextThemeLabel);
+      btn.setAttribute("title", nextThemeLabel);
     }
     localStorage.setItem(STORAGE_THEME, theme);
   }
@@ -204,7 +215,7 @@
   // ── Senior Mode ───────────────────────────────────────────────────────────
   function applySeniorMode() {
     document.documentElement.classList.toggle("senior-mode", seniorMode);
-    const btn = document.getElementById("senior-mode-toggle");
+    const btn = getElementById("senior-mode-toggle");
     if (btn) {
       btn.classList.toggle("active-toggle", seniorMode);
       btn.title = seniorMode
@@ -244,6 +255,8 @@
       t("meta.description");
     renderNavLinks();
     applyStaticI18n();
+    applyTheme();
+    applySeniorMode();
     updateLangToggle();
     refreshCurrentView();
     showToast(t("toast.langChanged"));
@@ -255,18 +268,30 @@
 
   function applyStaticI18n() {
     document.querySelectorAll("[data-i18n]").forEach((el) => {
-      el.textContent = t(el.dataset.i18n);
+      const key = el.dataset.i18n;
+      if (key) el.textContent = t(key);
     });
     document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
-      el.placeholder = t(el.dataset.i18nPlaceholder);
+      const key = el.dataset.i18nPlaceholder;
+      if (key) el.placeholder = t(key);
     });
     document.querySelectorAll("[data-i18n-title]").forEach((el) => {
-      el.title = t(el.dataset.i18nTitle);
+      const key = el.dataset.i18nTitle;
+      if (key) el.title = t(key);
     });
     document.querySelectorAll("[data-i18n-label]").forEach((el) => {
-      el.setAttribute("aria-label", t(el.dataset.i18nLabel));
+      const key = el.dataset.i18nLabel;
+      if (key) el.setAttribute("aria-label", t(key));
     });
-    const priceEl = document.getElementById("stat-price");
+
+    const langToggle = getElementById("lang-toggle");
+    if (langToggle) {
+      const langLabel = t("settings.toggleLanguage");
+      langToggle.setAttribute("aria-label", langLabel);
+      langToggle.setAttribute("title", langLabel);
+    }
+
+    const priceEl = getElementById("stat-price");
     if (priceEl) priceEl.textContent = t("price");
   }
 
@@ -284,7 +309,7 @@
   }
 
   function renderNavLinks() {
-    const navLinksEl = document.getElementById("nav-links");
+    const navLinksEl = getElementById("nav-links");
     if (!navLinksEl) return;
 
     const navItems = window.TG_NAV_ITEMS || [];
@@ -307,18 +332,24 @@
   }
 
   function updateLangToggle() {
-    const btn = document.getElementById("lang-toggle");
-    const label = document.getElementById("lang-label");
+    const btn = getElementById("lang-toggle");
+    const label = getElementById("lang-label");
     const flag = btn?.querySelector(".lang-flag");
     if (label) label.textContent = t("lang.toggle");
     if (flag) flag.textContent = lang === "pt" ? "🇧🇷" : "🇺🇸";
+
+    if (btn) {
+      const langLabel = t("settings.toggleLanguage");
+      btn.setAttribute("aria-label", langLabel);
+      btn.setAttribute("title", langLabel);
+    }
   }
 
   // ── Utilities ─────────────────────────────────────────────────────────────
 
   window.nvToast = window.nvToast || { queue: [], isShowing: false, timer: null };
   function showToast(msg) {
-    const el = document.getElementById("toast");
+    const el = getElementById("toast");
     if (!el) return;
     window.nvToast.queue.push(msg);
     if (window.nvToast.isShowing) return;
@@ -344,12 +375,23 @@
   }
   window.showToast = showToast;
 
+  function getIconMarkup(name, size = "18", className = "") {
+    if (!window.NVIcons || typeof window.NVIcons.get !== "function") {
+      return "";
+    }
+    return window.NVIcons.get(name, className, size);
+  }
+
+  function getIconMarkupOrFallback(name, fallback, size = "18", className = "") {
+    return getIconMarkup(name, size, className) || fallback;
+  }
+
   function highlightCode(html) {
     // Wrap <pre> blocks with a copy button and language detection
     return html.replace(/<pre>([\s\S]*?)<\/pre>/g, (_, code) => {
       const safe = code.trim();
       return `<div class="code-block">
-        <button class="code-copy-btn" aria-label="Copy code" title="Copy">${window.NVIcons ? window.NVIcons.get('copy','','18') : ''}</button>
+        <button class="code-copy-btn" aria-label="Copy code" title="Copy">${getIconMarkup("copy", "18")}</button>
         <pre>${safe}</pre>
       </div>`;
     });
@@ -362,15 +404,15 @@
         navigator.clipboard
           .writeText(pre.textContent)
           .then(() => {
-            btn.innerHTML = window.NVIcons ? window.NVIcons.get('check','','18') : '✓';
+            btn.innerHTML = getIconMarkupOrFallback("check", "✓", "18");
             setTimeout(() => {
-              btn.innerHTML = window.NVIcons ? window.NVIcons.get('copy','','18') : '';
+              btn.innerHTML = getIconMarkup("copy", "18");
             }, 1500);
           })
           .catch(() => {
-            btn.innerHTML = window.NVIcons ? window.NVIcons.get('close','','18') : '×';
+            btn.innerHTML = getIconMarkupOrFallback("close", "×", "18");
             setTimeout(() => {
-              btn.innerHTML = window.NVIcons ? window.NVIcons.get('copy','','18') : '';
+              btn.innerHTML = getIconMarkup("copy", "18");
             }, 1500);
           });
       });
@@ -583,7 +625,7 @@
 
   // ── Glossary ──────────────────────────────────────────────────────────────
   function renderGlossary() {
-    const items = window.TG_GLOSSARY?.[lang === "en" ? "en" : "pt"] || [];
+    const items = window.TG_GLOSSARY?.[getLangKey()] || [];
     document.getElementById("glossary-content").innerHTML = window.NVViewHelpers.buildGlossaryHtml(items, escapeHtml);
   }
 
@@ -591,7 +633,7 @@
   function renderLabs() {
     const container = document.getElementById("labs-content");
     if (!container) return;
-    const labs = labsData[lang === "en" ? "en" : "pt"] || labsData.pt || [];
+    const labs = labsData[getLangKey()] || labsData.pt || [];
     if (!labs.length) {
       container.innerHTML = window.NVViewHelpers.buildEmptyStateHtml(
         lang === "en" ? "No labs available." : "Nenhum lab disponível.",
@@ -623,7 +665,7 @@
     const track = findTrack(trackId);
     if (!track) return;
 
-    const langKey = lang === "en" ? "en" : "pt";
+    const langKey = getLangKey();
     const quizData = quizzes[trackId]?.[langKey] || quizzes[trackId]?.pt;
     if (!quizData) {
       container.innerHTML = window.NVViewHelpers.buildEmptyStateHtml(
@@ -699,7 +741,7 @@
     const { track, course, lesson, rawTrack, rawCourse, rawLesson } = found;
       const enr = getEnrichment(rawLesson.id);
       const isBookmarked = bookmarks.includes(rawLesson.id);
-      const langKey = lang === "en" ? "en" : "pt";
+      const langKey = getLangKey();
       const lessonContent = window.NVLessonContent?.loadLessonContent
         ? await window.NVLessonContent.loadLessonContent(rawLesson, { markdownMap: window.TG_LESSON_MARKDOWN_MAP })
         : { content: lesson.content, title: lesson.title, duration: lesson.duration };
@@ -889,8 +931,8 @@
 
   // ── Search ────────────────────────────────────────────────────────────────
   function handleSearch(query) {
-    const resultsEl = document.getElementById("search-results");
-    const glossaryItems = window.TG_GLOSSARY?.[lang === "en" ? "en" : "pt"] || [];
+    const resultsEl = getElementById("search-results");
+    const glossaryItems = window.TG_GLOSSARY?.[getLangKey()] || [];
     window.NVViewHelpers.searchAndRender(
       resultsEl,
       query,
@@ -908,18 +950,21 @@
     el.addEventListener("click", () => setPersona(el.dataset.persona));
   });
 
-  document.getElementById("lang-toggle").addEventListener("click", toggleLang);
-  const themeToggle = document.getElementById("theme-toggle");
+  const langToggle = getElementById("lang-toggle");
+  if (langToggle) {
+    langToggle.addEventListener("click", toggleLang);
+  }
+  const themeToggle = getElementById("theme-toggle");
   if (themeToggle) {
     themeToggle.addEventListener("click", toggleTheme);
   }
 
-  const seniorModeToggle = document.getElementById("senior-mode-toggle");
+  const seniorModeToggle = getElementById("senior-mode-toggle");
   if (seniorModeToggle) {
     seniorModeToggle.addEventListener("click", toggleSeniorMode);
   }
 
-  const globalSearch = document.getElementById("global-search");
+  const globalSearch = getElementById("global-search");
   if (globalSearch) {
     globalSearch.addEventListener("input", () => {
       clearTimeout(searchTimeout);
@@ -931,12 +976,15 @@
   }
 
   document.addEventListener("click", (e) => {
-    if (!e.target.closest(".search-bar-wrap"))
-      document.getElementById("search-results").classList.add("hidden");
+    if (!e.target.closest(".search-bar-wrap")) {
+      const resultsEl = getElementById("search-results");
+      if (resultsEl) {
+        resultsEl.classList.add("hidden");
+      }
+    }
   });
 
-  document
-    .getElementById("btn-reset-progress")
+  getElementById("btn-reset-progress")
     ?.addEventListener("click", () => {
       if (confirm(t("dashboard.resetConfirm"))) {
         progress = {};
@@ -948,20 +996,17 @@
       }
     });
 
-  document
-    .getElementById("btn-export-progress")
+  getElementById("btn-export-progress")
     ?.addEventListener("click", () => {
       exportProgressToFile(progress, bookmarks, quizzesPassed, checklistState);
     });
 
-  document
-    .getElementById("btn-import-progress")
+  getElementById("btn-import-progress")
     ?.addEventListener("click", () => {
       document.getElementById("progress-import-input").click();
     });
 
-  document
-    .getElementById("progress-import-input")
+  getElementById("progress-import-input")
     ?.addEventListener("change", async (event) => {
       const file = event.target.files?.[0];
       if (!file) return;
@@ -1129,69 +1174,85 @@
     };
 
   // ── Init ──────────────────────────────────────────────────────────────────
-  function init() {
-    // Load all tracks: merge main tracks + new specialized tracks
-    tracks = window.TG_QAWAY_TRACKS || [];
-    
-    // Merge new track structures — ensure all required fields are present
-    if (window.TG_PERFORMANCE_TRACK && window.TG_PERFORMANCE_TRACK.courses) {
-      const pt = window.TG_PERFORMANCE_TRACK;
-      if (!tracks.find(t => t.id === 'performance')) {
-        tracks.push({
-          id: pt.id || 'performance',
-          slug: pt.slug || 'performance-testing',
-          icon: 'perf',
-          title: pt.title || 'Arena de Carga',
-          color: pt.color || '#f59e0b',
-          description: pt.description || 'Performance testing com K6 e JMeter.',
-          level: pt.level || 'Sênior',
-          modules: pt.modules || 3,
-          hours: pt.hours || 40,
-          topics: pt.topics || ['Load Testing', 'K6', 'JMeter'],
-          courses: pt.courses
+  function mergeTrackSources() {
+    const baseTracks = window.TG_QAWAY_TRACKS || [];
+    const mergedTracks = [...baseTracks];
+
+    const sources = [
+      {
+        key: "TG_PERFORMANCE_TRACK",
+        id: "performance",
+        slug: "performance-testing",
+        icon: "perf",
+        title: "Arena de Carga",
+        color: "#f59e0b",
+        description: "Performance testing com K6 e JMeter.",
+        level: "Sênior",
+        modules: 3,
+        hours: 40,
+        topics: ["Load Testing", "K6", "JMeter"],
+      },
+      {
+        key: "TG_MENTORSHIP",
+        id: "mentorship",
+        slug: "mentorship",
+        icon: "mentor",
+        title: "Mentorship",
+        color: "#6366f1",
+        description: "Programa de mentoria e liderança.",
+        level: "Intermediário",
+        modules: 3,
+        hours: 30,
+        topics: ["Mentoring", "Liderança"],
+      },
+    ];
+
+    sources.forEach((source) => {
+      const dataset = window[source.key];
+      if (dataset && dataset.courses && !mergedTracks.find((track) => track.id === source.id)) {
+        mergedTracks.push({
+          id: source.id,
+          slug: source.slug,
+          icon: source.icon,
+          title: source.title,
+          color: source.color,
+          description: source.description,
+          level: source.level,
+          modules: source.modules,
+          hours: source.hours,
+          topics: source.topics,
+          courses: dataset.courses,
         });
       }
-    }
-    if (window.TG_MENTORSHIP && window.TG_MENTORSHIP.courses) {
-      const mt = window.TG_MENTORSHIP;
-      if (!tracks.find(t => t.id === 'mentorship')) {
-        tracks.push({
-          id: mt.id || 'mentorship',
-          slug: mt.slug || 'mentorship',
-          icon: 'mentor',
-          title: mt.title || 'Mentorship',
-          color: mt.color || '#6366f1',
-          description: mt.description || 'Programa de mentoria e liderança.',
-          level: mt.level || 'Intermediário',
-          modules: mt.modules || 3,
-          hours: mt.hours || 30,
-          topics: mt.topics || ['Mentoring', 'Liderança'],
-          courses: mt.courses
-        });
-      }
-    }
+    });
+
     if (window.TG_MOBILE_LABS && Array.isArray(window.TG_MOBILE_LABS)) {
       window.TG_MOBILE_LABS.forEach((ml) => {
-        if (!tracks.find((t) => t.id === ml.id)) {
-          tracks.push({
+        if (!mergedTracks.find((track) => track.id === ml.id)) {
+          mergedTracks.push({
             ...ml,
             id: ml.id,
             slug: ml.slug || ml.id,
-            icon: ml.icon || '',
-            title: ml.title || ml.name || 'Mobile Lab',
-            description:
-              ml.description ||
-              `Mobile lab for ${ml.device || 'mobile testing'}`,
-            color: ml.color || '#22c55e',
-            level: ml.level || 'intermediate',
+            icon: ml.icon || "",
+            title: ml.title || ml.name || "Mobile Lab",
+            description: ml.description || `Mobile lab for ${ml.device || "mobile testing"}`,
+            color: ml.color || "#22c55e",
+            level: ml.level || "intermediate",
             modules: ml.modules || 3,
             hours: ml.hours || 30,
-            topics: ml.topics || ['Mobile', 'Appium'],
+            topics: ml.topics || ["Mobile", "Appium"],
             courses: ml.courses || [],
           });
         }
       });
     }
+
+    return mergedTracks;
+  }
+
+  function init() {
+    // Load all tracks: merge main tracks + new specialized tracks
+    tracks = mergeTrackSources();
 
     window.lang = lang; // Sync with global for utility functions
     document.documentElement.lang = lang === "en" ? "en" : "pt-BR";
@@ -1203,7 +1264,12 @@
     applyStaticI18n();
     updateLangToggle();
     checkAchievements();
-    renderHome();
+    const lastLessonId = localStorage.getItem(STORAGE_LAST_LESSON);
+    if (lastLessonId && findLesson(lastLessonId)) {
+      navigate("lesson", { lessonId: lastLessonId });
+    } else {
+      renderHome();
+    }
 
     // During local development and automated tests, some UI state can remain
     // hidden due to timing or service worker caching. Ensure track grids and
