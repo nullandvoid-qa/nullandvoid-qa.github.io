@@ -122,22 +122,10 @@ a:hover { text-decoration: underline; }
 }
 
 /* Authentication controls */
-.auth-local-signin,
 .auth-user {
   background: linear-gradient(135deg, #00e5ff, #00b8d4);
   color: #1a1a1a;
   font-weight: 700;
-}
-
-.auth-local-signin {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  min-width: 170px;
-  padding: 0.7rem 1.3rem;
-  border-radius: 18px;
-  white-space: nowrap;
 }
 
 /* Logged-in user display should match guest button visual */

@@ -39,12 +39,12 @@ test.describe('Null and Void QA full site coverage', () => {
   });
 
   test('complete a quiz, toggle language, and verify dashboard updates', async ({ page }) => {
-    await page.locator('#auth-local-signin').click();
-    await expect(page.locator('#auth-user')).toBeVisible();
+    // (guest sign-in removed) continue without local guest auth
+    // (guest sign-in removed)
 
     await page.evaluate(() => window.navigate('track', { trackId: 'starter' }));
     await page.waitForTimeout(1000);
-    await expect(page.locator('#track-breadcrumb')).toContainText('Iniciação da Guilda');
+    await expect(page.locator('#track-breadcrumb')).toContainText('Testes Básicos');
 
     await page.locator('#btn-take-quiz').click();
     await expect(page.locator('.quiz-card')).toBeVisible();
@@ -66,8 +66,8 @@ test.describe('Null and Void QA full site coverage', () => {
   });
 
   test('bookmark a lesson and verify it appears in dashboard bookmarks', async ({ page }) => {
-    await page.locator('#auth-local-signin').click();
-    await expect(page.locator('#auth-user')).toBeVisible();
+    // (guest sign-in removed) continue without local guest auth
+    // (guest sign-in removed)
 
     await page.evaluate(() => window.navigate('track', { trackId: 'starter' }));
     await page.waitForTimeout(1000);
@@ -77,6 +77,6 @@ test.describe('Null and Void QA full site coverage', () => {
 
     await page.evaluate(() => window.navigate('dashboard'));
     await page.waitForTimeout(1000);
-    await expect(page.locator('#dashboard-bookmarks')).toContainText(/Iniciação da Guilda|Guild Initiation/);
+    await expect(page.locator('#dashboard-bookmarks')).toContainText(/Testes Básicos|Basic Testing/);
   });
 });

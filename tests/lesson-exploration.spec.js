@@ -8,8 +8,7 @@ test.describe('Lesson exploration coverage', () => {
   });
 
   test('opens every lesson one by one, checks the content, and verifies the lesson actions', async ({ page }) => {
-    await page.locator('#auth-local-signin').click();
-    await expect(page.locator('#auth-user')).toBeVisible();
+    // (guest sign-in removed) continue without local guest auth
 
     const lessons = await page.evaluate(() => {
       const normalizeTrack = (track, fallbackId) => ({

@@ -17,6 +17,47 @@
     courses: {},
     lessons: {},
   };
+  const EN_COURSE_ID_MAP = {
+    c1: 's1',
+    c2: 's2',
+    c3: 's3',
+    c4: 's4',
+    c5: 's5',
+    c6: 's6',
+    c7: 's7',
+    c8: 's8',
+    c9: 's9',
+    c10: 's10',
+    c11: 's11',
+    c12: 's12',
+  };
+  const EN_LESSON_ID_MAP = {
+    l1: 's1-l1',
+    l2: 's1-l2',
+    l9: 's1-l3',
+    l3: 's2-l1',
+    l4: 's2-l2',
+    l10: 's2-l3',
+    l5: 's3-l1',
+    l6: 's3-l2',
+    l11: 's3-l3',
+    l7: 's4-l1',
+    l8: 's4-l2',
+    l12: 's4-l3',
+    l13: 's5-l1',
+    l14: 's5-l2',
+    l15: 's5-l3',
+    l16: 's6-l1',
+    l17: 's6-l2',
+    l18: 's6-l3',
+    l19: 's7-l1',
+    l20: 's7-l2',
+    l21: 's8-l1',
+    l22: 's9-l1',
+    l23: 's10-l1',
+    l24: 's11-l1',
+    l25: 's12-l1',
+  };
   const enrichment = window.TG_LESSON_ENRICHMENT || {};
   const quizzes = window.TG_QUIZZES || {};
   const checklists = window.TG_CHECKLISTS || {};
@@ -25,7 +66,8 @@
 
   let lang = getStorage(STORAGE_LANG, "tg-qaway-lang") || "pt";
   window.lang = lang; // Sync with global
-  let persona = getStorage(STORAGE_PERSONA) || "experienced";
+  // Default to no persona so home track filter uses "all"
+  let persona = getStorage(STORAGE_PERSONA) || null;
   let progress = loadProgress();
   const bookmarks = loadJson(STORAGE_BOOKMARKS, [], validateBookmarksData);
   const quizzesPassed = loadJson(
@@ -129,14 +171,16 @@
   }
 
   function localizedCourse(course) {
-    if (lang === "en" && enOverlay.courses[course.id])
-      return { ...course, title: enOverlay.courses[course.id].title };
+    const enCourseId = EN_COURSE_ID_MAP[course.id] || course.id;
+    if (lang === "en" && enOverlay.courses[enCourseId])
+      return { ...course, title: enOverlay.courses[enCourseId].title };
     return course;
   }
 
   function localizedLesson(lesson) {
-    if (lang === "en" && enOverlay.lessons[lesson.id]) {
-      const o = enOverlay.lessons[lesson.id];
+    const enLessonId = EN_LESSON_ID_MAP[lesson.id] || lesson.id;
+    if (lang === "en" && enOverlay.lessons[enLessonId]) {
+      const o = enOverlay.lessons[enLessonId];
       return {
         ...lesson,
         title: o.title,

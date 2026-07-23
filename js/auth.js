@@ -16,7 +16,7 @@
   const STORAGE_KEY_USER = 'nv_auth_user';
   const STORAGE_KEY_TOKEN = 'nv_auth_token';
   const STORAGE_KEY_PROGRESS_SUFFIX = '_progress'; // user_id + suffix
-  const GUEST_USER_ID = 'guest_user';
+  // guest login removed; anonymous progress will use a shared anonymous key
 
   function isLocalDevelopment() {
     const host = window.location.hostname;
@@ -154,7 +154,6 @@
       } catch (e) {
         console.error('Google Sign-In initialization failed:', e);
         showAuthError('Google Sign-In não disponível');
-        renderLocalAuthFallback();
       }
     };
 
@@ -167,7 +166,6 @@
         } else {
           console.warn('Google Sign-In library failed to load or is unavailable.');
           showAuthError('Google Sign-In não disponível');
-          renderLocalAuthFallback();
         }
       });
     }
@@ -175,45 +173,7 @@
     renderAuthUI();
   }
 
-  function loginGuest() {
-    const user = {
-      id: GUEST_USER_ID,
-      name: 'Convidado',
-      picture: '',
-      email: '',
-    };
-
-    window.NVAuth.user = user;
-    window.NVAuth.isAuthenticated = true;
-    saveStoredJson(STORAGE_KEY_USER, user);
-    localStorage.removeItem(STORAGE_KEY_TOKEN);
-    document.dispatchEvent(new CustomEvent('nvauth:login', { detail: user }));
-    renderAuthUI();
-    showToast(window.t ? window.t('auth.localSignInSuccess') : 'Entrou como convidado');
-  }
-
-  function renderLocalAuthFallback() {
-    const signinDiv = document.getElementById('auth-signin');
-    if (!signinDiv) return;
-    // In production we avoid duplicating Google Sign-In and guest fallback.
-    // For local development (and tests) always show the guest fallback so
-    // automated tests can use the local sign-in flow.
-    if (!isLocalDevelopment() && window.google && window.google.accounts) return;
-
-    const actionsContainer = getAuthActionsContainer();
-    if (!actionsContainer) return;
-
-    let fallbackBtn = document.getElementById('auth-local-signin');
-    if (!fallbackBtn) {
-      fallbackBtn = document.createElement('button');
-      fallbackBtn.id = 'auth-local-signin';
-      fallbackBtn.type = 'button';
-      fallbackBtn.className = 'btn btn-secondary auth-local-signin';
-      fallbackBtn.textContent = 'Convidado';
-      fallbackBtn.addEventListener('click', loginGuest);
-      actionsContainer.appendChild(fallbackBtn);
-    }
-  }
+  // Guest/local-signin flow removed. No local guest button is rendered.
 
   /**
    * Handle Google Sign-In response
@@ -330,12 +290,6 @@
     } else {
       signinDiv.classList.remove('hidden');
       userDiv.classList.add('hidden');
-      // Show guest fallback during local development so tests and local dev
-      // environments can sign in as a guest reliably. In production we avoid
-      // rendering both Google and guest buttons.
-      if (isLocalDevelopment()) {
-        renderLocalAuthFallback();
-      }
     }
   }
 
@@ -360,10 +314,6 @@
    * Get user's progress from localStorage
    */
   function getProgress() {
-    if (!window.NVAuth.isAuthenticated || !window.NVAuth.user) {
-      return {};
-    }
-
     const key = getStorageKey();
     return readStoredJson(key, {});
   }
@@ -372,11 +322,6 @@
    * Save user's progress to localStorage
    */
   function setProgress(progressData) {
-    if (!window.NVAuth.isAuthenticated || !window.NVAuth.user) {
-      console.warn('Cannot save progress: user not authenticated');
-      return false;
-    }
-
     const key = getStorageKey();
     return saveStoredJson(key, progressData);
   }
@@ -385,7 +330,7 @@
    * Get localStorage key for user progress
    */
   function getStorageKey() {
-    if (!window.NVAuth.user) return null;
+    if (!window.NVAuth.user) return `nv_anonymous${STORAGE_KEY_PROGRESS_SUFFIX}`;
     return `nv_${window.NVAuth.user.id}${STORAGE_KEY_PROGRESS_SUFFIX}`;
   }
 
@@ -478,11 +423,7 @@
    * @returns {Object} Map of book IDs to read status
    */
   function getReadBooks() {
-    if (!window.NVAuth.isAuthenticated || !window.NVAuth.user) {
-      return {};
-    }
-
-    const key = `nv_${window.NVAuth.user.id}_read_books`;
+    const key = window.NVAuth.user ? `nv_${window.NVAuth.user.id}_read_books` : `nv_anonymous_read_books`;
     return readStoredJson(key, {});
   }
 
@@ -492,18 +433,13 @@
    * @returns {boolean} Success status
    */
   function markAsRead(bookId) {
-    if (!window.NVAuth.isAuthenticated || !window.NVAuth.user) {
-      console.warn('Cannot mark book as read: user not authenticated');
-      return false;
-    }
-
     try {
       const readBooks = getReadBooks();
       readBooks[bookId] = {
         readAt: new Date().toISOString(),
         completed: true,
       };
-      const key = `nv_${window.NVAuth.user.id}_read_books`;
+      const key = window.NVAuth.user ? `nv_${window.NVAuth.user.id}_read_books` : `nv_anonymous_read_books`;
       saveStoredJson(key, readBooks);
       document.dispatchEvent(new CustomEvent('nvauth:bookmarked', { detail: { bookId, marked: true } }));
       return true;
@@ -519,15 +455,10 @@
    * @returns {boolean} Success status
    */
   function unmarkAsRead(bookId) {
-    if (!window.NVAuth.isAuthenticated || !window.NVAuth.user) {
-      console.warn('Cannot unmark book as read: user not authenticated');
-      return false;
-    }
-
     try {
       const readBooks = getReadBooks();
       delete readBooks[bookId];
-      const key = `nv_${window.NVAuth.user.id}_read_books`;
+      const key = window.NVAuth.user ? `nv_${window.NVAuth.user.id}_read_books` : `nv_anonymous_read_books`;
       saveStoredJson(key, readBooks);
       document.dispatchEvent(new CustomEvent('nvauth:bookmarked', { detail: { bookId, marked: false } }));
       return true;

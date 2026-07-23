@@ -113,7 +113,7 @@ window.TG_I18N = {
       certificatesEmpty: "Conclua uma trilha para ganhar um certificado."
     },
     toast: { lessonDone: "Aula concluída!", lessonUndone: "Aula marcada como não concluída", progressReset: "Progresso resetado", exportProgressSuccess: "Progresso exportado com sucesso!", exportProgressFail: "Falha ao exportar progresso", importProgressSuccess: "Progresso importado com sucesso!", importProgressFail: "Falha ao importar progresso", invalidProgressFile: "Arquivo de progresso inválido", langChanged: "Idioma alterado", personaSaved: "Perfil atualizado", bookmarkAdded: "Aula favoritada", bookmarkRemoved: "Aula removida dos favoritos", quizPassed: "Quiz aprovado!", achievementUnlocked: "Conquista desbloqueada!", copySuccess: "Código copiado! Cole em seu projeto!", progressSavedLocal: "Progresso salvo localmente", certificateDownloaded: "Certificado baixado!", certificateDownloadError: "Erro" },
-    auth: { localSignIn: "Entrar como convidado", localSignInSuccess: "Entrou como convidado" },
+    // local guest sign-in removed
     footer: {
       line1: "Null and Void QA Course · Do iniciante ao sênior",
       line2: "Aprenda QA de forma gratuita e prática.",
@@ -172,6 +172,30 @@ window.TG_I18N = {
     home: {
       emptyTitle: "Trilhas carregando...",
       emptyDesc: "As trilhas de aprendizado aparecerão aqui em breve."
+    },
+    verify: {
+      title: "Verificação de certificado",
+      subtitle: "Confirme a autenticidade do certificado",
+      inputPlaceholder: "Cole o código de verificação (8 caracteres)",
+      verifyButton: "Verificar",
+      loginPrompt: "Faça login para verificar certificados.",
+      loginLink: "Entrar para verificar certificados",
+      leaderboardTitle: "🏆 Certificados recentes",
+      backToCourse: "← Voltar para o curso",
+      errorSignIn: "Faça login para verificar certificados.",
+      errorInvalidCode: "Informe um código válido (8 caracteres).",
+      invalidCertificateTitle: "Certificado inválido",
+      invalidCertificateMessage: "O código não corresponde aos dados do certificado. Possível adulteração.",
+      certificateVerifiedTitle: "Certificado verificado!",
+      certificateVerifiedSuccess: "✓ Este certificado é autêntico e foi gerado em {date}",
+      certificateNotFoundTitle: "Certificado não encontrado",
+      certificateNotFoundMessage: "Este código não corresponde a nenhum certificado verificado. Verifique sua entrada.",
+      labels: {
+        name: "Nome:",
+        path: "Trilha:",
+        date: "Data:",
+        code: "Código:"
+      }
     },
     brand: {
       name: "Null and Void",
@@ -240,6 +264,30 @@ window.TG_I18N = {
     home: {
       emptyTitle: "Paths loading...",
       emptyDesc: "Learning paths will appear here soon."
+    },
+    verify: {
+      title: "Certificate Verification",
+      subtitle: "Confirm the authenticity of a certificate",
+      inputPlaceholder: "Paste verification code (8 characters)",
+      verifyButton: "Verify",
+      loginPrompt: "Please sign in to verify certificates.",
+      loginLink: "Sign in to verify certificates",
+      leaderboardTitle: "🏆 Recent certificates",
+      backToCourse: "← Back to course",
+      errorSignIn: "Please sign in to verify certificates.",
+      errorInvalidCode: "Please enter a valid code (8 characters).",
+      invalidCertificateTitle: "Invalid Certificate",
+      invalidCertificateMessage: "The code does not match the certificate data. Possible tampering.",
+      certificateVerifiedTitle: "Certificate Verified!",
+      certificateVerifiedSuccess: "✓ This certificate is authentic and was generated on {date}",
+      certificateNotFoundTitle: "Certificate Not Found",
+      certificateNotFoundMessage: "This code does not match any verified certificate. Please check your input.",
+      labels: {
+        name: "Name:",
+        path: "Path:",
+        date: "Date:",
+        code: "Code:"
+      }
     },
     roadmap: {
       recruitTitle: "Recruit Route",
@@ -360,7 +408,7 @@ window.TG_I18N = {
       certificatesEmpty: "Complete a track to earn a certificate."
     },
     toast: { lessonDone: "Lesson completed!", lessonUndone: "Lesson marked as incomplete", progressReset: "Progress reset", exportProgressSuccess: "Progress exported successfully!", exportProgressFail: "Failed to export progress", importProgressSuccess: "Progress imported successfully!", importProgressFail: "Failed to import progress", invalidProgressFile: "Invalid progress file", langChanged: "Language changed", personaSaved: "Profile updated", bookmarkAdded: "Lesson bookmarked", bookmarkRemoved: "Lesson removed from bookmarks", quizPassed: "Quiz passed!", achievementUnlocked: "Achievement unlocked!", copySuccess: "Code copied! Paste it into your project.", progressSavedLocal: "Progress saved locally", certificateDownloaded: "Certificate downloaded!", certificateDownloadError: "Error" },
-    auth: { localSignIn: "Sign in as guest", localSignInSuccess: "Signed in as guest" },
+    // local guest sign-in removed
     footer: {
       line1: "Null and Void QA Course · Beginner to senior",
       line2: "Learn QA for free with practical content.",

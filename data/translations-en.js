@@ -1,7 +1,7 @@
 window.TG_QAWAY_EN = {
   "tracks": {
     "starter": {
-      "title": "Guild Initiation",
+      "title": "Basic Testing",
       "description": "Your journey as a Guild recruit. QA fundamentals, manual testing, and first automation steps.",
       "level": "Beginner",
       "topics": [
@@ -11,32 +11,6 @@ window.TG_QAWAY_EN = {
         "Agile",
         "Git",
         "Basic JavaScript"
-      ]
-    },
-    "web": {
-      "title": "Frontend Forge",
-      "description": "Forge resilient web automations with Cypress, Playwright, Selenium, and modern frameworks.",
-      "level": "Intermediate",
-      "topics": [
-        "JavaScript",
-        "Cypress",
-        "Playwright",
-        "Selenium",
-        "Robot Framework",
-        "CI/CD"
-      ]
-    },
-    "api": {
-      "title": "Integration Workshop",
-      "description": "Build trust between systems. REST, contracts, Postman, and end-to-end API automation.",
-      "level": "Intermediate",
-      "topics": [
-        "HTTP/REST",
-        "Postman",
-        "Supertest",
-        "Rest Assured",
-        "Contracts",
-        "GraphQL intro"
       ]
     },
     "mobile": {
@@ -52,79 +26,15 @@ window.TG_QAWAY_EN = {
         "Mobile CI"
       ]
     },
-    "performance": {
-      "title": "Load Arena",
-      "description": "Face performance bottlenecks with JMeter, K6, and deep metrics analysis.",
-      "level": "Advanced",
-      "topics": [
-        "JMeter",
-        "K6",
-        "Load/Stress/Spike",
-        "Metrics",
-        "Grafana",
-        "Performance CI"
-      ]
-    },
-    "security": {
-      "title": "Security Sentinel",
-      "description": "Learn security testing, OWASP Top 10, and techniques to find vulnerabilities before attackers.",
-      "level": "Intermediate",
-      "topics": [
-        "OWASP",
-        "Basic pentest",
-        "ZAP/Burp",
-        "SQLi/XSS",
-        "Auth testing",
-        "Security CI"
-      ]
-    },
-    "devops": {
-      "title": "Pipeline Craft",
-      "description": "Integrate tests into CI/CD pipelines, Docker, reports, and quality gates that protect production.",
-      "level": "Intermediate",
-      "topics": [
-        "GitHub Actions",
-        "Docker",
-        "Allure",
-        "Quality gates",
-        "GitOps",
-        "Test infra"
-      ]
-    },
-    "accessibility": {
-      "title": "Inclusive Testing",
-      "description": "Ensure digital products work for everyone. WCAG, automated a11y, and screen reader testing.",
-      "level": "Intermediate",
-      "topics": [
-        "WCAG 2.2",
-        "axe-core",
-        "Screen readers",
-        "Keyboard nav",
-        "Lighthouse",
-        "Inclusive design"
-      ]
-    },
-    "leadership": {
-      "title": "Guild Mastery",
-      "description": "For QAs who lead teams, define test strategy, and elevate quality at organizational scale.",
-      "level": "Advanced",
-      "topics": [
-        "Test strategy",
-        "Team leadership",
-        "Metrics",
-        "Interviews",
-        "Architecture",
-        "Quality culture"
-      ]
-    },
     "senior": {
-      "title": "Advanced Testing",
-      "description": "Sophisticated testing techniques: automation, performance, security.",
+      "title": "QA Mastery",
+      "description": "Quality leadership, test strategy, and mentoring.",
       "level": "Advanced",
       "topics": [
-        "Automation",
-        "Performance",
-        "Security"
+        "Leadership",
+        "Strategy",
+        "CI/CD",
+        "Test architecture"
       ]
     },
     "intermediate": {

@@ -1,4 +1,4 @@
-# QA Starter Project — Iniciação da Guilda
+# QA Starter Project — Testes Básicos
 
 Seu ponto de partida para aprender QA do zero. Este template inclui tudo que você precisa para começar testes manuais + primeira automação.
 

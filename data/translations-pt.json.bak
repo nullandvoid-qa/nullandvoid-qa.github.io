@@ -111,12 +111,12 @@
   "lesson.l15.title": "Emulador, simulador e device real",
   "lesson.l16.title": "Gestos, scroll e orientação",
   "lesson.l17.title": "CI/CD para apps mobile",
-  "lesson.l18.title": "Qualidade e métricas mobile"
-  ,"lesson.l19.title": "Escolhendo frameworks e arquiteturas de teste"
-  ,"lesson.l20.title": "Design de testes para automação sustentável"
-  ,"lesson.l21.title": "Fundamentos de teste de performance"
-  ,"lesson.l22.title": "Noções básicas de segurança para QA"
-  ,"lesson.l23.title": "Construindo uma estratégia de testes efetiva"
-  ,"lesson.l24.title": "Métricas úteis para avaliar qualidade"
-  ,"lesson.l25.title": "Como mentorar QAs e elevar o time"
+  "lesson.l18.title": "Qualidade e métricas mobile",
+  "lesson.l19.title": "Escolhendo frameworks e arquiteturas de teste",
+  "lesson.l20.title": "Design de testes para automação sustentável",
+  "lesson.l21.title": "Fundamentos de teste de performance",
+  "lesson.l22.title": "Noções básicas de segurança para QA",
+  "lesson.l23.title": "Construindo uma estratégia de testes efetiva",
+  "lesson.l24.title": "Métricas úteis para avaliar qualidade",
+  "lesson.l25.title": "Como mentorar QAs e elevar o time"
 }

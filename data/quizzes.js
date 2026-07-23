@@ -1,7 +1,7 @@
 window.TG_QUIZZES = {
   "starter": {
     "pt": {
-      "title": "Quiz — Iniciação da Guilda",
+      "title": "Quiz — Testes Básicos",
       "passScore": 2,
       "questions": [
         {
@@ -40,7 +40,7 @@ window.TG_QUIZZES = {
       ]
     },
     "en": {
-      "title": "Quiz — Guild Initiation",
+      "title": "Quiz — Basic Testing",
       "passScore": 2,
       "questions": [
         {

@@ -57,7 +57,7 @@ npm run test:e2e
 
 | Trilha | Público | Duração | Foco |
 |--------|---------|---------|------|
-| **🚀 Iniciação da Guilda** | Iniciante | ~40h | Fundamentos, BDD, Git, primeira automação |
+| **🚀 Testes Básicos** | Iniciante | ~40h | Fundamentos, BDD, Git, primeira automação |
 | **⚡ Forja Frontend** | Intermediário | ~50h | Cypress, Playwright, E2E testing |
 | **🔧 Oficina de Integração** | Intermediário | ~45h | REST, Postman, API testing, contratos |
 | **📊 Arena de Carga** | Sênior | ~40h | JMeter, K6, performance, SLAs |

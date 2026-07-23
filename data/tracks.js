@@ -2,7 +2,7 @@ window.TG_QAWAY_TRACKS = [
   {
     id: "starter",
     slug: "guild-initiation",
-    title: "Iniciação da Guilda",
+    title: "Testes Básicos",
     icon: "starter",
     color: "#10b981",
     description: "Sua jornada como recruta da Guilda. Fundamentos de QA, testes manuais e primeiros passos em automação.",
@@ -804,6 +804,122 @@ Funcionalidade: Login | Impacto: Alto | Probabilidade: Baixo | Prioridade: Médi
               { label: "Risk-Based Testing", url: "https://www.tutorialspoint.com/software_testing_dictionary/risk_based_testing.htm" },
               { label: "Prioridade de Teste com Matriz", url: "https://www.guru99.com/risk-based-testing.html" }
             ]
+          }
+        ]
+      },
+      {
+        id: "c7",
+        title: "Automação e Frameworks",
+        lessons: [
+          {
+            id: "l19",
+            title: "Escolhendo frameworks e arquiteturas de teste",
+            duration: "45 min",
+            content: `<h2>Escolhendo frameworks e arquiteturas de teste</h2>
+
+<h3>🎯 Objetivos</h3>
+<ul>
+  <li>Comparar trade-offs entre Cypress, Playwright, Selenium e headless tools</li>
+  <li>Mapear responsabilidades entre unit/integration/E2E</li>
+  <li>Escolher padrões que reduzem custo de manutenção</li>
+</ul>
+
+<h3>📌 Tópicos</h3>
+<ul>
+  <li>Critérios de escolha: velocidade, stability, tooling, ecosystem</li>
+  <li>Arquiteturas: Page Objects, Screen Objects, Service Layer, Modular suites</li>
+  <li>Organização de suites por objetivo (smoke, regression, critical flows)</li>
+</ul>
+
+<h3>🔗 Recursos</h3>
+<ul>
+  <li><a href="https://playwright.dev">Playwright docs</a></li>
+  <li><a href="https://www.cypress.io">Cypress docs</a></li>
+  <li><a href="https://www.selenium.dev">Selenium</a></li>
+</ul>
+
+<h3>✏️ Exercício</h3>
+<p>Analise um projeto simples (demo app) e proponha uma arquitetura de testes com justificativa.</p>`
+          },
+          {
+            id: "l20",
+            title: "Design de testes para automação sustentável",
+            duration: "50 min",
+            content: `<h2>Design de testes para automação sustentável</h2>
+
+<h3>✅ Pontos-chave</h3>
+<ul>
+  <li>Separar claramente unit, integration e E2E</li>
+  <li>Priorizar testes rápidos e determinísticos no CI</li>
+  <li>Uso de fixtures, mocks e dados parametrizados para reduzir fragilidade</li>
+</ul>
+
+<h3>📘 Boas práticas</h3>
+<ul>
+  <li>Focar em validação de comportamento, não em textos exatos</li>
+  <li>Evitar dependências entre testes; tornar cada teste idempotente</li>
+  <li>Adicionar retries somente com causa investigada</li>
+</ul>
+
+<h3>✏️ Exercício</h3>
+<p>Refatore 2 testes E2E de um projeto demo para reduzir flakiness usando fixtures e waits explícitos.</p>`
+          }
+        ]
+      },
+      {
+        id: "c8",
+        title: "Performance Testing",
+        lessons: [
+          {
+            id: "l21",
+            title: "Fundamentos de teste de performance",
+            duration: "40 min",
+            content: `<h2>Fundamentos de teste de performance</h2>
+
+<h3>🎯 Objetivos</h3>
+<ul>
+  <li>Entender tipos de teste: load, stress, soak, spike</li>
+  <li>Definir métricas de sucesso (p95, error rate, throughput)</li>
+  <li>Projetar um cenário simples de carga e interpretar resultados</li>
+</ul>
+
+<h3>🔍 Ferramentas</h3>
+<ul>
+  <li>K6/Grafana para scripts e visualização</li>
+  <li>JMeter para cargas mais extensas</li>
+</ul>
+
+<h3>✏️ Exercício</h3>
+<p>Crie um script k6 que simule 50 usuários realizando um fluxo crítico e analise latência p95.</p>`
+          }
+        ]
+      },
+      {
+        id: "c9",
+        title: "Security Testing Basics",
+        lessons: [
+          {
+            id: "l22",
+            title: "Noções básicas de segurança para QA",
+            duration: "45 min",
+            content: `<h2>Noções básicas de segurança para QA</h2>
+
+<h3>🎯 Objetivos</h3>
+<ul>
+  <li>Conhecer OWASP Top 10 e exemplos práticos</li>
+  <li>Integrar scanners básicos (ZAP) em pipeline</li>
+  <li>Priorizar vulnerabilidades por risco de negócio</li>
+</ul>
+
+<h3>📌 Checklist</h3>
+<ul>
+  <li>Input validation on server-side</li>
+  <li>Auth & session management checks</li>
+  <li>Basic XSS and SQLi probes</li>
+</ul>
+
+<h3>✏️ Exercício</h3>
+<p>Execute OWASP ZAP against a demo app and summarize the top 3 findings with remediation suggestions.</p>`
           }
         ]
       }
@@ -1627,6 +1743,93 @@ História: Como usuário, quero recuperar minha senha para continuar usando a pl
               { label: "Definition of Done Guide", url: "https://www.scrum.org/resources/blog/definition-of-done" },
               { label: "Quality in Agile", url: "https://www.atlassian.com/agile/definition-of-done" }
             ]
+          }
+        ]
+      },
+      {
+        id: "c10",
+        title: "Estratégia e Arquitetura de Testes",
+        lessons: [
+          {
+            id: "l23",
+            title: "Construindo uma estratégia de testes efetiva",
+            duration: "50 min",
+            content: `<h2>Construindo uma estratégia de testes efetiva</h2>
+
+<h3>🎯 Objetivos</h3>
+<ul>
+  <li>Aprender a mapear risco e priorizar cobertura de testes</li>
+  <li>Alinhar critérios de aceitação e Definition of Done com Produto</li>
+  <li>Definir políticas de automação e níveis de teste</li>
+</ul>
+
+<h3>📌 Estrutura</h3>
+<ul>
+  <li>Risco → prioridade → tipo de teste</li>
+  <li>Critérios de aceitação testáveis</li>
+  <li>Políticas de revisão e owner dos testes</li>
+</ul>
+
+<h3>✏️ Exercício</h3>
+<p>Crie um plano de testes de alto nível para uma nova feature e identifique 5 riscos prioritários.</p>`
+          }
+        ]
+      },
+      {
+        id: "c11",
+        title: "Observability e Métricas",
+        lessons: [
+          {
+            id: "l24",
+            title: "Métricas úteis para avaliar qualidade",
+            duration: "45 min",
+            content: `<h2>Métricas úteis para avaliar qualidade</h2>
+
+<h3>🎯 Objetivos</h3>
+<ul>
+  <li>Entender métricas essenciais: MTTR, defect density, flakiness, coverage</li>
+  <li>Usar métricas para tomar decisões, não para punir equipes</li>
+  <li>Construir dashboards simples para stakeholders</li>
+</ul>
+
+<h3>📊 Exemplos</h3>
+<ul>
+  <li>MTTR (mean time to recovery)</li>
+  <li>Defect escape rate (issues found in production)</li>
+  <li>Test reliability / flakiness rate</li>
+</ul>
+
+<h3>✏️ Exercício</h3>
+<p>Monte um pequeno dashboard com três métricas chave e explique a ação que cada métrica recomenda.</p>`
+          }
+        ]
+      },
+      {
+        id: "c12",
+        title: "Mentoring e Coaching",
+        lessons: [
+          {
+            id: "l25",
+            title: "Como mentorar QAs e elevar o time",
+            duration: "40 min",
+            content: `<h2>Como mentorar QAs e elevar o time</h2>
+
+<h3>🎯 Objetivos</h3>
+<ul>
+  <li>Aprender técnicas práticas de feedback e coaching</li>
+  <li>Praticar pair-testing e pair-programming para transferir conhecimento</li>
+  <li>Definir planos de crescimento e habilidades mensuráveis</li>
+</ul>
+
+<h3>📌 Atividades</h3>
+<ul>
+  <li>Sessões de revisão de teste e código com foco em aprendizado</li>
+  <li>Planos de desenvolvimento individuais (IDPs)</li>
+  <li>Como realizar entrevistas técnicas e avaliar candidatos</li>
+</ul>
+
+<h3>✏️ Exercício</h3>
+<p>Prepare um roteiro de 30 minutos para uma sessão de mentoring com um QA júnior, incluindo objetivos e follow-ups.</p>`
           }
         ]
       }

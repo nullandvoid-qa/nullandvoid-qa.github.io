@@ -1,0 +1,545 @@
+﻿
+> testersguild.github.io@1.0.0 test
+> jest --coverage --runInBand --verbose
+
+node.exe : FAIL js/__tests__/track-translations.test.js
+No linha:1 caractere:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\Rampz\AppData\Roaming\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (FAIL js/__tests...lations.test.js 
+   :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  Track translation coverage
+    ΓêÜ all top-level track IDs have English translations (52 ms)
+    ΓêÜ all actual track IDs have English translations (3 ms)
+    ΓêÜ all actual course IDs have English translation entries via legacy 
+mapping (3 ms)
+    ΓêÜ all actual lesson IDs have enough English lesson entries for their 
+course (5 ms)
+    ΓêÜ all English track IDs have Portuguese translation stubs (6 ms)
+    ΓêÜ all English course IDs have Portuguese translation stubs (8 ms)
+    ├ù all actual course IDs have English translation entries (5 ms)
+    ├ù all actual lesson IDs have English translation entries (3 ms)
+    ΓêÜ all extracted lesson IDs have Portuguese translation stubs (4 ms)
+
+  ΓùÅ Track translation coverage ΓÇ║ all actual course IDs have English 
+translation entries
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected value: "c1"
+    Received array: ["s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", 
+"s10", ΓÇª]
+
+    [0m [90m 112 |[39m     expect(actualCourseIds)[33m.[39mnot[33m.[39mt
+oHaveLength([35m0[39m)[33m;[39m
+     [90m 113 |[39m     actualCourseIds[33m.[39mforEach((id) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 114 |[39m       
+expect(enCourseIds)[33m.[39mtoContain(id)[33m;[39m
+     [90m     |[39m                           [31m[1m^[22m[39m
+     [90m 115 |[39m     })[33m;[39m
+     [90m 116 |[39m   })[33m;[39m
+     [90m 117 |[39m[0m
+
+      at toContain (js/__tests__/track-translations.test.js:114:27)
+          at Array.forEach (<anonymous>)
+      at Object.forEach (js/__tests__/track-translations.test.js:113:21)
+
+  ΓùÅ Track translation coverage ΓÇ║ all actual lesson IDs have English 
+translation entries
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected value: "l1"
+    Received array: ["s1-l1", "s1-l2", "s1-l3", "s2-l1", "s2-l2", "s2-l3", 
+"s3-l1", "s3-l2", "s3-l3", "s4-l1", ΓÇª]
+
+    [0m [90m 126 |[39m     expect(actualLessonIds)[33m.[39mnot[33m.[39mt
+oHaveLength([35m0[39m)[33m;[39m
+     [90m 127 |[39m     actualLessonIds[33m.[39mforEach((id) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 128 |[39m       
+expect(enLessonIds)[33m.[39mtoContain(id)[33m;[39m
+     [90m     |[39m                           [31m[1m^[22m[39m
+     [90m 129 |[39m     })[33m;[39m
+     [90m 130 |[39m   })[33m;[39m
+     [90m 131 |[39m[0m
+
+      at toContain (js/__tests__/track-translations.test.js:128:27)
+          at Array.forEach (<anonymous>)
+      at Object.forEach (js/__tests__/track-translations.test.js:127:21)
+
+PASS js/__tests__/view-helpers.test.js
+  view helpers
+    ΓêÜ wireFilterBar attaches a callback for each filter selection (69 ms)
+    ΓêÜ bindAccessibleAction wires click and keyboard activation (2 ms)
+    ΓêÜ setActiveView toggles the active view and nav state (3 ms)
+    ΓêÜ buildTrackCardHtml includes progress, title and topic tags (1 ms)
+    ΓêÜ buildTrackDetailHtml includes hero markup and course list (1 ms)
+    ΓêÜ buildDashboardStatsHtml and buildBookmarksHtml render dashboard 
+content (2 ms)
+    ΓêÜ renderContinueBanner renders a richer resume card with a primary 
+action (3 ms)
+    ΓêÜ buildGlossaryHtml and buildLabsHtml render their sections (1 ms)
+    ΓêÜ buildQuizResultHtml renders pass and fail states (1 ms)
+    ΓêÜ buildRoadmapHtml renders roadmap cards and actions (1 ms)
+    ΓêÜ buildEmptyStateHtml renders a message with the empty-state class (3 ms)
+    ΓêÜ buildDashboardEmptyStateHtml and buildSearchEmptyStateHtml render 
+their sections (1 ms)
+    ΓêÜ bindTrackQuizHandlers wires quiz submission, result rendering and 
+retry (2 ms)
+    ΓêÜ bindLessonPageActions wires lesson buttons and feedback submit (51 ms)
+    ΓêÜ buildDashboardBookmarksSectionHtml renders empty state when no 
+bookmarks exist (1 ms)
+    ΓêÜ buildDashboardBookmarksSectionHtml renders bookmark buttons when 
+lessons exist (1 ms)
+    ΓêÜ buildDashboardCertificatesSectionHtml renders a certificate preview 
+example (45 ms)
+    ΓêÜ buildDashboardCertificatesSectionHtml renders empty state when no 
+completed tracks exist (1 ms)
+    ΓêÜ buildDashboardCertificatesSectionHtml renders certificate cards when 
+tracks exist (5 ms)
+    ΓêÜ buildDashboardCertificatesSectionHtml uses the translation helper for 
+its UI labels (7 ms)
+    ΓêÜ buildAchievementsHtml renders unlocked and locked achievements (5 ms)
+    ΓêÜ bindDashboardBookmarkHandlers attaches lesson navigation callbacks (10 
+ms)
+    ΓêÜ bindDashboardCertificateHandlers calls onDownload with track ids (9 ms)
+    ΓêÜ buildTrackCoursesHtml renders lesson lists and course sections (1 ms)
+
+  console.error
+    Error: Not implemented: HTMLCanvasElement.prototype.getContext (without installing the canvas npm package)
+        at module.exports (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+        at HTMLCanvasElementImpl.getContext (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jsdom\lib\jsdom\living\nodes\HTMLCanvasElement-impl.js:42:5)
+        at HTMLCanvasElement.getContext (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jsdom\lib\jsdom\living\generated\HTMLCanvasElement.js:131:58)
+        at HTMLCanvasElement.call [as getContext] (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\js\certificates.js:200:74)
+        at getContext (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\js\certificates.js:224:20)
+        at Object.renderCertificateCanvas [as generateCertificate] (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\js\certificates.js:397:17)
+        at Object.generateCertificate (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\js\__tests__\certificates.test.js:52:47)
+        at Promise.then.completed (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\utils.js:298:28)
+        at new Promise (<anonymous>)
+        at callAsyncCircusFn (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\utils.js:231:10)
+        at _callCircusTest (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:316:40)
+        at _runTest (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:252:3)
+        at _runTestsForDescribeBlock (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:126:9)
+        at _runTestsForDescribeBlock (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:121:9)
+        at run (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:71:3)
+        at runAndTransformResultsToJestFormat (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+        at jestAdapter (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+        at runTestInternal (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-runner\build\runTest.js:367:16)
+        at runTest (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-runner\build\runTest.js:444:34) {
+      type: 'not implemented'
+    }
+
+    [0m [90m 198 |[39m       }
+     [90m 199 |[39m       [36mtry[39m {
+    [31m[1m>[22m[39m[90m 200 |[39m         [36mreturn[39m [36mtypeof[39m nativeGetContext [33m===[39m [32m'function'[39m [33m?[39m nativeGetContext[33m.[39mcall([36mthis[39m[33m,[39m type) [33m:[39m [36mnull[39m[33m;[39m
+     [90m     |[39m                                                                          [31m[1m^[22m[39m
+     [90m 201 |[39m       } [36mcatch[39m (error) {
+     [90m 202 |[39m         [36mreturn[39m createFallbackCanvasContext([36mthis[39m)[33m;[39m
+     [90m 203 |[39m       }[0m
+
+      at VirtualConsole.<anonymous> (node_modules/@jest/environment-jsdom-abstract/build/index.js:87:23)
+      at module.exports (node_modules/jsdom/lib/jsdom/browser/not-implemented.js:12:26)
+      at HTMLCanvasElementImpl.getContext (node_modules/jsdom/lib/jsdom/living/nodes/HTMLCanvasElement-impl.js:42:5)
+      at HTMLCanvasElement.getContext (node_modules/jsdom/lib/jsdom/living/generated/HTMLCanvasElement.js:131:58)
+      at HTMLCanvasElement.call [as getContext] (js/certificates.js:200:74)
+      at getContext (js/certificates.js:224:20)
+      at Object.renderCertificateCanvas [as generateCertificate] (js/certificates.js:397:17)
+      at Object.generateCertificate (js/__tests__/certificates.test.js:52:47)
+
+  console.error
+    Error: Not implemented: HTMLCanvasElement.prototype.toDataURL (without installing the canvas npm package)
+        at module.exports (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+        at HTMLCanvasElementImpl.toDataURL (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jsdom\lib\jsdom\living\nodes\HTMLCanvasElement-impl.js:55:5)
+        at HTMLCanvasElement.toDataURL (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jsdom\lib\jsdom\living\generated\HTMLCanvasElement.js:162:34)
+        at HTMLCanvasElement.call [as toDataURL] (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\js\certificates.js:210:34)
+        at toDataURL (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\js\certificates.js:252:24)
+        at Object.renderCertificateCanvas [as generateCertificate] (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\js\certificates.js:397:17)
+        at Object.generateCertificate (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\js\__tests__\certificates.test.js:52:47)
+        at Promise.then.completed (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\utils.js:298:28)
+        at new Promise (<anonymous>)
+        at callAsyncCircusFn (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\utils.js:231:10)
+        at _callCircusTest (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:316:40)
+        at _runTest (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:252:3)
+        at _runTestsForDescribeBlock (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:126:9)
+        at _runTestsForDescribeBlock (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:121:9)
+        at run (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:71:3)
+        at runAndTransformResultsToJestFormat (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+        at jestAdapter (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+        at runTestInternal (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-runner\build\runTest.js:367:16)
+        at runTest (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-runner\build\runTest.js:444:34) {
+      type: 'not implemented'
+    }
+
+    [0m [90m 208 |[39m       [36mif[39m ([36mtypeof[39m nativeToDataURL [33m===[39m [32m'function'[39m) {
+     [90m 209 |[39m         [36mtry[39m {
+    [31m[1m>[22m[39m[90m 210 |[39m           [36mreturn[39m nativeToDataURL[33m.[39mcall([36mthis[39m[33m,[39m type)[33m;[39m
+     [90m     |[39m                                  [31m[1m^[22m[39m
+     [90m 211 |[39m         } [36mcatch[39m (error) {
+     [90m 212 |[39m           [36mreturn[39m [32m'data:image/png;base64,AAAA'[39m[33m;[39m
+     [90m 213 |[39m         }[0m
+
+      at VirtualConsole.<anonymous> (node_modules/@jest/environment-jsdom-abstract/build/index.js:87:23)
+      at module.exports (node_modules/jsdom/lib/jsdom/browser/not-implemented.js:12:26)
+      at HTMLCanvasElementImpl.toDataURL (node_modules/jsdom/lib/jsdom/living/nodes/HTMLCanvasElement-impl.js:55:5)
+      at HTMLCanvasElement.toDataURL (node_modules/jsdom/lib/jsdom/living/generated/HTMLCanvasElement.js:162:34)
+      at HTMLCanvasElement.call [as toDataURL] (js/certificates.js:210:34)
+      at toDataURL (js/certificates.js:252:24)
+      at Object.renderCertificateCanvas [as generateCertificate] (js/certificates.js:397:17)
+      at Object.generateCertificate (js/__tests__/certificates.test.js:52:47)
+
+  console.error
+    Error: Not implemented: HTMLCanvasElement.prototype.toDataURL (without installing the canvas npm package)
+        at module.exports (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+        at HTMLCanvasElementImpl.toDataURL (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jsdom\lib\jsdom\living\nodes\HTMLCanvasElement-impl.js:55:5)
+        at HTMLCanvasElement.toDataURL (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jsdom\lib\jsdom\living\generated\HTMLCanvasElement.js:162:34)
+        at HTMLCanvasElement.call [as toDataURL] (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\js\certificates.js:210:34)
+        at Object.toDataURL [as generateCertificate] (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\js\certificates.js:399:36)
+        at Object.generateCertificate (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\js\__tests__\certificates.test.js:52:47)
+        at Promise.then.completed (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\utils.js:298:28)
+        at new Promise (<anonymous>)
+        at callAsyncCircusFn (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\utils.js:231:10)
+        at _callCircusTest (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:316:40)
+        at _runTest (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:252:3)
+        at _runTestsForDescribeBlock (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:126:9)
+        at _runTestsForDescribeBlock (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:121:9)
+        at run (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:71:3)
+        at runAndTransformResultsToJestFormat (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+        at jestAdapter (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+        at runTestInternal (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-runner\build\runTest.js:367:16)
+        at runTest (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-runner\build\runTest.js:444:34) {
+      type: 'not implemented'
+    }
+
+    [0m [90m 208 |[39m       [36mif[39m ([36mtypeof[39m nativeToDataURL [33m===[39m [32m'function'[39m) {
+     [90m 209 |[39m         [36mtry[39m {
+    [31m[1m>[22m[39m[90m 210 |[39m           [36mreturn[39m nativeToDataURL[33m.[39mcall([36mthis[39m[33m,[39m type)[33m;[39m
+     [90m     |[39m                                  [31m[1m^[22m[39m
+     [90m 211 |[39m         } [36mcatch[39m (error) {
+     [90m 212 |[39m           [36mreturn[39m [32m'data:image/png;base64,AAAA'[39m[33m;[39m
+     [90m 213 |[39m         }[0m
+
+      at VirtualConsole.<anonymous> (node_modules/@jest/environment-jsdom-abstract/build/index.js:87:23)
+      at module.exports (node_modules/jsdom/lib/jsdom/browser/not-implemented.js:12:26)
+      at HTMLCanvasElementImpl.toDataURL (node_modules/jsdom/lib/jsdom/living/nodes/HTMLCanvasElement-impl.js:55:5)
+      at HTMLCanvasElement.toDataURL (node_modules/jsdom/lib/jsdom/living/generated/HTMLCanvasElement.js:162:34)
+      at HTMLCanvasElement.call [as toDataURL] (js/certificates.js:210:34)
+      at Object.toDataURL [as generateCertificate] (js/certificates.js:399:36)
+      at Object.generateCertificate (js/__tests__/certificates.test.js:52:47)
+
+  console.error
+    Error: Not implemented: HTMLCanvasElement.prototype.getContext (without installing the canvas npm package)
+        at module.exports (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+        at HTMLCanvasElementImpl.getContext (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jsdom\lib\jsdom\living\nodes\HTMLCanvasElement-impl.js:42:5)
+        at HTMLCanvasElement.getContext (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jsdom\lib\jsdom\living\generated\HTMLCanvasElement.js:131:58)
+        at HTMLCanvasElement.call [as getContext] (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\js\certificates.js:200:74)
+        at getContext (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\js\certificates.js:224:20)
+        at Object.renderCertificateCanvas [as generateCertificate] (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\js\certificates.js:397:17)
+        at Object.generateCertificate (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\js\__tests__\certificates.test.js:66:47)
+        at Promise.then.completed (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\utils.js:298:28)
+        at new Promise (<anonymous>)
+        at callAsyncCircusFn (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\utils.js:231:10)
+        at _callCircusTest (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:316:40)
+        at _runTest (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:252:3)
+        at _runTestsForDescribeBlock (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:126:9)
+        at _runTestsForDescribeBlock (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:121:9)
+        at run (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:71:3)
+        at runAndTransformResultsToJestFormat (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+        at jestAdapter (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+        at runTestInternal (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-runner\build\runTest.js:367:16)
+        at runTest (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-runner\build\runTest.js:444:34) {
+      type: 'not implemented'
+    }
+
+    [0m [90m 198 |[39m       }
+     [90m 199 |[39m       [36mtry[39m {
+    [31m[1m>[22m[39m[90m 200 |[39m         [36mreturn[39m [36mtypeof[39m nativeGetContext [33m===[39m [32m'function'[39m [33m?[39m nativeGetContext[33m.[39mcall([36mthis[39m[33m,[39m type) [33m:[39m [36mnull[39m[33m;[39m
+     [90m     |[39m                                                                          [31m[1m^[22m[39m
+     [90m 201 |[39m       } [36mcatch[39m (error) {
+     [90m 202 |[39m         [36mreturn[39m createFallbackCanvasContext([36mthis[39m)[33m;[39m
+     [90m 203 |[39m       }[0m
+
+      at VirtualConsole.<anonymous> (node_modules/@jest/environment-jsdom-abstract/build/index.js:87:23)
+      at module.exports (node_modules/jsdom/lib/jsdom/browser/not-implemented.js:12:26)
+      at HTMLCanvasElementImpl.getContext (node_modules/jsdom/lib/jsdom/living/nodes/HTMLCanvasElement-impl.js:42:5)
+      at HTMLCanvasElement.getContext (node_modules/jsdom/lib/jsdom/living/generated/HTMLCanvasElement.js:131:58)
+      at HTMLCanvasElement.call [as getContext] (js/certificates.js:200:74)
+      at getContext (js/certificates.js:224:20)
+      at Object.renderCertificateCanvas [as generateCertificate] (js/certificates.js:397:17)
+      at Object.generateCertificate (js/__tests__/certificates.test.js:66:47)
+
+  console.error
+    Error: Not implemented: HTMLCanvasElement.prototype.toDataURL (without installing the canvas npm package)
+        at module.exports (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+        at HTMLCanvasElementImpl.toDataURL (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jsdom\lib\jsdom\living\nodes\HTMLCanvasElement-impl.js:55:5)
+        at HTMLCanvasElement.toDataURL (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jsdom\lib\jsdom\living\generated\HTMLCanvasElement.js:162:34)
+        at HTMLCanvasElement.call [as toDataURL] (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\js\certificates.js:210:34)
+        at toDataURL (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\js\certificates.js:252:24)
+        at Object.renderCertificateCanvas [as generateCertificate] (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\js\certificates.js:397:17)
+        at Object.generateCertificate (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\js\__tests__\certificates.test.js:66:47)
+        at Promise.then.completed (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\utils.js:298:28)
+        at new Promise (<anonymous>)
+        at callAsyncCircusFn (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\utils.js:231:10)
+        at _callCircusTest (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:316:40)
+        at _runTest (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:252:3)
+        at _runTestsForDescribeBlock (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:126:9)
+        at _runTestsForDescribeBlock (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:121:9)
+        at run (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:71:3)
+        at runAndTransformResultsToJestFormat (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+        at jestAdapter (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+        at runTestInternal (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-runner\build\runTest.js:367:16)
+        at runTest (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-runner\build\runTest.js:444:34) {
+      type: 'not implemented'
+    }
+
+    [0m [90m 208 |[39m       [36mif[39m ([36mtypeof[39m nativeToDataURL [33m===[39m [32m'function'[39m) {
+     [90m 209 |[39m         [36mtry[39m {
+    [31m[1m>[22m[39m[90m 210 |[39m           [36mreturn[39m nativeToDataURL[33m.[39mcall([36mthis[39m[33m,[39m type)[33m;[39m
+     [90m     |[39m                                  [31m[1m^[22m[39m
+     [90m 211 |[39m         } [36mcatch[39m (error) {
+     [90m 212 |[39m           [36mreturn[39m [32m'data:image/png;base64,AAAA'[39m[33m;[39m
+     [90m 213 |[39m         }[0m
+
+      at VirtualConsole.<anonymous> (node_modules/@jest/environment-jsdom-abstract/build/index.js:87:23)
+      at module.exports (node_modules/jsdom/lib/jsdom/browser/not-implemented.js:12:26)
+      at HTMLCanvasElementImpl.toDataURL (node_modules/jsdom/lib/jsdom/living/nodes/HTMLCanvasElement-impl.js:55:5)
+      at HTMLCanvasElement.toDataURL (node_modules/jsdom/lib/jsdom/living/generated/HTMLCanvasElement.js:162:34)
+      at HTMLCanvasElement.call [as toDataURL] (js/certificates.js:210:34)
+      at toDataURL (js/certificates.js:252:24)
+      at Object.renderCertificateCanvas [as generateCertificate] (js/certificates.js:397:17)
+      at Object.generateCertificate (js/__tests__/certificates.test.js:66:47)
+
+  console.error
+    Error: Not implemented: HTMLCanvasElement.prototype.toDataURL (without installing the canvas npm package)
+        at module.exports (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+        at HTMLCanvasElementImpl.toDataURL (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jsdom\lib\jsdom\living\nodes\HTMLCanvasElement-impl.js:55:5)
+        at HTMLCanvasElement.toDataURL (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jsdom\lib\jsdom\living\generated\HTMLCanvasElement.js:162:34)
+        at HTMLCanvasElement.call [as toDataURL] (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\js\certificates.js:210:34)
+        at Object.toDataURL [as generateCertificate] (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\js\certificates.js:399:36)
+        at Object.generateCertificate (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\js\__tests__\certificates.test.js:66:47)
+        at Promise.then.completed (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\utils.js:298:28)
+        at new Promise (<anonymous>)
+        at callAsyncCircusFn (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\utils.js:231:10)
+        at _callCircusTest (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:316:40)
+        at _runTest (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:252:3)
+        at _runTestsForDescribeBlock (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:126:9)
+        at _runTestsForDescribeBlock (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:121:9)
+        at run (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:71:3)
+        at runAndTransformResultsToJestFormat (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+        at jestAdapter (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+        at runTestInternal (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-runner\build\runTest.js:367:16)
+        at runTest (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-runner\build\runTest.js:444:34) {
+      type: 'not implemented'
+    }
+
+    [0m [90m 208 |[39m       [36mif[39m ([36mtypeof[39m nativeToDataURL [33m===[39m [32m'function'[39m) {
+     [90m 209 |[39m         [36mtry[39m {
+    [31m[1m>[22m[39m[90m 210 |[39m           [36mreturn[39m nativeToDataURL[33m.[39mcall([36mthis[39m[33m,[39m type)[33m;[39m
+     [90m     |[39m                                  [31m[1m^[22m[39m
+     [90m 211 |[39m         } [36mcatch[39m (error) {
+     [90m 212 |[39m           [36mreturn[39m [32m'data:image/png;base64,AAAA'[39m[33m;[39m
+     [90m 213 |[39m         }[0m
+
+      at VirtualConsole.<anonymous> (node_modules/@jest/environment-jsdom-abstract/build/index.js:87:23)
+      at module.exports (node_modules/jsdom/lib/jsdom/browser/not-implemented.js:12:26)
+      at HTMLCanvasElementImpl.toDataURL (node_modules/jsdom/lib/jsdom/living/nodes/HTMLCanvasElement-impl.js:55:5)
+      at HTMLCanvasElement.toDataURL (node_modules/jsdom/lib/jsdom/living/generated/HTMLCanvasElement.js:162:34)
+      at HTMLCanvasElement.call [as toDataURL] (js/certificates.js:210:34)
+      at Object.toDataURL [as generateCertificate] (js/certificates.js:399:36)
+      at Object.generateCertificate (js/__tests__/certificates.test.js:66:47)
+
+PASS js/__tests__/certificates.test.js
+  TG_CERTIFICATES Module
+    ΓêÜ generateCertificate includes Google user name when provided (125 ms)
+    ΓêÜ generateCertificate uses blank name when user is not logged in (35 ms)
+    ΓêÜ buildCertificatePayload maps track data into the new certificate 
+engine shape (1 ms)
+    ΓêÜ saveCertificate persists certificate with the provided user name or 
+blank string (4 ms)
+
+PASS js/__tests__/logout-ui.test.js
+  Logout UI regression
+    ΓêÜ calls location.reload after logout to restore login UI (26 ms)
+
+PASS js/__tests__/storage.test.js
+  Storage helpers
+    loadJson
+      ΓêÜ returns parsed JSON for valid JSON string (27 ms)
+      ΓêÜ returns fallback for invalid JSON
+      ΓêÜ returns fallback for null value
+      ΓêÜ uses validator function when provided (1 ms)
+      ΓêÜ returns fallback when validator fails (1 ms)
+    getStorage
+      ΓêÜ returns value for the primary storage key (1 ms)
+      ΓêÜ falls back to a legacy key when the primary key is missing (1 ms)
+    saveJson
+      ΓêÜ saves data as JSON string (1 ms)
+      ΓêÜ overwrites existing data (1 ms)
+    validateProgressData
+      ΓêÜ validates correct progress structure (3 ms)
+      ΓêÜ rejects invalid progress structure (1 ms)
+      ΓêÜ rejects progress with invalid completedAt (1 ms)
+    validateBookmarksData
+      ΓêÜ validates correct bookmarks structure (1 ms)
+      ΓêÜ rejects invalid bookmarks structure (1 ms)
+      ΓêÜ rejects bookmarks with non-string items (1 ms)
+    validateQuizzesPassedData
+      ΓêÜ validates correct quizzes structure (1 ms)
+      ΓêÜ rejects invalid quizzes structure (1 ms)
+      ΓêÜ rejects quizzes with invalid score (1 ms)
+    validateChecklistState
+      ΓêÜ validates a checklist mapping with numeric indexes (1 ms)
+      ΓêÜ rejects invalid checklist state structures (3 ms)
+      ΓêÜ rejects checklist items with non-numeric indexes (2 ms)
+    importProgressFromFile
+      ΓêÜ accepts a valid payload with checklist data when the shared 
+validator is available (60 ms)
+
+PASS js/__tests__/utils-translate.test.js
+  utils.t translation helper
+    ΓêÜ returns Portuguese value when lang is pt (6 ms)
+    ΓêÜ returns English value when lang is en (7 ms)
+    ΓêÜ returns fallback when path missing (12 ms)
+    ΓêÜ returns a readable label instead of leaking the translation key when 
+the label is missing (8 ms)
+
+PASS js/__tests__/lesson-renderers.test.js
+  lesson renderers
+    ΓêÜ buildLessonBodyHtml preserves prebuilt primer and senior markup (15 ms)
+    ΓêÜ buildLessonFeedbackHtml renders the feedback form shell (1 ms)
+
+PASS js/__tests__/i18n.test.js
+  i18n functions
+    getCurrentLangKey
+      ΓêÜ returns "pt" when lang is "pt" (3 ms)
+      ΓêÜ returns "en" when lang is "en" (1 ms)
+      ΓêÜ returns "pt" as fallback when lang is undefined (1 ms)
+    window.t helper
+      ΓêÜ returns PT translation when lang is pt (8 ms)
+      ΓêÜ returns EN translation when lang is en (2 ms)
+      ΓêÜ falls back to PT when lang is undefined (2 ms)
+      ΓêÜ returns the key when the translation path is missing (2 ms)
+      ΓêÜ uses the centralized translation API when it is available (5 ms)
+
+  console.warn
+    Error: missing file
+        at fetchImpl (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\js\__tests__\lesson-content.test.js:7:40)
+        at fetchImpl (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\js\lesson-content.js:73:30)
+        at Object.loadLessonContent (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\js\__tests__\lesson-content.test.js:5:27)
+        at Promise.then.completed (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\utils.js:298:28)
+        at new Promise (<anonymous>)
+        at callAsyncCircusFn (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\utils.js:231:10)
+        at _callCircusTest (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:316:40)
+        at _runTest (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:252:3)
+        at _runTestsForDescribeBlock (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:126:9)
+        at _runTestsForDescribeBlock (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:121:9)
+        at run (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\run.js:71:3)
+        at runAndTransformResultsToJestFormat (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapterInit.js:122:21)
+        at jestAdapter (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-circus\build\legacy-code-todo-rewrite\jestAdapter.js:79:19)
+        at runTestInternal (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-runner\build\runTest.js:367:16)
+        at runTest (C:\Users\Rampz\Desktop\nullandvoid-qa.github.io\node_modules\jest-runner\build\runTest.js:444:34)
+
+    [0m [90m 84 |[39m     } [36mcatch[39m (error) {
+     [90m 85 |[39m       [36mif[39m (sourcePath [33m&&[39m sourcePath [33m!==[39m [32m"/content/lessons/undefined.md"[39m) {
+    [31m[1m>[22m[39m[90m 86 |[39m         console[33m.[39mwarn(error)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 87 |[39m       }
+     [90m 88 |[39m       [36mreturn[39m {
+     [90m 89 |[39m         content[33m:[39m lesson[33m.[39mcontent [33m||[39m [32m""[39m[33m,[39m[0m
+
+      at warn (js/lesson-content.js:86:17)
+      at Object.<anonymous> (js/__tests__/lesson-content.test.js:5:21)
+
+PASS js/__tests__/lesson-content.test.js
+  lesson content loader
+    ΓêÜ uses inline lesson content when no markdown source exists (39 ms)
+    ΓêÜ loads markdown content from a mapped path and converts it to html (3 
+ms)
+    ΓêÜ discovers markdown content from the default lesson path when no map 
+exists (2 ms)
+    ΓêÜ preserves raw html content stored in markdown files (1 ms)
+
+PASS js/__tests__/utils.test.js
+  escapeHtml
+    ΓêÜ escapes HTML special characters (4 ms)
+    ΓêÜ handles empty string (1 ms)
+    ΓêÜ handles non-string input (1 ms)
+
+PASS js/__tests__/tracks-structure.test.js
+  data/tracks.js structure
+    ΓêÜ exports an array of tracks with required fields (25 ms)
+
+PASS js/__tests__/auth.test.js
+  NVAuth Module
+    ΓêÜ should initialize with authenticated = false (1 ms)
+    ΓêÜ should get user when authenticated (1 ms)
+    ΓêÜ should generate correct storage key for user (2 ms)
+    ΓêÜ should save and retrieve user progress (2 ms)
+    ΓêÜ should not save progress if not authenticated
+    ΓêÜ should return empty progress if no data stored (1 ms)
+    ΓêÜ should return null from getUserName when not authenticated (1 ms)
+    ΓêÜ should return user name from getUserName when authenticated
+    ΓêÜ should isolate progress between users (1 ms)
+
+PASS js/__tests__/tracks-translations.test.js
+  tracks -> translations consistency
+    ΓêÜ every track has an english translation entry (10 ms)
+
+PASS js/__tests__/app-certificates.test.js
+  Certificate download integration
+    ΓêÜ downloadCertificate is called with blank name when user is not logged 
+in (28 ms)
+    ΓêÜ downloadCertificate is called with user name when user is logged in (6 
+ms)
+
+PASS js/__tests__/app-storage.test.js
+  app storage normalization
+    ΓêÜ normalizes progress, bookmarks, and quizzes to safe shapes (4 ms)
+    ΓêÜ normalizes imported payload values before returning them (1 ms)
+
+PASS js/__tests__/app-bootstrap.test.js
+  app bootstrap registry
+    ΓêÜ registers state accessors and helpers on window.NVApp (12 ms)
+
+PASS js/__tests__/certificate-english.test.js
+  Certificate English content regression
+    ΓêÜ certificate payload uses English title and description for 
+intermediate track (6 ms)
+
+PASS js/__tests__/book-page.test.js
+  book detail page helpers
+    ΓêÜ stores and retrieves bookmarked book IDs (3 ms)
+    ΓêÜ detects bookmarked books by id (1 ms)
+    ΓêÜ toggles bookmark state correctly
+
+------------------------|---------|----------|---------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+File                    | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s                                                                                                                                                    
+------------------------|---------|----------|---------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+All files               |   31.45 |    28.63 |   29.61 |   32.78 |                                                                                                                                                                      
+ app-bootstrap.js       |   95.65 |    52.38 |      80 |     100 | 3-31                                                                                                                                                                 
+ app-dashboard.js       |   91.48 |    56.75 |     100 |   95.23 | 20-21                                                                                                                                                                
+ app-home.js            |       0 |        0 |       0 |       0 | 1-127                                                                                                                                                                
+ app-i18n.js            |   94.11 |    83.33 |     100 |   93.75 | 3                                                                                                                                                                    
+ app-lesson.js          |       0 |        0 |       0 |       0 | 1-201                                                                                                                                                                
+ app-navigation.js      |       0 |        0 |       0 |       0 | 2-39                                                                                                                                                                 
+ app-storage.js         |   52.04 |    63.71 |   73.33 |   48.27 | 5,12,20,27,37,45,56-117,123,136,140,152,161-162,172-174                                                                                                              
+ app-track.js           |       0 |        0 |       0 |       0 | 1-104                                                                                                                                                                
+ app.js                 |       0 |        0 |       0 |       0 | 1-1121                                                                                                                                                               
+ auth.js                |   19.17 |    14.91 |   23.52 |   20.58 | 22-42,51-53,71-72,97-222,238,253-334,346-376,385,393,401-402,406-410,418-478                                                                                         
+ certificates.js        |   67.88 |    50.33 |    50.9 |   68.75 | 8,20,58-59,66-67,197,202,212-215,226,238-241,245-246,254,296,299,302,359-362,368,377-382,402-410,426-437,446-447,464-465,509-529,535,538-540,547-587,596-597,602,625 
+ debug-helpers.js       |       0 |        0 |       0 |       0 | 2-104                                                                                                                                                                
+ discord-integration.js |       0 |        0 |       0 |       0 | 7-177                                                                                                                                                                
+ i18n.js                |       0 |        0 |       0 |       0 | 1-510                                                                                                                                                                
+ icons.js               |       0 |        0 |       0 |       0 | 7-122                                                                                                                                                                
+ lesson-content.js      |    85.1 |    61.01 |     100 |   88.88 | 7,27,56,65,75                                                                                                                                                        
+ lesson-renderers.js    |      64 |    36.11 |      50 |      64 | 5-12,28,106-143                                                                                                                                                      
+ service-worker.js      |       0 |        0 |       0 |       0 | 9-250                                                                                                                                                                
+ utils.js               |   55.79 |    49.26 |   44.44 |   57.36 | 14-85,104,120,141-161,210,257-271,315-321                                                                                                                            
+ view-helpers.js        |   38.78 |    29.55 |   47.18 |   42.66 | 19-44,112-113,118-119,138-268,292-440,450-451,488-489,506-615,707-710,917-930,945-946,950-958,968-1126,1207-1261,1300-1317                                           
+------------------------|---------|----------|---------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Test Suites: 1 failed, 17 passed, 18 total
+Tests:       2 failed, 99 passed, 101 total
+Snapshots:   0 total
+Time:        8.543 s
+Ran all test suites.

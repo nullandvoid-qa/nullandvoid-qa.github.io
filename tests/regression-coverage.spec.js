@@ -33,8 +33,7 @@ test.describe('Regression coverage for core UX flows', () => {
   });
 
   test('persists bookmark and completion state after a full reload', async ({ page }) => {
-    await page.locator('#auth-local-signin').click();
-    await expect(page.locator('#auth-user')).toBeVisible();
+    // (guest sign-in removed) continue without local guest auth
 
     await page.evaluate(() => window.navigate('track', { trackId: 'starter' }));
     await page.waitForSelector('#view-track.active', { timeout: 10000 });

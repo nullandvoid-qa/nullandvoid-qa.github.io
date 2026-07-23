@@ -47,7 +47,7 @@ window.TG_ROADMAPS = {
       title: "Rota do Recruta",
       desc: "Zero experiência? Siga esta ordem. Cada passo constrói a base para o próximo.",
       steps: [
-        { trackId: "starter", label: "1. Iniciação da Guilda", why: "Fundamentos, tipos de teste, bugs, Agile" },
+        { trackId: "starter", label: "1. Testes Básicos", why: "Fundamentos, tipos de teste, bugs, Agile" },
         { trackId: "starter", lessonId: "s10-l3", label: "2. Primeiro teste automatizado", why: "Playwright Hello World — seu primeiro script verde" },
         { trackId: "web", label: "3. Forja Frontend", why: "Cypress ou Playwright com profundidade" },
         { trackId: "api", label: "4. Oficina de Integração", why: "APIs são requisito em quase toda vaga" },
@@ -57,7 +57,7 @@ window.TG_ROADMAPS = {
       title: "Recruit Route",
       desc: "Zero experience? Follow this order. Each step builds on the last.",
       steps: [
-        { trackId: "starter", label: "1. Guild Initiation", why: "Fundamentals, test types, bugs, Agile" },
+        { trackId: "starter", label: "1. Basic Testing", why: "Fundamentals, test types, bugs, Agile" },
         { trackId: "starter", lessonId: "s10-l3", label: "2. First automated test", why: "Playwright Hello World — your first green script" },
         { trackId: "web", label: "3. Frontend Forge", why: "Cypress or Playwright in depth" },
         { trackId: "api", label: "4. Integration Workshop", why: "APIs are required in almost every job posting" },

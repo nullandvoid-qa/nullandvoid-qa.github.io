@@ -15,6 +15,8 @@ global.navigator = {
   },
 };
 
+global.window = global.window || global;
+
 global.HTMLElement = class {
   constructor() {
     this.classList = {
@@ -108,3 +110,8 @@ global.document = {
   }),
   addEventListener: jest.fn(),
 };
+
+global.window.document = global.document;
+global.window.navigator = global.navigator;
+global.window.HTMLElement = global.HTMLElement;
+global.window.HTMLCanvasElement = global.HTMLCanvasElement;

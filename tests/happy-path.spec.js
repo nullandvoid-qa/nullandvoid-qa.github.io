@@ -8,14 +8,7 @@ test.describe('Null and Void QA happy path', () => {
   });
 
   test('should show auth fallback and navigate to a track, complete lesson, and verify progress', async ({ page }) => {
-    // Guest login fallback should be available locally
-    const guestButton = page.locator('#auth-local-signin');
-    await expect(guestButton).toBeVisible();
-    await guestButton.click();
-
-    // After guest login, auth profile should appear
-    await expect(page.locator('#auth-user')).toBeVisible();
-    await expect(page.locator('#auth-name')).toHaveText(/Convidado|Signed in as guest/);
+    // (guest sign-in removed) continue without local guest auth
 
     // Home page should render track cards and allow navigation
     // Wait for any track-card to appear; if not present, navigate to the tracks view.
@@ -53,10 +46,7 @@ test.describe('Null and Void QA happy path', () => {
   });
 
   test('should complete starter quiz and preserve bookmark in dashboard', async ({ page }) => {
-    const guestButton = page.locator('#auth-local-signin');
-    await expect(guestButton).toBeVisible();
-    await guestButton.click();
-    await expect(page.locator('#auth-user')).toBeVisible();
+    // (guest sign-in removed) continue without local guest auth
 
     await page.evaluate(() => window.navigate('track', { trackId: 'starter' }));
     await page.waitForTimeout(1000);
@@ -67,7 +57,7 @@ test.describe('Null and Void QA happy path', () => {
     await quizButton.click();
 
     await expect(page.locator('.quiz-card')).toBeVisible();
-    await expect(page.locator('.quiz-card h2')).toContainText(/Quiz — Iniciação da Guilda|Quiz — Guild Initiation/);
+    await expect(page.locator('.quiz-card h2')).toContainText(/Quiz — Testes Básicos|Quiz — Basic Testing/);
 
     await page.locator('label.quiz-option[data-qi="0"][data-oi="1"]').click();
     await page.locator('label.quiz-option[data-qi="1"][data-oi="2"]').click();
@@ -83,13 +73,13 @@ test.describe('Null and Void QA happy path', () => {
 
     await page.evaluate(() => window.navigate('tracks'));
     await page.waitForTimeout(1000);
-    await page.locator('.track-card', { hasText: 'Iniciação da Guilda' }).first().click();
+    await page.locator('.track-card', { hasText: 'Testes Básicos' }).first().click();
     await page.locator('.lesson-item').first().click();
     await expect(page.locator('#btn-bookmark')).toBeVisible();
     await page.locator('#btn-bookmark').click();
     await page.evaluate(() => window.navigate('dashboard'));
     await page.waitForTimeout(1000);
-    await expect(page.locator('#dashboard-bookmarks')).toContainText(/Iniciação da Guilda|Guild Initiation/);
+    await expect(page.locator('#dashboard-bookmarks')).toContainText(/Testes Básicos|Basic Testing/);
   });
 
   test('should expose the main homepage CTAs and reach the books library', async ({ page }) => {
