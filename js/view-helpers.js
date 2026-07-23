@@ -1291,7 +1291,7 @@
           })
           .join("");
 
-        return `<div class="course-block"><div class="course-header"><span class="course-num">${idx + 1}</span>${escapeHtml(course.title)}</div><ul class="lesson-list">${lessonsHtml}</ul></div>`;
+        return `<div class="course-block course-card"><div class="course-header"><span class="course-num">${idx + 1}</span>${escapeHtml(course.title)}</div><ul class="lesson-list">${lessonsHtml}</ul></div>`;
       })
       .join("");
   }

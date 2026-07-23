@@ -1,0 +1,305 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: lesson-exploration.spec.js >> Lesson exploration coverage >> opens every lesson one by one, checks the content, and verifies the lesson actions
+- Location: tests\lesson-exploration.spec.js:10:3
+
+# Error details
+
+```
+Error: page.evaluate: ReferenceError: getIconMarkup is not defined
+    at http://127.0.0.1:8000/js/utils.js:65:5
+    at String.replace (<anonymous>)
+    at Object.highlightCode (http://127.0.0.1:8000/js/utils.js:63:23)
+    at renderLesson (http://127.0.0.1:8000/js/app-lesson.js:126:38)
+    at async navigate (http://127.0.0.1:8000/js/app-navigation.js:29:5)
+    at async <anonymous>:329:30
+```
+
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - link "Skip to content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - link "Null and Void QA Course Home" [ref=e5] [cursor=pointer]:
+        - /url: "#"
+        - img [ref=e7]
+        - generic [ref=e9]:
+          - generic [ref=e10]: Null and Void
+          - generic [ref=e11]: QA Course
+      - generic [ref=e12]:
+        - navigation "Main navigation" [ref=e13]:
+          - link "Início" [ref=e14] [cursor=pointer]:
+            - /url: "#"
+          - link "Trilhas" [ref=e15] [cursor=pointer]:
+            - /url: "#"
+          - link "Rotas" [ref=e16] [cursor=pointer]:
+            - /url: "#"
+          - link "Glossário" [ref=e17] [cursor=pointer]:
+            - /url: "#"
+          - link "Labs" [ref=e18] [cursor=pointer]:
+            - /url: "#"
+          - link "Progresso" [ref=e19] [cursor=pointer]:
+            - /url: "#"
+          - generic [ref=e20]: Tudo Liberado
+        - generic [ref=e21]:
+          - button "Alternar para tema claro" [ref=e22] [cursor=pointer]:
+            - img [ref=e23]
+          - button "Alternar idioma" [ref=e25] [cursor=pointer]:
+            - generic [ref=e26]: 🇧🇷
+            - generic [ref=e27]: ENG
+          - generic [ref=e32]:
+            - button "Fazer Login com o Google. Abre em uma nova guia" [ref=e34] [cursor=pointer]:
+              - generic [ref=e36]:
+                - img [ref=e38]
+                - generic [ref=e45]: Fazer login
+            - iframe
+  - main [ref=e46]:
+    - generic [ref=e47]:
+      - generic [ref=e48]:
+        - link "Trilhas" [ref=e49] [cursor=pointer]:
+          - /url: "#"
+        - generic [ref=e50]: ›
+        - link "Trilha de Testes Mobile" [ref=e51] [cursor=pointer]:
+          - /url: "#"
+        - generic [ref=e52]: ›
+        - generic [ref=e53]: Android Emulator — Básico
+      - generic [ref=e55]:
+        - complementary [ref=e56]:
+          - generic [ref=e57]:
+            - img [ref=e58]
+            - text: Testes Avançados
+          - generic [ref=e60]: Técnicas de Teste
+          - list [ref=e61]:
+            - button "✓ Partição de Equivalência e Valor Limite" [ref=e62] [cursor=pointer]
+            - button "✓ Teste Exploratório" [ref=e63] [cursor=pointer]
+            - button "✓ Testes de Regressão e Automação Inteligente" [ref=e64] [cursor=pointer]
+        - article [ref=e65]:
+          - generic [ref=e66]:
+            - heading "Testes de Regressão e Automação Inteligente" [level=1] [ref=e67]
+            - generic [ref=e68]:
+              - generic [ref=e69]: Intermediário
+              - button "Remover favorito" [ref=e70] [cursor=pointer]:
+                - img [ref=e71]
+          - generic [ref=e73]:
+            - generic [ref=e74]:
+              - img [ref=e75]
+              - text: 55 min
+            - generic [ref=e78]:
+              - img [ref=e79]
+              - text: Concluída
+          - generic [ref=e81]:
+            - heading "Testes de Regressão e Automação Inteligente" [level=2] [ref=e82]
+            - heading "🎯 Objetivos de Aprendizado" [level=3] [ref=e83]
+            - paragraph [ref=e84]: "Após esta aula, você será capaz de:"
+            - list [ref=e85]:
+              - listitem [ref=e86]: Entender o propósito dos testes de regressão
+              - listitem [ref=e87]: Decidir quais casos merecem automação
+              - listitem [ref=e88]: Evitar automação excessiva e de baixo valor
+              - listitem [ref=e89]: Construir uma suite de regressão sustentável
+            - heading "📊 Resumo Executivo" [level=3] [ref=e90]
+            - paragraph [ref=e91]: Teste de regressão é a prova de que as mudanças não quebraram o que já funcionava. Automação ajuda, mas só se for aplicada nos casos mais estáveis, críticos e repetitivos.
+            - heading "🔍 Quando automatizar" [level=3] [ref=e92]
+            - list [ref=e93]:
+              - listitem [ref=e94]: Fluxos críticos do negócio que são executados a cada release
+              - listitem [ref=e95]: Casos repetitivos e fáceis de parametrizar
+              - listitem [ref=e96]: Configurações estáveis que não mudam constantemente
+              - listitem [ref=e97]: Testes com alto custo manual e baixo custo de manutenção
+            - heading "⚠️ Quando evitar automação" [level=3] [ref=e98]
+            - list [ref=e99]:
+              - listitem [ref=e100]: Fluxos muito instáveis ou em constante mudança
+              - listitem [ref=e101]: Testes com alto valor exploratório
+              - listitem [ref=e102]: Casos de borda esporádicos sem impacto crítico
+            - heading "📌 Estrutura de uma suite de regressão" [level=3] [ref=e103]
+            - list [ref=e104]:
+              - listitem [ref=e105]: Casos críticos que não podem falhar em produção
+              - listitem [ref=e106]: Funcionalidades principais com alto volume de uso
+              - listitem [ref=e107]: Regras de negócio sensíveis a mudanças
+              - listitem [ref=e108]: Testes automatizados para cobertura rápida de regressão
+            - heading "🏆 Framework de Automação Inteligente" [level=3] [ref=e109]
+            - generic [ref=e110]:
+              - paragraph [ref=e111]:
+                - strong [ref=e112]: "Pirâmide de Testes:"
+              - generic [ref=e113]: "▲ / \\ ← E2E (10%): Testes críticos de ponta a ponta /---\\ / UI \\ ← Testes de interface (20%) /-------\\ / Serviço \\ ← Testes de API/integração (30%) /-----------\\ / Unitários \\ ← Testes unitários (40%) /_______________\\"
+              - paragraph [ref=e114]:
+                - strong [ref=e115]: "ROI de Automação por Nível:"
+              - table [ref=e116]:
+                - rowgroup [ref=e117]:
+                  - row "Nível Custo Velocidade ROI" [ref=e118]:
+                    - columnheader "Nível" [ref=e119]
+                    - columnheader "Custo" [ref=e120]
+                    - columnheader "Velocidade" [ref=e121]
+                    - columnheader "ROI" [ref=e122]
+                  - row "Unitários Baixo Muito rápido Alto" [ref=e123]:
+                    - cell "Unitários" [ref=e124]
+                    - cell "Baixo" [ref=e125]
+                    - cell "Muito rápido" [ref=e126]
+                    - cell "Alto" [ref=e127]
+                  - row "Serviço Médio Rápido Médio-Alto" [ref=e128]:
+                    - cell "Serviço" [ref=e129]
+                    - cell "Médio" [ref=e130]
+                    - cell "Rápido" [ref=e131]
+                    - cell "Médio-Alto" [ref=e132]
+                  - row "UI Alto Lento Médio" [ref=e133]:
+                    - cell "UI" [ref=e134]
+                    - cell "Alto" [ref=e135]
+                    - cell "Lento" [ref=e136]
+                    - cell "Médio" [ref=e137]
+                  - row "E2E Muito alto Muito lento Baixo-Médio" [ref=e138]:
+                    - cell "E2E" [ref=e139]
+                    - cell "Muito alto" [ref=e140]
+                    - cell "Muito lento" [ref=e141]
+                    - cell "Baixo-Médio" [ref=e142]
+              - paragraph [ref=e143]:
+                - strong [ref=e144]: "Ferramentas Recomendadas por Nível:"
+              - table [ref=e145]:
+                - rowgroup [ref=e146]:
+                  - row "Nível Ferramentas Quando Usar" [ref=e147]:
+                    - columnheader "Nível" [ref=e148]
+                    - columnheader "Ferramentas" [ref=e149]
+                    - columnheader "Quando Usar" [ref=e150]
+                  - row "Unitários JUnit, PyTest, Jest, Mocha, NUnit, xUnit Lógica de negócio, algoritmos, validações" [ref=e151]:
+                    - cell "Unitários" [ref=e152]:
+                      - strong [ref=e153]: Unitários
+                    - cell "JUnit, PyTest, Jest, Mocha, NUnit, xUnit" [ref=e154]
+                    - cell "Lógica de negócio, algoritmos, validações" [ref=e155]
+                  - row "Serviço/API Postman, REST Assured, Supertest, Karate, SoapUI Integrações, endpoints, contratos" [ref=e156]:
+                    - cell "Serviço/API" [ref=e157]:
+                      - strong [ref=e158]: Serviço/API
+                    - cell "Postman, REST Assured, Supertest, Karate, SoapUI" [ref=e159]
+                    - cell "Integrações, endpoints, contratos" [ref=e160]
+                  - row "UI Selenium, Cypress, Playwright, Puppeteer Interfaces web, componentes visuais" [ref=e161]:
+                    - cell "UI" [ref=e162]:
+                      - strong [ref=e163]: UI
+                    - cell "Selenium, Cypress, Playwright, Puppeteer" [ref=e164]
+                    - cell "Interfaces web, componentes visuais" [ref=e165]
+                  - row "E2E Cypress, Playwright, Selenium WebDriver, Appium (mobile) Fluxos críticos de ponta a ponta" [ref=e166]:
+                    - cell "E2E" [ref=e167]:
+                      - strong [ref=e168]: E2E
+                    - cell "Cypress, Playwright, Selenium WebDriver, Appium (mobile)" [ref=e169]
+                    - cell "Fluxos críticos de ponta a ponta" [ref=e170]
+            - generic [ref=e171]:
+              - paragraph [ref=e172]:
+                - strong [ref=e173]: "Exemplo de Stack de Automação por Linguagem:"
+              - paragraph [ref=e174]:
+                - strong [ref=e175]: "Para JavaScript/TypeScript:"
+              - list [ref=e176]:
+                - listitem [ref=e177]:
+                  - strong [ref=e178]: "Unitários:"
+                  - text: Jest + Testing Library
+                - listitem [ref=e179]:
+                  - strong [ref=e180]: "API:"
+                  - text: Supertest + Jest
+                - listitem [ref=e181]:
+                  - strong [ref=e182]: "UI:"
+                  - text: Playwright ou Cypress
+                - listitem [ref=e183]:
+                  - strong [ref=e184]: "E2E:"
+                  - text: Cypress ou Playwright
+              - paragraph [ref=e185]:
+                - strong [ref=e186]: "Para Python:"
+              - list [ref=e187]:
+                - listitem [ref=e188]:
+                  - strong [ref=e189]: "Unitários:"
+                  - text: PyTest + unittest
+                - listitem [ref=e190]:
+                  - strong [ref=e191]: "API:"
+                  - text: PyTest + requests
+                - listitem [ref=e192]:
+                  - strong [ref=e193]: "UI:"
+                  - text: Selenium WebDriver
+                - listitem [ref=e194]:
+                  - strong [ref=e195]: "E2E:"
+                  - text: Robot Framework ou Playwright (Python)
+              - paragraph [ref=e196]:
+                - strong [ref=e197]: "Para Java:"
+              - list [ref=e198]:
+                - listitem [ref=e199]:
+                  - strong [ref=e200]: "Unitários:"
+                  - text: JUnit 5 + Mockito
+                - listitem [ref=e201]:
+                  - strong [ref=e202]: "API:"
+                  - text: REST Assured + JUnit
+                - listitem [ref=e203]:
+                  - strong [ref=e204]: "UI:"
+                  - text: Selenium WebDriver + JUnit
+                - listitem [ref=e205]:
+                  - strong [ref=e206]: "E2E:"
+                  - text: Cucumber + Selenium
+              - paragraph [ref=e207]:
+                - strong [ref=e208]: "Para .NET (C#):"
+              - list [ref=e209]:
+                - listitem [ref=e210]:
+                  - strong [ref=e211]: "Unitários:"
+                  - text: xUnit + Moq
+                - listitem [ref=e212]:
+                  - strong [ref=e213]: "API:"
+                  - text: SpecFlow + RestSharp
+                - listitem [ref=e214]:
+                  - strong [ref=e215]: "UI:"
+                  - text: Selenium WebDriver + NUnit
+                - listitem [ref=e216]:
+                  - strong [ref=e217]: "E2E:"
+                  - text: SpecFlow + Selenium
+            - heading "✏️ Exercício Prático" [level=3] [ref=e218]
+            - paragraph [ref=e219]: Liste cinco casos de regressão para um checkout online e classifique quais devem ser automatizados e quais devem permanecer manuais.
+            - heading "🧠 Regra de Ouro" [level=3] [ref=e220]
+            - paragraph [ref=e221]: Automação inteligente é aquela que reduz esforço manual sem criar uma suíte cara demais para manter. Se um teste não agrega confiança repetitiva, ele provavelmente não merece automação.
+            - heading "⏭️ Próxima Aula" [level=3] [ref=e222]
+            - paragraph [ref=e223]: Na próxima aula, vamos consolidar o que aprendemos sobre qualidade em Agile e como o Definition of Done ajuda a manter a confiança do time e do cliente.
+            - heading "📚 Recursos" [level=3] [ref=e224]
+            - list [ref=e225]:
+              - listitem [ref=e226]:
+                - link "📖 Regression Testing Guide" [ref=e227] [cursor=pointer]:
+                  - /url: https://www.guru99.com/regression-testing.html
+              - listitem [ref=e228]:
+                - link "📖 Test Automation University" [ref=e229] [cursor=pointer]:
+                  - /url: https://testautomationu.applitools.com/
+              - listitem [ref=e230]:
+                - link "📖 Selenium Documentation" [ref=e231] [cursor=pointer]:
+                  - /url: https://www.selenium.dev/documentation/
+              - listitem [ref=e232]:
+                - link "📖 Cypress Documentation" [ref=e233] [cursor=pointer]:
+                  - /url: https://docs.cypress.io/
+              - listitem [ref=e234]:
+                - link "📖 Playwright Documentation" [ref=e235] [cursor=pointer]:
+                  - /url: https://playwright.dev/
+              - listitem [ref=e236]:
+                - 'link "📖 Martin Fowler: The Practical Test Pyramid" [ref=e237] [cursor=pointer]':
+                  - /url: https://martinfowler.com/articles/practical-test-pyramid.html
+          - generic [ref=e238]:
+            - heading "Recursos gratuitos" [level=3] [ref=e239]
+            - link "Regression Testing Best Practices" [ref=e240] [cursor=pointer]:
+              - /url: https://www.guru99.com/regression-testing.html
+              - img [ref=e241]
+              - text: Regression Testing Best Practices
+            - link "Automation Strategy" [ref=e245] [cursor=pointer]:
+              - /url: https://www.tutorialspoint.com/software_testing_dictionary/automation_testing.htm
+              - img [ref=e246]
+              - text: Automation Strategy
+          - generic [ref=e250]:
+            - button "Marcar como não concluída" [ref=e251] [cursor=pointer]
+            - button "Anterior" [ref=e252] [cursor=pointer]:
+              - img [ref=e253]
+              - text: Anterior
+            - button "Feedback" [ref=e255] [cursor=pointer]:
+              - img [ref=e256]
+              - text: Feedback
+  - contentinfo [ref=e258]:
+    - paragraph [ref=e259]:
+      - strong [ref=e260]: Null and Void
+      - text: — Null and Void QA Course · Do iniciante ao sênior
+    - paragraph [ref=e261]: Aprenda QA de forma gratuita e prática.
+    - paragraph [ref=e262]:
+      - link "Discord" [ref=e263] [cursor=pointer]:
+        - /url: https://discord.gg/evVQqq4rf
+  - status [ref=e264]: Aula favoritada
+```

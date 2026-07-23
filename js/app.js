@@ -637,6 +637,39 @@
     );
   }
 
+  function renderSandbox() {
+    const menu = document.getElementById("sandbox-menu");
+    const example = document.getElementById("sandbox-example");
+    if (!menu || !example) return;
+
+    const examples = Array.isArray(window.TG_MOBILE_AUTOMATION_EXAMPLES)
+      ? window.TG_MOBILE_AUTOMATION_EXAMPLES
+      : [];
+
+    if (!examples.length) {
+      menu.innerHTML = "";
+      example.textContent = lang === "en" ? "Sandbox examples are not available yet." : "Exemplos do sandbox ainda não estão disponíveis.";
+      return;
+    }
+
+    menu.innerHTML = examples
+      .map((item, index) => `<button type="button" class="sandbox-item" data-index="${index}">${escapeHtml(item.name || item.id || `Example ${index + 1}`)}</button>`)
+      .join("");
+
+    const renderExample = (index) => {
+      const item = examples[index] || examples[0];
+      example.innerHTML = `<pre class="sandbox-example-code">${escapeHtml(item.code || "")}</pre>`;
+    };
+
+    menu.querySelectorAll(".sandbox-item").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        renderExample(Number(btn.dataset.index || 0));
+      });
+    });
+
+    renderExample(0);
+  }
+
   // ── Quiz ──────────────────────────────────────────────────────────────────
   function renderQuiz(trackId) {
     const container = document.getElementById("quiz-content");
