@@ -30,7 +30,7 @@ async function navigate(view, params = {}) {
   }
 
   if (typeof window.scrollTo === "function") {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "auto" });
   }
 
   return result;

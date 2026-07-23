@@ -626,6 +626,7 @@
       onCompleteToggle,
       onReRender,
       onFeedbackSubmit,
+      t,
     } = options;
 
     const bookmarkBtn = document.getElementById("btn-bookmark");
@@ -640,30 +641,26 @@
     if (bookmarkBtn) {
       bookmarkBtn.addEventListener("click", () => {
         onBookmarkToggle(rawLesson.id);
-        if (typeof onReRender === "function") {
-          try {
-            // Call synchronously so unit tests relying on immediate callback pass,
-            // and schedule a small delayed re-render to allow storage/state to settle
-            onReRender(lessonId);
-          } catch (e) {
-            // swallow errors from callback
-          }
-          setTimeout(() => onReRender(lessonId), 120);
-        }
+
+        const bookmarkState = Array.isArray(window.NVApp?.state?.bookmarks)
+          ? window.NVApp.state.bookmarks.includes(rawLesson.id)
+          : false;
+        bookmarkBtn.classList.toggle("bookmarked", bookmarkState);
+        const bookmarkTitle = bookmarkState ? (t ? t("lesson.unbookmark") : "Unbookmark") : (t ? t("lesson.bookmark") : "Bookmark");
+        bookmarkBtn.setAttribute("title", bookmarkTitle);
+        bookmarkBtn.setAttribute("aria-label", bookmarkTitle);
       });
     }
 
     if (completeBtn) {
       completeBtn.addEventListener("click", () => {
         onCompleteToggle(rawLesson.id);
-        if (typeof onReRender === "function") {
-          try {
-            onReRender(lessonId);
-          } catch (e) {
-            // noop
-          }
-          setTimeout(() => onReRender(lessonId), 120);
-        }
+
+        const progressState = window.NVApp?.state?.progress || {};
+        const isDone = !!progressState[rawLesson.id];
+        completeBtn.textContent = isDone
+          ? (t ? t("lesson.unmarkComplete") : "Unmark complete")
+          : (t ? t("lesson.markComplete") : "Mark complete");
       });
     }
 

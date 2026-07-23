@@ -608,6 +608,7 @@
     const items = window.TG_GLOSSARY?.[getLangKey()] || [];
     document.getElementById("glossary-content").innerHTML = window.NVViewHelpers.buildGlossaryHtml(items, escapeHtml);
   }
+  window.renderGlossary = renderGlossary;
 
   // ── Labs ──────────────────────────────────────────────────────────────────
   function renderLabs() {
@@ -636,6 +637,7 @@
       lang,
     );
   }
+  window.renderLabs = renderLabs;
 
   function renderSandbox() {
     const menu = document.getElementById("sandbox-menu");
@@ -669,6 +671,7 @@
 
     renderExample(0);
   }
+  window.renderSandbox = renderSandbox;
 
   // ── Quiz ──────────────────────────────────────────────────────────────────
   function renderQuiz(trackId) {

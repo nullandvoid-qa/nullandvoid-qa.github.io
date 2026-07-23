@@ -1,6 +1,11 @@
 (function () {
   "use strict";
 
+  const KNOWN_MARKDOWN_IDS = new Set([
+    "l1", "l2", "l3", "l4", "l5", "l6", "l7", "l8", "l9", "l10", "l11", "l12", "l13", "l14", "l15", "l16",
+    "perf-l1", "perf-l2", "perf-l3", "perf-l4", "perf-l5", "perf-l6", "perf-l7",
+  ]);
+
   function parseFrontmatter(markdown) {
     const match = markdown.match(/^---\s*\n([\s\S]*?)\n---\s*\n?/);
     if (!match) {
@@ -47,6 +52,10 @@
   function resolveMarkdownPath(lessonId, markdownMap = {}) {
     if (markdownMap[lessonId]) {
       return markdownMap[lessonId];
+    }
+
+    if (!KNOWN_MARKDOWN_IDS.has(lessonId)) {
+      return null;
     }
 
     if (typeof window !== "undefined" && window.location?.origin) {

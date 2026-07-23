@@ -22,6 +22,21 @@ function normalizeTextLabel(text) {
   return String(text || '').replace(/^[^\wÀ-ž]+\s*/, '').trim();
 }
 
+function getIconMarkup(name, size = "18", className = "") {
+  if (!window.NVIcons || typeof window.NVIcons.get !== "function") {
+    return "";
+  }
+  return window.NVIcons.get(name, className, size);
+}
+
+window.getIconMarkup = window.getIconMarkup || getIconMarkup;
+
+function getIconMarkupOrFallback(name, fallback, size = "18", className = "") {
+  return getIconMarkup(name, size, className) || fallback;
+}
+
+window.getIconMarkupOrFallback = window.getIconMarkupOrFallback || getIconMarkupOrFallback;
+
 function getTrackIcon(track) {
   const TRACK_ICON_MAP = {
     starter: 'starter',

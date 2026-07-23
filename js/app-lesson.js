@@ -77,11 +77,17 @@
     const { track, course, lesson, rawTrack, rawCourse, rawLesson } = found;
     const enr = helpers.getEnrichment(rawLesson.id);
     const isBookmarked = state.bookmarks.includes(rawLesson.id);
-    const lessonContent = window.NVLessonContent?.loadLessonContent
-      ? await window.NVLessonContent.loadLessonContent(rawLesson, {
-          markdownMap: window.TG_LESSON_MARKDOWN_MAP,
-        })
-      : { content: lesson.content, title: lesson.title, duration: lesson.duration };
+    const lessonContent = rawLesson?.content
+      ? {
+          content: rawLesson.content,
+          title: rawLesson.title || lesson.title,
+          duration: rawLesson.duration || lesson.duration,
+        }
+      : window.NVLessonContent?.loadLessonContent
+        ? await window.NVLessonContent.loadLessonContent(rawLesson, {
+            markdownMap: window.TG_LESSON_MARKDOWN_MAP,
+          })
+        : { content: lesson.content, title: lesson.title, duration: lesson.duration };
     const contentLesson = {
       ...lesson,
       title: lessonContent.title || lesson.title,

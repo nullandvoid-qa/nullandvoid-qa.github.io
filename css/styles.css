@@ -301,7 +301,7 @@ a:hover { text-decoration: underline; }
 /* Main layout */
 .main { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
 
-.view { display: none; animation: fadeIn 0.3s ease; }
+.view { display: none; }
 .view.active { display: block; }
 
 @keyframes fadeIn {
