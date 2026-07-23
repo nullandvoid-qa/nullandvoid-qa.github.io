@@ -18,7 +18,7 @@ Tasks:
   - [x] navigation and route handling
   - [x] translation helpers
   - [ ] rendering helpers
-  - [ ] lesson/track interaction handlers
+  - [x] lesson/track interaction handlers
 - [ ] Extract repeated DOM creation logic into reusable render helpers.
 - [ ] Replace scattered global variable usage with a single app state object.
 - [ ] Add comments around the main initialization flow so the entry point is easy to follow.

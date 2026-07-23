@@ -14,6 +14,7 @@ function t(key, fallback) {
   const parts = String(key).split(".");
   const langKey = getLangKey();
   let node = window.TG_I18N?.[langKey] || window.TG_I18N?.pt;
+
   for (const p of parts) {
     if (!node || node[p] === undefined) return fallback || key;
     node = node[p];

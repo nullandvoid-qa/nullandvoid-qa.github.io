@@ -5,7 +5,7 @@ Objetivo: padronizar e melhorar a documentação das trilhas para que fique fác
 Tarefas recomendadas:
 - Padronizar `data/tracks.js` com metadados por lição: `author`, `lastReviewed`, `difficulty`, `learningOutcomes`.
 - Extrair exemplos e repositórios associados em `docs/examples/` com READMEs pequenos e links.
-- Criar `docs/TRACKS_CONTRIBUTING.md` com passos para adicionar trilhas/cursos/lições e formatos esperados (YAML/JSON snippets).
+- [x] Criar `docs/TRACKS_CONTRIBUTING.md` com passos para adicionar trilhas/cursos/lições e formatos esperados (YAML/JSON snippets).
 - Garantir que todas as strings de exibição estejam cobertas por i18n (usar `reports/i18n-strings.json`).
 - Adicionar exemplos de templates para exercícios em `docs/exercises/templates.md`.
 

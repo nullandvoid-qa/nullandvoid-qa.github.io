@@ -145,9 +145,9 @@
         google.accounts.id.renderButton(
           googleButtonWrapper,
           {
-            theme: 'dark',
+            theme: 'outline',
             size: 'large',
-            text: 'signin_with',
+            text: 'signin',
             logo_alignment: 'left',
           }
         );

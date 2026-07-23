@@ -121,6 +121,14 @@ a:hover { text-decoration: underline; }
   width: 100% !important;
 }
 
+/* Authentication controls */
+.auth-local-signin,
+.auth-user {
+  background: linear-gradient(135deg, #00e5ff, #00b8d4);
+  color: #1a1a1a;
+  font-weight: 700;
+}
+
 .auth-local-signin {
   display: inline-flex;
   align-items: center;
@@ -129,10 +137,6 @@ a:hover { text-decoration: underline; }
   min-width: 170px;
   padding: 0.7rem 1.3rem;
   border-radius: 18px;
-  background: linear-gradient(135deg, #00e5ff, #00b8d4);
-  color: #1a1a1a;
-  font-weight: 700;
-  box-shadow: 0 4px 22px rgba(0, 229, 255, 0.35);
   white-space: nowrap;
 }
 
@@ -143,10 +147,6 @@ a:hover { text-decoration: underline; }
   gap: 0.5rem;
   padding: 0.5rem 0.9rem;
   border-radius: 18px;
-  background: linear-gradient(135deg, #00e5ff, #00b8d4);
-  color: #1a1a1a;
-  font-weight: 700;
-  box-shadow: 0 4px 22px rgba(0, 229, 255, 0.35);
 }
 
 .auth-user .auth-picture {
@@ -481,6 +481,7 @@ a:hover { text-decoration: underline; }
   color: var(--text-muted);
 }
 
+/* Buttons */
 .cta-group {
   display: flex;
   gap: 1rem;

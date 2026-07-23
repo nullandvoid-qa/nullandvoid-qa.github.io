@@ -112,7 +112,7 @@ npm run test:e2e
 
 ## 🤝 Contribuir
 
-Para um plano de manutenção e boas práticas de engenharia para o projeto, veja [bestpractices.md](bestpractices.md). Para uma lista de tarefas de refatoração priorizadas por arquivo e risco, veja [docs/REFACTORING_CHECKLIST.md](docs/REFACTORING_CHECKLIST.md).
+Para acompanhar o fluxo de contribuição com trilhas, aulas e certificados, veja [CONTRIBUTING.md](CONTRIBUTING.md). Para um plano de manutenção e boas práticas de engenharia para o projeto, veja [bestpractices.md](bestpractices.md). Para uma lista de tarefas de refatoração priorizadas por arquivo e risco, veja [docs/REFACTORING_CHECKLIST.md](docs/REFACTORING_CHECKLIST.md).
 
 Bugs, sugestões ou contribuições? 
 

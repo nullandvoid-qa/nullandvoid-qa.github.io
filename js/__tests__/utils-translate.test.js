@@ -27,4 +27,14 @@ describe('utils.t translation helper', () => {
     const { t } = require('../utils.js');
     expect(t('non.existent', 'fallback')).toBe('fallback');
   });
+
+  test('returns a readable label instead of leaking the translation key when the label is missing', () => {
+    window.lang = 'pt';
+    const { t } = require('../utils.js');
+    expect(t('track.inProgress')).toBe('Em andamento');
+
+    window.lang = 'en';
+    const { t: tEn } = require('../utils.js');
+    expect(tEn('track.inProgress')).toBe('In progress');
+  });
 });

@@ -670,200 +670,9 @@
     checkAchievements();
   }
 
-  // ── Lesson ────────────────────────────────────────────────────────────────
-  async function renderLesson(lessonId) {
-    const found = findLesson(lessonId);
-    if (!found) return;
-    const { track, course, lesson, rawTrack, rawCourse, rawLesson } = found;
-      const enr = getEnrichment(rawLesson.id);
-      const isBookmarked = bookmarks.includes(rawLesson.id);
-      const langKey = getLangKey();
-      const lessonContent = window.NVLessonContent?.loadLessonContent
-        ? await window.NVLessonContent.loadLessonContent(rawLesson, { markdownMap: window.TG_LESSON_MARKDOWN_MAP })
-        : { content: lesson.content, title: lesson.title, duration: lesson.duration };
-      const contentLesson = {
-        ...lesson,
-        title: lessonContent.title || lesson.title,
-        duration: lessonContent.duration || lesson.duration,
-        content: lessonContent.content,
-      };
-      window.NVViewHelpers.setupLessonHeader(
-        lessonId,
-        track,
-        rawTrack.id,
-        contentLesson.title,
-        navigate,
-        saveLastLesson,
-        window.NVIcons,
-        getTrackIcon,
-        escapeHtml,
-      );
-      const primerText = !seniorMode
-        ? enr.primer?.[langKey] || enr.primer?.pt
-        : null;
-      const seniorText = enr.seniorNote?.[langKey] || enr.seniorNote?.pt;
-      const primerHtml = primerText
-        ? `<aside class="lesson-box lesson-box-beginner"><h3>${t("lesson.primerTitle")}</h3><p>${escapeHtml(primerText)}</p></aside>`
-        : "";
-      const seniorHtml = seniorText
-        ? `<aside class="lesson-box lesson-box-senior"><h3>${t("lesson.seniorTitle")}</h3><p>${escapeHtml(seniorText)}</p></aside>`
-        : "";
-      const allLessons = (rawTrack && rawTrack.courses && Array.isArray(rawTrack.courses))
-        ? rawTrack.courses.flatMap((c) => c.lessons || [])
-        : [];
-      const idx = allLessons.findIndex((l) => l.id === rawLesson.id);
-      const prev = allLessons[idx - 1];
-      const next = allLessons[idx + 1];
-      const isFinalProject =
-        rawLesson.id.endsWith("-l1") &&
-        (rawCourse.id === "s12" ||
-          rawCourse.id === "w10" ||
-          rawCourse.id === "a9" ||
-          rawCourse.id === "m8" ||
-          rawCourse.id === "p8" ||
-          rawCourse.id === "sec6" ||
-          rawCourse.id === "dev5" ||
-          rawCourse.id === "a11y5" ||
-          rawCourse.id === "lead4");
-      const sanitized = window.NVViewHelpers.cleanInlineBackgrounds(contentLesson.content);
-      const processedContent = highlightCode(sanitized);
-      document.getElementById("lesson-detail").innerHTML = window.NVLessonRenderers.buildLessonPageHtml({
-        rawCourse,
-        rawLesson,
-        course,
-        track,
-        lesson: contentLesson,
-        progressMap: progress,
-        isBookmarked,
-        prev,
-        next,
-        lang,
-        t,
-        tierLabel,
-        escapeHtml,
-        icons: window.NVIcons,
-        getTrackIcon,
-        getEnrichment,
-        localizedLesson,
-        processedContent,
-        primerHtml,
-        seniorHtml,
-      });
-      attachCopyButtons(document.getElementById("lesson-detail"));
-      if (isFinalProject) {
-        const zone = document.getElementById("lesson-checklist-zone");
-        renderChecklist(rawTrack.id, zone);
-      }
-      const quizZone = document.getElementById("lesson-quiz-zone");
-      if (quizZone) {
-        renderLessonQuiz(rawLesson.id, quizZone);
-      }
-      window.NVViewHelpers.bindLessonPageActions({
-        lessonId,
-        rawLesson,
-        prevLessonId: prev?.id,
-        nextLessonId: next?.id,
-        navigate,
-        onBookmarkToggle: toggleBookmark,
-        onCompleteToggle: (lessonIdToToggle) => {
-          window.NVViewHelpers.toggleLessonComplete(lessonIdToToggle, progress, () => saveProgress(progress), checkAchievements, t);
-        },
-        onReRender: renderLesson,
-        onFeedbackSubmit: ({ lessonId: submittedLessonId, rating, text }) => {
-          window.NVViewHelpers.submitLessonFeedback({ lessonId: submittedLessonId, rating, text }, { onAfter: () => {
-            const ft = document.getElementById('feedback-text'); if (ft) ft.value = '';
-            document.querySelectorAll('input[name="feedback-rating"]').forEach((r) => (r.checked = false));
-          }, t });
-        },
-        t,
-      });
-  }
-
-  // Expose core navigation/render APIs early so external test helpers
-  // can call them before full `init()` completes.
-  try {
-    window.renderLesson = renderLesson;
-    window.navigate = navigate;
-    window.findLesson = findLesson;
-  } catch (e) {
-    // noop
-  }
-  // ── Dashboard ─────────────────────────────────────────────────────────────
-  function renderDashboard() {
-    const global = getGlobalProgress();
-    const passedCount = Object.keys(quizzesPassed).length;
-
-    document.getElementById("dashboard-stats").innerHTML = window.NVViewHelpers.buildDashboardStatsHtml(
-      { ...global, passedCount },
-      t("price"),
-      t,
-      t,
-    );
-
-    renderAchievements();
-
-    const grid = document.getElementById("dashboard-tracks");
-    grid.innerHTML = "";
-    tracks.forEach((tr) => renderTrackCard(tr, "dashboard-tracks"));
-
-    const achievementsGrid = document.getElementById("achievements-grid");
-    const bmSection = document.getElementById("dashboard-bookmarks");
-    const certSection = document.getElementById("dashboard-certificates");
-    const completedTracks = tracks.filter((tr) => getTrackProgress(tr).pct === 100);
-    const getUserCertificates = window.TG_CERTIFICATES?.getUserCertificates?.bind(window.TG_CERTIFICATES);
-    const unlocked = loadJson("testers-guild-unlocked-achievements", []);
-
-    window.NVViewHelpers.renderDashboardSections(
-      {
-        achievementsGrid,
-        bookmarksSection: bmSection,
-        certificatesSection: certSection,
-      },
-      {
-        achievementsList,
-        unlocked,
-        bookmarks,
-        findLesson,
-        icons: window.NVIcons,
-        escapeHtml,
-        getTrackIcon,
-        lang,
-        t,
-        getUserCertificates,
-        completedTracks,
-        onCertDownload: async (trackId) => {
-          if (!window.TG_CERTIFICATES) return;
-          if (!window.NVAuth || !window.NVAuth.isAuthenticated) {
-            showToast(lang === "en" ? "Please log in to download certificates." : "Faça login para baixar certificados.");
-            return;
-          }
-          const track = completedTracks.find((tr) => tr.id === trackId);
-          if (!track) return;
-          try {
-            const userName = window.NVAuth?.getUserName?.() || "";
-            await window.TG_CERTIFICATES.downloadCertificate(track.id, userName, new Date());
-            window.TG_CERTIFICATES.saveCertificate(track.id, userName, new Date());
-            showToast(lang === "en" ? "Certificate downloaded!" : "Certificado baixado!");
-          } catch (error) {
-            showToast(`Erro: ${error.message}`);
-          }
-        },
-        navigate,
-      },
-    );
-
-    // Recommendations section intentionally removed.
-
-    // Portfolio Templates section
-    const templatesSection = document.querySelector('[id$="templates"]');
-    if (!templatesSection && global.pct >= 20) {  // Show after 20% progress
-      const templatesHtml = window.NVViewHelpers.buildPortfolioTemplatesHtml(lang);
-      const dashboardContent = document.getElementById('dashboard-content') || document.getElementById('dashboard-stats')?.parentElement;
-      if (dashboardContent) {
-        dashboardContent.insertAdjacentHTML('beforeend', templatesHtml);
-      }
-    }
-  }
+  // The lesson rendering flow is handled in js/app-lesson.js.
+  // This file keeps shared state, helper wiring and global event bindings.
+  // The dashboard rendering flow is handled in js/app-dashboard.js.
 
   // ── Search ────────────────────────────────────────────────────────────────
   function handleSearch(query) {
@@ -1163,24 +972,42 @@
     });
 
     if (window.TG_MOBILE_LABS && Array.isArray(window.TG_MOBILE_LABS)) {
-      window.TG_MOBILE_LABS.forEach((ml) => {
-        if (!mergedTracks.find((track) => track.id === ml.id)) {
-          mergedTracks.push({
-            ...ml,
-            id: ml.id,
-            slug: ml.slug || ml.id,
-            icon: ml.icon || "",
-            title: ml.title || ml.name || "Mobile Lab",
-            description: ml.description || `Mobile lab for ${ml.device || "mobile testing"}`,
-            color: ml.color || "#22c55e",
-            level: ml.level || "intermediate",
-            modules: ml.modules || 3,
-            hours: ml.hours || 30,
-            topics: ml.topics || ["Mobile", "Appium"],
-            courses: ml.courses || [],
-          });
-        }
-      });
+      const mobileTrack = mergedTracks.find((track) => track.id === "mobile");
+      if (!mobileTrack) {
+        const mobileLessons = window.TG_MOBILE_LABS.map((lab, index) => ({
+          id: `mobile-lab-${index + 1}-${lab.id}`,
+          title: lab.name || `Mobile Lab ${index + 1}`,
+          duration: "20 min",
+          content: `
+            <h2>${lab.name || `Mobile Lab ${index + 1}`}</h2>
+            <p><strong>Tipo:</strong> ${lab.type || "mobile"}</p>
+            <p><strong>Dispositivo:</strong> ${lab.device || (Array.isArray(lab.devices) ? lab.devices.join(", ") : "N/A")}</p>
+            <p><strong>Ferramentas:</strong> ${Array.isArray(lab.tools) ? lab.tools.join(", ") : "Appium + WebDriverIO"}</p>
+            <p><strong>Custo:</strong> ${lab.cost || "N/A"}</p>
+            <pre>${lab.setup || ""}</pre>
+          `,
+        }));
+
+        mergedTracks.push({
+          id: "mobile",
+          slug: "mobile-testing",
+          icon: "mobile",
+          title: "Trilha de Testes Mobile",
+          color: "#22c55e",
+          description: "Trilha única para testes mobile em emuladores, simuladores e dispositivos reais.",
+          level: "Intermediário",
+          modules: mobileLessons.length,
+          hours: Math.max(4, mobileLessons.length),
+          topics: ["Appium", "WebDriverIO", "Android", "iOS", "Emuladores", "Devices reais"],
+          courses: [
+            {
+              id: "mobile-labs-course",
+              title: "Mobile Testing Labs",
+              lessons: mobileLessons,
+            },
+          ],
+        });
+      }
     }
 
     return mergedTracks;
@@ -1241,7 +1068,6 @@
 
     // Expose some internal helpers for debugging and integration tests
   try {
-    window.renderLesson = renderLesson;
     window.navigate = navigate;
     window.findLesson = findLesson;
   } catch (e) {

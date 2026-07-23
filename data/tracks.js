@@ -1114,6 +1114,232 @@ Prioridade: alta
     ]
   },
   {
+    id: "mobile",
+    slug: "mobile-testing",
+    title: "Trilha de Testes Mobile",
+    icon: "mobile",
+    color: "#22c55e",
+    description: "Trilha única para testes mobile em emuladores, simuladores e dispositivos reais, com foco em Appium, WebdriverIO e qualidade em produção.",
+    level: "Intermediário",
+    topics: ["Appium", "WebdriverIO", "Android", "iOS", "Emuladores", "Dispositivos reais"],
+    courses: [
+      {
+        id: "c5",
+        title: "Fundamentos de Testes Mobile",
+        lessons: [
+          {
+            id: "l13",
+            title: "Por que testes mobile são diferentes",
+            duration: "45 min",
+            content: `<h2>Por que testes mobile são diferentes</h2>
+
+<h3>🎯 Objetivos de Aprendizado</h3>
+<p>Após esta aula, você será capaz de:</p>
+<ul>
+  <li>Entender as diferenças entre web, desktop e mobile</li>
+  <li>Reconhecer riscos específicos de apps mobile</li>
+  <li>Usar uma estratégia de teste adequada para dispositivos e sistemas operacionais</li>
+</ul>
+
+<h3>📊 Resumo Executivo</h3>
+<p>Mobile é uma camada de complexidade extra: você precisa pensar em orientação, resolução, teclado virtual, conectividade, bateria, notificações, permissões e comportamento real do sistema operacional. O QA que ignora isso tende a testar apenas o “happy path” e perder erros importantes.</p>
+
+<h3>🔍 O que muda em mobile</h3>
+<ul style="margin:1rem 0">
+  <li><strong>Layout responsivo:</strong> o mesmo app muda em tela, tamanho de fonte e sensores</li>
+  <li><strong>Input e gesto:</strong> swipes, tap, long press e keyboard virtual são centrais</li>
+  <li><strong>Contextos de execução:</strong> emulador, simulador, device real, rede instável e modo avião</li>
+  <li><strong>Confiabilidade:</strong> um bug em mobile pode aparecer apenas em um dispositivo específico</li>
+</ul>
+
+<h3>✅ Estratégia prática</h3>
+<p>Seu plano de testes deve incluir:</p>
+<ul>
+  <li>Fluxo principal</li>
+  <li>Fluxo com interrupção (ligar/desligar rede, notificações, chamada)</li>
+  <li>Orientação portrait/landscape</li>
+  <li>Permissões e retorno do app</li>
+</ul>
+
+<h3>✏️ Exercício</h3>
+<p>Escolha um app mobile que você usa e liste 3 cenários em que o comportamento pode variar entre device, OS ou rede.</p>
+`,
+            resources: [
+              { label: "Appium Concepts", url: "https://appium.io/docs/en/latest/" },
+              { label: "Mobile testing checklist", url: "https://www.browserstack.com/guide/mobile-testing" }
+            ]
+          },
+          {
+            id: "l14",
+            title: "Appium e locators mobile",
+            duration: "50 min",
+            content: `<h2>Appium e locators mobile</h2>
+
+<h3>🎯 Objetivos de Aprendizado</h3>
+<p>Após esta aula, você será capaz de:</p>
+<ul>
+  <li>Entender como Appium conecta em dispositivos e emuladores</li>
+  <li>Usar locators estáveis em apps nativos e híbridos</li>
+  <li>Construir um fluxo de automação mais confiável</li>
+</ul>
+
+<h3>📊 Resumo Executivo</h3>
+<p>Em mobile, a escolha do locator é uma decisão crítica. O ideal é usar accessibility id quando disponível, seguida de resource-id, content-desc e, por fim, texto ou XPath, quando necessário.</p>
+
+<h3>🧩 Estratégia de locator</h3>
+<ul style="margin:1rem 0">
+  <li><strong>Accessibility ID:</strong> mais estável para apps nativos</li>
+  <li><strong>resource-id:</strong> bom quando a UI tem identificadores estruturados</li>
+  <li><strong>text:</strong> útil como fallback, mas frágil para mudanças de copy</li>
+  <li><strong>XPath:</strong> última opção; só use se não houver uma estratégia melhor</li>
+</ul>
+
+<h3>⚠️ Erros comuns</h3>
+<ul>
+  <li>Dependência excessiva de texto visível</li>
+  <li>Locator baseado em índice da lista</li>
+  <li>Automação que não espera o app carregar corretamente</li>
+</ul>
+
+<h3>✏️ Exercício</h3>
+<p>Compare dois locators em uma tela de login mobile e justifique qual é o melhor para regressão.</p>
+`,
+            resources: [
+              { label: "Appium locator strategy", url: "https://appium.io/docs/en/latest/intro/" },
+              { label: "WebdriverIO mobile docs", url: "https://webdriver.io/docs/mobile" }
+            ]
+          },
+          {
+            id: "l15",
+            title: "Emulador, simulador e device real",
+            duration: "40 min",
+            content: `<h2>Emulador, simulador e device real</h2>
+
+<h3>🎯 Objetivos de Aprendizado</h3>
+<p>Após esta aula, você será capaz de:</p>
+<ul>
+  <li>Diferenciar emulador, simulador e device real</li>
+  <li>Escolher o melhor ambiente para cada fase do projeto</li>
+  <li>Construir uma estratégia de teste por estágio</li>
+</ul>
+
+<h3>📊 Quando usar cada um</h3>
+<ul style="margin:1rem 0">
+  <li><strong>Emulador:</strong> automação rápida, baixo custo, ideal para CI</li>
+  <li><strong>Simulador:</strong> boa aproximação de iOS ou Android em desenvolvimento</li>
+  <li><strong>Device real:</strong> valida comportamento real, sensores, rede e usabilidade</li>
+</ul>
+
+<h3>✅ Recomendação de qualidade</h3>
+<p>Use emuladores na rotina de CI e no dia a dia de desenvolvimento; use devices reais para validar regressão crítica, autenticação, performance e UX real.</p>
+
+<h3>✏️ Exercício</h3>
+<p>Descreva uma matriz de cobertura para um app com login, checkout e push notification.</p>
+`,
+            resources: [
+              { label: "Android Emulator docs", url: "https://developer.android.com/studio/run/emulator" },
+              { label: "iOS Simulator docs", url: "https://developer.apple.com/documentation/xcode/running-your-app-in-the-simulator" }
+            ]
+          }
+        ]
+      },
+      {
+        id: "c6",
+        title: "Automação Mobile e CI",
+        lessons: [
+          {
+            id: "l16",
+            title: "Gestos, scroll e orientação",
+            duration: "45 min",
+            content: `<h2>Gestos, scroll e orientação</h2>
+
+<h3>🎯 Objetivos de Aprendizado</h3>
+<p>Após esta aula, você será capaz de:</p>
+<ul>
+  <li>Automatizar swipe, tap, long press e scroll</li>
+  <li>Trabalhar com orientação portrait e landscape</li>
+  <li>Validar comportamento de UI em diferentes estados do app</li>
+</ul>
+
+<h3>📌 Cenários críticos</h3>
+<ul style="margin:1rem 0">
+  <li>Lista longa e scroll de elementos</li>
+  <li>Botões fora da área visível</li>
+  <li>Troca de orientação durante o fluxo</li>
+  <li>Teclado virtual escondendo ações</li>
+</ul>
+
+<h3>✅ Boas práticas</h3>
+<p>Prefira ações baseadas em estado e estrutura do app em vez de coordenadas absolutas. Isso melhora confiabilidade e reduz flakiness.</p>
+`,
+            resources: [
+              { label: "WebdriverIO touch actions", url: "https://webdriver.io/docs/api/browser/touchAction" }
+            ]
+          },
+          {
+            id: "l17",
+            title: "CI/CD para apps mobile",
+            duration: "50 min",
+            content: `<h2>CI/CD para apps mobile</h2>
+
+<h3>🎯 Objetivos de Aprendizado</h3>
+<p>Após esta aula, você será capaz de:</p>
+<ul>
+  <li>Adicionar automação mobile em pipelines</li>
+  <li>Executar suites em emuladores headless</li>
+  <li>Configurar evidências e falhas com boa visibilidade</li>
+</ul>
+
+<h3>📊 O que um pipeline mobile precisa ter</h3>
+<ul style="margin:1rem 0">
+  <li>Ambiente de build estável</li>
+  <li>Emuladores ou dispositivos provisionados</li>
+  <li>Screenshots e vídeos em falha</li>
+  <li>Resumo legível de status e regressão</li>
+</ul>
+
+<h3>✅ Regra prática</h3>
+<p>Se o teste não produz evidência clara, ele não é um teste de qualidade no CI. Um pipeline sem logs e screenshots perde valor rapidamente.</p>
+`,
+            resources: [
+              { label: "GitHub Actions docs", url: "https://docs.github.com/actions" },
+              { label: "Appium CI guide", url: "https://appium.io/docs/en/latest/guides/running-appium-ci/" }
+            ]
+          },
+          {
+            id: "l18",
+            title: "Qualidade e métricas mobile",
+            duration: "45 min",
+            content: `<h2>Qualidade e métricas mobile</h2>
+
+<h3>🎯 Objetivos de Aprendizado</h3>
+<p>Após esta aula, você será capaz de:</p>
+<ul>
+  <li>Medir qualidade em apps mobile com foco em confiabilidade e UX</li>
+  <li>Interpretar falhas reais em produção</li>
+  <li>Usar métricas para apoiar decisão de release</li>
+</ul>
+
+<h3>📊 Indicadores importantes</h3>
+<ul style="margin:1rem 0">
+  <li><strong>Crash rate:</strong> falhas em produção</li>
+  <li><strong>Tempo de carregamento:</strong> impacta retenção e conversão</li>
+  <li><strong>Taxa de sucesso de fluxo crítico:</strong> login, checkout, pagamento</li>
+</ul>
+
+<h3>✅ Conclusão</h3>
+<p>Mobile testing não é só “clicar no botão”. É garantir que o app funcione em cenários reais, com contexto de usuário e qualidade de experiência. Essa é a diferença entre um app que “abre” e um app que entrega valor.</p>
+`,
+            resources: [
+              { label: "Firebase Performance", url: "https://firebase.google.com/products/performance" },
+              { label: "Crashlytics", url: "https://firebase.google.com/products/crashlytics" }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
     id: "senior",
     slug: "mastery",
     title: "Maestria em QA",

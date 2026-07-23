@@ -40,8 +40,8 @@ window.TG_QAWAY_EN = {
       ]
     },
     "mobile": {
-      "title": "Mobile Lab",
-      "description": "Test Android and iOS apps on emulators and real devices with Appium and WebdriverIO.",
+      "title": "Mobile Testing Track",
+      "description": "A single track for testing Android and iOS apps on emulators, simulators, and real devices with Appium and WebdriverIO.",
       "level": "Intermediate",
       "topics": [
         "Appium",

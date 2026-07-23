@@ -279,12 +279,54 @@ function t(path, fallback) {
     }
   }
   const dict2 = translations && translations[lang];
-  if (!dict2) return fallback || path;
+  const FALLBACK_LABELS = {
+    pt: {
+      inProgress: 'Em andamento',
+      completed: 'Concluído',
+      unlocked: 'Liberado',
+      modules: 'módulos',
+      hours: 'h',
+      hoursLong: 'horas',
+      free: 'Grátis',
+      lessonsDone: 'aulas concluídas',
+      lessonsProgress: 'aulas',
+      overallProgress: 'progresso geral',
+    },
+    en: {
+      inProgress: 'In progress',
+      completed: 'Completed',
+      unlocked: 'Unlocked',
+      modules: 'modules',
+      hours: 'h',
+      hoursLong: 'hours',
+      free: 'Free',
+      lessonsDone: 'lessons completed',
+      lessonsProgress: 'lessons',
+      overallProgress: 'overall progress',
+    },
+  };
+
+  function humanizeTranslationPath(path, currentLang) {
+    const parts = String(path).split('.').filter(Boolean);
+    const key = parts[parts.length - 1] || '';
+    const direct = FALLBACK_LABELS[currentLang]?.[key];
+    if (direct) return direct;
+
+    const humanized = key
+      .replace(/([a-z])([A-Z])/g, '$1 $2')
+      .replace(/[_-]+/g, ' ')
+      .trim();
+
+    if (!humanized) return path;
+    return humanized.charAt(0).toUpperCase() + humanized.slice(1);
+  }
+
+  if (!dict2) return fallback || humanizeTranslationPath(path, lang);
   const parts = String(path).split('.');
   let cur = dict2;
   for (const p of parts) {
     if (cur && Object.prototype.hasOwnProperty.call(cur, p)) cur = cur[p];
-    else return fallback || path;
+    else return fallback || humanizeTranslationPath(path, lang);
   }
   return cur;
 }

@@ -54,7 +54,7 @@ window.TG_I18N = {
       tracks: { title: "9 trilhas", desc: "Do zero à maestria." },
       progress: { title: "Progresso local", desc: "Seu avanço salvo no navegador, sem cadastro." }
     },
-    track: { unlocked: "LIBERADO", modules: "módulos", hours: "h", hoursLong: "horas", free: "Grátis", lessonsDone: "aulas concluídas", lessonsProgress: "aulas", completed: "concluído" },
+    track: { unlocked: "LIBERADO", modules: "módulos", hours: "h", hoursLong: "horas", free: "Grátis", lessonsDone: "aulas concluídas", lessonsProgress: "aulas", completed: "concluído", inProgress: "Em andamento" },
     lesson: {
       freeAccess: "Acesso gratuito",
       completed: "Concluída",
@@ -303,7 +303,7 @@ window.TG_I18N = {
       tracks: { title: "9 paths", desc: "From zero to mastery." },
       progress: { title: "Local progress", desc: "Your progress saved in the browser, no signup needed." }
     },
-    track: { unlocked: "UNLOCKED", modules: "modules", hours: "h", hoursLong: "hours", free: "Free", lessonsDone: "lessons completed", lessonsProgress: "lessons", completed: "completed" },
+    track: { unlocked: "UNLOCKED", modules: "modules", hours: "h", hoursLong: "hours", free: "Free", lessonsDone: "lessons completed", lessonsProgress: "lessons", completed: "completed", inProgress: "In progress" },
     lesson: {
       freeAccess: "Free access",
       completed: "Completed",
@@ -399,20 +399,62 @@ window.TG_I18N = {
 // Minimal translation API that centralizes lookup and language helpers.
 // Consumers should call `window.NV_I18N.t(path, fallback)`.
 (function () {
+  const FALLBACK_LABELS = {
+    pt: {
+      inProgress: 'Em andamento',
+      completed: 'Concluído',
+      unlocked: 'Liberado',
+      modules: 'módulos',
+      hours: 'h',
+      hoursLong: 'horas',
+      free: 'Grátis',
+      lessonsDone: 'aulas concluídas',
+      lessonsProgress: 'aulas',
+      overallProgress: 'progresso geral',
+    },
+    en: {
+      inProgress: 'In progress',
+      completed: 'Completed',
+      unlocked: 'Unlocked',
+      modules: 'modules',
+      hours: 'h',
+      hoursLong: 'hours',
+      free: 'Free',
+      lessonsDone: 'lessons completed',
+      lessonsProgress: 'lessons',
+      overallProgress: 'overall progress',
+    },
+  };
+
   function getCurrentLangKey() {
     const g = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : {};
     return g.lang === 'en' ? 'en' : 'pt';
   }
 
+  function humanizeTranslationPath(path, lang) {
+    const parts = String(path).split('.').filter(Boolean);
+    const key = parts[parts.length - 1] || '';
+    const direct = FALLBACK_LABELS[lang]?.[key];
+    if (direct) return direct;
+
+    const humanized = key
+      .replace(/([a-z])([A-Z])/g, '$1 $2')
+      .replace(/[_-]+/g, ' ')
+      .trim();
+
+    if (!humanized) return path;
+    return humanized.charAt(0).toUpperCase() + humanized.slice(1);
+  }
+
   function t(path, fallback) {
     const lang = getCurrentLangKey();
     const dict = (typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : {}).TG_I18N;
-    if (!dict || !dict[lang]) return fallback || path;
+    if (!dict || !dict[lang]) return fallback || humanizeTranslationPath(path, lang);
     const parts = String(path).split('.');
     let cur = dict[lang];
     for (const p of parts) {
       if (cur && Object.prototype.hasOwnProperty.call(cur, p)) cur = cur[p];
-      else return fallback || path;
+      else return fallback || humanizeTranslationPath(path, lang);
     }
     return cur;
   }
