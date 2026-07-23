@@ -64,6 +64,46 @@
     "text": "Testes de Regressão e Automação Inteligente"
   },
   {
+    "key": "track.mobile.title",
+    "text": "Trilha de Testes Mobile"
+  },
+  {
+    "key": "track.mobile.description",
+    "text": "Trilha única para testes mobile em emuladores, simuladores e dispositivos reais, com foco em Appium, WebdriverIO e qualidade em produção."
+  },
+  {
+    "key": "course.c5.title",
+    "text": "Fundamentos de Testes Mobile"
+  },
+  {
+    "key": "lesson.l13.title",
+    "text": "Por que testes mobile são diferentes"
+  },
+  {
+    "key": "lesson.l14.title",
+    "text": "Appium e locators mobile"
+  },
+  {
+    "key": "lesson.l15.title",
+    "text": "Emulador, simulador e device real"
+  },
+  {
+    "key": "course.c6.title",
+    "text": "Automação Mobile e CI"
+  },
+  {
+    "key": "lesson.l16.title",
+    "text": "Gestos, scroll e orientação"
+  },
+  {
+    "key": "lesson.l17.title",
+    "text": "CI/CD para apps mobile"
+  },
+  {
+    "key": "lesson.l18.title",
+    "text": "Qualidade e métricas mobile"
+  },
+  {
     "key": "track.senior.title",
     "text": "Maestria em QA"
   },
