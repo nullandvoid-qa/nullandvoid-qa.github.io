@@ -1,0 +1,90 @@
+[
+  {
+    "key": "track.starter.title",
+    "text": "Iniciação da Guilda"
+  },
+  {
+    "key": "track.starter.description",
+    "text": "Sua jornada como recruta da Guilda. Fundamentos de QA, testes manuais e primeiros passos em automação."
+  },
+  {
+    "key": "course.c1.title",
+    "text": "Introdução à Qualidade de Software"
+  },
+  {
+    "key": "lesson.l1.title",
+    "text": "O que é QA e por que importa"
+  },
+  {
+    "key": "lesson.l2.title",
+    "text": "Papéis: QA, QC e Tester"
+  },
+  {
+    "key": "lesson.l9.title",
+    "text": "Critérios de Aceitação e Definição de Pronto"
+  },
+  {
+    "key": "course.c2.title",
+    "text": "Ciclo de Vida e Tipos de Teste"
+  },
+  {
+    "key": "lesson.l3.title",
+    "text": "SDLC e onde o QA se encaixa"
+  },
+  {
+    "key": "lesson.l4.title",
+    "text": "Testes funcionais vs não-funcionais"
+  },
+  {
+    "key": "lesson.l10.title",
+    "text": "Matriz de Risco e Estratégia de Teste"
+  },
+  {
+    "key": "track.intermediate.title",
+    "text": "Testes Avançados"
+  },
+  {
+    "key": "track.intermediate.description",
+    "text": "Técnicas de teste mais sofisticadas: automação, performance, segurança."
+  },
+  {
+    "key": "course.c3.title",
+    "text": "Técnicas de Teste"
+  },
+  {
+    "key": "lesson.l5.title",
+    "text": "Partição de Equivalência e Valor Limite"
+  },
+  {
+    "key": "lesson.l6.title",
+    "text": "Teste Exploratório"
+  },
+  {
+    "key": "lesson.l11.title",
+    "text": "Testes de Regressão e Automação Inteligente"
+  },
+  {
+    "key": "track.senior.title",
+    "text": "Maestria em QA"
+  },
+  {
+    "key": "track.senior.description",
+    "text": "Liderança em qualidade, estratégia de testes, mentoring."
+  },
+  {
+    "key": "course.c4.title",
+    "text": "Agile e Scrum"
+  },
+  {
+    "key": "lesson.l7.title",
+    "text": "Cerimônias Agile"
+  },
+  {
+    "key": "lesson.l8.title",
+    "text": "Three Amigos"
+  },
+  {
+    "key": "lesson.l12.title",
+    "text": "Definition of Done e Qualidade em Agile"
+  }
+]

@@ -93,32 +93,7 @@
     "lab-browserstack": "cloud",
   };
 
-  function getElementById(id) {
-    return document ? document.getElementById(id) : null;
-  }
-
-  function normalizeTextLabel(text) {
-    return String(text || "").replace(/^[^\wÀ-ž]+\s*/, "").trim();
-  }
-
-  function getTrackIcon(track) {
-    const rawIcon = String(track.icon || "").trim();
-    // If icon name matches a known NVIcons key, use it directly
-    if (window.NVIcons && window.NVIcons.icons[rawIcon]) return rawIcon;
-    // If the stored icon is an emoji or other decorative character,
-    // prefer the canonical mapping from TRACK_ICON_MAP to ensure SVG icons.
-    try {
-      if (/\p{Emoji}/u.test(rawIcon)) return TRACK_ICON_MAP[track.id] || "tracks";
-    } catch (e) {
-      // If the runtime doesn't support Unicode property escapes, ignore
-    }
-    // Fallback to mapped icon name or generic 'tracks'
-    return TRACK_ICON_MAP[track.id] || "tracks";
-  }
-
-  function getLangKey() {
-    return lang === "en" ? "en" : "pt";
-  }
+  // Utility functions moved to `js/utils.js`.
 
   function getHomeTrackSummary(filteredCount = tracks.length) {
     const global = getGlobalProgress();
@@ -209,7 +184,7 @@
   function toggleTheme() {
     theme = theme === "dark" ? "light" : "dark";
     applyTheme();
-    showToast(theme === "dark" ? "Tema escuro" : "Tema claro");
+    showToast(t(theme === "dark" ? "settings.themeDark" : "settings.themeLight"));
   }
 
   // ── Senior Mode ───────────────────────────────────────────────────────────
@@ -219,12 +194,8 @@
     if (btn) {
       btn.classList.toggle("active-toggle", seniorMode);
       btn.title = seniorMode
-        ? lang === "en"
-          ? "Senior Mode ON"
-          : "Modo Sênior ATIVO"
-        : lang === "en"
-          ? "Senior Mode"
-          : "Modo Sênior";
+        ? t("settings.seniorModeOn", lang === "en" ? "Senior Mode ON" : "Modo Sênior ATIVO")
+        : t("settings.seniorModeOff", lang === "en" ? "Senior Mode" : "Modo Sênior");
     }
     localStorage.setItem(STORAGE_SENIOR_MODE, String(seniorMode));
   }
@@ -234,12 +205,8 @@
     applySeniorMode();
     showToast(
       seniorMode
-        ? lang === "en"
-          ? "Senior Mode ON — beginner tips hidden"
-          : "Modo Sênior ativado — dicas iniciante ocultas"
-        : lang === "en"
-          ? "Senior Mode OFF"
-          : "Modo Sênior desativado",
+        ? t("settings.seniorModeOnToast", lang === "en" ? "Senior Mode ON — beginner tips hidden" : "Modo Sênior ativado — dicas iniciante ocultas")
+        : t("settings.seniorModeOffToast", lang === "en" ? "Senior Mode OFF" : "Modo Sênior desativado"),
     );
     if (currentView === "lesson") renderLesson(viewParams.lessonId);
   }
@@ -386,38 +353,7 @@
     return getIconMarkup(name, size, className) || fallback;
   }
 
-  function highlightCode(html) {
-    // Wrap <pre> blocks with a copy button and language detection
-    return html.replace(/<pre>([\s\S]*?)<\/pre>/g, (_, code) => {
-      const safe = code.trim();
-      return `<div class="code-block">
-        <button class="code-copy-btn" aria-label="Copy code" title="Copy">${getIconMarkup("copy", "18")}</button>
-        <pre>${safe}</pre>
-      </div>`;
-    });
-  }
-
-  function attachCopyButtons(container) {
-    container.querySelectorAll(".code-copy-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const pre = btn.nextElementSibling;
-        navigator.clipboard
-          .writeText(pre.textContent)
-          .then(() => {
-            btn.innerHTML = getIconMarkupOrFallback("check", "✓", "18");
-            setTimeout(() => {
-              btn.innerHTML = getIconMarkup("copy", "18");
-            }, 1500);
-          })
-          .catch(() => {
-            btn.innerHTML = getIconMarkupOrFallback("close", "×", "18");
-            setTimeout(() => {
-              btn.innerHTML = getIconMarkup("copy", "18");
-            }, 1500);
-          });
-      });
-    });
-  }
+  // Code highlighting and copy button helpers live in `js/utils.js`.
 
 
 

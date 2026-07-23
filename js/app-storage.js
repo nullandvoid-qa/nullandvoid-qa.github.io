@@ -1,6 +1,5 @@
 const safeShowToast = typeof showToast === "function" ? showToast : () => {};
 const safeTranslate = typeof t === "function" ? t : (key) => key;
-const safeConfirm = typeof confirm === "function" ? confirm : () => true;
 const validateProgress = typeof validateProgressData === "function" ? validateProgressData : (data) => {
   if (!data || typeof data !== "object" || Array.isArray(data)) {
     return false;
@@ -14,6 +13,14 @@ const validateQuizzes = typeof validateQuizzesPassedData === "function" ? valida
   }
   return Object.values(data).every((value) => value && typeof value === "object" && typeof value.passedAt === "string" && typeof value.score === "number");
 };
+const validateChecklist = typeof window !== "undefined" && typeof window.validateChecklistState === "function"
+  ? window.validateChecklistState
+  : (data) => {
+      if (!data || typeof data !== "object" || Array.isArray(data)) {
+        return false;
+      }
+      return Object.values(data).every((item) => Array.isArray(item) && item.every((idx) => typeof idx === "number"));
+    };
 
 function normalizeProgressState(progressState) {
   if (!progressState || typeof progressState !== "object" || Array.isArray(progressState)) {
@@ -119,14 +126,35 @@ function isValidImportedPayload(payload) {
   const hasProgress = payload.progress === undefined || validateProgress(payload.progress);
   const hasBookmarks = payload.bookmarks === undefined || validateBookmarks(payload.bookmarks);
   const hasQuizzes = payload.quizzesPassed === undefined || validateQuizzes(payload.quizzesPassed);
-  const hasChecklist = payload.checklists === undefined || (typeof window.validateChecklistState === "function" && window.validateChecklistState(payload.checklists));
+  const hasChecklist = payload.checklists === undefined || validateChecklist(payload.checklists);
 
   return hasProgress && hasBookmarks && hasQuizzes && hasChecklist;
 }
 
+async function readImportedFileText(file) {
+  if (!file) {
+    return "";
+  }
+
+  if (typeof file.text === "function") {
+    return file.text();
+  }
+
+  if (typeof FileReader === "function") {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(typeof reader.result === "string" ? reader.result : "");
+      reader.onerror = () => reject(reader.error || new Error("Unable to read file"));
+      reader.readAsText(file);
+    });
+  }
+
+  return typeof file === "string" ? file : "";
+}
+
 async function importProgressFromFile(file) {
   try {
-    const text = await file.text();
+    const text = await readImportedFileText(file);
     const payload = JSON.parse(text);
 
     if (!isValidImportedPayload(payload)) {

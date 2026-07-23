@@ -836,7 +836,11 @@
       : buildDashboardEmptyStateHtml(emptyMessage || "", escapeHtml);
   }
 
-  function buildDashboardCertificatesSectionHtml(completedTracks, userCerts, localizedTrack, icons, lang, escapeHtml, emptyMessage) {
+  function buildDashboardCertificatesSectionHtml(completedTracks, userCerts, localizedTrack, icons, lang, escapeHtml, emptyMessage, t) {
+    const translate = typeof t === 'function'
+      ? (key, fallback) => t(key, fallback)
+      : (key, fallback) => fallback || key;
+
     // Determine first completed track and user name to make preview dynamic
     const firstTrack = Array.isArray(completedTracks) && completedTracks.length ? completedTracks[0] : null;
     const isAuthenticated = window.NVAuth && window.NVAuth.isAuthenticated;
@@ -847,26 +851,26 @@
     const issueDate = new Date().toLocaleDateString('en-US');
 
     const previewActions = firstTrack && isAuthenticated
-      ? `<div style="margin-top:0.5rem"><button class="btn btn-secondary btn-sm" id="btn-cert-preview" data-track="${escapeHtml(firstTrack.id)}" data-action="preview">Preview</button> <button class="btn btn-primary btn-sm" id="btn-cert-download" data-track="${escapeHtml(firstTrack.id)}" data-action="download">Download</button></div>`
-      : `<div style="margin-top:0.5rem; color: #cbd5e1; font-size: 0.95rem;">Sign in to access your certificates.</div>`;
+      ? `<div style="margin-top:0.5rem"><button class="btn btn-secondary btn-sm" id="btn-cert-preview" data-track="${escapeHtml(firstTrack.id)}" data-action="preview">${translate('dashboard.preview', lang === 'en' ? 'Preview' : 'Visualizar')}</button> <button class="btn btn-primary btn-sm" id="btn-cert-download" data-track="${escapeHtml(firstTrack.id)}" data-action="download">${translate('dashboard.download', lang === 'en' ? 'Download' : 'Baixar')}</button></div>`
+      : `<div style="margin-top:0.5rem; color: #cbd5e1; font-size: 0.95rem;">${translate('dashboard.signInToAccessCertificates', lang === 'en' ? 'Sign in to access your certificates.' : 'Faça login para acessar seus certificados.')}</div>`;
 
     const previewBadge = firstTrack
-      ? (lang === 'en' ? 'Certificate' : 'Certificado')
-      : (lang === 'en' ? 'Example' : 'Exemplo');
+      ? translate('dashboard.certificatePreviewBadge', lang === 'en' ? 'Certificate' : 'Certificado')
+      : translate('dashboard.exampleBadge', lang === 'en' ? 'Example' : 'Exemplo');
 
     const previewHtml = `
-      <div class="cert-preview" role="img" aria-label="Certificate preview">
+      <div class="cert-preview" role="img" aria-label="${translate('dashboard.certificatePreviewAria', lang === 'en' ? 'Certificate preview' : 'Pré-visualização do certificado')}">
         <div class="cert-preview__badge">${previewBadge}</div>
-        <div class="cert-preview__title">CERTIFICATE OF COMPLETION</div>
+        <div class="cert-preview__title">${translate('dashboard.certificatePreviewTitle', lang === 'en' ? 'CERTIFICATE OF COMPLETION' : 'CERTIFICADO DE CONCLUSÃO')}</div>
         <div class="cert-preview__name">${escapeHtml(userName)}</div>
         <div class="cert-preview__track">${escapeHtml(trackTitle)}</div>
-        <div class="cert-preview__footer">Issued on ${issueDate}
+        <div class="cert-preview__footer">${translate('dashboard.issuedOn', lang === 'en' ? 'Issued on' : 'Emitido em')} ${issueDate}
           ${previewActions}
         </div>
       </div>`;
 
     if (!Array.isArray(completedTracks) || completedTracks.length === 0) {
-      return `${previewHtml}${buildDashboardEmptyStateHtml(emptyMessage || "", escapeHtml)}`;
+      return `${previewHtml}${buildDashboardEmptyStateHtml(emptyMessage || translate('dashboard.certificatesEmpty', lang === 'en' ? 'Complete a track to earn a certificate.' : 'Conclua uma trilha para ganhar um certificado.'), escapeHtml)}`;
     }
 
     return `${previewHtml}${completedTracks
@@ -1075,6 +1079,7 @@
         lang,
         escapeHtml,
         lang === "en" ? "Complete a track to earn a certificate." : "Conclua uma trilha para ganhar um certificado.",
+        t,
       );
       bindDashboardCertificateHandlers(certificatesSection, onCertDownload);
     }

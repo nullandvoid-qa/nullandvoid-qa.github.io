@@ -1,0 +1,22 @@
+{
+  "count": 5,
+  "numeric": {
+    "count": 5,
+    "overall": {
+      "avg": 3.6,
+      "min": 2,
+      "max": 5
+    },
+    "clarity": {
+      "avg": 3.8,
+      "min": 2,
+      "max": 5
+    }
+  },
+  "objectives": {
+    "Sim": 3,
+    "Parcial": 1,
+    "Nao": 1
+  },
+  "exerciseUsefulYes": 3
+}

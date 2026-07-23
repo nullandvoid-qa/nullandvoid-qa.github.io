@@ -1,0 +1,47 @@
+[
+	{
+		"id": "r1",
+		"overall": 4,
+		"clarity": 5,
+		"objectives": "Sim",
+		"exercise_useful": true,
+		"comments": "A aula tem boa estrutura; faltou um repositório com exemplos.",
+		"contact": "user1@example.com"
+	},
+	{
+		"id": "r2",
+		"overall": 3,
+		"clarity": 3,
+		"objectives": "Parcial",
+		"exercise_useful": false,
+		"comments": "Exercícios muito teóricos; prefiro hands-on.",
+		"contact": "user2@example.com"
+	},
+	{
+		"id": "r3",
+		"overall": 5,
+		"clarity": 5,
+		"objectives": "Sim",
+		"exercise_useful": true,
+		"comments": "Ótimo material, exercícios claros.",
+		"contact": "user3@example.com"
+	},
+	{
+		"id": "r4",
+		"overall": 4,
+		"clarity": 4,
+		"objectives": "Sim",
+		"exercise_useful": true,
+		"comments": "Inclua templates editáveis.",
+		"contact": "user4@example.com"
+	},
+	{
+		"id": "r5",
+		"overall": 2,
+		"clarity": 2,
+		"objectives": "Nao",
+		"exercise_useful": false,
+		"comments": "Faltam exemplos práticos e gabaritos em algumas aulas.",
+		"contact": "user5@example.com"
+	}
+]

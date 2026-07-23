@@ -15,9 +15,10 @@
       const userName = window.NVAuth?.getUserName?.() || "";
       await window.TG_CERTIFICATES.downloadCertificate(track.id, userName, new Date());
       window.TG_CERTIFICATES.saveCertificate(track.id, userName, new Date());
-      window.showToast(getState().lang === "en" ? "Certificate downloaded!" : "Certificado baixado!");
+      window.showToast(getHelpers().t ? getHelpers().t("toast.certificateDownloaded", getState().lang === "en" ? "Certificate downloaded!" : "Certificado baixado!") : (getState().lang === "en" ? "Certificate downloaded!" : "Certificado baixado!"));
     } catch (error) {
-      window.showToast(`Erro: ${error.message}`);
+      const messagePrefix = getHelpers().t ? getHelpers().t("toast.certificateDownloadError", "Error") : "Erro";
+      window.showToast(`${messagePrefix}: ${error.message}`);
     }
   }
 

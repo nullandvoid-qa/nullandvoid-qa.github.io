@@ -74,13 +74,15 @@ window.TG_I18N = {
       quizIntro: "pergunta(s) rápida(s) — teste seu entendimento",
       quizCheck: "Verificar",
       quizReset: "Resetar",
+      feedbackTitle: "Feedback",
+      feedbackPlaceholder: "Conte-nos o que foi útil ou confuso",
       feedbackSubmit: "Enviar",
       feedbackCancel: "Cancelar",
       feedbackThanks: "Obrigado pelo feedback!"
     },
     quiz: { title: "Quiz da Trilha", start: "Iniciar Quiz", takeQuiz: "Fazer Quiz", backTrack: "Voltar para a trilha", submit: "Verificar respostas", passed: "Aprovado!", failed: "Tente novamente", score: "Acertos", questions: "perguntas", pass: "Aprovação", alreadyPassed: "Você já passou neste quiz!" },
     checklist: { title: "Checklist do Projeto Final", progress: "itens concluídos" },
-    settings: { theme: "Tema", seniorMode: "Modo Sênior", light: "Claro", dark: "Escuro", toggleThemeLight: "Alternar para tema claro", toggleThemeDark: "Alternar para tema escuro", toggleLanguage: "Alternar idioma" },
+    settings: { theme: "Tema", seniorMode: "Modo Sênior", light: "Claro", dark: "Escuro", toggleThemeLight: "Alternar para tema claro", toggleThemeDark: "Alternar para tema escuro", toggleLanguage: "Alternar idioma", themeLight: "Tema claro", themeDark: "Tema escuro", seniorModeOn: "Modo Sênior ATIVO", seniorModeOff: "Modo Sênior", seniorModeOnToast: "Modo Sênior ativado — dicas iniciante ocultas", seniorModeOffToast: "Modo Sênior desativado" },
     certificate: { title: "Certificado da Guilda", download: "Imprimir / Salvar PDF" },
     filter: { all: "Todos", beginner: "Iniciante", intermediate: "Intermediário", senior: "Avançado" },
     dashboard: {
@@ -99,9 +101,18 @@ window.TG_I18N = {
       certificatesTitle: "Certificados",
       lessonsCompleted: "Aulas concluídas",
       overallProgress: "Progresso geral",
-      quizzesPassed: "Quizzes aprovados"
+      quizzesPassed: "Quizzes aprovados",
+      certificatePreviewBadge: "Certificado",
+      exampleBadge: "Exemplo",
+      certificatePreviewTitle: "CERTIFICADO DE CONCLUSÃO",
+      issuedOn: "Emitido em",
+      preview: "Visualizar",
+      download: "Baixar",
+      close: "Fechar",
+      signInToAccessCertificates: "Faça login para acessar seus certificados.",
+      certificatesEmpty: "Conclua uma trilha para ganhar um certificado."
     },
-    toast: { lessonDone: "Aula concluída!", lessonUndone: "Aula marcada como não concluída", progressReset: "Progresso resetado", exportProgressSuccess: "Progresso exportado com sucesso!", exportProgressFail: "Falha ao exportar progresso", importProgressSuccess: "Progresso importado com sucesso!", importProgressFail: "Falha ao importar progresso", invalidProgressFile: "Arquivo de progresso inválido", langChanged: "Idioma alterado", personaSaved: "Perfil atualizado", bookmarkAdded: "Aula favoritada", bookmarkRemoved: "Aula removida dos favoritos", quizPassed: "Quiz aprovado!", achievementUnlocked: "Conquista desbloqueada!", copySuccess: "Código copiado! Cole em seu projeto!", progressSavedLocal: "Progresso salvo localmente" },
+    toast: { lessonDone: "Aula concluída!", lessonUndone: "Aula marcada como não concluída", progressReset: "Progresso resetado", exportProgressSuccess: "Progresso exportado com sucesso!", exportProgressFail: "Falha ao exportar progresso", importProgressSuccess: "Progresso importado com sucesso!", importProgressFail: "Falha ao importar progresso", invalidProgressFile: "Arquivo de progresso inválido", langChanged: "Idioma alterado", personaSaved: "Perfil atualizado", bookmarkAdded: "Aula favoritada", bookmarkRemoved: "Aula removida dos favoritos", quizPassed: "Quiz aprovado!", achievementUnlocked: "Conquista desbloqueada!", copySuccess: "Código copiado! Cole em seu projeto!", progressSavedLocal: "Progresso salvo localmente", certificateDownloaded: "Certificado baixado!", certificateDownloadError: "Erro" },
     auth: { localSignIn: "Entrar como convidado", localSignInSuccess: "Entrou como convidado" },
     footer: {
       line1: "Null and Void QA Course · Do iniciante ao sênior",
@@ -318,7 +329,7 @@ window.TG_I18N = {
     },
     quiz: { title: "Path Quiz", start: "Start Quiz", takeQuiz: "Take Quiz", backTrack: "Back to Track", submit: "Check answers", passed: "Passed!", failed: "Try again", score: "Correct", questions: "questions", pass: "Pass", alreadyPassed: "You already passed this quiz!" },
     checklist: { title: "Final Project Checklist", progress: "items done" },
-    settings: { theme: "Theme", seniorMode: "Senior Mode", light: "Light", dark: "Dark", toggleThemeLight: "Switch to light theme", toggleThemeDark: "Switch to dark theme", toggleLanguage: "Switch language" },
+    settings: { theme: "Theme", seniorMode: "Senior Mode", light: "Light", dark: "Dark", toggleThemeLight: "Switch to light theme", toggleThemeDark: "Switch to dark theme", toggleLanguage: "Switch language", themeLight: "Theme light", themeDark: "Theme dark", seniorModeOn: "Senior Mode ON", seniorModeOff: "Senior Mode", seniorModeOnToast: "Senior Mode ON — beginner tips hidden", seniorModeOffToast: "Senior Mode OFF" },
     certificate: { title: "Guild Certificate", download: "Print / Save PDF" },
     filter: { all: "All", beginner: "Beginner", intermediate: "Intermediate", senior: "Advanced" },
     dashboard: {
@@ -337,9 +348,18 @@ window.TG_I18N = {
       certificatesTitle: "Certificates",
       lessonsCompleted: "Lessons completed",
       overallProgress: "Overall progress",
-      quizzesPassed: "Quizzes passed"
+      quizzesPassed: "Quizzes passed",
+      certificatePreviewBadge: "Certificate",
+      exampleBadge: "Example",
+      certificatePreviewTitle: "CERTIFICATE OF COMPLETION",
+      issuedOn: "Issued on",
+      preview: "Preview",
+      download: "Download",
+      close: "Close",
+      signInToAccessCertificates: "Sign in to access your certificates.",
+      certificatesEmpty: "Complete a track to earn a certificate."
     },
-    toast: { lessonDone: "Lesson completed!", lessonUndone: "Lesson marked as incomplete", progressReset: "Progress reset", exportProgressSuccess: "Progress exported successfully!", exportProgressFail: "Failed to export progress", importProgressSuccess: "Progress imported successfully!", importProgressFail: "Failed to import progress", invalidProgressFile: "Invalid progress file", langChanged: "Language changed", personaSaved: "Profile updated", bookmarkAdded: "Lesson bookmarked", bookmarkRemoved: "Lesson removed from bookmarks", quizPassed: "Quiz passed!", achievementUnlocked: "Achievement unlocked!", copySuccess: "Code copied! Paste it into your project.", progressSavedLocal: "Progress saved locally" },
+    toast: { lessonDone: "Lesson completed!", lessonUndone: "Lesson marked as incomplete", progressReset: "Progress reset", exportProgressSuccess: "Progress exported successfully!", exportProgressFail: "Failed to export progress", importProgressSuccess: "Progress imported successfully!", importProgressFail: "Failed to import progress", invalidProgressFile: "Invalid progress file", langChanged: "Language changed", personaSaved: "Profile updated", bookmarkAdded: "Lesson bookmarked", bookmarkRemoved: "Lesson removed from bookmarks", quizPassed: "Quiz passed!", achievementUnlocked: "Achievement unlocked!", copySuccess: "Code copied! Paste it into your project.", progressSavedLocal: "Progress saved locally", certificateDownloaded: "Certificate downloaded!", certificateDownloadError: "Error" },
     auth: { localSignIn: "Sign in as guest", localSignInSuccess: "Signed in as guest" },
     footer: {
       line1: "Null and Void QA Course · Beginner to senior",
@@ -375,3 +395,27 @@ window.TG_I18N = {
     lang: { toggle: "PT", current: "EN" }
   }
 };
+
+// Minimal translation API that centralizes lookup and language helpers.
+// Consumers should call `window.NV_I18N.t(path, fallback)`.
+(function () {
+  function getCurrentLangKey() {
+    const g = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : {};
+    return g.lang === 'en' ? 'en' : 'pt';
+  }
+
+  function t(path, fallback) {
+    const lang = getCurrentLangKey();
+    const dict = (typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : {}).TG_I18N;
+    if (!dict || !dict[lang]) return fallback || path;
+    const parts = String(path).split('.');
+    let cur = dict[lang];
+    for (const p of parts) {
+      if (cur && Object.prototype.hasOwnProperty.call(cur, p)) cur = cur[p];
+      else return fallback || path;
+    }
+    return cur;
+  }
+
+  window.NV_I18N = window.NV_I18N || { t, getCurrentLangKey };
+})();

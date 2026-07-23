@@ -10,6 +10,85 @@ function escapeHtml(str) {
     .replace(/'/g, "&#039;");
 }
 
+function getElementById(id) {
+  try {
+    return typeof document !== 'undefined' ? document.getElementById(id) : null;
+  } catch {
+    return null;
+  }
+}
+
+function normalizeTextLabel(text) {
+  return String(text || '').replace(/^[^\wÀ-ž]+\s*/, '').trim();
+}
+
+function getTrackIcon(track) {
+  const TRACK_ICON_MAP = {
+    starter: 'starter',
+    intermediate: 'bolt',
+    senior: 'crown',
+    mentorship: 'mentor',
+    web: 'web',
+    api: 'api',
+    mobile: 'mobile',
+    performance: 'perf',
+    security: 'security',
+    devops: 'devops',
+    accessibility: 'accessibility',
+    leadership: 'leadership',
+    'lab-android-basic': 'android',
+    'lab-ios-basic': 'ios',
+    'lab-saucelabs': 'externalLink',
+    'lab-browserstack': 'cloud',
+  };
+  const rawIcon = String((track && track.icon) || '').trim();
+  try {
+    if (window && window.NVIcons && window.NVIcons.icons && window.NVIcons.icons[rawIcon]) return rawIcon;
+  } catch (e) {
+    // ignore
+  }
+  try {
+    if (/\p{Emoji}/u.test(rawIcon)) return TRACK_ICON_MAP[track.id] || 'tracks';
+  } catch (e) {
+    // ignore unicode property support
+  }
+  return TRACK_ICON_MAP[track.id] || 'tracks';
+}
+
+function getLangKey() {
+  return getCurrentLangKey();
+}
+
+function highlightCode(html) {
+  return String(html).replace(/<pre>([\s\S]*?)<\/pre>/g, (_, code) => {
+    const safe = code.trim();
+    return `<div class="code-block">\n        <button class="code-copy-btn" aria-label="Copy code" title="Copy">${getIconMarkup('copy', '18')}</button>\n        <pre>${safe}</pre>\n      </div>`;
+  });
+}
+
+function attachCopyButtons(container) {
+  if (!container || !container.querySelectorAll) return;
+  container.querySelectorAll('.code-copy-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const pre = btn.nextElementSibling;
+      navigator.clipboard
+        .writeText(pre.textContent)
+        .then(() => {
+          btn.innerHTML = getIconMarkupOrFallback('check', '✓', '18');
+          setTimeout(() => {
+            btn.innerHTML = getIconMarkup('copy', '18');
+          }, 1500);
+        })
+        .catch(() => {
+          btn.innerHTML = getIconMarkupOrFallback('close', '×', '18');
+          setTimeout(() => {
+            btn.innerHTML = getIconMarkup('copy', '18');
+          }, 1500);
+        });
+    });
+  });
+}
+
 function getCurrentLangKey() {
   const g =
     typeof window !== "undefined"
@@ -43,7 +122,7 @@ function loadJson(key, fallback, validator) {
 
     const raw = localStorage.getItem(key);
     if (raw === null) return fallback;
-    const data = JSON.parse(raw);
+      const data = JSON.parse(raw);
     if (validator && !validator(data)) {
       return fallback;
     }
@@ -152,5 +231,60 @@ if (typeof module !== "undefined" && module.exports) {
     validateBookmarksData,
     validateQuizzesPassedData,
     validateChecklistState,
+    t,
+    getElementById,
+    normalizeTextLabel,
+    getTrackIcon,
+    getLangKey,
+    highlightCode,
+    attachCopyButtons,
   };
+}
+
+function t(path, fallback) {
+  // Prefer the centralized translation API when available.
+  const ctxGlobal = typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : (typeof global !== 'undefined' ? global : {}));
+  if (ctxGlobal && ctxGlobal.NV_I18N && typeof ctxGlobal.NV_I18N.t === 'function') {
+    return ctxGlobal.NV_I18N.t(path, fallback);
+  }
+
+  const lang = getCurrentLangKey();
+  const ctx = ctxGlobal;
+  // Accept translations defined at global TG_I18N or under a global `window` object.
+  const translationsRoot = (ctx && ctx.TG_I18N) || (typeof globalThis !== 'undefined' && globalThis.window && globalThis.window.TG_I18N) || (ctx && ctx.window && ctx.window.TG_I18N);
+  let translations = translationsRoot;
+  if (!translations) {
+    try {
+      for (const k of Object.keys(ctx || {})) {
+        const cand = ctx[k];
+        if (cand && cand.TG_I18N) {
+          translations = cand.TG_I18N;
+          break;
+        }
+      }
+      // Also scan globalThis top-level entries for a nested TG_I18N if present.
+      for (const k of Object.keys(globalThis || {})) {
+        try {
+          const cand = globalThis[k];
+          if (cand && cand.TG_I18N) {
+            translations = cand.TG_I18N;
+            break;
+          }
+        } catch (e) {
+          // Ignore lookup failures for unrelated globals.
+        }
+      }
+    } catch (e) {
+      // Ignore failures while resolving nested translation objects.
+    }
+  }
+  const dict2 = translations && translations[lang];
+  if (!dict2) return fallback || path;
+  const parts = String(path).split('.');
+  let cur = dict2;
+  for (const p of parts) {
+    if (cur && Object.prototype.hasOwnProperty.call(cur, p)) cur = cur[p];
+    else return fallback || path;
+  }
+  return cur;
 }

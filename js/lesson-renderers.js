@@ -57,7 +57,7 @@
           <button class="btn btn-primary" id="btn-complete">${done ? t("lesson.unmarkComplete") : t("lesson.markComplete")}</button>
           ${prev ? `<button class="btn btn-secondary" id="btn-prev">${icons ? icons.get('arrowLeft', '', '16') + ' ' : '← '}${t("lesson.prev")}</button>` : ""}
           ${next ? `<button class="btn btn-secondary" id="btn-next">${t("lesson.next")} ${icons ? icons.get('arrowRight', '', '16') : '→'}</button>` : ""}
-          <button class="btn btn-outline" id="btn-feedback" style="margin-left: auto; display:inline-flex; align-items:center; gap:0.4rem;">${icons ? icons.get('feedback', '', '16') + ' ' : ''}${lang === "en" ? "Feedback" : "Feedback"}</button>
+          <button class="btn btn-outline" id="btn-feedback" style="margin-left: auto; display:inline-flex; align-items:center; gap:0.4rem;">${icons ? icons.get('feedback', '', '16') + ' ' : ''}${t("lesson.feedbackTitle", lang === "en" ? "Feedback" : "Feedback")}</button>
         </div>
       </article>`;
   }
@@ -65,7 +65,7 @@
   function buildLessonFeedbackHtml(lang, icons, t) {
     return `
       <div class="lesson-feedback-form" id="lesson-feedback-form" style="display:none;margin-top:1rem;padding:1rem;background:var(--surface-2);border-radius:10px;">
-        <h3 style="margin-top:0;">${lang === "en" ? "Feedback" : "Feedback"}</h3>
+        <h3 style="margin-top:0;">${t("lesson.feedbackTitle", lang === "en" ? "Feedback" : "Feedback")}</h3>
         <div class="feedback-rating" style="display:flex;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap;">
           ${["1", "2", "3", "4", "5"].map((value) => `
             <label style="display:flex;align-items:center;gap:0.25rem;">
@@ -73,10 +73,10 @@
               <span>${value}</span>
             </label>`).join("")}
         </div>
-        <textarea id="feedback-text" rows="4" style="width:100%;resize:vertical;" placeholder="${lang === "en" ? "Tell us what was helpful or confusing" : "Conte-nos o que foi útil ou confuso"}"></textarea>
+        <textarea id="feedback-text" rows="4" style="width:100%;resize:vertical;" placeholder="${t("lesson.feedbackPlaceholder", lang === "en" ? "Tell us what was helpful or confusing" : "Conte-nos o que foi útil ou confuso")}"></textarea>
         <div style="display:flex;gap:0.5rem;margin-top:0.75rem;">
-          <button class="btn btn-primary btn-sm" id="btn-feedback-submit">${t("lesson.feedbackThanks")}</button>
-          <button class="btn btn-secondary btn-sm" id="btn-feedback-cancel">${lang === "en" ? "Cancel" : "Cancelar"}</button>
+          <button class="btn btn-primary btn-sm" id="btn-feedback-submit">${t("lesson.feedbackSubmit", lang === "en" ? "Send" : "Enviar")}</button>
+          <button class="btn btn-secondary btn-sm" id="btn-feedback-cancel">${t("lesson.feedbackCancel", lang === "en" ? "Cancel" : "Cancelar")}</button>
         </div>
       </div>`;
   }

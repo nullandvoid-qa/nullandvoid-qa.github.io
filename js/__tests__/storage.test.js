@@ -174,4 +174,34 @@ describe('Storage helpers', () => {
       expect(validateChecklistState(invalidData)).toBe(false);
     });
   });
+
+  describe('importProgressFromFile', () => {
+    test('accepts a valid payload with checklist data when the shared validator is available', async () => {
+      const { importProgressFromFile } = require('../app-storage.js');
+      const payload = {
+        progress: {
+          'lesson-1': { completedAt: '2024-01-01T00:00:00.000Z' },
+        },
+        bookmarks: ['lesson-1'],
+        quizzesPassed: {
+          web: { passedAt: '2024-01-01T00:00:00.000Z', score: 5 },
+        },
+        checklists: {
+          starter: [0, 1],
+        },
+      };
+
+      const file = new File([JSON.stringify(payload)], 'progress.json', {
+        type: 'application/json',
+      });
+
+      const result = await importProgressFromFile(file);
+      expect(result).toEqual({
+        progress: payload.progress,
+        bookmarks: payload.bookmarks,
+        quizzesPassed: payload.quizzesPassed,
+        checklistState: payload.checklists,
+      });
+    });
+  });
 });

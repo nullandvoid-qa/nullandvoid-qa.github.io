@@ -141,7 +141,15 @@ Produção (real)         $150,000 - $1,000,000
 
 <p style="margin-top:2rem; padding-top:1rem; border-top:1px solid #ddd; color:#666; font-size:0.9rem">
 ✅ <strong>Você completou L1!</strong> Parabéns. Você agora pode explicar para um leigo por quê qualidade de software importa.
-</p>`,
+</p>
+
+<h3>✏️ Exercício Prático — Gabarito</h3>
+<p>Escolha um app e liste 3 edge cases. Compare com o exemplo abaixo.</p>
+<details><summary>Gabarito exemplo</summary>
+<pre>1) Login sem internet — resultado esperado: mensagem de erro clara e opção de tentar novamente.
+2) Senha com caracteres especiais — resultado esperado: aceitar caracteres UTF-8 e validar corretamente.
+3) Clique repetido no botão enviar — resultado esperado: botão desabilitado durante requisição para evitar duplicação.</pre>
+</details>`,
             resources: [
               { label: "ISTQB Foundation Syllabus", url: "https://www.istqb.org/certifications/foundation-level" },
               { label: "Martin Fowler: QA in Agile", url: "https://martinfowler.com/articles/qa-in-agile.html" },
@@ -368,7 +376,13 @@ Produção (real)         $150,000 - $1,000,000
 
 <p style="margin-top:2rem; padding-top:1rem; border-top:1px solid #ddd; color:#666; font-size:0.9rem">
 ✅ <strong>Você completou L2!</strong> Agora você sabe diferenciar os três papéis. Isso impressiona em entrevistas e te prepara para escolher sua carreira em QA.
-</p>`,
+</p>
+
+<h3>✏️ Exercício Prático — Gabarito</h3>
+<p>Classifique as 10 atividades do exercício como QA, QC ou Tester e compare com o gabarito.</p>
+<details><summary>Gabarito exemplo</summary>
+<pre>1=Tester | 2=QA | 3=Tester | 4=QC | 5=QA | 6=QA | 7=Tester | 8=QA | 9=QC | 10=QA</pre>
+</details>`,
             resources: [
               { label: "ISTQB Foundation Syllabus", url: "https://www.istqb.org/certifications/foundation-level" },
               { label: "QA vs QC Explained", url: "https://www.coursera.org/articles/qa-vs-qc" },
@@ -425,7 +439,20 @@ Produção (real)         $150,000 - $1,000,000
 
   <h3>✏️ Exercício Prático</h3>
   <p>Escolha uma história simples e escreva três critérios de aceitação e três itens de Definição de Pronto. Compare com seu time e veja se sobrou algo ambiguo.</p>
-  `,
+
+  <h4>Gabarito (exemplo)</h4>
+  <details><summary>Exemplo preenchido</summary>
+  <pre>Critérios de aceitação:
+- O usuário deve ver confirmação ao salvar cartão
+- Número do cartão validado por algoritmo Luhn
+- Data de validade no formato MM/AA
+
+Definição de Pronto:
+- Código revisado
+- Testes automatizados adicionados para fluxo de pagamento
+- Documentação atualizada
+</pre>
+  </details>`,
               resources: [
                 { label: "Definição de Pronto na Prática", url: "https://www.scrum.org/resources/what-is-done" },
                 { label: "Critérios de Aceitação Testáveis", url: "https://www.mountaingoatsoftware.com/blog/writing-better-acceptance-criteria" }
@@ -464,7 +491,16 @@ Produção (real)         $150,000 - $1,000,000
   <li><strong>Testes</strong> – validar o produto antes do deploy.</li>
   <li><strong>Deploy / Produção</strong> – entregar ao usuário final.</li>
   <li><strong>Manutenção</strong> – corrigir bugs e evoluir o produto.</li>
-</ol>
+
+  </ol>
+
+  <h3>✏️ Exercício Prático — Gabarito</h3>
+  <p>Use o exemplo abaixo para responder as três perguntas do exercício.</p>
+  <details><summary>Gabarito exemplo</summary>
+  <pre>1) Fase: Desenvolvimento
+2) QA antes do desenvolvimento: revisão de requisitos e critérios de aceitação
+3) Maior oportunidade de shift-left: validar critérios de aceitação no refinement</pre>
+  </details>
 
 <h3>🧩 Onde o QA Atua</h3>
 <p>Veja como QA agrega valor em cada etapa do ciclo de vida:</p>
@@ -563,6 +599,13 @@ Produção               100x
   <li><strong>03:00–04:00</strong> — Mostrar a tabela de fases e atividades de QA (zoom in).</li>
   <li><strong>04:00–04:40</strong> — Conclusão: resumo das ações que o aluno pode aplicar hoje.</li>
 </ul>
+
+<h3>✏️ Exercício Prático — Gabarito</h3>
+<p>Para a feature escolhida, veja o exemplo de matriz preenchida abaixo.</p>
+<details><summary>Matriz exemplo</summary>
+<pre>Funcionalidade: Pagamento | Impacto: Alto | Probabilidade: Médio | Prioridade: Alto
+Funcionalidade: Login | Impacto: Alto | Probabilidade: Baixo | Prioridade: Médio</pre>
+</details>
 `,
             resources: [
               { label: "SDLC definition - Agile Alliance", url: "https://www.agilealliance.org/glossary/sdlc/" },

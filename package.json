@@ -8,6 +8,7 @@
     "test:watch": "jest --watch",
     "test:verbose": "jest --coverage --verbose",
     "test:e2e": "npx playwright test",
+    "validate:tracks": "node scripts/validate-tracks.js",
     "lint:js": "eslint js/ --ext .js",
     "lint:css": "stylelint css/**/*.css",
     "lint:html": "htmlhint *.html",
@@ -27,5 +28,8 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "playwright": "^1.61.1"
   }
 }

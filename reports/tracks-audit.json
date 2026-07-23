@@ -1,0 +1,52 @@
+[
+  {
+    "id": "starter",
+    "slug": "guild-initiation",
+    "title": "Iniciação da Guilda",
+    "courses": 2,
+    "totalLessons": 6,
+    "courseDetails": [
+      {
+        "id": "c1",
+        "title": "Introdução à Qualidade de Software",
+        "lessons": 3
+      },
+      {
+        "id": "c2",
+        "title": "Ciclo de Vida e Tipos de Teste",
+        "lessons": 3
+      }
+    ],
+    "needsAttention": false
+  },
+  {
+    "id": "intermediate",
+    "slug": "advanced-testing",
+    "title": "Testes Avançados",
+    "courses": 1,
+    "totalLessons": 3,
+    "courseDetails": [
+      {
+        "id": "c3",
+        "title": "Técnicas de Teste",
+        "lessons": 3
+      }
+    ],
+    "needsAttention": true
+  },
+  {
+    "id": "senior",
+    "slug": "mastery",
+    "title": "Maestria em QA",
+    "courses": 1,
+    "totalLessons": 3,
+    "courseDetails": [
+      {
+        "id": "c4",
+        "title": "Agile e Scrum",
+        "lessons": 3
+      }
+    ],
+    "needsAttention": true
+  }
+]

@@ -7,13 +7,6 @@ function navigate(view, params = {}) {
     window.viewParams = safeParams;
   }
 
-  if (typeof currentView !== "undefined") {
-    currentView = safeView;
-  }
-  if (typeof viewParams !== "undefined") {
-    viewParams = safeParams;
-  }
-
   if (window.NVViewHelpers && typeof window.NVViewHelpers.setActiveView === "function") {
     window.NVViewHelpers.setActiveView(document, safeView, "tracks");
   }
@@ -38,7 +31,8 @@ function navigate(view, params = {}) {
 }
 
 function refreshCurrentView() {
-  navigate(window.currentView, window.viewParams);
+  if (typeof window === "undefined") return;
+  navigate(window.currentView || "home", window.viewParams || {});
 }
 
 window.navigate = navigate;

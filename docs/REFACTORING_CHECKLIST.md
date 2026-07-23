@@ -2,17 +2,22 @@
 
 This checklist turns the maintainability plan into a practical backlog. It is organized by priority and by file so the work can be tackled incrementally without losing context.
 
+## Current status snapshot
+- The storage, i18n, navigation, and shared utility layers have already been partially extracted into dedicated modules.
+- Progress import/export and translation resolution now have regression coverage.
+- The remaining refactor focus is the UI/rendering split inside `js/app.js` and the documentation sync for the new structure.
+
 ## Priority 0 — Stabilize the foundation
 
 ### 1. js/app.js
 **Why first:** this file is the biggest source of coupling and the most likely place for regressions.
 
 Tasks:
-- [ ] Split the file into smaller modules by responsibility:
-  - [ ] state management
-  - [ ] storage helpers
+- [x] Split the file into smaller modules by responsibility where the behavior was already extracted:
+  - [x] storage helpers
+  - [x] navigation and route handling
+  - [x] translation helpers
   - [ ] rendering helpers
-  - [ ] navigation and route handling
   - [ ] lesson/track interaction handlers
 - [ ] Extract repeated DOM creation logic into reusable render helpers.
 - [ ] Replace scattered global variable usage with a single app state object.
@@ -58,8 +63,8 @@ Definition of done:
 **Why:** content is the product core and should be easy to extend without breaking UI.
 
 Tasks:
-- [ ] Keep lesson objects consistent with a documented schema.
-- [ ] Add a lightweight validation step during development for missing fields.
+- [x] Keep lesson objects consistent with a documented schema.
+- [x] Add a lightweight validation step during development for missing fields.
 - [ ] Normalize repeated structure across lessons and courses.
 - [ ] Avoid embedding UI-only markup logic directly into data where possible.
 
@@ -100,9 +105,9 @@ Definition of done:
 **Why:** regression protection is essential as the app grows.
 
 Tasks:
-- [ ] Add tests for lesson completion and bookmarking.
-- [ ] Add tests for progress export/import flows.
-- [ ] Add tests for track filtering and navigation.
+- [x] Add tests for lesson completion and bookmarking.
+- [x] Add tests for progress export/import flows.
+- [x] Add tests for track filtering and navigation.
 - [ ] Add a small regression test for every bug fixed from now on.
 
 Definition of done:

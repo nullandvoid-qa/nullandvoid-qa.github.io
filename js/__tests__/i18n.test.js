@@ -64,5 +64,17 @@ describe('i18n functions', () => {
       require('../app-i18n.js');
       expect(window.t('hero.unknownKey')).toBe('hero.unknownKey');
     });
+
+    test('uses the centralized translation API when it is available', () => {
+      window.lang = 'pt';
+      window.NV_I18N = {
+        t: (path, fallback) => fallback || `central:${path}`,
+        getCurrentLangKey: () => 'pt',
+      };
+      require('../app-i18n.js');
+      const { t: utilsT } = require('../utils.js');
+      expect(window.t('hero.freeAccessLabel')).toBe('central:hero.freeAccessLabel');
+      expect(utilsT('hero.freeAccessLabel', 'fallback')).toBe('fallback');
+    });
   });
 });

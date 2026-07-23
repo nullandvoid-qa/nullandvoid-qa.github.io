@@ -386,7 +386,7 @@ describe('view helpers', () => {
 
     expect(html).toContain('cert-preview');
     expect(html).toContain('Exemplo');
-    expect(html).toContain('CERTIFICATE OF COMPLETION');
+    expect(html).toContain('CERTIFICADO DE CONCLUSÃO');
   });
 
   test('buildDashboardCertificatesSectionHtml renders empty state when no completed tracks exist', () => {
@@ -422,6 +422,25 @@ describe('view helpers', () => {
     expect(html).toContain('cert-card');
     expect(html).toContain('Web');
     expect(html).toContain('Baixar');
+  });
+
+  test('buildDashboardCertificatesSectionHtml uses the translation helper for its UI labels', () => {
+    const { buildDashboardCertificatesSectionHtml } = require('../view-helpers.js');
+
+    const html = buildDashboardCertificatesSectionHtml(
+      [],
+      [],
+      (track) => track,
+      { get: () => '' },
+      'pt',
+      (value) => String(value),
+      undefined,
+      (key) => `T:${key}`,
+    );
+
+    expect(html).toContain('T:dashboard.exampleBadge');
+    expect(html).toContain('T:dashboard.certificatePreviewTitle');
+    expect(html).toContain('T:dashboard.certificatesEmpty');
   });
 
   test('buildAchievementsHtml renders unlocked and locked achievements', () => {
