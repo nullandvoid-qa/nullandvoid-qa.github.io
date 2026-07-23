@@ -1016,41 +1016,45 @@
     });
 
     if (window.TG_MOBILE_LABS && Array.isArray(window.TG_MOBILE_LABS)) {
-      const mobileTrack = mergedTracks.find((track) => track.id === "mobile");
-      if (!mobileTrack) {
-        const mobileLessons = window.TG_MOBILE_LABS.map((lab, index) => ({
-          id: `mobile-lab-${index + 1}-${lab.id}`,
-          title: lab.name || `Mobile Lab ${index + 1}`,
-          duration: "20 min",
-          content: `
-            <h2>${lab.name || `Mobile Lab ${index + 1}`}</h2>
-            <p><strong>Tipo:</strong> ${lab.type || "mobile"}</p>
-            <p><strong>Dispositivo:</strong> ${lab.device || (Array.isArray(lab.devices) ? lab.devices.join(", ") : "N/A")}</p>
-            <p><strong>Ferramentas:</strong> ${Array.isArray(lab.tools) ? lab.tools.join(", ") : "Appium + WebDriverIO"}</p>
-            <p><strong>Custo:</strong> ${lab.cost || "N/A"}</p>
-            <pre>${lab.setup || ""}</pre>
-          `,
-        }));
+      const mobileLessons = window.TG_MOBILE_LABS.map((lab, index) => ({
+        id: `mobile-lab-${index + 1}-${lab.id}`,
+        title: lab.name || `Mobile Lab ${index + 1}`,
+        duration: "20 min",
+        content: `
+          <h2>${lab.name || `Mobile Lab ${index + 1}`}</h2>
+          <p><strong>Tipo:</strong> ${lab.type || "mobile"}</p>
+          <p><strong>Dispositivo:</strong> ${lab.device || (Array.isArray(lab.devices) ? lab.devices.join(", ") : "N/A")}</p>
+          <p><strong>Ferramentas:</strong> ${Array.isArray(lab.tools) ? lab.tools.join(", ") : "Appium + WebDriverIO"}</p>
+          <p><strong>Custo:</strong> ${lab.cost || "N/A"}</p>
+          <pre>${lab.setup || ""}</pre>
+        `,
+      }));
 
-        mergedTracks.push({
-          id: "mobile",
-          slug: "mobile-testing",
-          icon: "mobile",
-          title: "Trilha de Testes Mobile",
-          color: "#22c55e",
-          description: "Trilha única para testes mobile em emuladores, simuladores e dispositivos reais.",
-          level: "Intermediário",
-          modules: mobileLessons.length,
-          hours: Math.max(4, mobileLessons.length),
-          topics: ["Appium", "WebDriverIO", "Android", "iOS", "Emuladores", "Devices reais"],
-          courses: [
-            {
-              id: "mobile-labs-course",
-              title: "Mobile Testing Labs",
-              lessons: mobileLessons,
-            },
-          ],
-        });
+      const mobileTrack = mergedTracks.find((track) => track.id === "mobile");
+      const mobileTrackPayload = {
+        id: "mobile",
+        slug: "mobile-testing",
+        icon: "mobile",
+        title: "Trilha de Testes Mobile",
+        color: "#22c55e",
+        description: "Trilha única para testes mobile em emuladores, simuladores e dispositivos reais.",
+        level: "Intermediário",
+        modules: mobileLessons.length,
+        hours: Math.max(4, mobileLessons.length),
+        topics: ["Appium", "WebDriverIO", "Android", "iOS", "Emuladores", "Devices reais"],
+        courses: [
+          {
+            id: "mobile-labs-course",
+            title: "Mobile Testing Labs",
+            lessons: mobileLessons,
+          },
+        ],
+      };
+
+      if (mobileTrack) {
+        Object.assign(mobileTrack, mobileTrackPayload);
+      } else {
+        mergedTracks.push(mobileTrackPayload);
       }
     }
 
