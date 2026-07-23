@@ -126,6 +126,17 @@ window.TG_QAWAY_EN = {
         "Performance",
         "Security"
       ]
+    },
+    "intermediate": {
+      "title": "Advanced Testing",
+      "description": "Sophisticated testing techniques: automation, performance, security.",
+      "level": "Intermediate",
+      "topics": [
+        "Automation",
+        "Performance",
+        "Security",
+        "API Testing"
+      ]
     }
   },
   "courses": {

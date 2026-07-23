@@ -21,8 +21,36 @@ Ou rode localmente:
 ```bash
 git clone https://github.com/nullandvoid-qa/nullandvoid-qa.github.io.git
 cd nullandvoid-qa
+npm install
+npm test
+npm run lint
+npm run test:e2e
 python3 -m http.server 8000
 # Abra http://localhost:8000
+```
+
+## 🧪 Rodando localmente e validando qualidade
+
+1. Instale dependências:
+
+```bash
+npm install
+```
+
+2. Execute o site localmente:
+
+```bash
+python3 -m http.server 8000
+```
+
+3. Abra `http://localhost:8000`
+
+4. Valide qualidade com os scripts disponíveis:
+
+```bash
+npm test
+npm run lint
+npm run test:e2e
 ```
 
 ## 📚 O que você aprende

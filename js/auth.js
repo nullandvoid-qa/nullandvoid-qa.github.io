@@ -62,6 +62,17 @@
     });
   }
 
+  function triggerPostLogoutReload() {
+    if (window.__NVAuthReload && typeof window.__NVAuthReload === 'function') {
+      window.__NVAuthReload();
+      return;
+    }
+
+    if (window.location && typeof window.location.reload === 'function') {
+      window.location.reload();
+    }
+  }
+
   // Export to global
   window.NVAuth = {
     user: null,
@@ -82,6 +93,20 @@
   /**
    * Initialize Google Sign-In
    */
+  function getAuthActionsContainer() {
+    const signinDiv = document.getElementById('auth-signin');
+    if (!signinDiv) return null;
+
+    let actions = signinDiv.querySelector('.auth-actions');
+    if (!actions) {
+      actions = document.createElement('div');
+      actions.className = 'auth-actions';
+      signinDiv.appendChild(actions);
+    }
+
+    return actions;
+  }
+
   function init() {
     // Check if already logged in
     const savedUser = localStorage.getItem(STORAGE_KEY_USER);
@@ -100,14 +125,25 @@
     // Initialize Google Sign-In button
     const initializeGoogleSignIn = () => {
       try {
+        const signinDiv = document.getElementById('auth-signin');
+        if (!signinDiv) return;
+
         google.accounts.id.initialize({
           client_id: GOOGLE_CLIENT_ID,
           callback: handleCredentialResponse,
           auto_select: false,
         });
 
+        const actionsContainer = getAuthActionsContainer();
+        if (!actionsContainer) return;
+
+        actionsContainer.innerHTML = '';
+        const googleButtonWrapper = document.createElement('div');
+        googleButtonWrapper.className = 'auth-google-button';
+        actionsContainer.appendChild(googleButtonWrapper);
+
         google.accounts.id.renderButton(
-          document.getElementById('auth-signin'),
+          googleButtonWrapper,
           {
             theme: 'dark',
             size: 'large',
@@ -164,16 +200,18 @@
     // automated tests can use the local sign-in flow.
     if (!isLocalDevelopment() && window.google && window.google.accounts) return;
 
+    const actionsContainer = getAuthActionsContainer();
+    if (!actionsContainer) return;
+
     let fallbackBtn = document.getElementById('auth-local-signin');
     if (!fallbackBtn) {
       fallbackBtn = document.createElement('button');
       fallbackBtn.id = 'auth-local-signin';
       fallbackBtn.type = 'button';
-      fallbackBtn.className = 'btn btn-secondary';
-      fallbackBtn.style.marginTop = '0.75rem';
-      fallbackBtn.textContent = window.t ? window.t('auth.localSignIn') : 'Entrar como convidado';
+      fallbackBtn.className = 'btn btn-secondary auth-local-signin';
+      fallbackBtn.textContent = 'Convidado';
       fallbackBtn.addEventListener('click', loginGuest);
-      signinDiv.appendChild(fallbackBtn);
+      actionsContainer.appendChild(fallbackBtn);
     }
   }
 
@@ -242,8 +280,17 @@
 
     document.dispatchEvent(new CustomEvent('nvauth:logout'));
 
-    renderAuthUI();
     showToast('Desconectado com sucesso');
+
+    // Ensure the login UI is restored after logout.
+    // If the auth button disappears due to UI state sync issues,
+    // refresh the page so the app reinitializes cleanly.
+    if (window.location && typeof window.location.reload === 'function') {
+      triggerPostLogoutReload();
+      return;
+    }
+
+    renderAuthUI();
   }
 
   /**
@@ -268,6 +315,18 @@
           picture.src = '';
         }
       }
+        // Replace image avatar with emoji for a consistent, lightweight avatar
+        let emoji = document.getElementById('auth-emoji');
+        if (!emoji) {
+          emoji = document.createElement('span');
+          emoji.id = 'auth-emoji';
+          emoji.className = 'auth-emoji';
+          const nameEl = document.getElementById('auth-name');
+          if (nameEl) userDiv.insertBefore(emoji, nameEl);
+          else userDiv.insertBefore(emoji, document.getElementById('auth-logout'));
+        }
+        emoji.textContent = '👤';
+        if (picture) picture.style.display = 'none';
     } else {
       signinDiv.classList.remove('hidden');
       userDiv.classList.add('hidden');

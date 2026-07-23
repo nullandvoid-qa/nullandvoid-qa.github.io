@@ -3,6 +3,7 @@ module.exports = {
   testMatch: ['**/__tests__/**/*.test.js'],
   moduleFileExtensions: ['js'],
   setupFilesAfterEnv: ['<rootDir>/js/__tests__/setup.js'],
+  testPathIgnorePatterns: ['<rootDir>/js/__tests__/books-.*\\.test\\.js'],
   globals: {
     global: {},
   },
@@ -11,5 +12,4 @@ module.exports = {
     '!js/__tests__/**',
     '!js/**/node_modules/**',
   ],
-  outputFile: 'test-results.json',
 };

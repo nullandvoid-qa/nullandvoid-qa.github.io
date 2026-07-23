@@ -9,7 +9,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{height:100vh;display:flex;justify-content:center;align-items:center;overflow:hidden;background:#111416;font-family:Inter,Segoe UI,sans-serif}
 .background{position:fixed;inset:0;background:radial-gradient(circle at 20% 20%,rgba(0,255,255,.08),transparent 40%),radial-gradient(circle at 80% 70%,rgba(255,0,170,.08),transparent 40%),linear-gradient(#16191c,#0d1012)}
-.certificate{position:relative;width:1200px;height:850px;background:linear-gradient(145deg,#1b1e22,#111315);border:1px solid #333;border-radius:24px;overflow:hidden;box-shadow:0 0 80px rgba(0,255,255,.08),0 0 200px rgba(0,0,0,.8);padding:70px}
+.certificate{position:relative;width:1200px;height:850px;background:linear-gradient(145deg,#1b1e22,#111315);border:1px solid #333;border-radius:24px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.5);padding:70px}
 .noise{position:absolute;inset:0;opacity:.03;pointer-events:none;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:4px 4px}
 .top-line{position:absolute;left:0;top:0;width:100%;height:4px;background:linear-gradient(90deg,#00ffff,#ff00aa,#00ffff);box-shadow:0 0 20px cyan}
 .corner{position:absolute;width:90px;height:90px;border:2px solid cyan;opacity:.7}
@@ -19,17 +19,17 @@ body{height:100vh;display:flex;justify-content:center;align-items:center;overflo
 .br{bottom:18px;right:18px;border-left:none;border-top:none}
 .header{display:flex;justify-content:flex-start;align-items:center;margin-bottom:50px}
 .logo{font-size:36px;font-weight:900;letter-spacing:5px;color:white}
-.logo .accent{color:#00ffff;text-shadow:0 0 12px cyan}
+.logo .accent{color:#00ffff}
 .title{text-align:center;font-size:62px;font-weight:900;letter-spacing:4px;color:white;margin-bottom:20px}
-.title .accent{color:#00ffff;text-shadow:0 0 10px cyan,0 0 20px cyan}
+.title .accent{color:#00ffff}
 .subtitle{text-align:center;font-size:20px;color:#888;margin-bottom:16px}
 .student-name{text-align:center;font-size:64px;font-weight:900;color:white;margin-bottom:24px;text-transform:uppercase;letter-spacing:3px}
 .description{width:850px;margin:0 auto;text-align:center;line-height:2;font-size:19px;color:#d4d4d4}
 .description-secondary{width:850px;margin:18px auto 0;text-align:center;line-height:1.8;font-size:18px;color:#d4d4d4;max-width:900px}
-.course-title{margin-top:22px;font-size:32px;color:#00ffff;letter-spacing:1px;text-shadow:0 0 12px cyan;font-weight:800}
-.stats{display:flex;gap:25px;margin-top:60px;justify-content:center}
+.course-title{margin-top:22px;font-size:32px;color:#00ffff;letter-spacing:1px;font-weight:800;text-align:center}
+.stats{display:flex;gap:25px;margin-top:30px;justify-content:center}
 .card{width:220px;background:#191d20;border:1px solid #333;padding:22px;border-radius:16px;text-align:center;transition:.3s}
-.card:hover{border-color:cyan;transform:translateY(-4px);box-shadow:0 0 20px rgba(0,255,255,.3)}
+.card:hover{border-color:cyan;transform:translateY(-4px)}
 .card small{display:block;color:#888;margin-bottom:12px;font-size:14px}
 .card strong{font-size:28px;color:#00ffff}
 .card{width:220px;background:#191d20;border:1px solid #333;padding:22px;border-radius:16px;text-align:center;transition:.3s}
@@ -40,7 +40,7 @@ body{height:100vh;display:flex;justify-content:center;align-items:center;overflo
 .signature{width:280px;text-align:center}
 .sign-line{height:2px;background:#555;margin-bottom:12px}
 .signature .label{color:#aaa}
-.seal{width:130px;height:130px;border-radius:50%;border:2px solid #ff00aa;display:flex;justify-content:center;align-items:center;font-size:64px;color:#ff00aa;box-shadow:0 0 20px rgba(255,0,170,.5),inset 0 0 20px rgba(255,0,170,.2);text-shadow:0 0 20px hotpink}
+.seal{width:130px;height:130px;border-radius:50%;border:2px solid #ff00aa;display:flex;justify-content:center;align-items:center;font-size:64px;color:#ff00aa;box-shadow:none;text-shadow:none}
 /* END TEMPLATE CSS */
   </style>
 </head>
@@ -62,7 +62,7 @@ body{height:100vh;display:flex;justify-content:center;align-items:center;overflo
     <div class="header">
 
         <div class="logo">
-            NULL<span class="accent">VOID</span>
+            NULL AND <span class="accent">VOID</span>
         </div>
 
     </div>
@@ -85,7 +85,7 @@ body{height:100vh;display:flex;justify-content:center;align-items:center;overflo
         has successfully completed the professional training
     </div>
     <div class="highlight course-title" id="course-title">
-        <center>"Course Title"</center>
+        "Course Title"
     </div>
     <div class="description-secondary" id="course-description">
         demonstrating practical knowledge in automation, API testing, exploratory testing, CI/CD, bug reporting and software quality engineering.

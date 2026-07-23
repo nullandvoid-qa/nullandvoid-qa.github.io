@@ -842,21 +842,25 @@
     const isAuthenticated = window.NVAuth && window.NVAuth.isAuthenticated;
     const userName = isAuthenticated
       ? ((typeof window.NVAuth.getUserName === 'function') ? (window.NVAuth.getUserName() || 'Ana Silva') : (window.NVAuth.user && window.NVAuth.user.name) || 'Ana Silva')
-      : 'Faça login para gerar seu certificado';
-    const trackTitle = firstTrack ? (localizedTrack ? localizedTrack(firstTrack).title : firstTrack.title) : 'Trilha de Testes Web • Nível Intermediário';
-    const issueDate = new Date().toLocaleDateString('pt-BR');
+      : 'Please sign in to generate your certificate';
+    const trackTitle = firstTrack ? (localizedTrack ? localizedTrack(firstTrack).title : firstTrack.title) : 'Web Testing Track • Intermediate Level';
+    const issueDate = new Date().toLocaleDateString('en-US');
 
     const previewActions = firstTrack && isAuthenticated
-      ? `<div style="margin-top:0.5rem"><button class="btn btn-secondary btn-sm" id="btn-cert-preview" data-track="${escapeHtml(firstTrack.id)}" data-action="preview">Visualizar</button> <button class="btn btn-primary btn-sm" id="btn-cert-download" data-track="${escapeHtml(firstTrack.id)}" data-action="download">Baixar</button></div>`
-      : `<div style="margin-top:0.5rem; color: #374151; font-size: 0.95rem;">Faça login para acessar seus certificados.</div>`;
+      ? `<div style="margin-top:0.5rem"><button class="btn btn-secondary btn-sm" id="btn-cert-preview" data-track="${escapeHtml(firstTrack.id)}" data-action="preview">Preview</button> <button class="btn btn-primary btn-sm" id="btn-cert-download" data-track="${escapeHtml(firstTrack.id)}" data-action="download">Download</button></div>`
+      : `<div style="margin-top:0.5rem; color: #cbd5e1; font-size: 0.95rem;">Sign in to access your certificates.</div>`;
+
+    const previewBadge = firstTrack
+      ? (lang === 'en' ? 'Certificate' : 'Certificado')
+      : (lang === 'en' ? 'Example' : 'Exemplo');
 
     const previewHtml = `
-      <div class="cert-preview" role="img" aria-label="Exemplo de certificado">
-        <div class="cert-preview__badge">${firstTrack ? 'Certificado' : 'Exemplo'}</div>
+      <div class="cert-preview" role="img" aria-label="Certificate preview">
+        <div class="cert-preview__badge">${previewBadge}</div>
         <div class="cert-preview__title">CERTIFICATE OF COMPLETION</div>
         <div class="cert-preview__name">${escapeHtml(userName)}</div>
         <div class="cert-preview__track">${escapeHtml(trackTitle)}</div>
-        <div class="cert-preview__footer">Emitido em ${issueDate}
+        <div class="cert-preview__footer">Issued on ${issueDate}
           ${previewActions}
         </div>
       </div>`;
