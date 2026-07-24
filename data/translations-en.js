@@ -255,7 +255,7 @@ window.TG_QAWAY_EN = {
   "lessons": {
     "s1-l1": {
       "title": "What is QA and why it matters",
-      "content": "<p>Software Quality (QA) is the practice of ensuring digital products work as expected, are secure, and deliver value to users.</p><h3>What a QA does</h3><ul><li>Plans and executes tests</li><li>Reports bugs clearly</li><li>Collaborates with devs and POs</li><li>Automates repetitive scenarios</li><li>Advocates for user experience</li></ul><h3>Common myths</h3><p>QA is not \"just clicking around\". It is analysis, strategy, communication, and increasingly, programming.</p>"
+      "content": "<p>Software Quality (QA) is the practice of making sure digital products work as expected, remain secure, and deliver value to users.</p><h3>What a QA does</h3><ul><li>Plans and executes tests</li><li>Reports bugs clearly</li><li>Collaborates with developers and product owners</li><li>Automates repetitive scenarios</li><li>Advocates for the user experience</li></ul><h3>Common myths</h3><p>QA is not \"just clicking around\". It is analysis, strategy, communication, and increasingly, programming.</p>"
     },
     "s1-l2": {
       "title": "Roles: QA, QC, and Tester",
@@ -263,7 +263,7 @@ window.TG_QAWAY_EN = {
     },
     "s1-l3": {
       "title": "Soft skills of successful QAs",
-      "content": "<h3>Essential skills</h3><ul><li>Curiosity and attention to detail</li><li>Clear communication when reporting bugs</li><li>Critical thinking</li><li>Organization and prioritization</li><li>Continuous learning</li></ul><p>Bad bug report: \"it doesn't work\". Good bug report: steps, expected result, actual result, environment, evidence.</p>"
+      "content": "<h3>Essential skills</h3><ul><li>Curiosity and attention to detail</li><li>Clear communication when reporting bugs</li><li>Critical thinking</li><li>Organization and prioritization</li><li>Continuous learning</li></ul><p>A weak bug report says \"it doesn't work\". A strong bug report includes steps, expected result, actual result, environment, and evidence.</p>"
     },
     "s2-l1": {
       "title": "SDLC and where QA fits",
@@ -395,11 +395,11 @@ window.TG_QAWAY_EN = {
     },
     "w1-l1": {
       "title": "Destructuring, spread, and arrays",
-      "content": "<p>Recursos modernos de JS usados em frameworks de teste. Map, filter, reduce para manipular dados de teste.</p>"
+      "content": "<p>Modern JavaScript features used in test frameworks. Use <code>map</code>, <code>filter</code>, and <code>reduce</code> to manipulate test data.</p>"
     },
     "w1-l2": {
       "title": "Classes and Page Object Model",
-      "content": "<p>This lesson covers: <strong>Classes and Page Object Model</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Classes and Page Object Model</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "w2-l1": {
       "title": "Setup and first test",
@@ -407,87 +407,87 @@ window.TG_QAWAY_EN = {
     },
     "w2-l2": {
       "title": "Custom commands and fixtures",
-      "content": "<p>This lesson covers: <strong>Custom commands and fixtures</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Custom commands and fixtures</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "w2-l3": {
       "title": "Intercepting APIs in Cypress",
-      "content": "<p>cy.intercept para mock/stub de APIs. Valide UI enquanto controla respostas do backend.</p>"
+      "content": "<p>Use <code>cy.intercept</code> to mock or stub APIs. Validate the UI while controlling backend responses.</p>"
     },
     "w2-l4": {
       "title": "Cypress + CI (GitHub Actions)",
-      "content": "<p>This lesson covers: <strong>Cypress + CI (GitHub Actions)</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Cypress + CI (GitHub Actions)</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "w3-l1": {
       "title": "Installation and codegen",
-      "content": "<p>This lesson covers: <strong>Installation and codegen</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Installation and codegen</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "w3-l2": {
       "title": "Resilient locators",
-      "content": "<p>This lesson covers: <strong>Resilient locators</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Resilient locators</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "w3-l3": {
       "title": "API testing with Playwright",
-      "content": "<p>request fixture para testar APIs no mesmo projeto E2E. Storage state para reutilizar login.</p>"
+      "content": "<p>Use the request fixture to test APIs in the same E2E project. Reuse authenticated state with storage state.</p>"
     },
     "w3-l4": {
       "title": "Visual regression and trace viewer",
-      "content": "<p>expect(page).toHaveScreenshot(). Trace viewer para debugar falhas com timeline completa.</p>"
+      "content": "<p>Use <code>expect(page).toHaveScreenshot()</code>. The trace viewer helps debug failures with a complete timeline.</p>"
     },
     "w4-l1": {
       "title": "Basic WebDriver",
-      "content": "<p>WebDriver driver = new ChromeDriver(); driver.get(url); WebElement + By.id/css/xpath. Explicit waits com WebDriverWait.</p>"
+      "content": "<p>WebDriver basics: <code>driver = new ChromeDriver()</code>, <code>driver.get(url)</code>, <code>WebElement</code>, and selectors like <code>By.id</code>, <code>By.css</code>, and <code>By.xpath</code>. Use explicit waits with <code>WebDriverWait</code>.</p>"
     },
     "w4-l2": {
       "title": "TestNG/JUnit and Page Factory",
-      "content": "<p>@FindBy, PageFactory.initElements. TestNG para suites, groups e parallel execution.</p>"
+      "content": "<p>Use <code>@FindBy</code> and <code>PageFactory.initElements</code>. TestNG supports suites, groups, and parallel execution.</p>"
     },
     "w4-l3": {
       "title": "Grid and remote execution",
-      "content": "<p>This lesson covers: <strong>Grid and remote execution</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Grid and remote execution</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "w5-l1": {
       "title": "Keyword-driven syntax",
-      "content": "<p>This lesson covers: <strong>Keyword-driven syntax</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Keyword-driven syntax</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "w5-l2": {
       "title": "SeleniumLibrary",
-      "content": "<p>This lesson covers: <strong>SeleniumLibrary</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>SeleniumLibrary</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "w6-l1": {
       "title": "CodeceptJS — simplified BDD",
-      "content": "<p>This lesson covers: <strong>CodeceptJS — simplified BDD</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>CodeceptJS — simplified BDD</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "w6-l2": {
       "title": "TestCafé — no WebDriver",
-      "content": "<p>This lesson covers: <strong>TestCafé — no WebDriver</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>TestCafé — no WebDriver</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "w7-l1": {
       "title": "Advanced Git for testing",
-      "content": "<p>Rebase vs merge, stash, cherry-pick. Hooks pre-commit para rodar lint/test.</p>"
+      "content": "<p>Understand rebase vs. merge, stash, and cherry-pick. Use pre-commit hooks to run linting and tests automatically.</p>"
     },
     "w7-l2": {
       "title": "Docker for test environments",
-      "content": "<p>This lesson covers: <strong>Docker for test environments</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Docker for test environments</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "w7-l3": {
       "title": "Full pipeline",
-      "content": "<p>This lesson covers: <strong>Full pipeline</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Full pipeline</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "w8-l1": {
       "title": "Flaky tests: causes and fixes",
-      "content": "<p>This lesson covers: <strong>Flaky tests: causes and fixes</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Flaky tests: causes and fixes</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "w8-l2": {
       "title": "Test automation project architecture",
-      "content": "<p>This lesson covers: <strong>Test automation project architecture</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Test automation project architecture</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "w9-l1": {
       "title": "axe-core and Lighthouse",
-      "content": "<p>Automatize checks WCAG. @axe-core/playwright integra acessibilidade na suite E2E.</p>"
+      "content": "<p>Automate WCAG checks. <code>@axe-core/playwright</code> integrates accessibility testing into your E2E suite.</p>"
     },
     "w10-l1": {
       "title": "Complete Swag Labs suite",
-      "content": "<p>This lesson covers: <strong>Complete Swag Labs suite</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Complete Swag Labs suite</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "a1-l1": {
       "title": "REST, methods, and status codes",
@@ -495,27 +495,27 @@ window.TG_QAWAY_EN = {
     },
     "a1-l2": {
       "title": "Authentication: Bearer, OAuth, API Keys",
-      "content": "<p>JWT, OAuth2 flows, Basic Auth. Como testar endpoints protegidos e refresh token.</p>"
+      "content": "<p>JWT, OAuth2 flows, and Basic Auth. Learn how to test protected endpoints and refresh tokens.</p>"
     },
     "a1-l3": {
       "title": "OpenAPI/Swagger",
-      "content": "<p>Contrato da API documentado. Gere collections Postman e valide responses contra schema.</p>"
+      "content": "<p>The API contract is documented. Generate Postman collections and validate responses against the schema.</p>"
     },
     "a2-l1": {
       "title": "Collections and environments",
-      "content": "<p>This lesson covers: <strong>Collections and environments</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Collections and environments</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "a2-l2": {
       "title": "Tests tab and Newman CLI",
-      "content": "<p>pm.test assertions. newman run collection.json para CI headless.</p>"
+      "content": "<p>Use <code>pm.test</code> assertions. Run <code>newman run collection.json</code> in headless CI.</p>"
     },
     "a2-l3": {
       "title": "Mock servers and monitoring",
-      "content": "<p>This lesson covers: <strong>Mock servers and monitoring</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Mock servers and monitoring</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "a3-l1": {
       "title": "fetch and axios",
-      "content": "<p>This lesson covers: <strong>fetch and axios</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>Learn how to use <code>fetch</code> and <code>axios</code> to send HTTP requests from JavaScript tests and scripts.</p>"
     },
     "a3-l2": {
       "title": "Supertest + Jest/Mocha",
@@ -523,11 +523,11 @@ window.TG_QAWAY_EN = {
     },
     "a4-l1": {
       "title": "cy.request in Cypress",
-      "content": "<p>Teste API pura ou setup de dados via API antes do E2E UI.</p>"
+      "content": "<p>Use <code>cy.request</code> for pure API testing or to set up data via API before the UI E2E flow.</p>"
     },
     "a4-l2": {
       "title": "Playwright request context",
-      "content": "<p>APIRequestContext para CRUD completo. Combine com testes UI no mesmo fluxo.</p>"
+      "content": "<p>Use <code>APIRequestContext</code> for full CRUD operations. Combine it with UI tests in the same workflow.</p>"
     },
     "a5-l1": {
       "title": "Given-When-Then with Rest Assured",
@@ -535,79 +535,79 @@ window.TG_QAWAY_EN = {
     },
     "a5-l2": {
       "title": "Schema validation with JSON Schema",
-      "content": "<p>Valide estrutura de response automaticamente. Contrato quebrado = teste falha.</p>"
+      "content": "<p>Validate the response structure automatically. A broken contract means the test fails.</p>"
     },
     "a6-l1": {
       "title": "RequestsLibrary",
-      "content": "<p>Keywords GET, POST, PATCH com assertions de status e JSON.</p>"
+      "content": "<p>Use keywords like <code>GET</code>, <code>POST</code>, and <code>PATCH</code> with status and JSON assertions.</p>"
     },
     "a7-l1": {
       "title": "Pact and consumer-driven contracts",
-      "content": "<p>Consumer define expectativa, provider valida. Evita breaking changes silenciosos.</p>"
+      "content": "<p>The consumer defines the expectation; the provider validates it. This helps avoid silent breaking changes.</p>"
     },
     "a7-l2": {
       "title": "Negative testing and edge cases",
-      "content": "<p>This lesson covers: <strong>Negative testing and edge cases</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Negative testing and edge cases</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "a8-l1": {
       "title": "Testing GraphQL",
-      "content": "<p>Queries, mutations, introspection. Valide errors e nested data.</p>"
+      "content": "<p>Cover queries, mutations, and introspection. Validate errors and nested data.</p>"
     },
     "a8-l2": {
       "title": "WebSockets basics",
-      "content": "<p>This lesson covers: <strong>WebSockets basics</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>WebSockets basics</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "a9-l1": {
       "title": "ReqRes or JSONPlaceholder suite",
-      "content": "<p>CRUD completo, auth simulada, schema validation, CI com Newman ou Supertest.</p>"
+      "content": "<p>Complete CRUD coverage, mocked authentication, schema validation, and CI with Newman or Supertest.</p>"
     },
     "m1-l1": {
       "title": "Web vs mobile differences",
-      "content": "<p>This lesson covers: <strong>Web vs mobile differences</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Web vs mobile differences</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "m1-l2": {
       "title": "Emulators vs real devices",
-      "content": "<p>Android Studio AVD, Xcode Simulator. BrowserStack/Sauce Labs para cloud devices.</p>"
+      "content": "<p>Android Studio AVD, Xcode Simulator. BrowserStack/Sauce Labs for cloud devices.</p>"
     },
     "m1-l3": {
       "title": "App types: native, hybrid, PWA",
-      "content": "<p>This lesson covers: <strong>App types: native, hybrid, PWA</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>App types: native, hybrid, PWA</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "m2-l1": {
       "title": "Appium 2 installation",
-      "content": "<p>appium server, drivers uiautomator2/xcuitest. Desired capabilities: platformName, deviceName, app.</p>"
+      "content": "<p>Set up the Appium server and the uiautomator2/xcuitest drivers. Use desired capabilities such as platformName, deviceName, and app.</p>"
     },
     "m2-l2": {
       "title": "Inspecting elements",
-      "content": "<p>Appium Inspector, UI Automator Viewer, Xcode Accessibility Inspector. accessibility id preferido.</p>"
+      "content": "<p>Appium Inspector, UI Automator Viewer, Xcode Accessibility Inspector. Prefer accessibility IDs.</p>"
     },
     "m2-l3": {
       "title": "Gestures: swipe, scroll, tap",
-      "content": "<p>This lesson covers: <strong>Gestures: swipe, scroll, tap</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Gestures: swipe, scroll, tap</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "m3-l1": {
       "title": "wdio + Appium config",
-      "content": "<p>This lesson covers: <strong>wdio + Appium config</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>wdio + Appium config</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "m3-l2": {
       "title": "Mobile Page Objects",
-      "content": "<p>Screens como classes. Reutilize login em todos os fluxos.</p>"
+      "content": "<p>Use screen objects as classes. Reuse login across all flows.</p>"
     },
     "m4-l1": {
       "title": "Espresso (intro for devs)",
-      "content": "<p>Testes instrumentados Android. QA entende para colaborar com devs.</p>"
+      "content": "<p>Android instrumented tests. QA understands the stack well enough to collaborate with developers.</p>"
     },
     "m4-l2": {
       "title": "Useful ADB commands",
-      "content": "<p>adb install, logcat, shell pm clear. Debug sem UI.</p>"
+      "content": "<p>adb install, logcat, shell pm clear. Debug without a UI.</p>"
     },
     "m5-l1": {
       "title": "XCUITest and limitations",
-      "content": "<p>Requer Mac para iOS real. Simulador vs device. Provisioning profiles.</p>"
+      "content": "<p>Requires a Mac for real iOS testing. Simulator vs device. Provisioning profiles.</p>"
     },
     "m5-l2": {
       "title": "TestFlight and distribution",
-      "content": "<p>Beta testing antes da loja. Feedback de QAs internos e externos.</p>"
+      "content": "<p>Beta testing before the app store. Feedback from internal and external QAs.</p>"
     },
     "m6-l1": {
       "title": "Mobile metrics",
@@ -615,35 +615,35 @@ window.TG_QAWAY_EN = {
     },
     "m7-l1": {
       "title": "Pipeline with headless emulator",
-      "content": "<p>GitHub Actions + Android emulator. Upload APK, roda Appium, artefatos de screenshot.</p>"
+      "content": "<p>Use GitHub Actions with an Android emulator. Upload the APK, run Appium, and publish screenshot artifacts.</p>"
     },
     "m8-l1": {
       "title": "Automate a demo app",
-      "content": "<p>Use app de demo (ApiDemos, WDIO native demo). 5 fluxos automatizados + README.</p>"
+      "content": "<p>Use a demo app (ApiDemos, WDIO native demo). Automate 5 flows + README.</p>"
     },
     "p1-l1": {
       "title": "Types: load, stress, spike, soak",
-      "content": "<p>This lesson covers: <strong>Types: load, stress, spike, soak</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Types: load, stress, spike, soak</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "p1-l2": {
       "title": "Essential metrics",
-      "content": "<p>Throughput (RPS), latency (p50/p95/p99), error rate, CPU, memory, connections. SLAs e SLOs.</p>"
+      "content": "<p>Track throughput (RPS), latency (p50/p95/p99), error rate, CPU, memory, and connection usage. These metrics feed SLAs and SLOs.</p>"
     },
     "p1-l3": {
       "title": "Performance test planning",
-      "content": "<p>This lesson covers: <strong>Performance test planning</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Performance test planning</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "p2-l1": {
       "title": "Thread Group and HTTP Request",
-      "content": "<p>This lesson covers: <strong>Thread Group and HTTP Request</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Thread Group and HTTP Request</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "p2-l2": {
       "title": "Correlation and extractors",
-      "content": "<p>This lesson covers: <strong>Correlation and extractors</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Correlation and extractors</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "p2-l3": {
       "title": "CSV Data Set and parametrization",
-      "content": "<p>This lesson covers: <strong>CSV Data Set and parametrization</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>CSV Data Set and parametrization</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "p2-l4": {
       "title": "JMeter non-GUI and HTML reports",
@@ -655,39 +655,39 @@ window.TG_QAWAY_EN = {
     },
     "p3-l2": {
       "title": "Thresholds and checks",
-      "content": "<p>thresholds: { http_req_duration: ['p(95)<500'] }. Checks para validar response body.</p>"
+      "content": "<p>thresholds: { http_req_duration: ['p(95)<500'] }. Checks to validate the response body.</p>"
     },
     "p3-l3": {
       "title": "K6 Cloud and Grafana integration",
-      "content": "<p>This lesson covers: <strong>K6 Cloud and Grafana integration</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>K6 Cloud and Grafana integration</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "p4-l1": {
       "title": "Reading JMeter/K6 reports",
-      "content": "<p>Identifique p95 alto, errors por endpoint, saturation de thread pool ou DB connections.</p>"
+      "content": "<p>Identify high p95 values, errors by endpoint, thread pool saturation, or DB connections.</p>"
     },
     "p4-l2": {
       "title": "APM: New Relic, Datadog (intro)",
-      "content": "<p>Correlacione teste de carga com traces APM para achar bottleneck exato.</p>"
+      "content": "<p>Correlate load-test results with APM traces to pinpoint the exact bottleneck.</p>"
     },
     "p5-l1": {
       "title": "Testing isolated APIs vs system",
-      "content": "<p>This lesson covers: <strong>Testing isolated APIs vs system</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Testing isolated APIs vs system</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "p6-l1": {
       "title": "Performance smoke in pipeline",
-      "content": "<p>This lesson covers: <strong>Performance smoke in pipeline</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Performance smoke in pipeline</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "p6-l2": {
       "title": "Baseline and comparison",
-      "content": "<p>This lesson covers: <strong>Baseline and comparison</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Baseline and comparison</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "p7-l1": {
       "title": "Artillery, Locust, Gatling (overview)",
-      "content": "<p>Alternativas por linguagem e caso de uso. Escolha a ferramenta certa para seu stack.</p>"
+      "content": "<p>Compare tool options by language and use case, then choose the right one for your stack.</p>"
     },
     "p8-l1": {
       "title": "Complete test plan",
-      "content": "<p>This lesson covers: <strong>Complete test plan</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Complete test plan</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "sec1-l1": {
       "title": "QA vs Security Engineer",
@@ -711,35 +711,35 @@ window.TG_QAWAY_EN = {
     },
     "sec2-l3": {
       "title": "Basic automated security checks",
-      "content": "<p>This lesson covers: <strong>Basic automated security checks</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Basic automated security checks</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "sec3-l1": {
       "title": "Testing login and sessions",
-      "content": "<p>Brute force, session fixation, logout incompleto, JWT expirado, privilege escalation horizontal/vertical.</p>"
+      "content": "<p>Brute force, session fixation, incomplete logout, expired JWT, horizontal/vertical privilege escalation.</p>"
     },
     "sec3-l2": {
       "title": "Security headers",
-      "content": "<p>HSTS, X-Frame-Options, X-Content-Type-Options, CSP. Valide com securityheaders.com ou scripts automatizados.</p>"
+      "content": "<p>Review HSTS, X-Frame-Options, X-Content-Type-Options, and CSP. Validate them with securityheaders.com or automated scripts.</p>"
     },
     "sec4-l1": {
       "title": "OWASP ZAP — proxy and scan",
-      "content": "<p>Configure ZAP como proxy, navegue na app, rode Active Scan e analise alertas. Integre ZAP baseline scan na CI.</p>"
+      "content": "<p>Set up ZAP as a proxy, browse the application, run an Active Scan, and review the alerts. Integrate a ZAP baseline scan into CI.</p>"
     },
     "sec4-l2": {
       "title": "Burp Suite Community (intro)",
-      "content": "<p>This lesson covers: <strong>Burp Suite Community (intro)</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Burp Suite Community (intro)</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "sec5-l1": {
       "title": "SAST and DAST (intro)",
-      "content": "<p>This lesson covers: <strong>SAST and DAST (intro)</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>SAST and DAST (intro)</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "sec5-l2": {
       "title": "Dependency scanning",
-      "content": "<p>This lesson covers: <strong>Dependency scanning</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Dependency scanning</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "sec6-l1": {
       "title": "Audit on a practice app",
-      "content": "<p>This lesson covers: <strong>Audit on a practice app</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Audit on a practice app</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "dev1-l1": {
       "title": "Anatomy of a pipeline",
@@ -751,35 +751,35 @@ window.TG_QAWAY_EN = {
     },
     "dev1-l3": {
       "title": "Parallelization and matrix builds",
-      "content": "<p>This lesson covers: <strong>Parallelization and matrix builds</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Parallelization and matrix builds</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "dev2-l1": {
       "title": "Containers and docker-compose",
-      "content": "<p>This lesson covers: <strong>Containers and docker-compose</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Containers and docker-compose</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "dev2-l2": {
       "title": "Custom images for tests",
-      "content": "<p>This lesson covers: <strong>Custom images for tests</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Custom images for tests</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "dev3-l1": {
       "title": "Allure Reports",
-      "content": "<p>This lesson covers: <strong>Allure Reports</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Allure Reports</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "dev3-l2": {
       "title": "Quality gates and metrics",
-      "content": "<p>This lesson covers: <strong>Quality gates and metrics</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Quality gates and metrics</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "dev4-l1": {
       "title": "Test data management",
-      "content": "<p>This lesson covers: <strong>Test data management</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Test data management</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "dev4-l2": {
       "title": "Feature flags and testing",
-      "content": "<p>Teste com flag on/off. LaunchDarkly, Unleash. QA valida ambos os caminhos antes do rollout.</p>"
+      "content": "<p>Test with flag on/off. LaunchDarkly, Unleash. QA validates both paths before rollout.</p>"
     },
     "dev5-l1": {
       "title": "Complete GitHub pipeline",
-      "content": "<p>Projeto com lint + unit + E2E + Allure report publicado como artifact. Badge no README. Quality gate bloqueia merge se E2E falhar.</p>"
+      "content": "<p>This project includes linting, unit tests, E2E tests, and an Allure report published as an artifact. Add a badge to the README, and use a quality gate to block merges when E2E fails.</p>"
     },
     "a11y1-l1": {
       "title": "Why a11y matters for QA",
@@ -787,23 +787,23 @@ window.TG_QAWAY_EN = {
     },
     "a11y1-l2": {
       "title": "WCAG 2.2 — POUR principles",
-      "content": "<p>This lesson covers: <strong>WCAG 2.2 — POUR principles</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>WCAG 2.2 — POUR principles</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "a11y1-l3": {
       "title": "Disabilities and assistive tech",
-      "content": "<p>This lesson covers: <strong>Disabilities and assistive tech</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Disabilities and assistive tech</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "a11y2-l1": {
       "title": "Keyboard navigation",
-      "content": "<p>This lesson covers: <strong>Keyboard navigation</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Keyboard navigation</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "a11y2-l2": {
       "title": "Contrast and typography",
-      "content": "<p>This lesson covers: <strong>Contrast and typography</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Contrast and typography</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "a11y2-l3": {
       "title": "Testing with screen reader",
-      "content": "<p>This lesson covers: <strong>Testing with screen reader</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Testing with screen reader</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "a11y3-l1": {
       "title": "axe-core + Playwright/Cypress",
@@ -811,19 +811,19 @@ window.TG_QAWAY_EN = {
     },
     "a11y3-l2": {
       "title": "Lighthouse CI",
-      "content": "<p>This lesson covers: <strong>Lighthouse CI</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Lighthouse CI</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "a11y4-l1": {
       "title": "Roles, labels and landmarks",
-      "content": "<p>This lesson covers: <strong>Roles, labels and landmarks</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Roles, labels and landmarks</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "a11y4-l2": {
       "title": "Accessible forms",
-      "content": "<p>This lesson covers: <strong>Accessible forms</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Accessible forms</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "a11y5-l1": {
       "title": "Complete a11y audit",
-      "content": "<p>This lesson covers: <strong>Complete a11y audit</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Complete a11y audit</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "lead1-l1": {
       "title": "Test strategy document",
@@ -831,23 +831,23 @@ window.TG_QAWAY_EN = {
     },
     "lead1-l2": {
       "title": "Risk-based testing",
-      "content": "<p>This lesson covers: <strong>Risk-based testing</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Risk-based testing</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "lead1-l3": {
       "title": "Quality metrics that matter",
-      "content": "<p>This lesson covers: <strong>Quality metrics that matter</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Quality metrics that matter</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "lead2-l1": {
       "title": "Building quality culture",
-      "content": "<p>This lesson covers: <strong>Building quality culture</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Building quality culture</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "lead2-l2": {
       "title": "Mentoring junior QAs",
-      "content": "<p>This lesson covers: <strong>Mentoring junior QAs</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Mentoring junior QAs</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "lead3-l1": {
       "title": "Framework decisions",
-      "content": "<p>This lesson covers: <strong>Framework decisions</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Framework decisions</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     },
     "lead3-l2": {
       "title": "Managing flaky tests at scale",
@@ -855,7 +855,7 @@ window.TG_QAWAY_EN = {
     },
     "lead4-l1": {
       "title": "Quality plan for a fictional product",
-      "content": "<p>This lesson covers: <strong>Quality plan for a fictional product</strong>.</p><p>Study the concepts, practice with the linked resources, and apply them in a real or demo project.</p>"
+      "content": "<p>This lesson covers: <strong>Quality plan for a fictional product</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
     }
   },
   "filter": {

@@ -100,6 +100,62 @@ describe('view helpers', () => {
     expect(html).toContain('50');
   });
 
+  test('renderTrackCard forwards the localized track metadata to the card markup builder', () => {
+    require('../app-track.js');
+
+    const container = document.createElement('div');
+    container.id = 'tracks-grid';
+    document.body.appendChild(container);
+
+    window.NVApp = {
+      state: { progress: {} },
+      helpers: {
+        localizedTrack: () => ({
+          id: 'starter',
+          title: 'Basic Testing',
+          description: 'English description',
+          topics: ['QA Fundamentals', 'Manual testing'],
+          color: '#10b981',
+          icon: 'starter',
+          courses: [],
+        }),
+        getTrackProgress: () => ({ pct: 25, done: 1, total: 4 }),
+        TRACK_AUDIENCE: { starter: 'beginner' },
+        getTrackIcon: () => 'starter',
+        normalizeTextLabel: (text) => String(text || ''),
+        escapeHtml: (value) => String(value),
+        t: (key) => key,
+        tierLabel: (value) => value,
+        navigate: jest.fn(),
+      },
+    };
+
+    window.NVIcons = { get: () => '' };
+    window.NVViewHelpers = {
+      buildTrackCardHtml: jest.fn(() => '<article class="track-card"></article>'),
+      bindAccessibleAction: jest.fn(),
+    };
+
+    window.NVAppTrack.renderTrackCard({
+      id: 'starter',
+      title: 'Testes Básicos',
+      description: 'Descrição em português',
+      topics: ['Fundamentos de QA'],
+      color: '#10b981',
+      icon: 'starter',
+      courses: [],
+    }, 'tracks-grid');
+
+    expect(window.NVViewHelpers.buildTrackCardHtml).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: 'Basic Testing',
+        description: 'English description',
+        topics: ['QA Fundamentals', 'Manual testing'],
+      }),
+      expect.any(Object),
+    );
+  });
+
   test('buildTrackDetailHtml includes hero markup and course list', () => {
     const { buildTrackDetailHtml } = require('../view-helpers.js');
 

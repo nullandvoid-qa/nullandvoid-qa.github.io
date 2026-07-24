@@ -290,6 +290,8 @@ window.TG_I18N = {
       }
     },
     roadmap: {
+      start: "Start →",
+      why: "Why",
       recruitTitle: "Recruit Route",
       recruitDesc: "For people new to QA",
       recruitItems: [
@@ -371,6 +373,8 @@ window.TG_I18N = {
       quizIntro: "quick question(s) — test your understanding",
       quizCheck: "Check",
       quizReset: "Reset",
+      feedbackTitle: "Feedback",
+      feedbackPlaceholder: "Tell us what was helpful or confusing",
       feedbackSubmit: "Submit",
       feedbackCancel: "Cancel",
       feedbackThanks: "Thank you for the feedback!"

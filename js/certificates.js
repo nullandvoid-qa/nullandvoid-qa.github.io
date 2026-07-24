@@ -372,12 +372,10 @@
 
         // Prefer template renderer if available (returns Promise<string> dataUrl)
         let dataUrl = null;
-        let templateError = null;
         if (window.CertificateRenderer && typeof window.CertificateRenderer.renderCertificate === 'function') {
           try {
             dataUrl = await window.CertificateRenderer.renderCertificate(payload);
           } catch (err) {
-            templateError = err;
             console.warn('CertificateRenderer failed, falling back to canvas renderer', err);
             dataUrl = null;
           }

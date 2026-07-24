@@ -1,7 +1,6 @@
 (function () {
   "use strict";
 
-  const STORAGE_PROGRESS = "testers-guild-progress";
   const STORAGE_LANG = "testers-guild-lang";
   const STORAGE_LAST_LESSON = "testers-guild-last-lesson";
   const STORAGE_PERSONA = "testers-guild-persona";
@@ -60,7 +59,6 @@
   };
   const enrichment = window.TG_LESSON_ENRICHMENT || {};
   const quizzes = window.TG_QUIZZES || {};
-  const checklists = window.TG_CHECKLISTS || {};
   const labsData = window.TG_LABS || {};
   const achievementsList = window.TG_ACHIEVEMENTS || [];
 
@@ -114,25 +112,6 @@
     "lab-ios-basic": "intermediate",
     "lab-saucelabs": "intermediate",
     "lab-browserstack": "intermediate",
-  };
-
-  const TRACK_ICON_MAP = {
-    starter: "starter",
-    intermediate: "bolt",
-    senior: "crown",
-    mentorship: "mentor",
-    web: "web",
-    api: "api",
-    mobile: "mobile",
-    performance: "perf",
-    security: "security",
-    devops: "devops",
-    accessibility: "accessibility",
-    leadership: "leadership",
-    "lab-android-basic": "android",
-    "lab-ios-basic": "ios",
-    "lab-saucelabs": "externalLink",
-    "lab-browserstack": "cloud",
   };
 
   // Utility functions moved to `js/utils.js`.
@@ -391,10 +370,6 @@
       return "";
     }
     return window.NVIcons.get(name, className, size);
-  }
-
-  function getIconMarkupOrFallback(name, fallback, size = "18", className = "") {
-    return getIconMarkup(name, size, className) || fallback;
   }
 
   // Code highlighting and copy button helpers live in `js/utils.js`.
@@ -729,6 +704,7 @@
       },
     );
   }
+  window.renderQuiz = renderQuiz;
 
   // ── Checklist and lesson rendering ─────────────────────────────────────────
   // Lesson-specific rendering has been moved to js/app-lesson.js.
@@ -996,6 +972,7 @@
       escapeHtml,
       tierLabel,
       sortTracksForPersona,
+      getHomeTrackSummary,
     };
 
   // ── Init ──────────────────────────────────────────────────────────────────

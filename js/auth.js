@@ -18,11 +18,6 @@
   const STORAGE_KEY_PROGRESS_SUFFIX = '_progress'; // user_id + suffix
   // guest login removed; anonymous progress will use a shared anonymous key
 
-  function isLocalDevelopment() {
-    const host = window.location.hostname;
-    return host === 'localhost' || host === '127.0.0.1' || host === '::1';
-  }
-
   function readStoredJson(key, fallback = {}) {
     try {
       const raw = localStorage.getItem(key);

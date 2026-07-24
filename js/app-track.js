@@ -8,22 +8,21 @@
   }
 
   function renderTrackCard(track, containerId) {
-    const state = getState();
     const helpers = getHelpers();
-    const lt = helpers.localizedTrack(track);
+    const localizedTrackData = helpers.localizedTrack(track) || track;
     const prog = helpers.getTrackProgress(track);
     const container = document.getElementById(containerId);
     if (!container) return;
     const audience = helpers.TRACK_AUDIENCE[track.id] || "intermediate";
     const isComplete = prog.pct === 100;
 
-    const iconName = helpers.getTrackIcon(track);
+    const iconName = helpers.getTrackIcon(localizedTrackData);
     const iconHtml = window.NVIcons
       ? window.NVIcons.get(iconName, "track-icon-svg", "28")
-      : helpers.escapeHtml(track.icon || "");
-    const title = helpers.normalizeTextLabel(lt.title);
+      : helpers.escapeHtml(localizedTrackData.icon || "");
+    const title = helpers.normalizeTextLabel(localizedTrackData.title);
 
-    const cardMarkup = window.NVViewHelpers.buildTrackCardHtml(track, {
+    const cardMarkup = window.NVViewHelpers.buildTrackCardHtml(localizedTrackData, {
       prog: {
         pct: prog.pct,
         done: prog.done,
@@ -44,7 +43,7 @@
     card.innerHTML = cardMarkup;
     const cardElement = card.firstElementChild;
     if (cardElement) {
-      cardElement.style.setProperty("--track-color", track.color);
+      cardElement.style.setProperty("--track-color", localizedTrackData.color || track.color);
       const open = () => helpers.navigate("track", { trackId: track.id });
       window.NVViewHelpers.bindAccessibleAction(cardElement, open);
       container.appendChild(cardElement);

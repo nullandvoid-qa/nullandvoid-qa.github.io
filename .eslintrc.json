@@ -47,7 +47,14 @@
     "renderTrackCard": "readonly",
     "renderContinueBanner": "readonly",
     "refreshCurrentView": "readonly",
-    "navigate": "readonly"
+    "navigate": "readonly",
+    "getElementById": "readonly",
+    "normalizeTextLabel": "readonly",
+    "getTrackIcon": "readonly",
+    "getLangKey": "readonly",
+    "highlightCode": "readonly",
+    "attachCopyButtons": "readonly",
+    "renderSandbox": "readonly"
   },
   "extends": [
     "eslint:recommended",

@@ -617,7 +617,6 @@
 
   function bindLessonPageActions(options) {
     const {
-      lessonId,
       rawLesson,
       prevLessonId,
       nextLessonId,
@@ -641,6 +640,7 @@
     if (bookmarkBtn) {
       bookmarkBtn.addEventListener("click", () => {
         onBookmarkToggle(rawLesson.id);
+        if (typeof onReRender === "function") onReRender(rawLesson.id);
 
         const bookmarkState = Array.isArray(window.NVApp?.state?.bookmarks)
           ? window.NVApp.state.bookmarks.includes(rawLesson.id)
@@ -655,6 +655,7 @@
     if (completeBtn) {
       completeBtn.addEventListener("click", () => {
         onCompleteToggle(rawLesson.id);
+        if (typeof onReRender === "function") onReRender(rawLesson.id);
 
         const progressState = window.NVApp?.state?.progress || {};
         const isDone = !!progressState[rawLesson.id];
@@ -948,7 +949,7 @@
           try {
             const userName = (typeof window.NVAuth.getUserName === 'function') ? (window.NVAuth.getUserName() || '') : (window.NVAuth.user && window.NVAuth.user.name) || '';
             const blob = await window.TG_CERTIFICATES.generateCertificate(trackId, userName, new Date());
-            showCertificateModal(blob, `${trackId}-certificate.pdf`, trackId, onDownload);
+            showCertificateModal(blob, `${trackId}-certificate.pdf`, trackId);
           } catch (e) {
             console.error('Certificate preview failed:', e);
           }
@@ -961,7 +962,7 @@
   }
 
   // Show an inline modal with embedded PDF blob and download action
-  function showCertificateModal(blob, filename, trackId, onDownload) {
+  function showCertificateModal(blob, filename, trackId) {
     if (!blob) return;
     // If modal already exists, remove it
     const existing = document.getElementById('cert-modal-root');
@@ -999,7 +1000,8 @@
       // prefer using TG_CERTIFICATES.downloadCertificate if available to maintain naming
       if (window.TG_CERTIFICATES && typeof window.TG_CERTIFICATES.downloadCertificate === 'function') {
         // Trigger the same download flow (this will re-generate PDF) in background
-        window.TG_CERTIFICATES.downloadCertificate(trackId, (window.NVAuth && typeof window.NVAuth.getUserName === 'function') ? (window.NVAuth.getUserName() || '') : (window.NVAuth && window.NVAuth.user && window.NVAuth.user.name) || '', new Date()).catch((e) => {
+        window.TG_CERTIFICATES.downloadCertificate(trackId, (window.NVAuth && typeof window.NVAuth.getUserName === 'function') ? (window.NVAuth.getUserName() || '') : (window.NVAuth && window.NVAuth.user && window.NVAuth.user.name) || '', new Date()).catch((err) => {
+          console.warn('Download via downloadCertificate failed, using direct blob link', err);
           // fallback to direct blob download
           const a = document.createElement('a');
           a.href = url;
