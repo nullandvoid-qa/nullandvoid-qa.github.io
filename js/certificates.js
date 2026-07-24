@@ -389,33 +389,41 @@
      */
     generateShareableCertificate: async function(trackId, userName, completedDate) {
       try {
+        // Build the same payload used for PDF generation so the image matches
         const payload = this.buildCertificatePayload(trackId, userName, completedDate);
+
+        // Force a canvas size that resembles the PDF layout so visuals match
         payload.design = {
           ...(payload.design || {}),
-          canvas: { width: 1080, height: 1350 },
-          format: '1080x1350',
-          theme: 'social',
+          canvas: { width: 1920, height: 1080 },
+          format: '1920x1080',
+          theme: 'print',
         };
 
-        const canvas = createCanvasForCertificate(1080, 1350);
-        if (typeof canvas.toDataURL === 'function') {
+        // Render using the same certificate renderer used by PDFs (renderProfessionalCertificate)
+        const canvas = createCanvasForCertificate(1920, 1080);
+        try {
+          renderCertificateCanvas(canvas, payload);
+          // prefer cached result from renderCertificateCanvas
+          const dataUrl = canvas.__lastDataUrl || (typeof canvas.toDataURL === 'function' ? canvas.toDataURL('image/png') : null);
+          const blob = dataUrlToBlob(dataUrl, 'image/png');
+          if (blob) return blob;
+        } catch (err) {
+          console.warn('Certificate canvas render (PDF layout) failed:', err);
+        }
+
+        // Fallback to CertificateRenderer if provided
+        if (window.CertificateRenderer && typeof window.CertificateRenderer.renderCertificate === 'function') {
           try {
-            renderCertificateCanvas(canvas, payload);
-            const dataUrl = canvas.toDataURL('image/png');
+            const dataUrl = await window.CertificateRenderer.renderCertificate(payload);
             const blob = dataUrlToBlob(dataUrl, 'image/png');
             if (blob) return blob;
-          } catch (error) {
-            console.warn('Social certificate canvas export failed:', error);
+          } catch (err) {
+            console.warn('CertificateRenderer fallback failed:', err);
           }
         }
 
-        if (window.CertificateRenderer && typeof window.CertificateRenderer.renderCertificate === 'function') {
-          const dataUrl = await window.CertificateRenderer.renderCertificate(payload);
-          const blob = dataUrlToBlob(dataUrl, 'image/png');
-          if (blob) return blob;
-        }
-
-        throw new Error('Unable to create a social-ready certificate image.');
+        throw new Error('Unable to create a shareable certificate image using PDF layout.');
       } catch (error) {
         console.error('Shareable certificate generation failed:', error);
         throw error;
