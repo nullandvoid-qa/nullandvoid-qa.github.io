@@ -18,6 +18,10 @@ function getElementById(id) {
   }
 }
 
+if (typeof window !== 'undefined' && typeof window.getElementById !== 'function') {
+  window.getElementById = getElementById;
+}
+
 function normalizeTextLabel(text) {
   return String(text || '').replace(/^[^\wÀ-ž]+\s*/, '').trim();
 }

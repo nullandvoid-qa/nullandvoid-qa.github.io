@@ -340,6 +340,26 @@
     return lessonHtml + glossaryHtml;
   }
 
+  function buildSearchSkeletonHtml() {
+    return `
+      <div class="search-skeleton-group">
+        <div class="skeleton-card search-skeleton-item">
+          <div class="skeleton skeleton-line skeleton-line-sm"></div>
+          <div class="skeleton skeleton-line"></div>
+          <div class="skeleton skeleton-line skeleton-line-xs"></div>
+        </div>
+        <div class="skeleton-card search-skeleton-item">
+          <div class="skeleton skeleton-line skeleton-line-sm"></div>
+          <div class="skeleton skeleton-line"></div>
+          <div class="skeleton skeleton-line skeleton-line-xs"></div>
+        </div>
+        <div class="skeleton-card search-skeleton-item">
+          <div class="skeleton skeleton-line skeleton-line-sm"></div>
+          <div class="skeleton skeleton-line"></div>
+        </div>
+      </div>`;
+  }
+
   function renderSearchResults(container, lessonMatches, glossaryMatches, icons, escapeHtml, t, onLessonOpen, onGlossaryOpen) {
     if (!container) return;
 
@@ -369,6 +389,9 @@
       container.innerHTML = "";
       return;
     }
+
+    container.classList.remove("hidden");
+    container.innerHTML = buildSearchSkeletonHtml();
 
     const allLessons = typeof getAllLessonsFn === 'function' ? getAllLessonsFn() : [];
     const lessonMatches = allLessons.filter(
@@ -781,6 +804,60 @@
       <div class="course-list">${coursesHtml}</div>`;
   }
 
+  function buildDashboardSkeletonHtml() {
+    return `
+      <div class="dashboard-skeleton-grid">
+        <div class="dash-card skeleton-card"><div class="skeleton skeleton-line skeleton-line-sm"></div><div class="skeleton skeleton-line"></div></div>
+        <div class="dash-card skeleton-card"><div class="skeleton skeleton-line skeleton-line-sm"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line skeleton-line-xs"></div></div>
+        <div class="dash-card skeleton-card"><div class="skeleton skeleton-line skeleton-line-sm"></div><div class="skeleton skeleton-line"></div></div>
+        <div class="dash-card skeleton-card"><div class="skeleton skeleton-line skeleton-line-sm"></div><div class="skeleton skeleton-line"></div></div>
+      </div>`;
+  }
+
+  function buildDashboardSkeletonCardHtml(className, lineClasses) {
+    const safeClasses = Array.isArray(lineClasses) ? lineClasses : [];
+    const lineMarkup = safeClasses
+      .map((lineClass) => `<div class="skeleton skeleton-line ${lineClass}"></div>`)
+      .join("");
+
+    return `<div class="${className || "skeleton-card"}">${lineMarkup}</div>`;
+  }
+
+  function buildDashboardSkeletonGridHtml(items) {
+    if (!Array.isArray(items) || !items.length) return "";
+
+    return `
+      <div class="dashboard-skeleton-grid">
+        ${items.map((item) => buildDashboardSkeletonCardHtml(item.className, item.lineClasses)).join("")}
+      </div>`;
+  }
+
+  function buildLessonSkeletonHtml() {
+    return `
+      <div class="lesson-skeleton-shell">
+        <div class="lesson-skeleton-sidebar">
+          <div class="skeleton-card">
+            <div class="skeleton skeleton-line skeleton-line-sm"></div>
+            <div class="skeleton skeleton-line"></div>
+            <div class="skeleton skeleton-line skeleton-line-xs"></div>
+          </div>
+        </div>
+        <div class="lesson-skeleton-content">
+          <div class="skeleton-card">
+            <div class="skeleton skeleton-line skeleton-line-sm"></div>
+            <div class="skeleton skeleton-line"></div>
+            <div class="skeleton skeleton-line"></div>
+            <div class="skeleton skeleton-line skeleton-line-xs"></div>
+          </div>
+          <div class="skeleton-card">
+            <div class="skeleton skeleton-line"></div>
+            <div class="skeleton skeleton-line"></div>
+            <div class="skeleton skeleton-line skeleton-line-sm"></div>
+          </div>
+        </div>
+      </div>`;
+  }
+
   function buildDashboardStatsHtml(global, priceLabel, t, fallbackT) {
     const statsLabel = typeof t === "function" ? t : fallbackT;
     return `
@@ -981,6 +1058,7 @@
         </div>
         <div class="cert-modal__actions">
           <button class="btn btn-secondary" id="cert-modal-download">Baixar</button>
+          <button class="btn btn-secondary" id="cert-modal-download-shareable">Download image</button>
           <button class="btn" id="cert-modal-close-2">Fechar</button>
         </div>
       </div>
@@ -1017,6 +1095,26 @@
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
+      }
+    });
+
+    document.getElementById('cert-modal-download-shareable')?.addEventListener('click', async () => {
+      if (!window.TG_CERTIFICATES || typeof window.TG_CERTIFICATES.generateShareableCertificate !== 'function') return;
+      try {
+        const userName = (window.NVAuth && typeof window.NVAuth.getUserName === 'function')
+          ? (window.NVAuth.getUserName() || '')
+          : (window.NVAuth && window.NVAuth.user && window.NVAuth.user.name) || '';
+        const shareBlob = await window.TG_CERTIFICATES.generateShareableCertificate(trackId, userName, new Date());
+        const shareUrl = URL.createObjectURL(shareBlob);
+        const a = document.createElement('a');
+        a.href = shareUrl;
+        a.download = `${trackId}-certificate-share.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(shareUrl), 200);
+      } catch (err) {
+        console.warn('Shareable certificate image download failed:', err);
       }
     });
   }
@@ -1414,10 +1512,14 @@
     buildEmptyStateHtml,
     buildDashboardEmptyStateHtml,
     buildSearchEmptyStateHtml,
+    buildSearchSkeletonHtml,
     renderSearchResults,
     buildDashboardBookmarksSectionHtml,
     buildDashboardCertificatesSectionHtml,
-    
+    buildDashboardSkeletonHtml,
+    buildDashboardSkeletonCardHtml,
+    buildDashboardSkeletonGridHtml,
+    buildLessonSkeletonHtml,
     renderDashboardSections,
   };
 

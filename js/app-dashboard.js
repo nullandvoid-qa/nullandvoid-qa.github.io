@@ -22,12 +22,67 @@
     }
   }
 
-  function renderDashboard() {
+  async function renderDashboard() {
     const state = getState();
     const helpers = getHelpers();
+    const statsEl = document.getElementById("dashboard-stats");
+    const grid = document.getElementById("dashboard-tracks");
+    const achievementsGrid = document.getElementById("achievements-grid");
+    const bmSection = document.getElementById("dashboard-bookmarks");
+    const certSection = document.getElementById("dashboard-certificates");
+
+    if (statsEl && window.NVViewHelpers?.buildDashboardSkeletonHtml) {
+      statsEl.innerHTML = window.NVViewHelpers.buildDashboardSkeletonHtml();
+    }
+
+    if (window.NVViewHelpers?.buildDashboardSkeletonGridHtml) {
+      const skeletonSections = [
+        {
+          element: grid,
+          count: 4,
+          className: "skeleton-card track-card skeleton-card",
+          lineClasses: ["skeleton-line-sm", "", "skeleton-line-xs"],
+        },
+        {
+          element: achievementsGrid,
+          count: 4,
+          className: "achievement-card skeleton-card",
+          lineClasses: ["skeleton-circle", "skeleton-line-sm", "skeleton-line-xs"],
+        },
+        {
+          element: bmSection,
+          count: 3,
+          className: "skeleton-card skeleton-list-item",
+          lineClasses: ["skeleton-line-sm", ""],
+        },
+        {
+          element: certSection,
+          count: 2,
+          className: "skeleton-card cert-skeleton-card",
+          lineClasses: ["skeleton-line-sm", ""],
+        },
+      ];
+
+      skeletonSections.forEach((section) => {
+        if (!section.element) return;
+
+        const items = Array.from({ length: section.count }, () => ({
+          className: section.className,
+          lineClasses: section.lineClasses,
+        }));
+
+        section.element.innerHTML = window.NVViewHelpers.buildDashboardSkeletonGridHtml(items);
+      });
+    }
+
+    const frameWait = typeof window !== "undefined" && typeof window.requestAnimationFrame === "function"
+      ? new Promise((resolve) => window.requestAnimationFrame(resolve))
+      : Promise.resolve();
+
+    await frameWait;
+
     const global = helpers.getGlobalProgress();
     const passedCount = Object.keys(state.quizzesPassed || {}).length;
-    const statsEl = document.getElementById("dashboard-stats");
 
     if (statsEl && window.NVViewHelpers?.buildDashboardStatsHtml) {
       statsEl.innerHTML = window.NVViewHelpers.buildDashboardStatsHtml(
@@ -40,15 +95,11 @@
 
     helpers.renderAchievements();
 
-    const grid = document.getElementById("dashboard-tracks");
     if (grid) {
       grid.innerHTML = "";
       state.tracks.forEach((tr) => helpers.renderTrackCard(tr, "dashboard-tracks"));
     }
 
-    const achievementsGrid = document.getElementById("achievements-grid");
-    const bmSection = document.getElementById("dashboard-bookmarks");
-    const certSection = document.getElementById("dashboard-certificates");
     const completedTracks = state.tracks.filter((tr) => helpers.getTrackProgress(tr).pct === 100);
     const getUserCertificates = window.TG_CERTIFICATES?.getUserCertificates?.bind(window.TG_CERTIFICATES);
     const unlocked = window.loadJson("testers-guild-unlocked-achievements", []);

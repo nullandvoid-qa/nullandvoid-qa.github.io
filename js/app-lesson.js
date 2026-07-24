@@ -71,6 +71,17 @@
   async function renderLesson(lessonId) {
     const state = getState();
     const helpers = getHelpers();
+    const lessonDetail = document.getElementById("lesson-detail");
+    if (lessonDetail && window.NVViewHelpers?.buildLessonSkeletonHtml) {
+      lessonDetail.innerHTML = window.NVViewHelpers.buildLessonSkeletonHtml();
+    }
+
+    const frameWait = typeof window !== "undefined" && typeof window.requestAnimationFrame === "function"
+      ? new Promise((resolve) => window.requestAnimationFrame(resolve))
+      : Promise.resolve();
+
+    await frameWait;
+
     const found = helpers.findLesson(lessonId);
     if (!found) return;
 
@@ -130,7 +141,7 @@
 
     const sanitized = window.NVViewHelpers.cleanInlineBackgrounds(contentLesson.content);
     const processedContent = helpers.highlightCode(sanitized);
-    document.getElementById("lesson-detail").innerHTML = window.NVLessonRenderers.buildLessonPageHtml({
+    lessonDetail.innerHTML = window.NVLessonRenderers.buildLessonPageHtml({
       rawCourse,
       rawLesson,
       course,

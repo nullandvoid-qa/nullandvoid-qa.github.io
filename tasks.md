@@ -43,3 +43,12 @@ Este arquivo serve como a fonte da verdade para o progresso do projeto, detalhan
   - Integrar a validação de chaves de internacionalização no pipeline do GitHub Actions para falhar caso novos textos cruificados ou não traduzidos subam para a master.
 - [ ] **Refinar Pipeline Local**
   - Adicionar scripts unificados de qualidade no [package.json](file:///c:/Users/Rampz/Desktop/nullandvoid-qa.github.io/package.json) (ex: `validate:all`) e registrar instruções no [README.md](file:///c:/Users/Rampz/Desktop/nullandvoid-qa.github.io/README.md).
+
+## 🏅 Certificados e Compartilhamento Social
+
+- [ ] **Criar export social-ready do certificado para upload em LinkedIn**
+  - Implementar um fluxo separado de geração de imagem em proporção social, em vez de depender do PDF A4 atual.
+- [ ] **Adicionar ação de download de imagem no modal do certificado**
+  - Expor um botão de download para o arquivo pronto para post em redes sociais sem quebrar o fluxo já existente de PDF.
+- [ ] **Cobrir o novo comportamento com testes de regressão**
+  - Garantir que o novo export de imagem e a ação de UI continuem funcionando com a automação existente.

@@ -173,6 +173,21 @@ describe('view helpers', () => {
     expect(html).toContain('btn-take-quiz');
   });
 
+  test('buildDashboardSkeletonCardHtml, buildLessonSkeletonHtml and buildSearchSkeletonHtml render reusable loading markup', () => {
+    const { buildDashboardSkeletonCardHtml, buildLessonSkeletonHtml, buildSearchSkeletonHtml } = require('../view-helpers.js');
+
+    const card = buildDashboardSkeletonCardHtml('track-card skeleton-card', ['skeleton-line-sm', '', 'skeleton-line-xs']);
+    const lessonSkeleton = buildLessonSkeletonHtml();
+    const searchSkeleton = buildSearchSkeletonHtml();
+
+    expect(card).toContain('track-card');
+    expect(card).toContain('skeleton-line-sm');
+    expect(lessonSkeleton).toContain('lesson-skeleton-shell');
+    expect(lessonSkeleton).toContain('skeleton-card');
+    expect(searchSkeleton).toContain('search-skeleton-group');
+    expect(searchSkeleton).toContain('search-skeleton-item');
+  });
+
   test('buildDashboardStatsHtml and buildBookmarksHtml render dashboard content', () => {
     const { buildDashboardStatsHtml, buildBookmarksHtml } = require('../view-helpers.js');
 

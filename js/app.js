@@ -339,7 +339,7 @@
 
   window.nvToast = window.nvToast || { queue: [], isShowing: false, timer: null };
   function showToast(msg) {
-    const el = getElementById("toast");
+    const el = document.getElementById("toast");
     if (!el) return;
     window.nvToast.queue.push(msg);
     if (window.nvToast.isShowing) return;

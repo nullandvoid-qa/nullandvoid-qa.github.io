@@ -50,11 +50,28 @@
     }
   }
 
-  function renderTrackDetail(trackId) {
+  async function renderTrackDetail(trackId) {
     const state = getState();
     const helpers = getHelpers();
     const raw = helpers.findTrack(trackId);
     if (!raw) return;
+
+    const container = document.getElementById("track-detail");
+    if (container && window.NVViewHelpers?.buildDashboardSkeletonGridHtml) {
+      container.innerHTML = window.NVViewHelpers.buildDashboardSkeletonGridHtml(
+        Array.from({ length: 3 }, () => ({
+          className: "skeleton-card track-card skeleton-card",
+          lineClasses: ["skeleton-line-sm", "", "skeleton-line-xs"],
+        })),
+      );
+    }
+
+    const frameWait = typeof window !== "undefined" && typeof window.requestAnimationFrame === "function"
+      ? new Promise((resolve) => window.requestAnimationFrame(resolve))
+      : Promise.resolve();
+
+    await frameWait;
+
     const track = helpers.localizedTrack(raw);
     const breadcrumb = document.getElementById("track-breadcrumb");
     if (breadcrumb) breadcrumb.textContent = track.title;
@@ -72,7 +89,6 @@
       window.NVIcons,
     );
 
-    const container = document.getElementById("track-detail");
     if (!container) return;
     window.NVViewHelpers.renderTrackDetail(
       container,

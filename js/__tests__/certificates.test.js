@@ -88,6 +88,14 @@ describe('TG_CERTIFICATES Module', () => {
     expect(payload.skills).toEqual(['Playwright', 'Assertions', 'Debugging']);
   });
 
+  test('generateShareableCertificate returns an upload-friendly PNG blob', async () => {
+    const completedDate = new Date('2026-07-19T11:00:00Z');
+
+    const blob = await window.TG_CERTIFICATES.generateShareableCertificate('web', 'Google User', completedDate);
+
+    expect(blob).toEqual(expect.objectContaining({ type: 'image/png' }));
+  });
+
   test('saveCertificate persists certificate with the provided user name or blank string', () => {
     const first = window.TG_CERTIFICATES.saveCertificate('web', 'Google User', new Date('2026-07-19T11:00:00Z'));
     const second = window.TG_CERTIFICATES.saveCertificate('web', '', new Date('2026-07-19T11:00:00Z'));

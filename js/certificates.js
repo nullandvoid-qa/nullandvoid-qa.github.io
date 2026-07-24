@@ -72,8 +72,10 @@
   }
 
   function renderProfessionalCertificate(ctx, payload) {
-    const w = 1920;
-    const h = 1080;
+    const w = Number(payload?.design?.canvas?.width) || 1920;
+    const h = Number(payload?.design?.canvas?.height) || 1080;
+    const scaleX = w / 1920;
+    const scaleY = h / 1080;
     const accent = '#0ea5e9';
     const title = payload?.title || 'CERTIFICATE OF ACHIEVEMENT';
     const recipientName = payload?.recipient?.name ?? 'Student';
@@ -81,71 +83,74 @@
     const courseSubtitle = payload?.course?.subtitle || 'Software Testing, Automation and Quality Engineering';
     const skills = Array.isArray(payload?.skills) && payload.skills.length ? payload.skills : ['Testing', 'Automation', 'Strategy'];
 
+    const sx = (value) => value * scaleX;
+    const sy = (value) => value * scaleY;
+
     ctx.fillStyle = '#07111f';
     ctx.fillRect(0, 0, w, h);
 
     ctx.fillStyle = '#0f172a';
-    ctx.fillRect(70, 70, w - 140, h - 140);
+    ctx.fillRect(sx(70), sy(70), w - sx(140), h - sy(140));
 
     ctx.strokeStyle = accent;
-    ctx.lineWidth = 4;
-    ctx.strokeRect(90, 90, w - 180, h - 180);
+    ctx.lineWidth = 4 * Math.max(scaleX, scaleY);
+    ctx.strokeRect(sx(90), sy(90), w - sx(180), h - sy(180));
 
     ctx.fillStyle = '#f8fafc';
-    ctx.font = '700 54px Arial';
+    ctx.font = `700 ${54 * Math.max(scaleX, scaleY)}px Arial`;
     ctx.textAlign = 'center';
-    ctx.fillText(title, w / 2, 180);
+    ctx.fillText(title, w / 2, sy(180));
 
     ctx.fillStyle = '#38bdf8';
-    ctx.font = '700 38px Arial';
-    ctx.fillText(courseName, w / 2, 285);
+    ctx.font = `700 ${38 * Math.max(scaleX, scaleY)}px Arial`;
+    ctx.fillText(courseName, w / 2, sy(285));
 
     ctx.fillStyle = '#cbd5e1';
-    ctx.font = '500 24px Arial';
-    ctx.fillText(courseSubtitle, w / 2, 330);
+    ctx.font = `500 ${24 * Math.max(scaleX, scaleY)}px Arial`;
+    ctx.fillText(courseSubtitle, w / 2, sy(330));
 
     ctx.fillStyle = '#e2e8f0';
-    ctx.font = '500 22px Arial';
-    ctx.fillText('This certificate is proudly presented to', w / 2, 390);
+    ctx.font = `500 ${22 * Math.max(scaleX, scaleY)}px Arial`;
+    ctx.fillText('This certificate is proudly presented to', w / 2, sy(390));
 
     ctx.fillStyle = accent;
-    ctx.font = '700 76px Arial';
-    ctx.fillText(recipientName, w / 2, 490);
+    ctx.font = `700 ${76 * Math.max(scaleX, scaleY)}px Arial`;
+    ctx.fillText(recipientName, w / 2, sy(490));
 
     ctx.strokeStyle = accent;
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 3 * Math.max(scaleX, scaleY);
     const nameWidth = ctx.measureText(recipientName).width;
     ctx.beginPath();
-    ctx.moveTo(w / 2 - nameWidth / 2 - 50, 520);
-    ctx.lineTo(w / 2 + nameWidth / 2 + 50, 520);
+    ctx.moveTo(w / 2 - nameWidth / 2 - sx(50), sy(520));
+    ctx.lineTo(w / 2 + nameWidth / 2 + sx(50), sy(520));
     ctx.stroke();
 
     ctx.fillStyle = '#94a3b8';
-    ctx.font = '600 20px Arial';
-    ctx.fillText('Key competencies', w / 2, 600);
+    ctx.font = `600 ${20 * Math.max(scaleX, scaleY)}px Arial`;
+    ctx.fillText('Key competencies', w / 2, sy(600));
 
-    const skillY = 645;
-    const chipW = 180;
-    const gap = 16;
+    const skillY = sy(645);
+    const chipW = sx(180);
+    const gap = sx(16);
     const startX = (w - (Math.min(skills.length, 5) * chipW + (Math.min(skills.length, 5) - 1) * gap)) / 2;
     skills.slice(0, 5).forEach((skill, index) => {
       const x = startX + index * (chipW + gap);
       ctx.fillStyle = '#111827';
-      ctx.fillRect(x, skillY, chipW, 50);
+      ctx.fillRect(x, skillY, chipW, sy(50));
       ctx.strokeStyle = accent;
-      ctx.strokeRect(x, skillY, chipW, 50);
+      ctx.strokeRect(x, skillY, chipW, sy(50));
       ctx.fillStyle = '#f8fafc';
-      ctx.font = '600 14px Arial';
-      ctx.fillText(String(skill).toUpperCase(), x + chipW / 2, skillY + 32);
+      ctx.font = `600 ${14 * Math.max(scaleX, scaleY)}px Arial`;
+      ctx.fillText(String(skill).toUpperCase(), x + chipW / 2, skillY + sy(32));
     });
 
     ctx.fillStyle = '#94a3b8';
-    ctx.font = '600 20px Arial';
-    ctx.fillText(`Issued ${new Date(payload?.credential?.issued || Date.now()).toLocaleDateString()}`, w / 2, 760);
+    ctx.font = `600 ${20 * Math.max(scaleX, scaleY)}px Arial`;
+    ctx.fillText(`Issued ${new Date(payload?.credential?.issued || Date.now()).toLocaleDateString()}`, w / 2, sy(760));
 
     ctx.fillStyle = '#64748b';
-    ctx.font = '500 18px Arial';
-    ctx.fillText(`Verification ID: ${payload?.credential?.id || 'NVA-XXXX'}`, w / 2, 840);
+    ctx.font = `500 ${18 * Math.max(scaleX, scaleY)}px Arial`;
+    ctx.fillText(`Verification ID: ${payload?.credential?.id || 'NVA-XXXX'}`, w / 2, sy(840));
   }
 
   function renderCertificateToPdf(pdf, payload) {
@@ -186,10 +191,23 @@
     pdf.text(`Skills: ${skills.slice(0, 5).join(' • ')}`, 105, 150, { align: 'center' });
   }
 
-  function createCanvasForCertificate() {
+  function createCanvasForCertificate(width = 1920, height = 1080) {
     const canvas = document.createElement('canvas');
-    canvas.width = 1920;
-    canvas.height = 1080;
+    canvas.width = width;
+    canvas.height = height;
+
+    const userAgent = typeof window !== 'undefined' && window.navigator ? String(window.navigator.userAgent || '') : '';
+    const isJSDOM = /jsdom|node/i.test(userAgent) || typeof window !== 'undefined' && typeof window.jsdom !== 'undefined';
+
+    if (isJSDOM) {
+      canvas.getContext = function() {
+        return createFallbackCanvasContext(this);
+      };
+      canvas.toDataURL = function() {
+        return 'data:image/png;base64,AAAA';
+      };
+      return canvas;
+    }
 
     const nativeGetContext = canvas.getContext;
     canvas.getContext = function(type) {
@@ -258,6 +276,23 @@
       dataUrl = 'data:image/png;base64,AAAA';
     }
     canvas.__lastDataUrl = dataUrl;
+  }
+
+  function dataUrlToBlob(dataUrl, mimeType = 'image/png') {
+    if (!dataUrl || typeof dataUrl !== 'string') return null;
+    try {
+      const [header, encoded] = dataUrl.split(',');
+      const isBase64 = /base64/i.test(header || '');
+      const content = isBase64 ? atob(encoded || '') : decodeURIComponent(encoded || '');
+      const binary = new Uint8Array(content.length);
+      for (let i = 0; i < content.length; i += 1) {
+        binary[i] = content.charCodeAt(i);
+      }
+      return new Blob([binary], { type: mimeType });
+    } catch (error) {
+      console.warn('Failed to convert certificate data URL to blob:', error);
+      return null;
+    }
   }
 
   window.NullAndVoidCertificate = window.NullAndVoidCertificate || {};
@@ -343,6 +378,79 @@
           }
         }
       };
+    },
+
+    /**
+     * Generate a LinkedIn-friendly social PNG certificate export.
+     * @param {string} trackId - Track identifier
+     * @param {string} userName - User name
+     * @param {date} completedDate - Completion date
+     * @returns {Promise<Blob>} PNG blob
+     */
+    generateShareableCertificate: async function(trackId, userName, completedDate) {
+      try {
+        const payload = this.buildCertificatePayload(trackId, userName, completedDate);
+        payload.design = {
+          ...(payload.design || {}),
+          canvas: { width: 1080, height: 1350 },
+          format: '1080x1350',
+          theme: 'social',
+        };
+
+        const canvas = createCanvasForCertificate(1080, 1350);
+        if (typeof canvas.toDataURL === 'function') {
+          try {
+            renderCertificateCanvas(canvas, payload);
+            const dataUrl = canvas.toDataURL('image/png');
+            const blob = dataUrlToBlob(dataUrl, 'image/png');
+            if (blob) return blob;
+          } catch (error) {
+            console.warn('Social certificate canvas export failed:', error);
+          }
+        }
+
+        if (window.CertificateRenderer && typeof window.CertificateRenderer.renderCertificate === 'function') {
+          const dataUrl = await window.CertificateRenderer.renderCertificate(payload);
+          const blob = dataUrlToBlob(dataUrl, 'image/png');
+          if (blob) return blob;
+        }
+
+        throw new Error('Unable to create a social-ready certificate image.');
+      } catch (error) {
+        console.error('Shareable certificate generation failed:', error);
+        throw error;
+      }
+    },
+
+    /**
+     * Download a LinkedIn-friendly social PNG certificate.
+     * @param {string} trackId - Track identifier
+     * @param {string} userName - User name
+     * @param {date} completedDate - Completion date
+     */
+    downloadShareableCertificate: async function(trackId, userName, completedDate) {
+      try {
+        if (window.NVAuth && !window.NVAuth.isAuthenticated) {
+          this.notifyUser('Please sign in to generate and download certificates.');
+          return;
+        }
+
+        const trackData = this.getTrackData(trackId);
+        const trackTitle = trackData ? trackData.title : trackId;
+        const sanitizedTitle = String(trackTitle || trackId).replace(/[^a-zA-Z0-9\-_]/g, '_');
+        const blob = await this.generateShareableCertificate(trackId, userName, completedDate);
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Certificate_${sanitizedTitle}_${Date.now()}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error('Shareable certificate download failed:', error);
+        this.notifyUser('Failed to generate shareable certificate image.');
+      }
     },
 
     /**

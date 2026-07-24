@@ -46,9 +46,26 @@
     );
   }
 
-  function renderHome() {
+  async function renderHome() {
     const state = getState();
     const helpers = getHelpers();
+    const homeGrid = document.getElementById("home-tracks-grid");
+
+    if (homeGrid && window.NVViewHelpers?.buildDashboardSkeletonGridHtml) {
+      homeGrid.innerHTML = window.NVViewHelpers.buildDashboardSkeletonGridHtml(
+        Array.from({ length: 4 }, () => ({
+          className: "skeleton-card track-card skeleton-card",
+          lineClasses: ["skeleton-line-sm", "", "skeleton-line-xs"],
+        })),
+      );
+    }
+
+    const frameWait = typeof window !== "undefined" && typeof window.requestAnimationFrame === "function"
+      ? new Promise((resolve) => window.requestAnimationFrame(resolve))
+      : Promise.resolve();
+
+    await frameWait;
+
     const global = helpers.getGlobalProgress();
     window.NVViewHelpers.renderHomeView(
       {
@@ -91,12 +108,28 @@
     );
   }
 
-  function renderTracksPage() {
+  async function renderTracksPage() {
     const state = getState();
     const helpers = getHelpers();
     renderFilterBar();
     const grid = document.getElementById("tracks-grid");
     if (!grid) return;
+
+    if (window.NVViewHelpers?.buildDashboardSkeletonGridHtml) {
+      grid.innerHTML = window.NVViewHelpers.buildDashboardSkeletonGridHtml(
+        Array.from({ length: 4 }, () => ({
+          className: "skeleton-card track-card skeleton-card",
+          lineClasses: ["skeleton-line-sm", "", "skeleton-line-xs"],
+        })),
+      );
+    }
+
+    const frameWait = typeof window !== "undefined" && typeof window.requestAnimationFrame === "function"
+      ? new Promise((resolve) => window.requestAnimationFrame(resolve))
+      : Promise.resolve();
+
+    await frameWait;
+
     grid.innerHTML = "";
     const filtered =
       state.trackFilter === "all"
