@@ -273,7 +273,10 @@
             Filtradas pelo seu perfil.
           </p>
         </div>
-        <div id="home-tracks-grid" class="tracks-grid"></div>
+        <div id="home-tracks-grid" class="tracks-grid">
+          <div class="skeleton-card track-card skeleton-card"><div class="skeleton skeleton-line skeleton-line-sm"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line skeleton-line-xs"></div></div>
+          <div class="skeleton-card track-card skeleton-card"><div class="skeleton skeleton-line skeleton-line-sm"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line skeleton-line-xs"></div></div>
+        </div>
         <div id="home-tracks-empty" class="empty-state hidden">
           <div class="empty-state-icon" data-icon="roadmap" data-icon-size="48"></div>
           <h3 data-i18n="home.emptyTitle">Trilhas carregando...</h3>
@@ -321,7 +324,10 @@
           Filtre por nível.
         </p>
         <div class="filter-bar" id="track-filter-bar"></div>
-        <div id="tracks-grid" class="tracks-grid"></div>
+        <div id="tracks-grid" class="tracks-grid">
+          <div class="skeleton-card track-card skeleton-card"><div class="skeleton skeleton-line skeleton-line-sm"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line skeleton-line-xs"></div></div>
+          <div class="skeleton-card track-card skeleton-card"><div class="skeleton skeleton-line skeleton-line-sm"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line skeleton-line-xs"></div></div>
+        </div>
       </section>
 
       <section id="view-roadmap" class="view">
@@ -490,7 +496,14 @@
             <input type="file" id="progress-import-input" accept="application/json" hidden />
           </div>
         </div>
-        <div id="dashboard-stats" class="dashboard-grid"></div>
+        <div id="dashboard-stats" class="dashboard-grid">
+          <div class="dashboard-skeleton-grid">
+            <div class="dash-card skeleton-card"><div class="skeleton skeleton-line skeleton-line-sm"></div><div class="skeleton skeleton-line"></div></div>
+            <div class="dash-card skeleton-card"><div class="skeleton skeleton-line skeleton-line-sm"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line skeleton-line-xs"></div></div>
+            <div class="dash-card skeleton-card"><div class="skeleton skeleton-line skeleton-line-sm"></div><div class="skeleton skeleton-line"></div></div>
+            <div class="dash-card skeleton-card"><div class="skeleton skeleton-line skeleton-line-sm"></div><div class="skeleton skeleton-line"></div></div>
+          </div>
+        </div>
         <h3
           class="section-title section-title-sm"
           data-i18n="sections.achievementsTitle"
@@ -509,16 +522,27 @@
           Aulas Favoritas
         </h3>
         <div class="dashboard-bookmarks-wrap">
-          <div id="dashboard-bookmarks"></div>
+          <div id="dashboard-bookmarks">
+          <div class="dashboard-skeleton-grid">
+            <div class="skeleton-card skeleton-list-item"><div class="skeleton skeleton-line skeleton-line-sm"></div><div class="skeleton skeleton-line"></div></div>
+            <div class="skeleton-card skeleton-list-item"><div class="skeleton skeleton-line skeleton-line-sm"></div><div class="skeleton skeleton-line"></div></div>
+          </div>
+        </div>
         </div>
         <h3 class="section-title section-title-sm" style="margin-top: 2rem" data-i18n="dashboard.certificatesTitle">
           Certificados
         </h3>
-        <div id="dashboard-certificates" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;"></div>
+        <div id="dashboard-certificates" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+          <div class="skeleton-card cert-skeleton-card"><div class="skeleton skeleton-line skeleton-line-sm"></div><div class="skeleton skeleton-line"></div></div>
+          <div class="skeleton-card cert-skeleton-card"><div class="skeleton skeleton-line skeleton-line-sm"></div><div class="skeleton skeleton-line"></div></div>
+        </div>
         <h3 class="section-title section-title-sm" style="margin-top: 2rem" data-i18n="dashboard.tracksTitle">
           Trilhas
         </h3>
-        <div id="dashboard-tracks" class="tracks-grid"></div>
+        <div id="dashboard-tracks" class="tracks-grid">
+          <div class="skeleton-card track-card skeleton-card"><div class="skeleton skeleton-line skeleton-line-sm"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line skeleton-line-xs"></div></div>
+          <div class="skeleton-card track-card skeleton-card"><div class="skeleton skeleton-line skeleton-line-sm"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line skeleton-line-xs"></div></div>
+        </div>
       </section>
     </main>
 

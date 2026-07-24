@@ -584,6 +584,14 @@ a:hover { text-decoration: underline; }
   gap: 1rem;
 }
 
+.cert-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
 .cert-card__header h4 {
   display: flex;
   align-items: center;

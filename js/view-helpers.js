@@ -283,7 +283,10 @@
           <h4>${iconHtml} ${title}</h4>
           <p>${label}</p>
         </div>
-        <button class="btn btn-primary btn-sm cert-card__action" id="btn-cert-${track.id}" data-track="${track.id}">${icons ? icons.get('download','','14') : ''} ${lang === "en" ? "Download" : "Baixar"}</button>
+        <div class="cert-card__actions">
+          <button class="btn btn-primary btn-sm cert-card__action" id="btn-cert-${track.id}" data-track="${track.id}" data-action="download">${icons ? icons.get('download','','14') : ''} ${lang === "en" ? "Download" : "Baixar"}</button>
+          <button class="btn btn-secondary btn-sm cert-card__action" id="btn-cert-image-${track.id}" data-track="${track.id}" data-action="download-image">${lang === "en" ? "Export image" : "Exportar imagem"}</button>
+        </div>
       </div>
     </div>`;
   }
@@ -926,7 +929,11 @@
     const issueDate = new Date().toLocaleDateString('en-US');
 
     const previewActions = firstTrack && isAuthenticated
-      ? `<div style="margin-top:0.5rem"><button class="btn btn-secondary btn-sm" id="btn-cert-preview" data-track="${escapeHtml(firstTrack.id)}" data-action="preview">${translate('dashboard.preview', lang === 'en' ? 'Preview' : 'Visualizar')}</button> <button class="btn btn-primary btn-sm" id="btn-cert-download" data-track="${escapeHtml(firstTrack.id)}" data-action="download">${translate('dashboard.download', lang === 'en' ? 'Download' : 'Baixar')}</button></div>`
+      ? `<div style="margin-top:0.5rem">
+          <button class="btn btn-secondary btn-sm" id="btn-cert-preview" data-track="${escapeHtml(firstTrack.id)}" data-action="preview">${translate('dashboard.preview', lang === 'en' ? 'Preview' : 'Visualizar')}</button>
+          <button class="btn btn-primary btn-sm" id="btn-cert-download" data-track="${escapeHtml(firstTrack.id)}" data-action="download">${translate('dashboard.download', lang === 'en' ? 'Download' : 'Baixar')}</button>
+          <button class="btn btn-secondary btn-sm" id="btn-cert-download-image" data-track="${escapeHtml(firstTrack.id)}" data-action="download-image">${translate('dashboard.downloadImage', lang === 'en' ? 'Download image' : 'Download imagem')}</button>
+        </div>`
       : `<div style="margin-top:0.5rem; color: #cbd5e1; font-size: 0.95rem;">${translate('dashboard.signInToAccessCertificates', lang === 'en' ? 'Sign in to access your certificates.' : 'Faça login para acessar seus certificados.')}</div>`;
 
     const previewBadge = firstTrack
@@ -1029,6 +1036,29 @@
             showCertificateModal(blob, `${trackId}-certificate.pdf`, trackId);
           } catch (e) {
             console.error('Certificate preview failed:', e);
+          }
+          return;
+        }
+
+        if (action === 'download-image') {
+          try {
+            const userName = (typeof window.NVAuth.getUserName === 'function') ? (window.NVAuth.getUserName() || '') : (window.NVAuth.user && window.NVAuth.user.name) || '';
+            if (window.TG_CERTIFICATES && typeof window.TG_CERTIFICATES.downloadShareableCertificate === 'function') {
+              await window.TG_CERTIFICATES.downloadShareableCertificate(trackId, userName, new Date());
+            } else if (window.TG_CERTIFICATES && typeof window.TG_CERTIFICATES.generateShareableCertificate === 'function') {
+              const blob = await window.TG_CERTIFICATES.generateShareableCertificate(trackId, userName, new Date());
+              const shareUrl = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = shareUrl;
+              a.download = `${trackId}-certificate-share.png`;
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              setTimeout(() => URL.revokeObjectURL(shareUrl), 200);
+              return;
+            }
+          } catch (e) {
+            console.error('Certificate image download failed:', e);
           }
           return;
         }
