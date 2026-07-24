@@ -597,6 +597,14 @@
       });
     </script>
 
+    <script>
+      if (typeof window !== 'undefined' && typeof window.getElementById !== 'function') {
+        window.getElementById = function(id) {
+          return document.getElementById(id);
+        };
+      }
+    </script>
+
     <script src="js/utils.js" defer></script>
     <script src="js/app-storage.js" defer></script>
     <script src="js/app-i18n.js" defer></script>

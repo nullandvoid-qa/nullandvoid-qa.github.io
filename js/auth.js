@@ -173,22 +173,36 @@
   /**
    * Handle Google Sign-In response
    */
+  function decodeJwtToken(token) {
+    if (typeof jwt_decode !== 'undefined') {
+      return jwt_decode(token);
+    }
+
+    const parts = String(token).split('.');
+    if (parts.length !== 3) {
+      throw new Error('Invalid JWT token');
+    }
+
+    const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map((c) => `%${`00${c.charCodeAt(0).toString(16)}`.slice(-2)}`)
+        .join(''),
+    );
+
+    return JSON.parse(jsonPayload);
+  }
+
   function handleCredentialResponse(response) {
     if (!response.credential) {
       console.error('No credential received');
       return;
     }
 
-    // Check if jwt_decode is available
-    if (typeof jwt_decode === 'undefined') {
-      console.error('jwt_decode library not loaded');
-      showAuthError('Biblioteca de autenticação não carregada. Recarregue a página.');
-      return;
-    }
-
     try {
       // Decode JWT token
-      const decoded = jwt_decode(response.credential);
+      const decoded = decodeJwtToken(response.credential);
 
       // Store user info (only public data)
       const user = {
