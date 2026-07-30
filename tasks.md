@@ -17,13 +17,13 @@ Este arquivo serve como a fonte da verdade para o progresso do projeto, detalhan
 
 ## 🌐 Internacionalização (i18n)
 
-- [ ] **Criar Arquivo de Metadados em Inglês (`translations-en.json`)**
+- [x] **Criar Arquivo de Metadados em Inglês (`translations-en.json`)**
   - Traduzir e estruturar as 120 chaves de metadados de trilhas/cursos/aulas do [translations-pt.json](file:///c:/Users/Rampz/Desktop/nullandvoid-qa.github.io/data/translations-pt.json) para o novo arquivo [translations-en.json](file:///c:/Users/Rampz/Desktop/nullandvoid-qa.github.io/data/translations-en.json).
-- [ ] **Criar Script de Sincronização (`sync-translations.js`)**
+- [x] **Criar Script de Sincronização (`sync-translations.js`)**
   - Implementar script em [scripts/sync-translations.js](file:///c:/Users/Rampz/Desktop/nullandvoid-qa.github.io/scripts/sync-translations.js) para validar chaves faltantes entre os idiomas.
-- [ ] **Escrever Testes de Cobertura de Tradução**
+- [x] **Escrever Testes de Cobertura de Tradução**
   - Adicionar [i18n-coverage.test.js](file:///c:/Users/Rampz/Desktop/nullandvoid-qa.github.io/js/__tests__/i18n-coverage.test.js) para assegurar que cada chave em PT-BR possua sua respectiva tradução em EN.
-- [ ] **Atualizar Guias de Contribuição**
+- [x] **Atualizar Guias de Contribuição**
   - Documentar regras e boas práticas de tradução no [CONTRIBUTING.md](file:///c:/Users/Rampz/Desktop/nullandvoid-qa.github.io/CONTRIBUTING.md) e [ARCHITECTURE.md](file:///c:/Users/Rampz/Desktop/nullandvoid-qa.github.io/docs/ARCHITECTURE.md).
 
 ## 📚 Conteúdo, Aulas e Exercícios
@@ -52,3 +52,5 @@ Este arquivo serve como a fonte da verdade para o progresso do projeto, detalhan
   - Expor um botão de download para o arquivo pronto para post em redes sociais sem quebrar o fluxo já existente de PDF.
 - [ ] **Cobrir o novo comportamento com testes de regressão**
   - Garantir que o novo export de imagem e a ação de UI continuem funcionando com a automação existente.
+
+

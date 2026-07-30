@@ -1,0 +1,6 @@
+{
+  "metrics": {
+    "http_req_duration": {"type":"trend","values":{"p(95)":123.4}},
+    "vus": {"type":"point","max":50}
+  }
+}

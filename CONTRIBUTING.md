@@ -44,38 +44,23 @@ Este documento centraliza o fluxo mínimo para contribuir com trilhas, aulas, ce
 
 ## Traduções e labels
 
-- Sempre que criar uma nova string de UI, atualize também `data/translations-en.js`.
-- Quando a string for usada em rótulos de status, progresso ou CTA, mantenha a chave coerente com `js/app-i18n.js`, `js/i18n.js` e `js/utils.js`.
-- Para fallbacks legíveis, prefira labels de texto humano em vez de expor a chave bruta do dicionário.
+O projeto usa um sistema i18n em camadas. Sempre que criar ou modificar textos, siga estas regras:
 
-## Validação antes do PR
+### Arquivos de tradução
 
-Execute ao menos:
+1. **`js/i18n.js`** — Dicionário principal de UI (PT + EN). Suporta ~180+ chaves.
+2. **`data/translations-pt.json`** — Metadados de trilhas/cursos/aulas em PT-BR (120 chaves).
+3. **`data/translations-en.json`** — Metadados de trilhas/cursos/aulas em EN (120 chaves).
+4. **`data/translations-en.js`** — Overlay legado para compatibilidade.
 
-```bash
-npm test
-npm run lint
-npm run validate:tracks
-```
+### Como adicionar novas strings
 
-Se a mudança for de UI ou navegação, também vale revisar:
+- **Strings de UI**: adicione a chave em ambos `pt` e `en` dentro de `js/i18n.js`.
+- **Metadados de trilha/curso/aula**: adicione a chave em ambos `translations-pt.json` e `translations-en.json`.
+- Use chaves em dot-notation (ex: `track.starter.title`).
+- Mantenha a estrutura hierárquica em `i18n.js` (ex: `nav.home`).
 
-```bash
-npm run test:e2e
-```
+### Validação automática
 
-## Checklist mínimo de PR
+Antes de abrir PR, execute:
 
-- [ ] Trilha atualizada em `data/tracks.js`
-- [ ] Traduções revisadas em `data/translations-en.js`
-- [ ] Conteúdo de lição consistente com o padrão esperado
-- [ ] Quizzes ou enriquecimentos atualizados quando necessários
-- [ ] Certificados ou templates revisados, se o fluxo mudou
-- [ ] Testes e lint executados com sucesso
-
-## Boas práticas
-
-- Preferir mudanças pequenas e bem descritas.
-- Manter o documento de tarefas alinhado com o estado real.
-- Não reintroduzir itens já finalizados.
-- Antes de abrir PR, confirme se a mudança está reproduzível, testada e documentada.

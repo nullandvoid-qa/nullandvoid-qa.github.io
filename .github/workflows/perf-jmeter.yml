@@ -1,0 +1,21 @@
+name: perf-jmeter
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  run-jmeter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run JMeter test plan (Docker)
+        env:
+          PERF_BASE_URL: ${{ secrets.PERF_BASE_URL }}
+        run: |
+          docker run --rm -v ${{ github.workspace }}/scripts/jmeter:/test -w /test justb4/jmeter:5.4.1 -n -t test-plan.jmx -l results.jtl -JBASE_URL=${PERF_BASE_URL}
+          docker run --rm -v ${{ github.workspace }}/scripts/jmeter:/test -w /test justb4/jmeter:5.4.1 -g results.jtl -o report
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: jmeter-report
+          path: scripts/jmeter/report

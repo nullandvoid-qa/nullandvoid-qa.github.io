@@ -93,10 +93,20 @@ The application uses localStorage with a migration system for legacy keys:
 
 ### Translation System
 
-The i18n system uses a hierarchical key-based approach:
+The i18n system uses a layered approach with multiple files:
+
+| File | Responsibility | Format | Keys |
+|------|---------------|--------|------|
+| `js/i18n.js` | Main UI dictionary (PT + EN) | Hierarchical JS object | ~180+ |
+| `js/app-i18n.js` | Wrapper with fallback to `TG_I18N` | JS module | — |
+| `data/translations-pt.json` | Track/course/lesson metadata (PT-BR) | Flat dot-notation JSON | 120 |
+| `data/translations-en.json` | Track/course/lesson metadata (EN) | Flat dot-notation JSON | 120 |
+| `data/translations-en.js` | Legacy overlay for compatibility | JS object (`window.TG_QAWAY_EN`) | — |
+
+The main i18n system uses a hierarchical key-based approach:
 
 ```javascript
-// Translation structure
+// Translation structure in js/i18n.js
 window.TG_I18N = {
   pt: {
     nav: { home: "Início", tracks: "Trilhas" },
@@ -109,6 +119,18 @@ window.TG_I18N = {
 }
 ```
 
+Metadata translations use flat dot-notation:
+
+```json
+// data/translations-pt.json & data/translations-en.json
+{
+  "track.starter.title": "Testes Básicos",
+  "track.starter.description": "Sua jornada como recruta...",
+  "course.c1.title": "Introdução à Qualidade de Software",
+  "lesson.l1.title": "O que é QA e por que importa"
+}
+```
+
 ### Usage
 
 ```javascript
@@ -117,6 +139,15 @@ t("nav.home") // Returns "Início" or "Home" based on current language
 
 // In HTML
 <span data-i18n="nav.home">Início</span>
+
+// Placeholders
+<input data-i18n-placeholder="search.placeholder" />
+
+// Titles
+<button data-i18n-title="settings.theme">Theme</button>
+
+// ARIA labels
+<button data-i18n-label="nav.home">Home</button>
 ```
 
 ### Language Switching
@@ -124,6 +155,35 @@ t("nav.home") // Returns "Início" or "Home" based on current language
 - **Toggle Function:** `toggleLang()` switches between PT and EN
 - **Global Update:** `setLang()` updates language and re-renders current view
 - **DOM Updates:** `applyStaticI18n()` updates all `data-i18n` elements
+
+### Validation and Sync
+
+The project includes automated i18n validation:
+
+```bash
+# Validate metadata translations (checks for missing/orphaned keys)
+node scripts/sync-translations.js
+
+# Run coverage tests (fails if any gap is found)
+npm test -- i18n-coverage
+```
+
+**`scripts/sync-translations.js`** validates:
+- Missing keys between PT and EN
+- Orphaned keys (in EN but not in PT)
+- Overall coverage percentage and prints a summary report
+
+**`js/__tests__/i18n-coverage.test.js`** fails if:
+- Any PT key lacks an EN equivalent
+- Key prefixes (track/course/lesson) are unbalanced
+- File formats are invalid or empty
+
+### Adding a New Language
+
+1. Create `data/translations-<lang>.json` with the same 120 keys
+2. Extend `scripts/sync-translations.js` to compare against the new file
+3. Add `<lang>` to `window.TG_I18N` in `js/i18n.js`
+4. Update `getLangKey()` in `js/app-i18n.js` to support the new language code
 
 ## Component Architecture
 

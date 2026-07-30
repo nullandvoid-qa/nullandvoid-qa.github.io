@@ -188,182 +188,23 @@
     return t(map[tier] || "lesson.tierIntermediate");
   }
 
-  // ── Theme ─────────────────────────────────────────────────────────────────
-  function applyTheme() {
-    document.documentElement.setAttribute("data-theme", theme);
-    const btn = getElementById("theme-toggle");
-    if (btn) {
-      const iconName = theme === "dark" ? "moon" : "sun";
-      btn.innerHTML = getIconMarkup(iconName, "18");
-      const nextThemeLabel = theme === "dark"
-        ? t("settings.toggleThemeLight")
-        : t("settings.toggleThemeDark");
-      btn.setAttribute("aria-label", nextThemeLabel);
-      btn.setAttribute("title", nextThemeLabel);
-    }
-    localStorage.setItem(STORAGE_THEME, theme);
-  }
-
-  function toggleTheme() {
-    theme = theme === "dark" ? "light" : "dark";
-    applyTheme();
-    showToast(t(theme === "dark" ? "settings.themeDark" : "settings.themeLight"));
-  }
-
-  // ── Senior Mode ───────────────────────────────────────────────────────────
-  function applySeniorMode() {
-    document.documentElement.classList.toggle("senior-mode", seniorMode);
-    const btn = getElementById("senior-mode-toggle");
-    if (btn) {
-      btn.classList.toggle("active-toggle", seniorMode);
-      btn.title = seniorMode
-        ? t("settings.seniorModeOn", lang === "en" ? "Senior Mode ON" : "Modo Sênior ATIVO")
-        : t("settings.seniorModeOff", lang === "en" ? "Senior Mode" : "Modo Sênior");
-    }
-    localStorage.setItem(STORAGE_SENIOR_MODE, String(seniorMode));
-  }
-
-  function toggleSeniorMode() {
-    seniorMode = !seniorMode;
-    applySeniorMode();
-    showToast(
-      seniorMode
-        ? t("settings.seniorModeOnToast", lang === "en" ? "Senior Mode ON — beginner tips hidden" : "Modo Sênior ativado — dicas iniciante ocultas")
-        : t("settings.seniorModeOffToast", lang === "en" ? "Senior Mode OFF" : "Modo Sênior desativado"),
-    );
-    if (currentView === "lesson") renderLesson(viewParams.lessonId);
-  }
-
-  // ── Language ──────────────────────────────────────────────────────────────
-  function setLang(newLang) {
-    lang = newLang === "en" ? "en" : "pt";
-    window.lang = lang; // Sync with global
-    localStorage.setItem(STORAGE_LANG, lang);
-    document.documentElement.lang = lang === "en" ? "en" : "pt-BR";
-    document.title = t("meta.title");
-    document.querySelector('meta[name="description"]').content =
-      t("meta.description");
-    renderNavLinks();
-    applyStaticI18n();
-    applyTheme();
-    applySeniorMode();
-    updateLangToggle();
-    refreshCurrentView();
-    showToast(t("toast.langChanged"));
-  }
-
-  function toggleLang() {
-    setLang(lang === "pt" ? "en" : "pt");
-  }
-
-  function applyStaticI18n() {
-    document.querySelectorAll("[data-i18n]").forEach((el) => {
-      const key = el.dataset.i18n;
-      if (key) el.textContent = t(key);
-    });
-    document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
-      const key = el.dataset.i18nPlaceholder;
-      if (key) el.placeholder = t(key);
-    });
-    document.querySelectorAll("[data-i18n-title]").forEach((el) => {
-      const key = el.dataset.i18nTitle;
-      if (key) el.title = t(key);
-    });
-    document.querySelectorAll("[data-i18n-label]").forEach((el) => {
-      const key = el.dataset.i18nLabel;
-      if (key) el.setAttribute("aria-label", t(key));
-    });
-
-    const langToggle = getElementById("lang-toggle");
-    if (langToggle) {
-      const langLabel = t("settings.toggleLanguage");
-      langToggle.setAttribute("aria-label", langLabel);
-      langToggle.setAttribute("title", langLabel);
-    }
-
-    const priceEl = getElementById("stat-price");
-    if (priceEl) priceEl.textContent = t("price");
-  }
-
-  function bindNavLinks() {
-    document.querySelectorAll("[data-nav]").forEach((el) => {
-      el.removeEventListener("click", handleNavClick);
-      el.addEventListener("click", handleNavClick);
-    });
-  }
-
-  function handleNavClick(e) {
-    e.preventDefault();
-    const nav = e.currentTarget.dataset.nav;
-    navigate(nav);
-  }
-
-  function renderNavLinks() {
-    const navLinksEl = getElementById("nav-links");
-    if (!navLinksEl) return;
-
-    const navItems = window.TG_NAV_ITEMS || [];
-    const navHtml = navItems
-      .map((item) => `
-        <a href="${item.href}" data-nav="${item.nav}" data-i18n="${item.i18n}">
-          ${t(item.i18n)}
-        </a>
-      `)
-      .join("");
-
-    const badgeHtml = `
-      <span class="badge-free" data-i18n="nav.allUnlocked">
-        <span data-icon="unlock" data-icon-size="14"></span> ${t("nav.allUnlocked")}
-      </span>
-    `;
-
-    navLinksEl.innerHTML = navHtml + badgeHtml;
-    bindNavLinks();
-  }
-
-  function updateLangToggle() {
-    const btn = getElementById("lang-toggle");
-    const label = getElementById("lang-label");
-    const flag = btn?.querySelector(".lang-flag");
-    if (label) label.textContent = t("lang.toggle");
-    if (flag) flag.textContent = lang === "pt" ? "🇧🇷" : "🇺🇸";
-
-    if (btn) {
-      const langLabel = t("settings.toggleLanguage");
-      btn.setAttribute("aria-label", langLabel);
-      btn.setAttribute("title", langLabel);
-    }
-  }
+    // ── Theme / Senior Mode / Language / Nav Links ────────────────────────────
+  // These functions are now provided by js/app-settings.js (loaded before app.js).
+  // We assign local aliases so the rest of app.js keeps using the same names.
+  const applyTheme = window.NVAppSettings.applyTheme;
+  const toggleTheme = window.NVAppSettings.toggleTheme;
+  const applySeniorMode = window.NVAppSettings.applySeniorMode;
+  const toggleSeniorMode = window.NVAppSettings.toggleSeniorMode;
+  const applyStaticI18n = window.NVAppSettings.applyStaticI18n;
+  const updateLangToggle = window.NVAppSettings.updateLangToggle;
+  const renderNavLinks = window.NVAppSettings.renderNavLinks;
+  const bindNavLinks = window.NVAppSettings.bindNavLinks;
+  const setLang = window.NVAppSettings.setLang;
+  const toggleLang = window.NVAppSettings.toggleLang;
 
   // ── Utilities ─────────────────────────────────────────────────────────────
 
-  window.nvToast = window.nvToast || { queue: [], isShowing: false, timer: null };
-  function showToast(msg) {
-    const el = document.getElementById("toast");
-    if (!el) return;
-    window.nvToast.queue.push(msg);
-    if (window.nvToast.isShowing) return;
-
-    const showNext = () => {
-      if (window.nvToast.queue.length === 0) {
-        window.nvToast.isShowing = false;
-        return;
-      }
-      const nextMsg = window.nvToast.queue.shift();
-      el.textContent = nextMsg;
-      el.classList.add("show");
-      window.nvToast.isShowing = true;
-      clearTimeout(window.nvToast.timer);
-      window.nvToast.timer = setTimeout(() => {
-        el.classList.remove("show");
-        window.nvToast.isShowing = false;
-        showNext();
-      }, 2800);
-    };
-
-    showNext();
-  }
-  window.showToast = showToast;
+    // showToast is now provided by js/app-ui.js
 
   function getIconMarkup(name, size = "18", className = "") {
     if (!window.NVIcons || typeof window.NVIcons.get !== "function") {

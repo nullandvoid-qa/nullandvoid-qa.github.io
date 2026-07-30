@@ -1,0 +1,17 @@
+name: perf-k6
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  run-k6:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run k6 script (Docker)
+        env:
+          BASE_URL: ${{ secrets.PERF_BASE_URL }}
+          K6_VUS: 50
+          K6_DURATION: 30s
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/src -w /src grafana/k6 run /src/scripts/k6/basic-script.js
