@@ -1,4 +1,4 @@
-w/**
+/**
  * app-achievements.js
  *
  * Achievement detection, unlocking, and rendering for the dashboard.

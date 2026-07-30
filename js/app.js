@@ -933,7 +933,7 @@
     if (lastLessonId && findLesson(lastLessonId)) {
       navigate("lesson", { lessonId: lastLessonId });
     } else {
-      renderHome();
+      navigate("home");
     }
 
     // During local development and automated tests, some UI state can remain
