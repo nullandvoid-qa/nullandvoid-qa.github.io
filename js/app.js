@@ -965,6 +965,18 @@
         .catch((error) => {
           console.warn('[PWA] Service Worker registration failed:', error);
         });
+      // Listen for messages from the service worker (e.g., update notifications)
+      try {
+        navigator.serviceWorker.addEventListener('message', (event) => {
+          if (event.data && event.data.type === 'SW_UPDATED') {
+            console.info('[PWA] Service worker updated to', event.data.version, '- reloading to fetch fresh content.');
+            // Force a reload so the page picks up the newest assets and content
+            window.location.reload();
+          }
+        });
+      } catch (e) {
+        // noop
+      }
     }
   }
 

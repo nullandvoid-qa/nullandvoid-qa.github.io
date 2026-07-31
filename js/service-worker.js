@@ -6,7 +6,7 @@
  * @global clients
  */
 
-const CACHE_VERSION = "v1.0.6";
+const CACHE_VERSION = "v1.0.9";
 const CACHE_NAME = `nullandvoid-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `nullandvoid-runtime-${CACHE_VERSION}`;
 
@@ -77,6 +77,17 @@ self.addEventListener("activate", (event) => {
     })
   );
   self.clients.claim(); // Take control of all clients immediately
+
+  // Notify open pages that a new service worker has taken control so they can reload.
+  self.clients.matchAll({ includeUncontrolled: true, type: 'window' }).then((clients) => {
+    for (const client of clients) {
+      try {
+        client.postMessage({ type: 'SW_UPDATED', version: CACHE_VERSION });
+      } catch (e) {
+        // ignore
+      }
+    }
+  });
 });
 
 // Fetch: implement caching strategy
