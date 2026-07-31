@@ -1,5 +1,5 @@
 ---
-title: Performance Testing - Browser/Frontend e Realidade do Real Device
+title: Testes de Performance - Frontend e Realidade de Dispositivos Reais
 duration: 60 min
 ---
 
@@ -23,6 +23,9 @@ duration: 60 min
   <li><strong>CLS (Cumulative Layout Shift):</strong> Mede a estabilidade visual. Avalia se elementos se movem na tela de forma inesperada durante o carregamento (gerando cliques incorretos e frustração).</li>
 </ul>
 
+<h3>⏭️ Próxima Aula</h3>
+<p>Na próxima aula, veremos <strong>Testes de Performance - Infraestrutura e Banco de Dados</strong>.</p>
+
 <h3>🛠️ Ferramentas Recomendadas</h3>
 <ul style="margin:1rem 0; padding-left:1.2rem">
   <li><strong>Lighthouse:</strong> Ferramenta integrada ao Chrome DevTools útil para auditorias locais rápidas e geração de scores de acessibilidade, SEO e performance.</li>
@@ -33,7 +36,7 @@ duration: 60 min
 <h3>💻 Comandos de Exemplo</h3>
 <pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
 # Executando Auditoria de Lighthouse via CLI localmente
-npx @lhci/cli@0.8.0 autorun --url=https://example.com --chrome-flags="--no-sandbox"
+npx @lhci/cli@0.8.0 autorun --url=http://localhost:8000 --chrome-flags="--no-sandbox"
 </pre>
 
 <h3>📋 Checklist de Análise de Frontend</h3>

@@ -1,5 +1,5 @@
 ---
-title: Performance Testing - Análise e Mitigação
+title: Testes de Performance - Análise e Mitigação
 duration: 75 min
 ---
 
@@ -49,6 +49,8 @@ Recomendações Técnicas:
   <li><strong>Product Owner (PO):</strong> Prioriza as tarefas de mitigação de performance no backlog ágil com base no impacto de negócio e na experiência do usuário.</li>
 </ul>
 
+<h3>⏭️ Próxima Aula</h3>
+<p>Esta é a última aula do track de Performance; faremos uma revisão e exercícios práticos para consolidar os conceitos aprendidos.</p>
 <h3>🔍 Amostras e Relatórios</h3>
 <p>Você pode utilizar o template de relatório em <code>scripts/perf/perf-report-template.md</code> e comparar com os dados de exemplo estruturados em <code>scripts/perf/examples</code> para estruturar sua própria documentação de testes.</p>
 

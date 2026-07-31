@@ -1,5 +1,5 @@
 ---
-title: Performance Testing - k6 e testes de API
+title: Testes de Performance - k6 e testes de API
 duration: 75 min
 ---
 
@@ -9,7 +9,7 @@ duration: 75 min
 <ul>
   <li>Instalar e criar um script básico de teste de performance usando o k6 em JavaScript/TypeScript.</li>
   <li>Configurar cenários com múltiplos usuários virtuais (VUs) e tempos de ramp-up.</li>
-  <li>Definir critérios de sucesso e falha (Thresholds) para integrar com o pipeline.</li>
+  <li>Definir critérios de sucesso e falha (limites, chamados thresholds) para integrar com o pipeline.</li>
   <li>Executar testes locais e analisar as principais latências (p50, p95 e p99).</li>
 </ul>
 
@@ -40,7 +40,7 @@ export default function () {
 }
 </pre>
 
-<h3>🚀 Quickstart: Executando o k6 localmente</h3>
+<h3>🚀 Início rápido: Executando o k6 localmente</h3>
 <p>O k6 pode ser instalado de forma simples em qualquer sistema operacional (via Homebrew, Chocolatey ou pacotes de instalação direta). Após a instalação, a execução de um script é feita de forma declarativa:</p>
 <pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
 # Instalar k6 (instruções completas em https://k6.io/docs/getting-started/installation/)
@@ -75,3 +75,6 @@ k6 run scripts/k6/basic-script.js
   <li><a href="https://k6.io/docs/using-k6/thresholds/" target="_blank">Entendendo e Configurando Thresholds no k6</a></li>
   <li><a href="https://github.com/grafana/k6" target="_blank">Repositório Oficial do k6 no GitHub</a></li>
 </ul>
+
+<h3>⏭️ Próxima Aula</h3>
+<p>Na próxima aula, veremos <strong>Testes de Performance - Testes de Carga em APIs e Servidores de Aplicação</strong>.</p>

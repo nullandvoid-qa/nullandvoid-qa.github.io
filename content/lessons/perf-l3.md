@@ -1,9 +1,9 @@
 ---
-title: Performance Testing - Testes de Carga em APIs e App Servers
+title: Testes de Performance - Testes de Carga em APIs e Servidores de Aplicação
 duration: 60 min
 ---
 
-<h2>Testes de Carga: APIs e App Servers</h2>
+<h2>Testes de Carga: APIs e Servidores de Aplicação</h2>
 
 <h3>🎯 Objetivos de Aprendizado</h3>
 <ul>
@@ -36,9 +36,9 @@ jmeter -n -t scripts/jmeter/test-plan.jmx -l scripts/jmeter/results.jtl -JBASE_U
 
 <h3>📈 Métricas Esperadas e Análise de Gargalos</h3>
 <ul style="margin:1rem 0; padding-left:1.2rem">
-  <li><strong>Throughput (RPS):</strong> Compare o volume de requisições processadas com as metas estabelecidas (ex: suportar 200 compras/segundo).</li>
+  <li><strong>Vazão (RPS):</strong> Compare o volume de requisições processadas com as metas estabelecidas (ex: suportar 200 compras/segundo).</li>
   <li><strong>Latência p95/p99:</strong> 95% ou 99% das respostas dos usuários devem retornar abaixo do limite acordado (ex: latência p95 < 500ms).</li>
-  <li><strong>Error Rate (Taxa de Erro):</strong> Monitorar taxas de erros acima de 1%. Erros 5xx geralmente apontam para falhas internas do servidor, e erros 408 indicam timeouts.</li>
+  <li><strong>Taxa de Erro:</strong> Monitorar taxas de erros acima de 1%. Erros 5xx geralmente apontam para falhas internas do servidor, e erros 408 indicam timeouts.</li>
 </ul>
 
 <h3>🔍 Amostras de Outputs</h3>
@@ -59,3 +59,6 @@ jmeter -n -t scripts/jmeter/test-plan.jmx -l scripts/jmeter/results.jtl -JBASE_U
   <li><a href="https://k6.io/docs/using-k6/scenarios/" target="_blank">Criação de Cenários e Workloads no k6</a></li>
   <li><a href="https://jmeter.apache.org/usermanual/build-web-test-plan.html" target="_blank">Construindo planos de teste de API no JMeter</a></li>
 </ul>
+
+<h3>⏭️ Próxima Aula</h3>
+<p>Na próxima aula, vamos abordar <strong>Testes de Performance - Frontend e Realidade de Dispositivos Reais</strong>.</p>

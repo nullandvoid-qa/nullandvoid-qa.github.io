@@ -1,15 +1,15 @@
 ---
-title: Performance Testing - CI Integration e Observability
+title: Testes de Performance - Integração de CI e Observabilidade
 duration: 60 min
 ---
 
-<h2>CI e Observabilidade para Performance</h2>
+<h2>Integração de CI e Observabilidade para Performance</h2>
 
 <h3>🎯 Objetivos de Aprendizado</h3>
 <ul>
   <li>Integrar testes automatizados de carga k6 diretamente em pipelines de Integração Contínua (CI).</li>
   <li>Enviar métricas em tempo real para ferramentas de monitoramento como Prometheus e Grafana.</li>
-  <li>Configurar thresholds e triggers de qualidade para bloquear builds instáveis ou lentas de forma automática.</li>
+  <li>Configurar limites (thresholds) e gatilhos de qualidade para bloquear builds instáveis ou lentas de forma automática.</li>
 </ul>
 
 <h3>📊 Resumo Executivo</h3>
@@ -37,6 +37,9 @@ jobs:
       - name: Run k6 Performance Test
         run: k6 run scripts/k6/basic-script.js
 </pre>
+
+<h3>⏭️ Próxima Aula</h3>
+<p>Na próxima aula, vamos ver <strong>Testes de Performance - Análise e Mitigação</strong>.</p>
 
 <h3>📈 O que é Observabilidade?</h3>
 <p>Executar o teste de carga no pipeline não é suficiente; precisamos enxergar o comportamento da máquina que hospeda o sistema. A observabilidade permite correlacionar o tráfego do teste (RPS e latência) com as métricas de infraestrutura:</p>

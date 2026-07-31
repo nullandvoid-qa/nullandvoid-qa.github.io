@@ -1,5 +1,5 @@
 ---
-title: Performance Testing - Infra e Database
+title: Testes de Performance - Infraestrutura e Banco de Dados
 duration: 75 min
 ---
 
@@ -24,6 +24,9 @@ FROM pg_stat_statements
 ORDER BY total_exec_time DESC
 LIMIT 10;
 </pre>
+
+<h3>⏭️ Próxima Aula</h3>
+<p>Na próxima aula, vamos ver <strong>Testes de Performance - Integração de CI e Observabilidade</strong>.</p>
 
 <h3>🛠️ EXPLAIN e EXPLAIN ANALYZE</h3>
 <p>Para otimizar uma query lenta, você deve entender como o banco está buscando a informação. Prefixar a consulta com o comando `EXPLAIN` faz o banco exibir o plano de execução planejado, revelando se ele fez uma busca sequencial completa na tabela (Seq Scan) ou se utilizou um índice eficiente (Index Scan).</p>

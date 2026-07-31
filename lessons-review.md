@@ -14,6 +14,11 @@ O curso evoluiu bastante com a inclusão de módulos técnicos (Git, SQL, API, C
 
 ---
 
+## **Itens Concluídos**
+- Inserção dos blocos padronizados **"⏭️ Próxima Aula"** em diversas lições (main + performance).
+- Arquivos atualizados: `content/lessons/l5.md`, `l6.md`, `l7.md`, `l8.md`, `l12.md`, `l17.md`, `l18.md`, `l19.md`, `l20.md`, `l21.md`, `l22.md`, `content/lessons/perf-l1.md` — `perf-l7.md`.
+
+
 ## 1. Base (Fundamentos de QA e Agile)
 - **Score**: 4.5/5
 - **Strengths**:
