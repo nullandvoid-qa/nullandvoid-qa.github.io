@@ -3,53 +3,57 @@ title: Performance Testing - Infra e Database
 duration: 75 min
 ---
 
-<h2>Performance: Infra e Database</h2>
+<h2>Performance: Infraestrutura e Banco de Dados</h2>
 
-<h3>Objetivos</h3>
+<h3>🎯 Objetivos de Aprendizado</h3>
 <ul>
-  <li>Identificar problemas de conexão ao banco, queries lentas e contensão</li>
-  <li>Usar EXPLAIN, monitorar locks e métricas de DB</li>
-  <li>Mapear ações para mitigar (index, cache, query rewrite)</li>
+  <li>Identificar gargalos associados a consultas lentas (slow queries), falta de índices ou problemas de concorrência de conexões.</li>
+  <li>Interpretar planos de execução de banco de dados usando `EXPLAIN` ou `EXPLAIN ANALYZE`.</li>
+  <li>Definir planos de ação básicos para mitigar gargalos (indexação, cacheamento, reescrita de consultas e pools de conexão).</li>
 </ul>
 
-<h3>Exercício</h3>
-<ol>
-  <li>Capture queries lentas durante um teste de carga e gere relatório com top-N queries.</li>
-  <li>Proponha duas otimizações e justifique o impacto esperado.</li>
-  <li>Use um `EXPLAIN ANALYZE` para priorizar a query mais custosa.</li>
-</ol>
+<h3>📊 Resumo Executivo</h3>
+<p>Na maioria das vezes, o limite de escalabilidade de um sistema está no banco de dados. Servidores de aplicação podem ser criados dinamicamente em múltiplos contêineres, mas o banco de dados geralmente centraliza a gravação física dos dados. Queries ineficientes sem índices adequados ou tabelas com locks prolongados degradam o tempo de resposta geral e podem paralisar todo o sistema durante testes de carga.</p>
 
-<h3>Ferramentas úteis</h3>
-<ul>
-  <li>Postgres: `pg_stat_statements`, `EXPLAIN ANALYZE`</li>
-  <li>MySQL: `slow_query_log`, `EXPLAIN`</li>
-  <li>Redis/memcached: medir hits/misses e latência</li>
-</ul>
-
-<h3>Exemplo rápido</h3>
-<pre style="background:#f5f5f5; padding:1rem">
-# Obter top slow queries (Postgres)
-SELECT query, calls, total_time, mean_time
+<h3>🔍 Identificando Queries Lentas</h3>
+<p>Os principais bancos de dados possuem ferramentas internas para gravar consultas que demoram mais do que um limite tolerável para o negócio (ex: queries acima de 1 segundo). No PostgreSQL, a extensão <code>pg_stat_statements</code> rastreia as estatísticas das consultas mais pesadas acumuladas.</p>
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+-- Exemplo: Consultar as 10 queries mais lentas por tempo total de execução (PostgreSQL)
+SELECT query, calls, total_exec_time, mean_exec_time
 FROM pg_stat_statements
-ORDER BY total_time DESC
+ORDER BY total_exec_time DESC
 LIMIT 10;
 </pre>
 
-<h3>Sample outputs</h3>
-<p>Exemplos de relatórios gerados pelo pipeline combinado estarão em <code>scripts/perf/examples/</code> após execução; compare com outputs reais gerados pelo laboratório.</p>
-
-<h3>Why this matters</h3>
-<p>Database and infrastructure bottlenecks are often the hidden cause of application slowdowns. QA should be able to translate load-test symptoms into actionable DB or infrastructure improvements.</p>
-
-<h3>Resources</h3>
-<ul>
-  <li><a href="https://www.postgresql.org/docs/current/pgstatstatements.html" target="_blank">PostgreSQL pg_stat_statements</a></li>
-  <li><a href="https://dev.mysql.com/doc/refman/en/slow-query-log.html" target="_blank">MySQL slow query log</a></li>
+<h3>🛠️ EXPLAIN e EXPLAIN ANALYZE</h3>
+<p>Para otimizar uma query lenta, você deve entender como o banco está buscando a informação. Prefixar a consulta com o comando `EXPLAIN` faz o banco exibir o plano de execução planejado, revelando se ele fez uma busca sequencial completa na tabela (Seq Scan) ou se utilizou um índice eficiente (Index Scan).</p>
+<ul style="margin:1rem 0; padding-left:1.2rem">
+  <li><code>EXPLAIN SELECT * FROM usuarios WHERE email = 'teste@email.com';</code>: Mostra o plano teórico e o custo estimado.</li>
+  <li><code>EXPLAIN ANALYZE SELECT * FROM usuarios WHERE email = 'teste@email.com';</code>: Executa a query de verdade e traz os dados reais de tempo gasto. ⚠️ <em>Cuidado: execute apenas queries seguras de leitura com ANALYZE.</em></li>
 </ul>
 
-<h3>Next steps</h3>
+<h3>📋 Estratégias de Mitigação de Gargalos</h3>
+<ul style="margin:1rem 0; padding-left:1.2rem">
+  <li><strong>Criação de Índices:</strong> Garante buscas rápidas por chaves de busca comuns (ex: emails, CPFs, códigos de pedido).</li>
+  <li><strong>Pool de Conexões:</strong> Gerenciadores de conexões (como PgBouncer para Postgres) evitam a criação/destruição constante de conexões que consomem muita CPU do banco.</li>
+  <li><strong>Uso de Caches:</strong> Bancos de chave-valor em memória (como Redis) salvam resultados de queries pesadas e repetitivas (como menus ou listagens estáticas) diminuindo as requisições no banco relacional.</li>
+</ul>
+
+<h3>💻 Exemplo e outputs de Exercícios</h3>
+<p>Outputs de exemplo gerados pelo pipeline de testes e relatórios de slow queries estão disponíveis em <code>scripts/perf/examples/</code>. Compare o consumo de conexões simultâneas locais com os benchmarks.</p>
+
+<h3>🏛️ Por que isso importa?</h3>
+<p>A instabilidade e degradação de performance reportada nos testes de carga quase sempre têm raiz na infraestrutura ou no banco de dados. Um QA apto a inspecionar consultas lentas e sugerir planos de ação técnicos de banco acelera a resolução de falhas e contribui ativamente no refinamento da arquitetura do time.</p>
+
+<h3>📝 Exercício Prático</h3>
+<ol>
+  <li>Imagine uma tabela <code>transacoes</code> com 5 milhões de linhas e sem nenhum índice. Uma consulta busca registros filtrando por <code>status = 'processada'</code> e demora 8 segundos.</li>
+  <li>Escreva o comando SQL necessário para criar um índice nessa coluna (ex: <code>CREATE INDEX idx_transacoes_status...</code>).</li>
+  <li>Explique qual seria o impacto dessa mudança no plano de execução (Seq Scan vs. Index Scan).</li>
+</ol>
+
+<h3>📚 Recursos</h3>
 <ul>
-  <li>Validate the test dataset and confirm the slow queries are reproducible.</li>
-  <li>Propose at least one database optimization and one infrastructure change.</li>
-  <li>Verify the improvement with a second load test and compare metrics.</li>
+  <li><a href="https://www.postgresql.org/docs/current/using-explain.html" target="_blank">Entendendo Planos de Execução (EXPLAIN) no PostgreSQL</a></li>
+  <li><a href="https://dev.mysql.com/doc/refman/8.0/en/explain.html" target="_blank">Otimização de Consultas com EXPLAIN no MySQL</a></li>
 </ul>

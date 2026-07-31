@@ -86,6 +86,9 @@ window.TG_QAWAY_EN = {
     "s12": {
       "title": "Starter Final Project"
     },
+    "s13": {
+      "title": "Technical QA Tools"
+    },
     "w1": {
       "title": "Advanced JavaScript for Web Automation"
     },
@@ -392,6 +395,26 @@ window.TG_QAWAY_EN = {
     "s12-l2": {
       "title": "Delivery and checklist",
       "content": "<p>Checklist: README, test cases, reported bugs, running automation, evidence. Publish on GitHub.</p>"
+    },
+    "s13-l1": {
+      "title": "Git basics for QA",
+      "content": "<p>Git helps QA collaborate on test cases, scripts, and evidence. Use branches, commits, and pull requests to keep work traceable and reviewable.</p>"
+    },
+    "s13-l2": {
+      "title": "SQL for QA",
+      "content": "<p>SQL helps QA validate data, investigate inconsistencies, and answer product questions with evidence from the database.</p>"
+    },
+    "s13-l3": {
+      "title": "API testing",
+      "content": "<p>API testing validates backend behavior, contracts, and data flow more quickly than UI-only checks. Learn to use Postman, REST Assured, or Playwright request APIs.</p>"
+    },
+    "s13-l4": {
+      "title": "CI/CD for QA",
+      "content": "<p>CI/CD lets QA define automated quality gates, run regression suites on every change, and get earlier feedback in the delivery pipeline.</p>"
+    },
+    "s13-l5": {
+      "title": "AI applied to QA",
+      "content": "<p>AI can help generate test ideas, improve bug reports, and support exploratory sessions, but QA must still validate suggestions against real product risks.</p>"
     },
     "w1-l1": {
       "title": "Destructuring, spread, and arrays",

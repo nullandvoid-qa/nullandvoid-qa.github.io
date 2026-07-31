@@ -2,7 +2,7 @@
   "use strict";
 
   const KNOWN_MARKDOWN_IDS = new Set([
-    "l1", "l2", "l3", "l4", "l5", "l6", "l7", "l8", "l9", "l10", "l11", "l12", "l13", "l14", "l15", "l16",
+    "l1", "l2", "l3", "l4", "l5", "l6", "l7", "l8", "l9", "l10", "l11", "l12", "l13", "l14", "l15", "l16", "l17", "l18", "l19", "l20", "l21", "l22",
     "perf-l1", "perf-l2", "perf-l3", "perf-l4", "perf-l5", "perf-l6", "perf-l7",
   ]);
 
@@ -58,11 +58,7 @@
       return null;
     }
 
-    if (typeof window !== "undefined" && window.location?.origin) {
-      return `/content/lessons/${lessonId}.md`;
-    }
-
-    return null;
+    return `/content/lessons/${lessonId}.md`;
   }
 
   async function loadLessonContent(lesson, options = {}) {

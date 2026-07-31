@@ -92,4 +92,30 @@ duration: 12 min
     expect(result.content).toContain('<h2>Conteúdo em HTML</h2>');
     expect(result.content).toContain('Este texto deve permanecer intacto.');
   });
+
+  test('loads the new programming and POO lesson from markdown', async () => {
+    const { loadLessonContent } = require('../lesson-content.js');
+
+    const markdown = `---
+title: Lógica de Programação e POO para QA
+duration: 60 min
+---
+
+# POO para QA
+`;
+
+    const result = await loadLessonContent(
+      { id: 'l22' },
+      {
+        fetchImpl: async () => ({
+          ok: true,
+          text: async () => markdown,
+        }),
+      },
+    );
+
+    expect(result.title).toBe('Lógica de Programação e POO para QA');
+    expect(result.duration).toBe('60 min');
+    expect(result.content).toContain('<h1>POO para QA</h1>');
+  });
 });

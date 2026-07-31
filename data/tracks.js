@@ -808,11 +808,552 @@ Funcionalidade: Login | Impacto: Alto | Probabilidade: Baixo | Prioridade: Médi
         ]
       },
       {
+        id: "c13",
+        title: "Ferramentas Técnicas de QA",
+        lessons: [
+          {
+            id: "l17",
+            title: "Git básico para QA",
+            duration: "45 min",
+            content: `<h2>Git básico para QA</h2>
+
+<h3>Objetivos de Aprendizado</h3>
+<ul>
+  <li>Entender por que Git é importante para QA e colaboração em times</li>
+  <li>Usar comandos básicos para versionar casos de teste, evidências e automação</li>
+  <li>Trabalhar com branches, commits e pull requests como parte do fluxo de QA</li>
+  <li>Aplicar boas práticas de mensagem de commit e revisão de código/testes</li>
+</ul>
+
+<h3>Por que Git importa para QA?</h3>
+<p>Um QA profissional não trabalha sozinho. Versionar casos de teste, scripts e evidências com Git garante rastreabilidade, colaboração e histórico de mudanças.</p>
+
+<ul>
+  <li><strong>Colaboração:</strong> QA pode criar e revisar branches de teste junto com o time.</li>
+  <li><strong>Histórico:</strong> é possível ver como um caso de teste ou um script mudou ao longo do tempo.</li>
+  <li><strong>Reprodutibilidade:</strong> garante que qualquer pessoa possa voltar a um estado anterior do trabalho.</li>
+</ul>
+
+<h3>Comandos básicos</h3>
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+git clone https://github.com/exemplo/projeto-qa.git
+cd projeto-qa
+
+# ver status dos arquivos
+git status
+
+# adicionar arquivos ao stage
+git add testes/nova-caso-de-teste.md
+
+# criar um commit claro
+git commit -m "Adiciona caso de teste para campo de CPF inválido"
+
+# enviar para o repositório remoto
+git push origin minha-branch
+</pre>
+
+<h3>Fluxo típico de QA com Git</h3>
+<ol>
+  <li><strong>Branch de feature:</strong> crie uma branch para nova suite de testes ou para um caso específico.</li>
+  <li><strong>Commit pequenos e claros:</strong> cada mudança deve explicar o que foi feito e por quê.</li>
+  <li><strong>Pull request:</strong> abra PR para revisão de colegas e inclua contexto de QA.</li>
+  <li><strong>Revisão:</strong> revise mudanças em casos de teste, scripts de automação e documentação.</li>
+</ol>
+
+<h3>Comandos úteis de branch</h3>
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+# listar branches locais
+git branch
+
+# criar e trocar para uma nova branch
+git checkout -b qa/caso-cpf
+
+# voltar para a branch main
+git checkout main
+
+# unir mudanças
+git merge qa/caso-cpf
+
+# obter atualizações do remoto
+git pull origin main
+</pre>
+
+<h3>Boas práticas de QA com Git</h3>
+<ul>
+  <li>Use mensagens de commit que descrevam a mudança em linguagem de QA e rastreamento de defeitos.</li>
+  <li>Acompanhe links de tickets/bugs na descrição do PR ou na mensagem do commit.</li>
+  <li>Inclua artefatos de teste quando relevantes: evidências, logs, screenshots, scripts.</li>
+  <li>Revisões de PR não são só para código: revise também planos de teste e scripts de automação.</li>
+</ul>
+
+<h3>Comandos úteis para revisar mudanças</h3>
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+# listar os últimos commits
+git log --oneline -5
+
+# ver o que mudou em relação à branch principal
+git diff main...HEAD
+
+# localizar quando uma linha mudou
+git blame testes/caso-login.md
+</pre>
+<p>Esses comandos ajudam a responder perguntas comuns de QA: quem alterou isso, quando mudou e qual contexto a mudança trouxe para o caso de teste ou script.</p>
+
+<h3>Exemplo de uso prático</h3>
+<p>Um QA encontra um cenário de borda no fluxo de pagamento. Ele cria uma branch <code>qa/pagamento-cartao</code> para adicionar o caso, documenta o passo a passo e pede revisão no PR. O histórico do Git mostra claramente quando e por que o caso foi adicionado.</p>
+
+<h3>Exercício</h3>
+<p>Crie um repositório local, adicione um arquivo de caso de teste e faça um commit com mensagem clara. Em seguida, crie uma branch para um segundo caso e simule um pull request com notas de revisão.</p>`,
+          },
+          {
+            id: "l18",
+            title: "SQL para QA",
+            duration: "60 min",
+            content: `<h2>SQL para QA</h2>
+
+<h3>Objetivos de Aprendizado</h3>
+<ul>
+  <li>Entender por que SQL é essencial para QA.</li>
+  <li>Escrever consultas básicas com <code>SELECT</code>, <code>JOIN</code> e <code>GROUP BY</code>.</li>
+  <li>Usar SQL para validar dados, comparar resultados e investigar bugs.</li>
+  <li>Interpretar resultados e aplicar SQL em testes de qualidade.</li>
+</ul>
+
+<h3>Por que QA precisa saber SQL?</h3>
+<p>Mesmo em times de automação de UI, QA frequentemente precisa validar dados no banco, confirmar integrações e investigar discrepâncias entre frontend e backend.</p>
+
+<ul>
+  <li><strong>Validação de dados:</strong> checar se valores estão gravados corretamente.</li>
+  <li><strong>Verificação de regras:</strong> confirmar limites, somas e agrupamentos.</li>
+  <li><strong>Diagnóstico:</strong> investigar erros que aparecem apenas em produção.</li>
+</ul>
+
+<h3>Consultas básicas</h3>
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+-- selecionar colunas específicas
+SELECT id, usuario_id, valor, status
+FROM transacoes
+WHERE status = 'pendente';
+
+-- ordenar resultados
+SELECT id, nome, criado_em
+FROM usuarios
+ORDER BY criado_em DESC
+LIMIT 10;
+</pre>
+
+<h3>JOINs</h3>
+<p>JOINs permitem combinar dados de tabelas relacionadas e são essenciais para QA quando você precisa validar um fluxo completo.</p>
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+SELECT u.id AS usuario_id,
+       u.email,
+       t.id AS transacao_id,
+       t.valor
+FROM usuarios u
+JOIN transacoes t ON t.usuario_id = u.id
+WHERE t.status = 'concluida';
+</pre>
+
+<h3>Agrupamento e agregação</h3>
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+SELECT status,
+       COUNT(*) AS total,
+       SUM(valor) AS valor_total,
+       AVG(valor) AS valor_medio
+FROM transacoes
+GROUP BY status;
+</pre>
+
+<h3>Casos úteis para QA</h3>
+<ul>
+  <li>Validar que um pedido cancelado não aparece como concluído.</li>
+  <li>Comparar totais do frontend com o total do banco.</li>
+  <li>Encontrar registros duplicados ou inconsistentes.</li>
+  <li>Verificar que um campo crítico nunca fica nulo em produção.</li>
+</ul>
+
+<h3>Perguntas de QA que SQL responde bem</h3>
+<p>Em QA, SQL não é só para quem gosta de banco. Ele ajuda a transformar dúvidas de negócio em evidências verificáveis.</p>
+<ul>
+  <li>Quantos pedidos foram criados hoje e em que status ficaram?</li>
+  <li>Existe algum valor inconsistente entre o total do pedido e a soma dos itens?</li>
+  <li>Há usuários ativos sem transação associada?</li>
+  <li>Os dados exibidos no frontend batem com o que está salvo no banco?</li>
+</ul>
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+SELECT pedido_id, SUM(valor_item) AS valor_total
+FROM itens_pedido
+GROUP BY pedido_id
+HAVING SUM(valor_item) <= 0;
+</pre>
+
+<h3>SQL para bugs comuns</h3>
+<ul>
+  <li>Verificar usuários com status inválido.</li>
+  <li>Encontrar transações sem usuário associado.</li>
+  <li>Detectar valores negativos em campos que não deveriam aceitar negativos.</li>
+</ul>
+
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+SELECT *
+FROM transacoes
+WHERE valor < 0;
+
+SELECT *
+FROM usuarios u
+LEFT JOIN transacoes t ON t.usuario_id = u.id
+WHERE t.id IS NULL
+  AND u.status = 'ativo';
+</pre>
+
+<h3>Exercício</h3>
+<p>Escreva três consultas para validar um fluxo de pedido:</p>
+<ol>
+  <li>Listar pedidos criados no último dia.</li>
+  <li>Mostrar o total de pedidos por status.</li>
+  <li>Listar pedidos cujo valor total não corresponde à soma dos itens.</li>
+</ol>`,
+          },
+          {
+            id: "l19",
+            title: "Testes de API",
+            duration: "60 min",
+            content: `<h2>Testes de API</h2>
+
+<h3>Objetivos de Aprendizado</h3>
+<ul>
+  <li>Entender por que testes de API são obrigatórios para QA moderno.</li>
+  <li>Conhecer as ferramentas mais usadas: Postman, REST Assured e Playwright APIRequest.</li>
+  <li>Aprender os conceitos de contract testing e validação de schema.</li>
+  <li>Escrever testes simples para endpoints REST.</li>
+</ul>
+
+<h3>Por que API é obrigatório?</h3>
+<p>APIs são o núcleo da maioria dos sistemas modernos. Mesmo QA manual precisa validar se os dados entre frontend e backend batem e se as regras do serviço estão corretas.</p>
+
+<ul>
+  <li><strong>Rapidez:</strong> testar APIs é mais rápido que testar UI para grande parte da lógica.</li>
+  <li><strong>Estabilidade:</strong> APIs mudam menos que interfaces visuais e são ideais para testes de regressão.</li>
+  <li><strong>Visibilidade:</strong> permitem validar exatamente o que o backend retorna.</li>
+</ul>
+
+<h3>Postman</h3>
+<p>Postman é a ferramenta mais citada e útil para testes manuais e automação leve de API.</p>
+
+<h4>Ponto de partida</h4>
+<ol>
+  <li>Crie uma nova coleção no Postman.</li>
+  <li>Adicione um request GET/POST.</li>
+  <li>Defina variáveis de ambiente para URL base e tokens.</li>
+</ol>
+
+<h4>Exemplo</h4>
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+GET https://api.exemplo.com/v1/pedidos/123
+Authorization: Bearer {{token}}
+</pre>
+
+<h4>Verificação de resposta</h4>
+<ul>
+  <li>Status code esperado: <code>200</code>.</li>
+  <li>Body deve conter a estrutura esperada e campos importantes como <code>id</code>, <code>status</code> e <code>valor</code>.</li>
+  <li>Verifique headers importantes como <code>Content-Type: application/json</code>.</li>
+</ul>
+
+<h3>Postman assertions</h3>
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+pm.test("Status code is 200", function () {
+  pm.response.to.have.status(200);
+});
+
+pm.test("Response has expected fields", function () {
+  var jsonData = pm.response.json();
+  pm.expect(jsonData).to.have.property("id");
+  pm.expect(jsonData).to.have.property("status", "concluida");
+});
+</pre>
+
+<h3>Hands-on prático no Postman</h3>
+<ol>
+  <li>Crie uma collection chamada <strong>Pedidos</strong> e uma variável de ambiente <strong>baseUrl</strong>.</li>
+  <li>Adicione uma requisição <strong>GET {{baseUrl}}/v1/pedidos/123</strong> com header <strong>Authorization: Bearer {{token}}</strong>.</li>
+  <li>Valide o status, o content-type e se o corpo possui os campos <strong>id</strong>, <strong>status</strong> e <strong>valor</strong>.</li>
+  <li>Salve a resposta como evidência e anexe o link do request no ticket de QA.</li>
+</ol>
+
+<h3>REST Assured</h3>
+<p>REST Assured é uma biblioteca Java muito usada em vagas SDET e em times que já têm automação com Java.</p>
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+import static io.restassured.RestAssured.*;
+import static org.hamcrest.Matchers.*;
+
+public class PedidoApiTest {
+  @Test
+  public void deveBuscarPedidoPorId() {
+    given()
+      .auth().oauth2(token)
+      .pathParam("id", 123)
+    .when()
+      .get("/v1/pedidos/{id}")
+    .then()
+      .statusCode(200)
+      .body("status", equalTo("concluida"))
+      .body("valor", greaterThan(0));
+  }
+}
+</pre>
+
+<h3>Playwright APIRequest</h3>
+<p>Playwright também suporta testes de API com o módulo <code>APIRequest</code>, o que é útil para times que usam Playwright para UI e querem estender para backend.</p>
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+const { test, expect } = require('@playwright/test');
+
+test('API de pedidos retorna status correto', async ({ request }) => {
+  const response = await request.get('/v1/pedidos/123', {
+    headers: { Authorization: 'Bearer ' + process.env.TOKEN }
+  });
+  expect(response.status()).toBe(200);
+  const body = await response.json();
+  expect(body.status).toBe('concluida');
+  expect(body.valor).toBeGreaterThan(0);
+});
+</pre>
+
+<h3>Contract testing e schema validation</h3>
+<p>Contract testing garante que o contrato entre serviços se mantenha estável. Schema validation valida que a resposta tem a estrutura esperada.</p>
+<ul>
+  <li>Postman: use <code>pm.response.to.have.jsonSchema(schema)</code> para validar a resposta.</li>
+  <li>REST Assured: use <code>matchesJsonSchemaInClasspath("pedido-schema.json")</code>.</li>
+  <li>Playwright: compare o JSON com um esquema ou use bibliotecas como <code>ajv</code>.</li>
+</ul>
+
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+const schema = {
+  type: 'object',
+  required: ['id', 'status', 'valor'],
+  properties: {
+    id: { type: 'number' },
+    status: { type: 'string' },
+    valor: { type: 'number' }
+  }
+};
+</pre>
+
+<h3>Exemplos de cenários de teste de API</h3>
+<ul>
+  <li>GET id válido deve retornar 200 e dados corretos.</li>
+  <li>GET id inexistente deve retornar 404.</li>
+  <li>POST com payload inválido deve retornar 400 e mensagem de erro adequada.</li>
+  <li>Validação de contrato: campos obrigatórios existem e os tipos estão corretos.</li>
+</ul>
+
+<h3>Exercício</h3>
+<ol>
+  <li>Crie um request no Postman para um endpoint GET e adicione uma verificação de status.</li>
+  <li>Adicione um teste de schema no Postman para validar a estrutura JSON.</li>
+  <li>Escreva um teste de API simples em REST Assured ou Playwright APIRequest para o mesmo endpoint.</li>
+</ol>`,
+          },
+          {
+            id: "l20",
+            title: "CI/CD para QA",
+            duration: "55 min",
+            content: `<h2>CI/CD para QA</h2>
+
+<h3>Objetivos de Aprendizado</h3>
+<ul>
+  <li>Entender por que QA precisa conhecer CI/CD.</li>
+  <li>Ver como Jenkins e GitHub Actions são usados para executar testes automaticamente.</li>
+  <li>Aprender o conceito de quality gates e shift-left testing.</li>
+  <li>Montar um pipeline simples que roda testes de API e regressão.</li>
+</ul>
+
+<h3>Por que CI/CD importa para QA?</h3>
+<p>O QA moderno não entrega apenas testes manuais. Ele garante que os testes rodem automaticamente em cada mudança e que o feedback chegue rápido ao time.</p>
+
+<ul>
+  <li><strong>Automação contínua:</strong> testes são executados a cada pull request ou merge.</li>
+  <li><strong>Feedback rápido:</strong> problemas aparecem antes da entrega em produção.</li>
+  <li><strong>Qualidade mensurável:</strong> testes com status e relatórios tornam o processo mais confiável.</li>
+</ul>
+
+<h3>Conceitos-chave</h3>
+<ul>
+  <li><strong>Pipeline:</strong> sequência de etapas que constroem, testam e liberam o software.</li>
+  <li><strong>Job:</strong> tarefa específica como <code>build</code>, <code>test</code> ou <code>deploy</code>.</li>
+  <li><strong>Trigger:</strong> evento que dispara o pipeline (<code>push</code>, <code>pull_request</code>, agendamento).</li>
+  <li><strong>Quality gate:</strong> conjunto de critérios que devem ser atendidos para permitir o merge.</li>
+</ul>
+
+<h3>Pipeline ideal para QA</h3>
+<p>Um pipeline útil para QA não precisa ser complexo desde o início. O ideal é separar etapas por valor: build, testes de API, testes de regressão e relatórios claros.</p>
+<ul>
+  <li><strong>Stage 1:</strong> instalação de dependências e validação de ambiente.</li>
+  <li><strong>Stage 2:</strong> testes de API e contrato.</li>
+  <li><strong>Stage 3:</strong> testes de regressão ou smoke tests críticos.</li>
+  <li><strong>Stage 4:</strong> publicação de relatórios e bloqueio de merge em caso de falhas críticas.</li>
+</ul>
+
+<h3>Exemplo GitHub Actions</h3>
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+name: QA Pipeline
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install
+      - name: Run API tests
+        run: npm run test:api
+      - name: Run regression tests
+        run: npm run test:regression
+</pre>
+
+<h3>Exemplo Jenkins</h3>
+<p>Jenkins também é muito usado em grandes empresas e permite orquestrar pipelines mais complexos.</p>
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+pipeline {
+  agent any
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+    stage('Install') {
+      steps {
+        sh 'npm install'
+      }
+    }
+    stage('API Tests') {
+      steps {
+        sh 'npm run test:api'
+      }
+    }
+    stage('Regression Tests') {
+      steps {
+        sh 'npm run test:regression'
+      }
+    }
+  }
+}
+</pre>
+
+<h3>O papel de QA no pipeline</h3>
+<ul>
+  <li>Definir quais suites de teste devem ser executadas automaticamente.</li>
+  <li>Escolher gatilhos de CI para validação de PRs e builds principais.</li>
+  <li>Revisar resultados de testes e relatórios de falha.</li>
+  <li>Manter o pipeline estável e remover testes obsoletos ou instáveis.</li>
+</ul>
+
+<h3>Quality gates</h3>
+<p>Quality gates são critérios que impedem a entrega quando algo está errado.</p>
+<ul>
+  <li>Todos os testes críticos passam.</li>
+  <li>Cobertura mínima obrigatória para áreas críticas.</li>
+  <li>Sem regressões conhecidas em funcionalidades essenciais.</li>
+  <li>Relatórios de falhas devem ser analisados antes do merge.</li>
+</ul>
+
+<h3>Exercício</h3>
+<ol>
+  <li>Desenhe um fluxo de CI/CD para um projeto de QA com etapas de testes de API, UI e relatórios.</li>
+  <li>Escreva um YAML básico de GitHub Actions que rode apenas os testes de API em pull requests.</li>
+  <li>Liste três critérios de quality gate relevantes para um time de QA.</li>
+</ol>`,
+          },
+          {
+            id: "l21",
+            title: "IA aplicada a QA",
+            duration: "45 min",
+            content: `<h2>IA aplicada a QA</h2>
+
+<h3>Objetivos de Aprendizado</h3>
+<ul>
+  <li>Entender como IA/LLMs podem apoiar o trabalho de QA.</li>
+  <li>Aprender a escrever prompts que gerem bons casos de teste e cenários de edge case.</li>
+  <li>Usar IA para revisar descrições de bugs, gerar checklists e melhorar cobertura de teste.</li>
+  <li>Conhecer limitações e como evitar confiar cegamente em IA.</li>
+</ul>
+
+<h3>Por que IA importa em QA?</h3>
+<p>IA não substitui QA, mas pode acelerar brainstorms de teste, sugerir casos de borda e ajudar a revisar documentação. Em 2026, saber usar IA de forma crítica é um diferencial importante.</p>
+
+<ul>
+  <li><strong>Geração de testes:</strong> IA pode sugerir cenários adicionais com base em requisitos.</li>
+  <li><strong>Revisão de bugs:</strong> ajuda a melhorar a descrição e o impacto do relatório.</li>
+  <li><strong>Prompt engineering:</strong> saber formular perguntas corretas é uma habilidade de QA.</li>
+</ul>
+
+<h3>Exemplo de prompt para gerar casos de teste</h3>
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+"Você é um QA profissional. Gere 8 casos de teste para uma funcionalidade de login que aceita email e senha, incluindo cenários de sucesso, falhas de validação, autenticação multifator e uso em dispositivo móvel. Use formato de tabela com caso, entrada e resultado esperado."
+</pre>
+
+<h3>Prompts práticos para QA com IA</h3>
+<p>Prompts melhores geram respostas melhores. Para QA, é útil pedir contexto, formato e restrições claras.</p>
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+"Você é um QA sênior. Gere 6 casos de teste para um formulário de cadastro com nome, e-mail, senha e confirmação. Inclua cenários de sucesso, validações de campo e erros de integração. Responda em formato de tabela."
+</pre>
+<p>Outro uso útil é pedir revisão de relatório de bug:</p>
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+"Reescreva este relatório de bug em linguagem objetiva, incluindo passo a passo, resultado esperado, resultado atual e impacto para o usuário."
+</pre>
+
+<h3>O que revisar em resultados de IA</h3>
+<ul>
+  <li>Verifique se os casos são relevantes para o produto e não genéricos demais.</li>
+  <li>Confirme se os cenários de borda são completos e se há cobertura de erros esperados.</li>
+  <li>Adapte a saída para a terminologia do seu time e requisitos específicos.</li>
+</ul>
+
+<h3>IA para testes exploratórios</h3>
+<p>IA pode ajudar a criar charters de sessão exploratória e a identificar áreas de risco.</p>
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+"Tenho um fluxo de checkout com cartão de crédito, parcelamento e cupom. Liste 5 hipóteses de falha que eu posso testar em uma sessão exploratória." 
+</pre>
+
+<h3>IA para documentação de QA</h3>
+<ul>
+  <li>Gerar sumários de bugs para Jira ou tickets.</li>
+  <li>Criar checklists de regressão baseados em requisitos.</li>
+  <li>Transformar histórias vagas em critérios de aceitação mais claros.</li>
+</ul>
+
+<h3>Limitações e cuidado</h3>
+<p>IA é uma ferramenta de apoio. Sempre valide as sugestões contra o domínio do produto, os requisitos reais e os dados do time.</p>
+<ul>
+  <li>IA pode inventar detalhes se os prompts forem vagos.</li>
+  <li>Prompts ruins geram resultados ruins.</li>
+  <li>Use IA como co-piloto, não como autoridade final.</li>
+</ul>
+
+<h3>Exercício</h3>
+<ol>
+  <li>Escreva um prompt que peça 5 casos de teste para um formulário de cadastro de usuário.</li>
+  <li>Use a resposta da IA para criar um checklist de casos manuais e 2 casos de API.</li>
+  <li>Revise a saída e ajuste para o contexto do produto, removendo sugestões irrelevantes.</li>
+</ol>`,
+          }
+        ]
+      },
+      {
         id: "c7",
         title: "Automação e Frameworks",
         lessons: [
           {
-            id: "l19",
+            id: "l28",
             title: "Escolhendo frameworks e arquiteturas de teste",
             duration: "45 min",
             content: `<h2>Escolhendo frameworks e arquiteturas de teste</h2>
@@ -842,7 +1383,7 @@ Funcionalidade: Login | Impacto: Alto | Probabilidade: Baixo | Prioridade: Médi
 <p>Analise um projeto simples (demo app) e proponha uma arquitetura de testes com justificativa.</p>`
           },
           {
-            id: "l20",
+            id: "l29",
             title: "Design de testes para automação sustentável",
             duration: "50 min",
             content: `<h2>Design de testes para automação sustentável</h2>
@@ -871,7 +1412,7 @@ Funcionalidade: Login | Impacto: Alto | Probabilidade: Baixo | Prioridade: Médi
         title: "Performance Testing",
         lessons: [
           {
-            id: "l21",
+            id: "l30",
             title: "Fundamentos de teste de performance",
             duration: "40 min",
             content: `<h2>Fundamentos de teste de performance</h2>
@@ -1393,7 +1934,7 @@ Prioridade: alta
             ]
           },
           {
-            id: "l17",
+            id: "l26",
             title: "CI/CD para apps mobile",
             duration: "50 min",
             content: `<h2>CI/CD para apps mobile</h2>
@@ -1423,7 +1964,7 @@ Prioridade: alta
             ]
           },
           {
-            id: "l18",
+            id: "l27",
             title: "Qualidade e métricas mobile",
             duration: "45 min",
             content: `<h2>Qualidade e métricas mobile</h2>

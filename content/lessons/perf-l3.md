@@ -5,61 +5,57 @@ duration: 60 min
 
 <h2>Testes de Carga: APIs e App Servers</h2>
 
-<h3>Objetivos</h3>
+<h3>🎯 Objetivos de Aprendizado</h3>
 <ul>
-  <li>Modelar cenários de usuários reais (login, navegação, transações)</li>
-  <li>Medir métricas chave: RPS, latência p50/p95/p99, erro por minuto</li>
-  <li>Identificar gargalos (DB, CPU, GC, conexões)</li>
+  <li>Modelar cenários de usuários reais (login, navegação, transações e checkout).</li>
+  <li>Medir métricas de desempenho essenciais: RPS (requisições por segundo), latências (p50/p95/p99) e taxa de erro por minuto.</li>
+  <li>Identificar gargalos de infraestrutura clássicos (banco de dados, CPU, Garbage Collector e exaustão de conexões).</li>
 </ul>
 
-<h3>Checklist de execução</h3>
-<ul>
-  <li>Definir baseline (sem cache, com cache).</li>
-  <li>Monitorar infra (CPU, memory, threads, DB).</li>
-  <li>Executar testes progressivos (soak, spike, ramp-up).</li>
+<h3>📊 Resumo Executivo</h3>
+<p>Testar a performance do backend (APIs e servidores de aplicação) exige modelagem realista. Um teste que dispara apenas requisições idênticas contra um único endpoint não simula a realidade de produção. Devemos planejar jornadas de usuários completas que misturem leituras e escritas para estressar todas as camadas da aplicação (banco de dados, cache, integradores de pagamento e processadores de fila).</p>
+
+<h3>📋 Checklist de Execução de Testes</h3>
+<ul style="margin:1rem 0; padding-left:1.2rem">
+  <li><strong>Definir Baseline:</strong> Execute um teste com carga reduzida para documentar a performance normal com e sem o uso de cache.</li>
+  <li><strong>Monitorar Infraestrutura:</strong> Acompanhe o consumo de CPU, memória RAM, filas de conexão de threads e comportamento do banco de dados.</li>
+  <li><strong>Estratégia de Rampa (Ramp-up/Ramp-down):</strong> Suba o número de usuários gradativamente para ver o ponto exato onde a performance começa a degradar.</li>
 </ul>
 
-<h3>Cenário sugerido</h3>
-<p>Simule um fluxo típico de API: login de usuário, consulta de dados e envio de uma transação simples. Isso ajuda a correlacionar picos de latência com chamadas específicas do backend.</p>
+<h3>💡 Cenário Sugerido de Negócio</h3>
+<p>Para obter métricas relevantes, simule um fluxo transacional comum: o usuário faz a autenticação, pesquisa um item, adiciona ao carrinho e finaliza o pedido. Isso permite analisar se operações pesadas (como geração de boletos ou gravação no banco) estão bloqueando requisições leves de leitura.</p>
 
-<h3>Exercício</h3>
-<ol>
-  <li>Execute um soak test de 1 hora com 50 VUs e registre as métricas de sistema.</li>
-  <li>Analise os resultados e proponha 3 ações para mitigação.</li>
-  <li>Compare a performance antes e depois de uma pequena otimização ou ajuste de cache.</li>
-</ol>
+<h3>💻 Comandos e Scripts de Exemplo</h3>
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+# k6: Executando teste de carga de API com parâmetros de ambiente
+K6_VUS=50 K6_DURATION=1h BASE_URL="https://jsonplaceholder.typicode.com" k6 run scripts/k6/basic-script.js
 
-<h3>Comandos de exemplo</h3>
-<pre style="background:#f5f5f5; padding:1rem">
-# k6 (HTTP API)
-K6_VUS=50 K6_DURATION=1h BASE_URL="https://test-api.example.com" k6 run scripts/k6/basic-script.js
-
-# JMeter (non-GUI)
-jmeter -n -t scripts/jmeter/test-plan.jmx -l scripts/jmeter/results.jtl -JBASE_URL="https://test-api.example.com"
+# Apache JMeter: Executando teste sem interface gráfica (GUI)
+jmeter -n -t scripts/jmeter/test-plan.jmx -l scripts/jmeter/results.jtl -JBASE_URL="https://jsonplaceholder.typicode.com"
 </pre>
 
-<h3>Métricas esperadas e análise rápida</h3>
-<ul>
-  <li><strong>Throughput (RPS):</strong> compare com o objetivo declarado (ex.: 200 RPS).</li>
-  <li><strong>Latência p95/p99:</strong> p95 < 500ms pode ser um bom objetivo para APIs simples.</li>
-  <li><strong>Error rate:</strong> idealmente < 1%; se >1% investigue timeouts e erros 5xx.</li>
+<h3>📈 Métricas Esperadas e Análise de Gargalos</h3>
+<ul style="margin:1rem 0; padding-left:1.2rem">
+  <li><strong>Throughput (RPS):</strong> Compare o volume de requisições processadas com as metas estabelecidas (ex: suportar 200 compras/segundo).</li>
+  <li><strong>Latência p95/p99:</strong> 95% ou 99% das respostas dos usuários devem retornar abaixo do limite acordado (ex: latência p95 < 500ms).</li>
+  <li><strong>Error Rate (Taxa de Erro):</strong> Monitorar taxas de erros acima de 1%. Erros 5xx geralmente apontam para falhas internas do servidor, e erros 408 indicam timeouts.</li>
 </ul>
 
-<h3>Sample outputs</h3>
-<p>Compare seus resultados com a amostra em <code>scripts/perf/examples/k6-summary-sample.json</code> e o exemplo de relatório JMeter em <code>scripts/perf/examples/jmeter-report-placeholder/index.html</code>.</p>
+<h3>🔍 Amostras de Outputs</h3>
+<p>Você pode comparar suas métricas locais de latência e RPS com a amostra em <code>scripts/perf/examples/k6-summary-sample.json</code> ou ver o modelo de relatório HTML do JMeter em <code>scripts/perf/examples/jmeter-report-placeholder/index.html</code>.</p>
 
-<h3>Why this matters</h3>
-<p>API and app server performance issues often emerge from a combination of slow back-end operations, bad connection handling, or insufficient capacity. This lesson helps QA teams tie load-test metrics directly to engineering fixes.</p>
+<h3>🏛️ Por que isso importa?</h3>
+<p>Os gargalos em APIs e servidores de aplicação geralmente surgem de uma combinação de consultas de banco lentas, gerenciamento ineficiente de conexões (pool esgotado) ou falta de CPU. Compreender estes problemas ajuda o time de QA a sugerir melhorias diretamente no código ou na arquitetura, em vez de apenas reportar que "o sistema caiu".</p>
 
-<h3>Resources</h3>
+<h3>📝 Exercício Prático</h3>
+<ol>
+  <li>Execute um teste k6 local de 2 minutos simulando 30 usuários virtuais.</li>
+  <li>Monitore a latência média e a latência de percentil 95 (p95).</li>
+  <li>Proponha duas hipóteses de melhoria de código caso a latência p95 ultrapasse 1 segundo (ex: adicionar cache na rota de listagem ou paginação nas queries).</li>
+</ol>
+
+<h3>📚 Recursos</h3>
 <ul>
-  <li><a href="https://k6.io/docs/using-k6/scenarios/" target="_blank">k6 scenarios</a></li>
-  <li><a href="https://jmeter.apache.org/usermanual/build-web-test-plan.html" target="_blank">JMeter Test Plan structure</a></li>
-</ul>
-
-<h3>Next steps</h3>
-<ul>
-  <li>Compare the test results with a baseline run and document any regressions.</li>
-  <li>Share the key findings with developers and classify them by impact.</li>
-  <li>Repeat the test after one optimization and compare the effect.</li>
+  <li><a href="https://k6.io/docs/using-k6/scenarios/" target="_blank">Criação de Cenários e Workloads no k6</a></li>
+  <li><a href="https://jmeter.apache.org/usermanual/build-web-test-plan.html" target="_blank">Construindo planos de teste de API no JMeter</a></li>
 </ul>

@@ -1,7 +1,7 @@
 [
   {
     "key": "track.starter.title",
-    "text": "Iniciação da Guilda"
+    "text": "Testes Básicos"
   },
   {
     "key": "track.starter.description",
@@ -38,6 +38,58 @@
   {
     "key": "lesson.l10.title",
     "text": "Matriz de Risco e Estratégia de Teste"
+  },
+  {
+    "key": "course.c13.title",
+    "text": "Ferramentas Técnicas de QA"
+  },
+  {
+    "key": "lesson.l17.title",
+    "text": "Git básico para QA"
+  },
+  {
+    "key": "lesson.l18.title",
+    "text": "SQL para QA"
+  },
+  {
+    "key": "lesson.l19.title",
+    "text": "Testes de API"
+  },
+  {
+    "key": "lesson.l20.title",
+    "text": "CI/CD para QA"
+  },
+  {
+    "key": "lesson.l21.title",
+    "text": "IA aplicada a QA"
+  },
+  {
+    "key": "course.c7.title",
+    "text": "Automação e Frameworks"
+  },
+  {
+    "key": "lesson.l28.title",
+    "text": "Escolhendo frameworks e arquiteturas de teste"
+  },
+  {
+    "key": "lesson.l29.title",
+    "text": "Design de testes para automação sustentável"
+  },
+  {
+    "key": "course.c8.title",
+    "text": "Performance Testing"
+  },
+  {
+    "key": "lesson.l30.title",
+    "text": "Fundamentos de teste de performance"
+  },
+  {
+    "key": "course.c9.title",
+    "text": "Security Testing Basics"
+  },
+  {
+    "key": "lesson.l22.title",
+    "text": "Noções básicas de segurança para QA"
   },
   {
     "key": "track.intermediate.title",
@@ -96,11 +148,11 @@
     "text": "Gestos, scroll e orientação"
   },
   {
-    "key": "lesson.l17.title",
+    "key": "lesson.l26.title",
     "text": "CI/CD para apps mobile"
   },
   {
-    "key": "lesson.l18.title",
+    "key": "lesson.l27.title",
     "text": "Qualidade e métricas mobile"
   },
   {
@@ -126,5 +178,29 @@
   {
     "key": "lesson.l12.title",
     "text": "Definition of Done e Qualidade em Agile"
+  },
+  {
+    "key": "course.c10.title",
+    "text": "Estratégia e Arquitetura de Testes"
+  },
+  {
+    "key": "lesson.l23.title",
+    "text": "Construindo uma estratégia de testes efetiva"
+  },
+  {
+    "key": "course.c11.title",
+    "text": "Observability e Métricas"
+  },
+  {
+    "key": "lesson.l24.title",
+    "text": "Métricas úteis para avaliar qualidade"
+  },
+  {
+    "key": "course.c12.title",
+    "text": "Mentoring e Coaching"
+  },
+  {
+    "key": "lesson.l25.title",
+    "text": "Como mentorar QAs e elevar o time"
   }
 ]

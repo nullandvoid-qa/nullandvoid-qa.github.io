@@ -1,0 +1,221 @@
+      "title": "Modules and npm basics",
+      "content": "<p>package.json, npm install, scripts. How to run Cypress/Playwright via npm run test.</p>"
+    },
+    "s10-l1": {
+      "title": "Why automate?",
+      "content": "<p>Fast regression, continuous feedback, frees time for exploratory testing. Do not automate everything — prioritize critical, stable flows.</p>"
+    },
+    "s10-l2": {
+      "title": "Selectors: CSS and data-testid",
+      "content": "<p>Prefer data-testid and accessible roles. Avoid fragile position-based XPath. Page Object Model (POM) organizes selectors.</p>"
+    },
+    "s10-l3": {
+      "title": "Hello World with Playwright",
+      "content": "<pre>npm init playwright@latest\n// tests/example.spec.js\nimport { test, expect } from '@playwright/test';\ntest('homepage', async ({ page }) => {\n  await page.goto('https://example.com');\n  await expect(page).toHaveTitle(/Example/);\n});</pre>"
+    },
+    "s11-l1": {
+      "title": "Levels: Junior, Mid, Senior",
+      "content": "<p>Junior: executes and learns. Mid: designs test and automation strategy. Senior: leads quality, mentors, defines test architecture.</p>"
+    },
+    "s11-l2": {
+      "title": "Building a QA portfolio",
+      "content": "<p>GitHub with automation projects, clear README, CI badge, documented test cases. Blog or LinkedIn with learnings.</p>"
+    },
+    "s11-l3": {
+      "title": "Interview preparation",
+      "content": "<p>Study test types, write a bug report live, explain the pyramid, show automation code. Practice test system design.</p>"
+    },
+    "s12-l1": {
+      "title": "Project: test a demo application",
+      "content": "<p>Use practice sites: Swag Labs, ParaBank, The Internet (Herokuapp). Document 10 manual cases + 3 automated ones.</p>"
+    },
+    "s12-l2": {
+      "title": "Delivery and checklist",
+      "content": "<p>Checklist: README, test cases, reported bugs, running automation, evidence. Publish on GitHub.</p>"
+    },
+    "w1-l1": {
+      "title": "Destructuring, spread, and arrays",
+      "content": "<p>Modern JavaScript features used in test frameworks. Use <code>map</code>, <code>filter</code>, and <code>reduce</code> to manipulate test data.</p>"
+    },
+    "w1-l2": {
+      "title": "Classes and Page Object Model",
+      "content": "<p>This lesson covers: <strong>Classes and Page Object Model</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
+    },
+    "w2-l1": {
+      "title": "Setup and first test",
+      "content": "<pre>npx cypress open\ncy.visit('/login')\ncy.get('[data-cy=email]').type('user@test.com')\ncy.get('[data-cy=password]').type('123456')\ncy.get('[data-cy=submit]').click()</pre>"
+    },
+    "w2-l2": {
+      "title": "Custom commands and fixtures",
+      "content": "<p>This lesson covers: <strong>Custom commands and fixtures</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
+    },
+    "w2-l3": {
+      "title": "Intercepting APIs in Cypress",
+      "content": "<p>Use <code>cy.intercept</code> to mock or stub APIs. Validate the UI while controlling backend responses.</p>"
+    },
+    "w2-l4": {
+      "title": "Cypress + CI (GitHub Actions)",
+      "content": "<p>This lesson covers: <strong>Cypress + CI (GitHub Actions)</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
+    },
+    "w3-l1": {
+      "title": "Installation and codegen",
+      "content": "<p>This lesson covers: <strong>Installation and codegen</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
+    },
+    "w3-l2": {
+      "title": "Resilient locators",
+      "content": "<p>This lesson covers: <strong>Resilient locators</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
+    },
+    "w3-l3": {
+      "title": "API testing with Playwright",
+      "content": "<p>Use the request fixture to test APIs in the same E2E project. Reuse authenticated state with storage state.</p>"
+    },
+    "w3-l4": {
+      "title": "Visual regression and trace viewer",
+      "content": "<p>Use <code>expect(page).toHaveScreenshot()</code>. The trace viewer helps debug failures with a complete timeline.</p>"
+    },
+    "w4-l1": {
+      "title": "Basic WebDriver",
+      "content": "<p>WebDriver basics: <code>driver = new ChromeDriver()</code>, <code>driver.get(url)</code>, <code>WebElement</code>, and selectors like <code>By.id</code>, <code>By.css</code>, and <code>By.xpath</code>. Use explicit waits with <code>WebDriverWait</code>.</p>"
+    },
+    "w4-l2": {
+      "title": "TestNG/JUnit and Page Factory",
+      "content": "<p>Use <code>@FindBy</code> and <code>PageFactory.initElements</code>. TestNG supports suites, groups, and parallel execution.</p>"
+    },
+    "w4-l3": {
+      "title": "Grid and remote execution",
+      "content": "<p>This lesson covers: <strong>Grid and remote execution</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
+    },
+    "w5-l1": {
+      "title": "Keyword-driven syntax",
+      "content": "<p>This lesson covers: <strong>Keyword-driven syntax</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
+    },
+    "w5-l2": {
+      "title": "SeleniumLibrary",
+      "content": "<p>This lesson covers: <strong>SeleniumLibrary</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
+    },
+    "w6-l1": {
+      "title": "CodeceptJS — simplified BDD",
+      "content": "<p>This lesson covers: <strong>CodeceptJS — simplified BDD</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
+    },
+    "w6-l2": {
+      "title": "TestCafé — no WebDriver",
+      "content": "<p>This lesson covers: <strong>TestCafé — no WebDriver</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
+    },
+    "w7-l1": {
+      "title": "Advanced Git for testing",
+      "content": "<p>Understand rebase vs. merge, stash, and cherry-pick. Use pre-commit hooks to run linting and tests automatically.</p>"
+    },
+    "w7-l2": {
+      "title": "Docker for test environments",
+      "content": "<p>This lesson covers: <strong>Docker for test environments</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
+    },
+    "w7-l3": {
+      "title": "Full pipeline",
+      "content": "<p>This lesson covers: <strong>Full pipeline</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
+    },
+    "w8-l1": {
+      "title": "Flaky tests: causes and fixes",
+      "content": "<p>This lesson covers: <strong>Flaky tests: causes and fixes</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
+    },
+    "w8-l2": {
+      "title": "Test automation project architecture",
+      "content": "<p>This lesson covers: <strong>Test automation project architecture</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
+    },
+    "w9-l1": {
+      "title": "axe-core and Lighthouse",
+      "content": "<p>Automate WCAG checks. <code>@axe-core/playwright</code> integrates accessibility testing into your E2E suite.</p>"
+    },
+    "w10-l1": {
+      "title": "Complete Swag Labs suite",
+      "content": "<p>This lesson covers: <strong>Complete Swag Labs suite</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
+    },
+    "a1-l1": {
+      "title": "REST, methods, and status codes",
+      "content": "<p>GET, POST, PUT, PATCH, DELETE. 2xx sucesso, 4xx cliente, 5xx servidor. Headers, body JSON, query params.</p>"
+    },
+    "a1-l2": {
+      "title": "Authentication: Bearer, OAuth, API Keys",
+      "content": "<p>JWT, OAuth2 flows, and Basic Auth. Learn how to test protected endpoints and refresh tokens.</p>"
+    },
+    "a1-l3": {
+      "title": "OpenAPI/Swagger",
+      "content": "<p>The API contract is documented. Generate Postman collections and validate responses against the schema.</p>"
+    },
+    "a2-l1": {
+      "title": "Collections and environments",
+      "content": "<p>This lesson covers: <strong>Collections and environments</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
+    },
+    "a2-l2": {
+      "title": "Tests tab and Newman CLI",
+      "content": "<p>Use <code>pm.test</code> assertions. Run <code>newman run collection.json</code> in headless CI.</p>"
+    },
+    "a2-l3": {
+      "title": "Mock servers and monitoring",
+      "content": "<p>This lesson covers: <strong>Mock servers and monitoring</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
+    },
+    "a3-l1": {
+      "title": "fetch and axios",
+      "content": "<p>Learn how to use <code>fetch</code> and <code>axios</code> to send HTTP requests from JavaScript tests and scripts.</p>"
+    },
+    "a3-l2": {
+      "title": "Supertest + Jest/Mocha",
+      "content": "<pre>request(app).get('/users').expect(200).expect(res => {\n  expect(res.body).toHaveLength(10);\n});</pre>"
+    },
+    "a4-l1": {
+      "title": "cy.request in Cypress",
+      "content": "<p>Use <code>cy.request</code> for pure API testing or to set up data via API before the UI E2E flow.</p>"
+    },
+    "a4-l2": {
+      "title": "Playwright request context",
+      "content": "<p>Use <code>APIRequestContext</code> for full CRUD operations. Combine it with UI tests in the same workflow.</p>"
+    },
+    "a5-l1": {
+      "title": "Given-When-Then with Rest Assured",
+      "content": "<pre>given().header(\"Auth\", token)\n  .when().get(\"/api/users\")\n  .then().statusCode(200)\n  .body(\"size()\", greaterThan(0));</pre>"
+    },
+    "a5-l2": {
+      "title": "Schema validation with JSON Schema",
+      "content": "<p>Validate the response structure automatically. A broken contract means the test fails.</p>"
+    },
+    "a6-l1": {
+      "title": "RequestsLibrary",
+      "content": "<p>Use keywords like <code>GET</code>, <code>POST</code>, and <code>PATCH</code> with status and JSON assertions.</p>"
+    },
+    "a7-l1": {
+      "title": "Pact and consumer-driven contracts",
+      "content": "<p>The consumer defines the expectation; the provider validates it. This helps avoid silent breaking changes.</p>"
+    },
+    "a7-l2": {
+      "title": "Negative testing and edge cases",
+      "content": "<p>This lesson covers: <strong>Negative testing and edge cases</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
+    },
+    "a8-l1": {
+      "title": "Testing GraphQL",
+      "content": "<p>Cover queries, mutations, and introspection. Validate errors and nested data.</p>"
+    },
+    "a8-l2": {
+      "title": "WebSockets basics",
+      "content": "<p>This lesson covers: <strong>WebSockets basics</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
+    },
+    "a9-l1": {
+      "title": "ReqRes or JSONPlaceholder suite",
+      "content": "<p>Complete CRUD coverage, mocked authentication, schema validation, and CI with Newman or Supertest.</p>"
+    },
+    "m1-l1": {
+      "title": "Web vs mobile differences",
+      "content": "<p>This lesson covers: <strong>Web vs mobile differences</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
+    },
+    "m1-l2": {
+      "title": "Emulators vs real devices",
+      "content": "<p>Android Studio AVD, Xcode Simulator. BrowserStack/Sauce Labs for cloud devices.</p>"
+    },
+    "m1-l3": {
+      "title": "App types: native, hybrid, PWA",
+      "content": "<p>This lesson covers: <strong>App types: native, hybrid, PWA</strong>.</p><p>Study the concepts, review the linked resources, and apply them in a real or demo project.</p>"
+    },
+    "m2-l1": {
+      "title": "Appium 2 installation",
+      "content": "<p>Set up the Appium server and the uiautomator2/xcuitest drivers. Use desired capabilities such as platformName, deviceName, and app.</p>"
+    },
+    "m2-l2": {
+
