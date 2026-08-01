@@ -23,6 +23,8 @@ O curso evoluiu bastante com a inclusão de módulos técnicos (Git, SQL, API, C
  - Postman collection adicionada: `content/lessons/jsonplaceholder_posts.postman_collection.json` e linkada em `content/lessons/l19.md`.
  - `content/lessons/l22.md` limpado (remoção de bloco duplicado) e conteúdo reorganizado.
 
+ - Novos templates adicionais: `content/templates/test-charter-template.md`, `content/templates/sql-schema-example.md`.
+
 ## 1. Base (Fundamentos de QA e Agile)
 - **Score**: 4.5/5
 - **Strengths**:
