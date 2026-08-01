@@ -136,3 +136,35 @@ Para alcançar o nível de **Melhor Curso de QA do Mundo**, a trilha deve guiar 
 ## Plano de Ação Imediato para Desenvolvimento
 1. **Padronizar cabeçalhos**: Realizar uma varredura nas lições `l1` a `l21` e nas lições `perf-*` para unificar os títulos usando emojis consistentes (ex: `🎯 Objetivos de Aprendizado`, `📝 Exercício Prático`, `📚 Recursos`).
 2. **Traduzir e expandir lições de Performance**: Realizar a tradução das lições `perf-l1` a `perf-l7` para o português e adicionar a seção de tipos de testes de carga.
+
+---
+
+## Próximo Passo: Padronização de Cabeçalhos (detalhes)
+
+- Objetivo: Unificar a identidade visual e pedagógica dos títulos em todas as lições para melhorar consistência e leitura.
+- Padrão proposto (a ser aplicado onde fizer sentido):
+  - `🎯 Objetivos de Aprendizado` — seção de objetivos
+  - `🔍 Por que isso importa` ou `🔍 Contexto` — breve justificativa (opcional)
+  - `📝 Exercício Prático` — exercícios e desafios
+  - `📚 Recursos` — leitura complementar e links
+  - `⏭️ Próxima Aula` — bloco final com link/contexto para a sequência
+
+- Arquivos alvo (primeira passada):
+  - `content/lessons/l1.md` .. `content/lessons/l22.md`
+  - `content/lessons/perf-l1.md` .. `content/lessons/perf-l7.md`
+
+- Checklist de alteração por arquivo (exemplo):
+  - Verificar presença de `Objetivos` → renomear para `🎯 Objetivos de Aprendizado` quando ausente
+  - Verificar seção de exercícios → renomear para `📝 Exercício Prático`
+  - Garantir bloco final `⏭️ Próxima Aula` com curto parágrafo de transição
+  - Linkar templates relevantes (test-case / bug-report / SQL schema) quando a lição pedir exercícios práticos
+
+- Processo de trabalho:
+  1. Fazer uma primeira varredura listando arquivos que não seguem o padrão (sem alterações).
+  2. Aplicar alterações em lotes pequenos (5–8 arquivos) e commitar cada lote.
+  3. Testar localmente abrindo `http://localhost:8000` e verificando renderização básica.
+  4. Push para `main` e atualizar este documento com o status de cada lote.
+
+---
+
+Vou começar aplicando a primeira passada de verificação e depois padronizar os títulos de até 8 arquivos por commit.
