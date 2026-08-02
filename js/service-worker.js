@@ -6,7 +6,7 @@
  * @global clients
  */
 
-const CACHE_VERSION = "v1.0.9";
+const CACHE_VERSION = "v1.0.10";
 const CACHE_NAME = `nullandvoid-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `nullandvoid-runtime-${CACHE_VERSION}`;
 
@@ -16,6 +16,11 @@ const NETWORK_FIRST_ASSETS = [
   "/js/auth.js",
   "/data/translations-en.js"
 ];
+
+function isNetworkFirstAsset(request) {
+  const url = new URL(request.url);
+  return NETWORK_FIRST_ASSETS.includes(url.pathname) || url.pathname.startsWith("/data/");
+}
 
 // Assets to cache on install
 const CRITICAL_ASSETS = [
@@ -45,10 +50,6 @@ const CRITICAL_ASSETS = [
   "/data/video-scripts.js"
 ];
 
-function isNetworkFirstAsset(request) {
-  const url = new URL(request.url);
-  return NETWORK_FIRST_ASSETS.includes(url.pathname);
-}
 
 // Install: cache critical assets
 self.addEventListener("install", (event) => {

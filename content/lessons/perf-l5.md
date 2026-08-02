@@ -3,7 +3,7 @@ title: Testes de Performance - Infraestrutura e Banco de Dados
 duration: 75 min
 ---
 
-<h2>Performance: Infraestrutura e Banco de Dados</h2>
+<h2>Testes de Performance - Infraestrutura e Banco de Dados</h2>
 
 <h3>🎯 Objetivos de Aprendizado</h3>
 <ul>
@@ -45,7 +45,7 @@ LIMIT 10;
 <h3>💻 Exemplo e outputs de Exercícios</h3>
 <p>Outputs de exemplo gerados pelo pipeline de testes e relatórios de slow queries estão disponíveis em <code>scripts/perf/examples/</code>. Compare o consumo de conexões simultâneas locais com os benchmarks.</p>
 
-<h3>🏛️ Por que isso importa?</h3>
+<h3>🔍 Por que isso importa</h3>
 <p>A instabilidade e degradação de performance reportada nos testes de carga quase sempre têm raiz na infraestrutura ou no banco de dados. Um QA apto a inspecionar consultas lentas e sugerir planos de ação técnicos de banco acelera a resolução de falhas e contribui ativamente no refinamento da arquitetura do time.</p>
 
 <h3>📝 Exercício Prático</h3>

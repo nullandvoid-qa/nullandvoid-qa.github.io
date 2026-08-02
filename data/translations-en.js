@@ -328,6 +328,10 @@ window.TG_QAWAY_EN = {
       "title": "QA in CI/CD",
       "content": "<p>Automated tests run in the pipeline. QA defines gates: smoke on PR, regression on main, E2E before deploy.</p>"
     },
+    "l31": {
+      "title": "Practical automation exercises and acceptance criteria",
+      "content": "<p>Practice turning manual scenarios into acceptance criteria, refactoring costly E2E flows into integration or contract checks, and creating a small Page Object.</p>"
+    },
     "s7-l1": {
       "title": "Jira for QAs",
       "content": "<p>Backlog, sprints, bugs, workflows. Learn to filter, use basic JQL, and link bugs to stories.</p>"

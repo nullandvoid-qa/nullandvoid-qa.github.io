@@ -3,7 +3,7 @@ title: Testes de Performance - Testes de Carga em APIs e Servidores de Aplicaç�
 duration: 60 min
 ---
 
-<h2>Testes de Carga: APIs e Servidores de Aplicação</h2>
+<h2>Testes de Performance - Testes de Carga em APIs e Servidores de Aplicação</h2>
 
 <h3>🎯 Objetivos de Aprendizado</h3>
 <ul>
@@ -44,7 +44,7 @@ jmeter -n -t scripts/jmeter/test-plan.jmx -l scripts/jmeter/results.jtl -JBASE_U
 <h3>🔍 Amostras de Outputs</h3>
 <p>Você pode comparar suas métricas locais de latência e RPS com a amostra em <code>scripts/perf/examples/k6-summary-sample.json</code> ou ver o modelo de relatório HTML do JMeter em <code>scripts/perf/examples/jmeter-report-placeholder/index.html</code>.</p>
 
-<h3>🏛️ Por que isso importa?</h3>
+<h3>🔍 Por que isso importa</h3>
 <p>Os gargalos em APIs e servidores de aplicação geralmente surgem de uma combinação de consultas de banco lentas, gerenciamento ineficiente de conexões (pool esgotado) ou falta de CPU. Compreender estes problemas ajuda o time de QA a sugerir melhorias diretamente no código ou na arquitetura, em vez de apenas reportar que "o sistema caiu".</p>
 
 <h3>📝 Exercício Prático</h3>

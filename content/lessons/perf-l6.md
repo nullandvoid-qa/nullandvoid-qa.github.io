@@ -3,7 +3,7 @@ title: Testes de Performance - Integração de CI e Observabilidade
 duration: 60 min
 ---
 
-<h2>Integração de CI e Observabilidade para Performance</h2>
+<h2>Testes de Performance - Integração de CI e Observabilidade</h2>
 
 <h3>🎯 Objetivos de Aprendizado</h3>
 <ul>
@@ -41,7 +41,7 @@ jobs:
 <h3>⏭️ Próxima Aula</h3>
 <p>Na próxima aula, vamos ver <strong>Testes de Performance - Análise e Mitigação</strong>.</p>
 
-<h3>📈 O que é Observabilidade?</h3>
+<h3>💡 Por que isso importa</h3>
 <p>Executar o teste de carga no pipeline não é suficiente; precisamos enxergar o comportamento da máquina que hospeda o sistema. A observabilidade permite correlacionar o tráfego do teste (RPS e latência) com as métricas de infraestrutura:</p>
 <ul style="margin:1rem 0; padding-left:1.2rem">
   <li><strong>Prometheus:</strong> Banco de dados de séries temporais que coleta e armazena métricas de sistemas e serviços.</li>

@@ -31,6 +31,7 @@ Este é um curso **completamente gratuito** de Quality Assurance (QA) desenhado 
 **Aula 3: SDLC e onde o QA se encaixa**
 - Visualização do SDLC com QA integrado
 - Conceito de Shift-Left
+- Modelos de desenvolvimento: Waterfall, Ágil e V-Model
 - Estudos de caso reais de shift-left
 - Matriz de impacto de bugs por fase
 - ⏱️ 55 minutos
@@ -39,13 +40,15 @@ Este é um curso **completamente gratuito** de Quality Assurance (QA) desenhado 
 **Aula 4: Testes funcionais vs não-funcionais**
 - Matriz de testes detalhada com ferramentas
 - Exemplos práticos por tipo
-- Checklist prático de testes
+- Checklist vs script de teste
+- Bugs sem atrito e mentalidade de qualidade
 - ⏱️ 55 minutos
 
 **Aula 5: Partição de Equivalência e Valor Limite**
 - Exemplos avançados de partição
 - Casos reais de e-commerce e sistemas de reserva
 - Tabela de decisão avançada
+- Transição de estados e cenários de fluxo
 - Erros comuns e como evitá-los
 - ⏱️ 55 minutos
 
@@ -81,11 +84,13 @@ Este é um curso **completamente gratuito** de Quality Assurance (QA) desenhado 
 **Aula 10: Matriz de Risco e Estratégia de Teste**
 - Exemplos de priorização real
 - Matriz de risco interativa
+- Plano de teste, rastreabilidade e relatório de bugs
 - Estratégia de teste baseada em risco
 - ⏱️ 55 minutos
 
 **Aula 11: Testes de Regressão e Automação Inteligente**
 - Framework de automação (pirâmide de testes)
+- POM, boas práticas e testes de contrato
 - ROI de automação por nível
 - Quando automatizar vs quando manual
 - Estrutura de suite de regressão
@@ -128,6 +133,7 @@ Este é um curso **completamente gratuito** de Quality Assurance (QA) desenhado 
 - ✅ Aplicar shift-left no seu dia a dia
 - ✅ Comunicar valor de qualidade para stakeholders
 - ✅ Priorizar testes baseado em risco e impacto
+- ✅ Estimar esforço e risco de teste com mais clareza
 - ✅ Contribuir em Three Amigos com valor real
 
 ### **Resultados Práticos:**
@@ -206,6 +212,7 @@ Cada aula segue uma estrutura consistente:
 - Definition of Done por tipo de projeto
 - Checklist de preparação para Three Amigos
 - Matriz de risco interativa
+- Template de relatório de bugs e rastreabilidade
 
 ### **🎯 Exercícios Práticos:**
 - Classificação de atividades (QA vs QC vs Tester)

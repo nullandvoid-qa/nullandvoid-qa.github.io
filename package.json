@@ -9,6 +9,7 @@
     "test:verbose": "jest --coverage --verbose",
     "test:e2e": "npx playwright test",
     "validate:tracks": "node scripts/validate-tracks.js",
+    "validate:lessons": "node scripts/validate-lessons.js",
     "lint:js": "eslint js/ --ext .js",
     "lint:css": "stylelint css/**/*.css",
     "lint:html": "htmlhint *.html",

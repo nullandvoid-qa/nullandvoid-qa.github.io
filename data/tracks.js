@@ -1404,6 +1404,22 @@ pipeline {
 
 <h3>✏️ Exercício</h3>
 <p>Refatore 2 testes E2E de um projeto demo para reduzir flakiness usando fixtures e waits explícitos.</p>`
+          },
+          {
+            id: "l31",
+            title: "Exercícios práticos — automação e critérios de aceite",
+            duration: "60 min",
+            content: `<h2>Exercícios práticos — automação e critérios de aceite</h2>
+
+<h3>🎯 Objetivos</h3>
+<ul>
+  <li>Transformar cenários manuais em critérios de aceite testáveis</li>
+  <li>Converter testes E2E caros em integração ou contrato quando possível</li>
+  <li>Praticar um POM mínimo e um teste de integração simples</li>
+</ul>
+
+<h3>🧪 Exercício</h3>
+<p>Escreva critérios de aceite, proponha uma refatoração E2E → integração e implemente um POM com um teste de integração.</p>`
           }
         ]
       },
@@ -2291,6 +2307,38 @@ História: Como usuário, quero recuperar minha senha para continuar usando a pl
         id: "c10",
         title: "Estratégia e Arquitetura de Testes",
         lessons: [
+          {
+            id: "l32",
+            title: "Modelos de desenvolvimento — Waterfall, Ágil e V-Model",
+            duration: "40 min",
+            content: `<h2>Modelos de desenvolvimento — Waterfall, Ágil e V-Model</h2>
+
+<h3>🎯 Objetivos</h3>
+<ul>
+  <li>Comparar Waterfall, Ágil e V-Model</li>
+  <li>Entender como cada modelo impacta teste e risco</li>
+  <li>Escolher boas práticas de QA para cada contexto</li>
+</ul>
+
+<h3>🧪 Exercício</h3>
+<p>Compare um plano de teste para uma feature simples em cada modelo e destaque o impacto em custo de mudança.</p>`
+          },
+          {
+            id: "l33",
+            title: "Cobertura de mercado, checklist vs script e acessibilidade",
+            duration: "60 min",
+            content: `<h2>Cobertura de mercado, checklist vs script e acessibilidade</h2>
+
+<h3>🎯 Objetivos</h3>
+<ul>
+  <li>Mapear cobertura de mercado com risco e valor</li>
+  <li>Diferenciar checklist, script e automação</li>
+  <li>Aplicar princípios de usabilidade e acessibilidade</li>
+</ul>
+
+<h3>🧪 Exercício</h3>
+<p>Escolha um fluxo crítico do produto e monte um checklist com transições de estado, riscos e critérios de acessibilidade.</p>`
+          },
           {
             id: "l23",
             title: "Construindo uma estratégia de testes efetiva",

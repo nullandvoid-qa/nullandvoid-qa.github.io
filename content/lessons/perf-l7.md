@@ -3,7 +3,7 @@ title: Testes de Performance - Análise e Mitigação
 duration: 75 min
 ---
 
-<h2>Análise de Resultados e Planos de Mitigação</h2>
+<h2>Testes de Performance - Análise e Mitigação</h2>
 
 <h3>🎯 Objetivos de Aprendizado</h3>
 <ul>
@@ -52,9 +52,17 @@ Recomendações Técnicas:
 <h3>⏭️ Próxima Aula</h3>
 <p>Esta é a última aula do track de Performance; faremos uma revisão e exercícios práticos para consolidar os conceitos aprendidos.</p>
 <h3>🔍 Amostras e Relatórios</h3>
-<p>Você pode utilizar o template de relatório em <code>scripts/perf/perf-report-template.md</code> e comparar com os dados de exemplo estruturados em <code>scripts/perf/examples</code> para estruturar sua própria documentação de testes.</p>
+<p>Você pode utilizar o template de relatório em <code>scripts/perf-report-template.md</code> e comparar com os dados de exemplo estruturados em <code>scripts/perf/examples</code> para estruturar sua própria documentação de testes.</p>
 
-<h3>🏛️ Por que isso importa?</h3>
+<h4>Checklist rápido para relatório de performance</h4>
+<ul>
+  <li>Resumo executivo com verdict claro: passou ou falhou contra o SLA.</li>
+  <li>Métricas principais: RPS, latência p50/p95/p99 e taxa de erro.</li>
+  <li>Top 3 endpoints lentos com evidência e timestamp.</li>
+  <li>Recomendações técnicas priorizadas em curto, médio e longo prazo.</li>
+</ul>
+
+<h3>🔍 Por que isso importa</h3>
 <p>Se as métricas e conclusões de performance não forem comunicadas de forma clara e o fluxo de correção não for planejado, os testes se tornam um desperdício de tempo. Saber documentar e mediar a resolução de gargalos de escalabilidade garante que a qualidade seja integrada como meta de toda a equipe.</p>
 
 <h3>📝 Exercício Prático</h3>

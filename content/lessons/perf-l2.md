@@ -3,7 +3,7 @@ title: Testes de Performance - k6 e testes de API
 duration: 75 min
 ---
 
-<h2>k6 para testes de carga modernos</h2>
+<h2>Testes de Performance - k6 e testes de API</h2>
 
 <h3>🎯 Objetivos de Aprendizado</h3>
 <ul>
@@ -13,7 +13,7 @@ duration: 75 min
   <li>Executar testes locais e analisar as principais latências (p50, p95 e p99).</li>
 </ul>
 
-<h3>📊 Resumo Executivo</h3>
+<h3>💡 Por que isso importa</h3>
 <p>O k6 é uma ferramenta moderna de testes de carga focada em desenvolvedores e QAs técnicos. Desenvolvido em Go, mas programado em JavaScript, ele é leve, rápido e se integra perfeitamente a pipelines de CI/CD. Diferente do JMeter, o k6 permite configurar cenários complexos de carga e critérios de qualidade (como limites de erro ou latência) diretamente via código.</p>
 
 <h3>🛠️ Como funcionam os Limites (Thresholds) no k6?</h3>

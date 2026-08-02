@@ -118,4 +118,85 @@ duration: 60 min
     expect(result.duration).toBe('60 min');
     expect(result.content).toContain('<h1>POO para QA</h1>');
   });
+
+  test('loads the new practical automation lesson from markdown', async () => {
+    const { loadLessonContent } = require('../lesson-content.js');
+
+    const markdown = `---
+title: Exercícios Práticos — Automação e Critérios de Aceite
+duration: 60 min
+---
+
+# Exercícios Práticos
+`;
+
+    const result = await loadLessonContent(
+      { id: 'l31' },
+      {
+        fetchImpl: async () => ({
+          ok: true,
+          text: async () => markdown,
+        }),
+      },
+    );
+
+    expect(result.title).toBe('Exercícios Práticos — Automação e Critérios de Aceite');
+    expect(result.duration).toBe('60 min');
+    expect(result.content).toContain('<h1>Exercícios Práticos</h1>');
+  });
+
+  test('loads the new market coverage and contract lesson from markdown', async () => {
+    const { loadLessonContent } = require('../lesson-content.js');
+
+    const markdown = `---
+title: Cobertura de Mercado, Risco e Contratos de API
+duration: 55 min
+---
+
+# Cobertura e contratos
+`;
+
+    const result = await loadLessonContent(
+      { id: 'l34' },
+      {
+        fetchImpl: async () => ({
+          ok: true,
+          text: async () => markdown,
+        }),
+      },
+    );
+
+    expect(result.title).toBe('Cobertura de Mercado, Risco e Contratos de API');
+    expect(result.duration).toBe('55 min');
+    expect(result.content).toContain('<h1>Cobertura e contratos</h1>');
+  });
+
+  test('recognizes additional lesson markdown files by default path', async () => {
+    const { loadLessonContent, resolveMarkdownPath } = require('../lesson-content.js');
+
+    expect(resolveMarkdownPath('l30')).toBe('/content/lessons/l30.md');
+    expect(resolveMarkdownPath('l35')).toBe('/content/lessons/l35.md');
+
+    const markdown = `---
+title: Fundamentos de teste de performance
+duration: 50 min
+---
+
+# Performance Fundamentals
+`;
+
+    const result = await loadLessonContent(
+      { id: 'l30' },
+      {
+        fetchImpl: async () => ({
+          ok: true,
+          text: async () => markdown,
+        }),
+      },
+    );
+
+    expect(result.title).toBe('Fundamentos de teste de performance');
+    expect(result.duration).toBe('50 min');
+    expect(result.content).toContain('<h1>Performance Fundamentals</h1>');
+  });
 });

@@ -8,7 +8,7 @@ window.TG_PERFORMANCE_TRACK = {
   slug: "performance-testing",
   title: "Arena de Carga",
   icon: "perf",
-  color: "#f59e0b",
+  color: "#10b981",
   description: "Domine testes de performance: load testing, stress testing, profiling e otimização com K6, JMeter e ferramentas reais.",
   level: "Sênior",
   modules: 3,

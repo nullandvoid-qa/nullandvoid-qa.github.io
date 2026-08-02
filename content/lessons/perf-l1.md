@@ -3,7 +3,7 @@ title: Testes de Performance - Introdução e JMeter
 duration: 75 min
 ---
 
-<h2>Testes de Performance — Introdução</h2>
+<h2>Testes de Performance - Introdução e JMeter</h2>
 
 <h3>🎯 Objetivos de Aprendizado</h3>
 <ul>
@@ -13,7 +13,7 @@ duration: 75 min
   <li>Interpretar relatórios HTML de resultados e identificar gargalos iniciais de desempenho.</li>
 </ul>
 
-<h3>📊 Resumo Executivo</h3>
+<h3>💡 Por que isso importa</h3>
 <p>Testes de performance medem como o sistema se comporta sob carga e estresse. Não basta validar se uma funcionalidade funciona (funcional); é preciso saber se ela é rápida e estável quando centenas de usuários a acessam simultaneamente. O Apache JMeter é uma das ferramentas mais maduras da indústria para simular tráfego HTTP em grande escala, testar Web APIs e gerar relatórios visuais detalhados.</p>
 
 <h3>📈 Conceitos Fundamentais</h3>

@@ -3,7 +3,7 @@ title: Testes de Performance - Frontend e Realidade de Dispositivos Reais
 duration: 60 min
 ---
 
-<h2>Performance do Frontend e Testes em Browsers reais</h2>
+<h2>Testes de Performance - Frontend e Realidade de Dispositivos Reais</h2>
 
 <h3>🎯 Objetivos de Aprendizado</h3>
 <ul>
@@ -46,10 +46,20 @@ npx @lhci/cli@0.8.0 autorun --url=http://localhost:8000 --chrome-flags="--no-san
   <li><strong>Emuladores vs Dispositivos Reais:</strong> Testes em emuladores Chrome do computador rodam no processador potente do seu PC. Em celulares reais de baixo custo, a renderização do JavaScript pode demorar até 10 vezes mais.</li>
 </ul>
 
+<h3>📊 Interpretando métricas e thresholds</h3>
+<p>A leitura de uma métrica isolada não basta. O QA precisa comparar o resultado com o contexto de negócio, a experiência do usuário e os limites de SLA.</p>
+<ul style="margin:1rem 0; padding-left:1.2rem">
+  <li><strong>LCP:</strong> abaixo de 2,5s costuma ser considerado bom para a maioria das páginas; acima disso, a percepção de lentidão cresce rapidamente.</li>
+  <li><strong>CLS:</strong> valores abaixo de 0,1 são desejáveis; mudanças visuais inesperadas geram frustração e cliques errados.</li>
+  <li><strong>TTFB:</strong> um valor acima de 600ms pode indicar gargalo de servidor, rede ou cache ruim, especialmente em páginas com conteúdo dinâmico.</li>
+  <li><strong>SLA e thresholds:</strong> sempre defina limites para a operação crítica, como tempo máximo de carregamento, taxa de erro e disponibilidade, e compare as métricas com esses limites antes de fechar uma release.</li>
+</ul>
+<p>Quando uma métrica piora, a pergunta correta não é apenas “o número subiu?” mas “o que mudou no frontend, no backend ou na rede para gerar esse impacto?”.</p>
+
 <h3>🔍 Amostras e Outputs</h3>
 <p>Consulte a pasta <code>scripts/perf/examples/</code> para visualizar relatórios estatísticos de comparação entre emulador móvel e dispositivo real para análise de performance de rede e renderização.</p>
 
-<h3>🏛️ Por que isso importa?</h3>
+<h3>🔍 Por que isso importa</h3>
 <p>O tempo de carregamento visual dita o sucesso ou fracasso de um produto digital. Medir as métricas de Core Web Vitals e realizar validações cruzadas entre emuladores locais e aparelhos reais ajuda o time de QA a identificar problemas de lentidão que seriam ignorados se testados apenas em computadores potentes de desenvolvimento.</p>
 
 <h3>📝 Exercício Prático</h3>
