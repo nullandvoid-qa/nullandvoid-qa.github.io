@@ -6,6 +6,7 @@ describe('TG_CERTIFICATES Module', () => {
   beforeEach(() => {
     localStorage.clear();
     document.body.innerHTML = '';
+    delete window.NVAuth;
 
     // Re-import certificates.js to ensure fresh global state
     delete require.cache[require.resolve('../certificates.js')];
@@ -94,6 +95,34 @@ describe('TG_CERTIFICATES Module', () => {
     const blob = await window.TG_CERTIFICATES.generateShareableCertificate('web', 'Google User', completedDate);
 
     expect(blob).toEqual(expect.objectContaining({ type: 'image/png' }));
+  });
+
+  test('downloadShareableCertificate persists a certificate entry after export', async () => {
+    window.NVAuth = {
+      isAuthenticated: true,
+      getUserName: () => 'Google User',
+    };
+
+    if (!window.URL.createObjectURL) {
+      window.URL.createObjectURL = jest.fn(() => 'blob:test-share');
+    }
+    if (!window.URL.revokeObjectURL) {
+      window.URL.revokeObjectURL = jest.fn();
+    }
+
+    const createObjectURL = jest.spyOn(URL, 'createObjectURL').mockReturnValue('blob:test-share');
+    const revokeObjectURL = jest.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
+    const generateShareableCertificate = jest.spyOn(window.TG_CERTIFICATES, 'generateShareableCertificate').mockResolvedValue(new Blob(['png-data'], { type: 'image/png' }));
+
+    await window.TG_CERTIFICATES.downloadShareableCertificate('web', 'Google User', new Date('2026-07-19T11:00:00Z'));
+
+    const stored = JSON.parse(localStorage.getItem('testers-guild-certificates') || '[]');
+    expect(stored).toHaveLength(1);
+    expect(stored[0]).toEqual(expect.objectContaining({ trackId: 'web', userName: 'Google User' }));
+
+    createObjectURL.mockRestore();
+    revokeObjectURL.mockRestore();
+    generateShareableCertificate.mockRestore();
   });
 
   test('saveCertificate persists certificate with the provided user name or blank string', () => {

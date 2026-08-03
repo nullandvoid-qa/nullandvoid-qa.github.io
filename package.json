@@ -12,6 +12,7 @@
     "validate:lessons": "node scripts/validate-lessons.js",
     "validate:i18n": "node scripts/sync-translations.js",
     "validate:all": "npm run lint && npm run validate:tracks && npm run validate:lessons && npm run validate:i18n && npm test",
+    "validate:links": "node scripts/verify-links.js",
     "lint:js": "eslint js/ --ext .js",
     "lint:css": "stylelint css/**/*.css",
     "lint:html": "htmlhint *.html",

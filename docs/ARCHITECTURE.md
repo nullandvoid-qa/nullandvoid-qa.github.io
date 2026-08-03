@@ -402,8 +402,8 @@ document.querySelectorAll(".sidebar-lesson").forEach((el) => {
 All scripts use `defer` attribute for non-blocking loading:
 
 ```html
-<script src="data/tracks.js" defer></script>
-<script src="js/app.js" defer></script>
+<script src="../data/tracks.js" defer></script>
+<script src="../js/app.js" defer></script>
 ```
 
 ### DOM Manipulation
@@ -417,6 +417,13 @@ All scripts use `defer` attribute for non-blocking loading:
 - **Global Variables:** Content loaded as window globals
 - **Lazy Loading:** Could be implemented for large data files
 - **Caching:** localStorage caches user progress
+
+### Project documentation
+
+- See [../CONTRIBUTING.md](../CONTRIBUTING.md) for contribution guidance.
+- See [../CODE_OF_CONDUCT.md](../CODE_OF_CONDUCT.md) for community expectations.
+- See [../SECURITY.md](../SECURITY.md) for reporting security issues.
+- See [../I18N_ANALYSIS_REPORT.md](../I18N_ANALYSIS_REPORT.md) for the latest i18n audit summary.
 
 ## Security Considerations
 

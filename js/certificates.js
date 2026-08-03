@@ -447,6 +447,7 @@
         const trackTitle = trackData ? trackData.title : trackId;
         const sanitizedTitle = String(trackTitle || trackId).replace(/[^a-zA-Z0-9\-_]/g, '_');
         const blob = await this.generateShareableCertificate(trackId, userName, completedDate);
+        this.saveCertificate(trackId, userName, completedDate);
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;

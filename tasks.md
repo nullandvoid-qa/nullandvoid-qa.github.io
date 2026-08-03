@@ -14,10 +14,10 @@ Este arquivo serve como a fonte da verdade para o progresso do projeto, detalhan
 - 2026-08-03 — Adicionados gabaritos a 10 lições amostradas; inseridos metadados de revisão (`reviewedAt`, `reviewAuthor`, `reviewStatus`) nas lições afetadas; executada validação de estrutura com `node scripts/validate-lessons.js` (passou para 42 arquivos).
 
 
-[ ] **Revisar e atualizar a experiência de certificado**
-  - Adicionar export social-ready do certificado (imagem para LinkedIn) além do fluxo de PDF atual.
-  - Incluir botão de download de imagem no modal de certificado.
-  - Cobrir o comportamento com testes de regressão.
+[x] **Revisar e atualizar a experiência de certificado**
+  - [x] Adicionar export social-ready do certificado (imagem para LinkedIn) além do fluxo de PDF atual.
+  - [x] Incluir botão de download de imagem no modal de certificado.
+  - [x] Cobrir o comportamento com testes de regressão.
 
 ## 🛠️ Ajustes de Qualidade e Código
 
@@ -41,14 +41,15 @@ Este arquivo serve como a fonte da verdade para o progresso do projeto, detalhan
 - [ ] **Criar checklist final de go-live**
  - [ ] **Criar checklist final de go-live** (em andamento)
   - [ ] Validar estrutura das lições e gabaritos (`node scripts/validate-lessons.js` deve passar)
-  - [ ] Confirmar traduções sincronizadas (`node scripts/sync-translations.js` deve reportar cobertura completa)
-  - [ ] Rodar validações globais: `npm run validate:all` (tracks, lessons, i18n)
-  - [ ] Executar testes: `npm test` — todas as suites devem passar
-  - [ ] Lint e qualidade: `npm run lint:js` — nenhum erro crítico
-  - [ ] Servir site localmente e smoke-test das páginas críticas (index, lições, certificado)
-  - [ ] Verificar export de certificado (PDF e imagem social-ready) manualmente
-  - [ ] Rodar verificador de links internos (ex: `linkinator` ou verificação manual)
-  - [ ] Atualizar `README.md` / notas de release com comandos e mudanças importantes
+  - [x] Validar estrutura das lições e gabaritos (`node scripts/validate-lessons.js` deve passar)
+  - [x] Confirmar traduções sincronizadas (`node scripts/sync-translations.js` deve reportar cobertura completa)
+  - [x] Rodar validações globais: `npm run validate:all` (tracks, lessons, i18n)
+  - [x] Executar testes: `npm test` — todas as suites devem passar
+  - [x] Lint e qualidade: `npm run lint:js` — nenhum erro crítico
+  - [x] Servir site localmente e smoke-test das páginas críticas (index, lições, certificado)
+  - [x] Verificar export de certificado (PDF e imagem social-ready) manualmente
+  - [x] Rodar verificador de links internos (ex: `linkinator` ou verificação manual)
+  - [x] Atualizar `README.md` / notas de release com comandos e mudanças importantes
   - [ ] Abrir PR com descrição, checklist e reviewers atribuídos
   - [ ] Após merge: monitorar CI e abrir issues para regressões detectadas
 

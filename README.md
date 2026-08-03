@@ -51,6 +51,7 @@ python3 -m http.server 8000
 npm run validate:tracks
 npm run validate:lessons
 npm run validate:i18n
+npm run validate:links
 npm run validate:all
 npm test
 npm run lint
@@ -76,7 +77,7 @@ npm run test:e2e
 ## ✨ Recursos
 
 - ✅ **130+ aulas estruturadas** com exemplos reais
-- ✅ **Certificados PDF** verificáveis ao completar trilhas
+- ✅ **Certificados PDF e imagem social-ready** verificáveis ao completar trilhas
 - ✅ **12+ labs curados** com dificuldade progressiva (Sauce Demo, ReqRes, OWASP, etc)
 - ✅ **Comunidade Discord** com 500+ QAs aprendendo juntos
 - ✅ **Glossário interativo** com 50+ termos essenciais
@@ -109,10 +110,22 @@ npm run test:e2e
 ## 📊 Qualidade
 
 - ✅ ESLint: 0 erros
-- ✅ Jest tests: 4 test files
+- ✅ Jest tests: cobertura de regressão para certificados e UI
 - ✅ Lighthouse A11y: 95+
 - ✅ Mobile responsive: 320px-1920px
 - ✅ Cross-browser: Chrome, Firefox, Safari, Edge
+- ✅ Validação automática de trilhas, lições, i18n e links internos
+
+## 🚀 Release highlights
+
+### 2026-08-03
+
+- Adicionado export social-ready de certificado em PNG para compartilhamento em redes sociais, além do fluxo de PDF existente.
+- Incluído fluxo de download de imagem no painel e no modal de certificado.
+- Reforçada a qualidade do conteúdo com exercícios e metadados de revisão em 10 lições amostradas.
+- Adicionados checks automatizados para trilhas, lições, traduções e links internos.
+
+Consulte [docs/RELEASE_NOTES.md](docs/RELEASE_NOTES.md) para um resumo operacional da release atual.
 
 ## 🤝 Contribuir
 
