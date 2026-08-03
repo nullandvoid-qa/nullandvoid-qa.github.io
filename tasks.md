@@ -1,56 +1,55 @@
 # Backlog de Tarefas - Null and Void QA Course
 
-Este arquivo serve como a fonte da verdade para o progresso do projeto, detalhando as melhorias de refatoração, internacionalização, qualidade de conteúdo e infraestrutura.
+Este arquivo serve como a fonte da verdade para o progresso do projeto, detalhando as melhorias de refatoração, qualidade de conteúdo, validação e preparação para o lançamento.
 
-## 🛠️ Refatoração de Código e Arquitetura
+## 🚀 Próximos Passos para o Go-Live
 
-- [ ] **Finalizar separação de módulos de renderização em `js/app.js`**
-  - Extrair helpers de renderização restantes em [app.js](file:///c:/Users/Rampz/Desktop/nullandvoid-qa.github.io/js/app.js) para [view-helpers.js](file:///c:/Users/Rampz/Desktop/nullandvoid-qa.github.io/js/view-helpers.js) ou [lesson-renderers.js](file:///c:/Users/Rampz/Desktop/nullandvoid-qa.github.io/js/lesson-renderers.js).
-  - Remover trechos duplicados de manipulação direta de DOM do fluxo principal.
-- [ ] **Unificar Estado Global do App**
-  - Substituir variáveis globais soltas por um objeto de estado centralizado em [app.js](file:///c:/Users/Rampz/Desktop/nullandvoid-qa.github.io/js/app.js) para melhorar a previsibilidade.
-- [ ] **Refatorar e Centralizar Utilitários**
-  - Mover funções de DOM genéricas e helpers seguros para `localStorage` / parse de JSON para [utils.js](file:///c:/Users/Rampz/Desktop/nullandvoid-qa.github.io/js/utils.js).
-- [ ] **Organizar Folha de Estilos CSS**
-  - Dividir [styles.css](file:///c:/Users/Rampz/Desktop/nullandvoid-qa.github.io/css/styles.css) em seções limpas (base, layout, componentes, utilitários).
-  - Eliminar seletores obsoletos ou duplicados.
+ - [x] **Garantir a qualidade das lições mais críticas**
+  - [x] Adicionar pelo menos 1 exercício prático com gabarito para cada uma das 10 lições amostradas em `reports/lesson-review.md`.
+  - [x] Incluir metadados de revisão (data, autor, status) nos cabeçalhos dessas lições.
+  - [x] Confirmar que a estrutura das lições segue os blocos esperados usando `node scripts/validate-lessons.js`.
 
-## 🌐 Internacionalização (i18n)
+## ✅ Concluído (resumo)
 
-- [x] **Criar Arquivo de Metadados em Inglês (`translations-en.json`)**
-  - Traduzir e estruturar as 120 chaves de metadados de trilhas/cursos/aulas do [translations-pt.json](file:///c:/Users/Rampz/Desktop/nullandvoid-qa.github.io/data/translations-pt.json) para o novo arquivo [translations-en.json](file:///c:/Users/Rampz/Desktop/nullandvoid-qa.github.io/data/translations-en.json).
-- [x] **Criar Script de Sincronização (`sync-translations.js`)**
-  - Implementar script em [scripts/sync-translations.js](file:///c:/Users/Rampz/Desktop/nullandvoid-qa.github.io/scripts/sync-translations.js) para validar chaves faltantes entre os idiomas.
-- [x] **Escrever Testes de Cobertura de Tradução**
-  - Adicionar [i18n-coverage.test.js](file:///c:/Users/Rampz/Desktop/nullandvoid-qa.github.io/js/__tests__/i18n-coverage.test.js) para assegurar que cada chave em PT-BR possua sua respectiva tradução em EN.
-- [x] **Atualizar Guias de Contribuição**
-  - Documentar regras e boas práticas de tradução no [CONTRIBUTING.md](file:///c:/Users/Rampz/Desktop/nullandvoid-qa.github.io/CONTRIBUTING.md) e [ARCHITECTURE.md](file:///c:/Users/Rampz/Desktop/nullandvoid-qa.github.io/docs/ARCHITECTURE.md).
+- 2026-08-03 — Adicionados gabaritos a 10 lições amostradas; inseridos metadados de revisão (`reviewedAt`, `reviewAuthor`, `reviewStatus`) nas lições afetadas; executada validação de estrutura com `node scripts/validate-lessons.js` (passou para 42 arquivos).
 
-## 📚 Conteúdo, Aulas e Exercícios
 
-- [ ] **Adicionar Exercícios Práticos com Gabarito**
-  - Elaborar pelo menos 1 exercício com respectivo gabarito/resolução para cada uma das 10 lições amostradas identificadas em [reports/lesson-review.md](file:///c:/Users/Rampz/Desktop/nullandvoid-qa.github.io/reports/lesson-review.md).
-- [ ] **Incluir Metadados de Revisão**
-  - Registrar data da última revisão, autor e status no cabeçalho das lições amostradas.
-- [ ] **Disponibilizar Templates Reutilizáveis**
-  - Criar e anexar templates (ex: Markdown/YAML) para matriz de risco, critérios de aceitação (BDD), checklists de SDLC e sessão de teste exploratório.
-- [ ] **Anexar Links e Repositórios Recomendados**
-  - Fornecer scripts ou repositórios práticos de exemplo para as aulas que abordam automação e testes de regressão.
+[ ] **Revisar e atualizar a experiência de certificado**
+  - Adicionar export social-ready do certificado (imagem para LinkedIn) além do fluxo de PDF atual.
+  - Incluir botão de download de imagem no modal de certificado.
+  - Cobrir o comportamento com testes de regressão.
 
-## 🧪 Testes e Automação de Qualidade
+## 🛠️ Ajustes de Qualidade e Código
 
-- [ ] **Configurar Validação Automatizada de i18n no CI/CD**
-  - Integrar a validação de chaves de internacionalização no pipeline do GitHub Actions para falhar caso novos textos cruificados ou não traduzidos subam para a master.
-- [ ] **Refinar Pipeline Local**
-  - Adicionar scripts unificados de qualidade no [package.json](file:///c:/Users/Rampz/Desktop/nullandvoid-qa.github.io/package.json) (ex: `validate:all`) e registrar instruções no [README.md](file:///c:/Users/Rampz/Desktop/nullandvoid-qa.github.io/README.md).
+- [ ] **Refinar as responsabilidades de UI e renderização**
+  - Finalizar a separação de helpers de renderização de `js/app.js` para `js/view-helpers.js` ou `js/lesson-renderers.js`.
+  - Reduzir itens de DOM direto em `js/app.js` e centralizar estado onde fizer sentido.
 
-## 🏅 Certificados e Compartilhamento Social
+- [ ] **Centralizar utilitários de DOM e armazenamento**
+  - Mover helpers genéricos de DOM, JSON e `localStorage` para `js/utils.js`.
 
-- [ ] **Criar export social-ready do certificado para upload em LinkedIn**
-  - Implementar um fluxo separado de geração de imagem em proporção social, em vez de depender do PDF A4 atual.
-- [ ] **Adicionar ação de download de imagem no modal do certificado**
-  - Expor um botão de download para o arquivo pronto para post em redes sociais sem quebrar o fluxo já existente de PDF.
-- [ ] **Cobrir o novo comportamento com testes de regressão**
-  - Garantir que o novo export de imagem e a ação de UI continuem funcionando com a automação existente.
+- [ ] **Organizar CSS para produção**
+  - Revisar `css/styles.css` e agrupar por base, layout, componentes e utilitários.
+  - Remover seletores obsoletos ou redundantes.
+
+## 📄 Documentação e lançamento
+
+- [x] **Atualizar README e fluxos de contribuição**
+  - Incluir os novos comandos de validação e os passos de preparação para deploy.
+  - Instruir como rodar `npm run validate:all`, `npm run validate:tracks`, `npm run validate:lessons` e `node scripts/sync-translations.js`.
+
+- [ ] **Criar checklist final de go-live**
+ - [ ] **Criar checklist final de go-live** (em andamento)
+  - [ ] Validar estrutura das lições e gabaritos (`node scripts/validate-lessons.js` deve passar)
+  - [ ] Confirmar traduções sincronizadas (`node scripts/sync-translations.js` deve reportar cobertura completa)
+  - [ ] Rodar validações globais: `npm run validate:all` (tracks, lessons, i18n)
+  - [ ] Executar testes: `npm test` — todas as suites devem passar
+  - [ ] Lint e qualidade: `npm run lint:js` — nenhum erro crítico
+  - [ ] Servir site localmente e smoke-test das páginas críticas (index, lições, certificado)
+  - [ ] Verificar export de certificado (PDF e imagem social-ready) manualmente
+  - [ ] Rodar verificador de links internos (ex: `linkinator` ou verificação manual)
+  - [ ] Atualizar `README.md` / notas de release com comandos e mudanças importantes
+  - [ ] Abrir PR com descrição, checklist e reviewers atribuídos
+  - [ ] Após merge: monitorar CI e abrir issues para regressões detectadas
 
 

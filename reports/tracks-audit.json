@@ -2,7 +2,7 @@
   {
     "id": "starter",
     "slug": "guild-initiation",
-    "title": "Iniciação da Guilda",
+    "title": "Testes Básicos",
     "courses": 2,
     "totalLessons": 6,
     "courseDetails": [
@@ -23,30 +23,85 @@
     "id": "intermediate",
     "slug": "advanced-testing",
     "title": "Testes Avançados",
-    "courses": 1,
-    "totalLessons": 3,
+    "courses": 5,
+    "totalLessons": 13,
     "courseDetails": [
       {
         "id": "c3",
         "title": "Técnicas de Teste",
         "lessons": 3
+      },
+      {
+        "id": "c13",
+        "title": "Ferramentas Técnicas de QA",
+        "lessons": 5
+      },
+      {
+        "id": "c7",
+        "title": "Automação e Frameworks",
+        "lessons": 3
+      },
+      {
+        "id": "c8",
+        "title": "Performance Testing",
+        "lessons": 1
+      },
+      {
+        "id": "c9",
+        "title": "Security Testing Basics",
+        "lessons": 1
       }
     ],
-    "needsAttention": true
+    "needsAttention": false
+  },
+  {
+    "id": "mobile",
+    "slug": "mobile-testing",
+    "title": "Trilha de Testes Mobile",
+    "courses": 2,
+    "totalLessons": 6,
+    "courseDetails": [
+      {
+        "id": "c5",
+        "title": "Fundamentos de Testes Mobile",
+        "lessons": 3
+      },
+      {
+        "id": "c6",
+        "title": "Automação Mobile e CI",
+        "lessons": 3
+      }
+    ],
+    "needsAttention": false
   },
   {
     "id": "senior",
     "slug": "mastery",
     "title": "Maestria em QA",
-    "courses": 1,
-    "totalLessons": 3,
+    "courses": 4,
+    "totalLessons": 8,
     "courseDetails": [
       {
         "id": "c4",
         "title": "Agile e Scrum",
         "lessons": 3
+      },
+      {
+        "id": "c10",
+        "title": "Estratégia e Arquitetura de Testes",
+        "lessons": 3
+      },
+      {
+        "id": "c11",
+        "title": "Observability e Métricas",
+        "lessons": 1
+      },
+      {
+        "id": "c12",
+        "title": "Mentoring e Coaching",
+        "lessons": 1
       }
     ],
-    "needsAttention": true
+    "needsAttention": false
   }
 ]

@@ -9,10 +9,6 @@
     return window.NVApp?.state || {};
   }
 
-  function getHelpers() {
-    return window.NVApp?.helpers || {};
-  }
-
   function toggleBookmark(lessonId) {
     const state = getState();
     const bookmarks = state.bookmarks || [];

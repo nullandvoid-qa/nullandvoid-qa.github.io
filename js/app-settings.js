@@ -9,10 +9,6 @@
     return window.NVApp?.state || {};
   }
 
-  function getHelpers() {
-    return window.NVApp?.helpers || {};
-  }
-
   function applyTheme() {
     const state = getState();
     const theme = state.theme || 'dark';

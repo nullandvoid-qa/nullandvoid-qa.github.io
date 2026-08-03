@@ -21,16 +21,16 @@ beforeEach(() => {
 
   // Stub NVViewHelpers.buildTrackQuizHtml and bindTrackQuizHandlers
   window.NVViewHelpers = {
-    buildTrackQuizHtml: (track, quizData) => {
+    buildTrackQuizHtml: (_track, _quizData) => {
       // render a simple submit button and radio inputs
       return `<form id="quiz-form"><div class="quiz-question" data-qi="0"><label><input type="radio" name="q0" value="0" checked> A</label><label><input type="radio" name="q0" value="1"> B</label></div><button type="button" id="quiz-submit">Submit</button></form>`;
     },
-    bindTrackQuizHandlers: (container, quizData, icons, lang, t, onBack, onRetry, onPassed) => {
+    bindTrackQuizHandlers: (container, _quizData, icons, lang, t, onBack, onRetry, onPassed) => {
       const submit = container.querySelector('#quiz-submit');
       if (submit) {
         submit.addEventListener('click', () => {
           // simulate calculating score equal to passScore
-          onPassed(quizData.passScore);
+          onPassed(_quizData.passScore);
         });
       }
     }

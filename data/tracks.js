@@ -806,7 +806,312 @@ Funcionalidade: Login | Impacto: Alto | Probabilidade: Baixo | Prioridade: Médi
             ]
           }
         ]
-      },
+      }
+    ]
+  },
+  {
+    id: "intermediate",
+    slug: "advanced-testing",
+    title: "Testes Avançados",
+    icon: "bolt",
+    color: "#f59e0b",
+    description: "Técnicas de teste mais sofisticadas: automação, performance, segurança.",
+    level: "Intermediário",
+    topics: ["Automação", "Performance", "Segurança", "API Testing"],
+    courses: [
+      {
+        id: "c3",
+        title: "Técnicas de Teste",
+        lessons: [
+          {
+            id: "l5",
+            title: "Partição de Equivalência e Valor Limite",
+            duration: "55 min",
+            content: `<h2>Partição de Equivalência e Valor Limite</h2>
+
+<h3>🎯 Objetivos de Aprendizado</h3>
+<p>Após esta aula, você será capaz de:</p>
+<ul>
+  <li>Transformar regras de negócio em classes de teste claras e úteis</li>
+  <li>Escolher os casos mais valiosos sem perder cobertura</li>
+  <li>Encontrar falhas em bordas, limites e condições de transição</li>
+  <li>Pensar como um QA estratégico, não apenas como alguém que “preenche tabela”</li>
+</ul>
+
+<h3>📊 Por que isso importa</h3>
+<p>Boa estratégia de teste não é fazer mais casos. É fazer os casos certos. Partição de equivalência e valor limite ajudam você a concentrar esforço onde há maior risco de falha e onde pequenas decisões de produto podem causar grandes problemas.</p>
+<p><strong>Regra prática:</strong> para cada regra, teste um valor representativo válido, um inválido e pelo menos dois valores na borda.</p>
+
+<h3>🧠 O pensamento certo</h3>
+<p>Em vez de testar todos os valores possíveis, você agrupa entradas em classes que devem se comportar de forma semelhante. Se uma entrada de uma classe funciona, a maioria das outras da mesma classe tende a funcionar do mesmo jeito. Depois, você valida os pontos de transição entre classes.</p>
+
+<h3>🔍 Como montar as partições</h3>
+<ol style="margin:1rem 0; list-style-position:inside">
+  <li>Entenda a regra de negócio e os limites explícitos ou implícitos</li>
+  <li>Separe entradas válidas, inválidas e limites de comportamento</li>
+  <li>Escolha um valor representativo de cada classe</li>
+  <li>Adicione valores imediatamente abaixo, no limite e acima do limite</li>
+</ol>
+
+<h3>📌 Exemplo prático</h3>
+<p>Regra: a idade deve estar entre 18 e 65 anos.</p>
+<ul style="margin:1rem 0">
+  <li><strong>Classe válida:</strong> 18, 25, 65</li>
+  <li><strong>Classe inválida:</strong> 17, 66</li>
+  <li><strong>Valores limite:</strong> 17, 18, 19, 64, 65, 66</li>
+</ul>
+
+<h3>📊 Exemplo de matriz de decisão</h3>
+<table style="width:100%; border-collapse:collapse; margin:1rem 0">
+  <tr style="background:#f5f5f5; border:1px solid #ddd">
+    <th style="padding:0.75rem; border:1px solid #ddd">Categoria</th>
+    <th style="padding:0.75rem; border:1px solid #ddd">Valores</th>
+    <th style="padding:0.75rem; border:1px solid #ddd">Esperado</th>
+  </tr>
+  <tr>
+    <td style="padding:0.75rem; border:1px solid #ddd">Válido</td>
+    <td style="padding:0.75rem; border:1px solid #ddd">25</td>
+    <td style="padding:0.75rem; border:1px solid #ddd">Cadastro aceito</td>
+  </tr>
+  <tr style="background:#f9f9f9; border:1px solid #ddd">
+    <td style="padding:0.75rem; border:1px solid #ddd">Inválido</td>
+    <td style="padding:0.75rem; border:1px solid #ddd">17</td>
+    <td style="padding:0.75rem; border:1px solid #ddd">Mensagem de erro exibida</td>
+  </tr>
+  <tr>
+    <td style="padding:0.75rem; border:1px solid #ddd">Limite</td>
+    <td style="padding:0.75rem; border:1px solid #ddd">18, 19, 64, 65</td>
+    <td style="padding:0.75rem; border:1px solid #ddd">Comportamento consistente e previsível</td>
+  </tr>
+</table>
+
+<h3>⚠️ Erros comuns</h3>
+<ul style="margin:1rem 0">
+  <li>Testar apenas valores "bonitos" ou fáceis de lembrar</li>
+  <li>Ignorar as bordas entre classes válidas e inválidas</li>
+  <li>Esquecer regras adicionais, como formato, obrigatoriedade e dependências</li>
+  <li>Confundir “muitos casos” com “boa cobertura”</li>
+</ul>
+
+<h3>🧪 Caso de teste guiado</h3>
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+Regra: quantidade do pedido deve estar entre 1 e 100.
+Casos prioritários:
+- 0 -> esperado: bloqueado
+- 1 -> esperado: aceito
+- 2 -> esperado: aceito
+- 99 -> esperado: aceito
+- 100 -> esperado: aceito
+- 101 -> esperado: bloqueado
+</pre>
+
+<h3>✅ O que um QA sênior faz aqui</h3>
+<p>Um bom QA não só cria casos. Ele pergunta: qual é o risco real? Quais entradas podem quebrar a regra? Onde o sistema provavelmente falhará primeiro? Essa é a diferença entre testar por hábito e testar com propósito.</p>
+
+<h3>🧪 Exemplo mais realista</h3>
+<p>Imagine um fluxo de checkout onde o valor do pedido deve estar entre 1 e 1000 reais para liberar o desconto de primeira compra.</p>
+<ul style="margin:1rem 0">
+  <li><strong>Classe válida:</strong> 50, 250, 1000</li>
+  <li><strong>Classe inválida:</strong> 0, 1001</li>
+  <li><strong>Valores de borda:</strong> 0, 1, 2, 999, 1000, 1001</li>
+</ul>
+<p>Se esse regra estiver implementada de forma inconsistente, o tipo de bug que você provavelmente vai encontrar é: desconto aceito em 1001, bloqueado em 1000 ou mensagem de erro confusa em 999.</p>
+
+<h3>✏️ Exercício Prático</h3>
+<p>Escolha uma regra de negócio do seu projeto atual e escreva:</p>
+<ol style="margin:1rem 0; list-style-position:inside">
+  <li>As classes válidas e inválidas</li>
+  <li>Quatro valores de teste em borda</li>
+  <li>Um caso que provavelmente revelaria um bug real</li>
+</ol>
+<p><strong>Desafio extra:</strong> transforme sua resposta em uma tabela de teste pronta para compartilhar com o time.</p>
+
+<h3>📚 Recursos</h3>
+<ul style="margin:1rem 0">
+  <li><a href="https://www.guru99.com/equivalence-partitioning.html" target="_blank">📖 Equivalence Partitioning in Software Testing</a></li>
+  <li><a href="https://www.softwaretestinghelp.com/boundary-value-analysis/" target="_blank">📖 Boundary Value Analysis Guide</a></li>
+  <li><a href="https://www.softwaretestinghelp.com/equivalence-partitioning-boundary-value-analysis/" target="_blank">📖 Equivalence Partitioning + BVA Comparison</a></li>
+</ul>
+`,
+            resources: [
+              { label: "Equivalence Partitioning in Software Testing", url: "https://www.guru99.com/equivalence-partitioning.html" },
+              { label: "Boundary Value Analysis Guide", url: "https://www.softwaretestinghelp.com/boundary-value-analysis/" },
+              { label: "Equivalence Partitioning + BVA Comparison", url: "https://www.softwaretestinghelp.com/equivalence-partitioning-boundary-value-analysis/" }
+            ]
+          },
+          {
+            id: "l6",
+            title: "Teste Exploratório",
+            duration: "60 min",
+            content: `<h2>Teste Exploratório</h2>
+
+<h3>🎯 Objetivos de Aprendizado</h3>
+<p>Após esta aula, você será capaz de:</p>
+<ul>
+  <li>Saber quando usar exploração livre e quando usar roteiros formais</li>
+  <li>Planejar uma sessão com charter claro, escopo e foco em risco</li>
+  <li>Usar heurísticas para encontrar defeitos reais de usabilidade, fluxo e integração</li>
+  <li>Transformar observações em achados úteis para o time</li>
+</ul>
+
+<h3>📊 Por que isso importa</h3>
+<p>Testes exploratórios são fundamentais quando o sistema é novo, o fluxo é complexo ou o risco é alto. Eles ajudam a descobrir problemas que não aparecem em cenários padronizados, sobretudo em áreas onde o usuário real tende a agir de forma inesperada.</p>
+<p><strong>Regra prática:</strong> nunca entre em uma sessão sem uma hipótese. Pergunte: “o que pode dar errado aqui?” e “onde eu esperaria um comportamento estranho?”</p>
+
+<h3>🧭 O ciclo de uma sessão exploratória</h3>
+<ol style="margin:1rem 0; list-style-position:inside">
+  <li>Defina um charter: o que você vai explorar e por quê</li>
+  <li>Teste com hipóteses e curiosidade, não apenas com passos fixos</li>
+  <li>Observe comportamento, mensagens, tempos de resposta e estados inesperados</li>
+  <li>Registre achados com contexto, impacto e evidência</li>
+  <li>Feche com aprendizado, próximos passos e gaps de cobertura</li>
+</ol>
+
+<h3>✨ Quando usar</h3>
+<ul style="margin:1rem 0">
+  <li>Em funcionalidades novas ou pouco conhecidas</li>
+  <li>Quando há pouco tempo para uma cobertura inicial</li>
+  <li>Para investigar bugs intermitentes ou falhas de experiência</li>
+  <li>Para validar fluxos reais de usuário, não apenas requisitos escritos</li>
+</ul>
+
+<h3>📌 Exploratório vs Roteirizado</h3>
+<table style="width:100%; border-collapse:collapse; margin:1rem 0">
+  <tr style="background:#f5f5f5; border:1px solid #ddd">
+    <th style="padding:0.75rem; text-align:left; border:1px solid #ddd">Exploratória</th>
+    <th style="padding:0.75rem; text-align:left; border:1px solid #ddd">Roteirizada</th>
+  </tr>
+  <tr>
+    <td style="padding:0.75rem; border:1px solid #ddd">Descoberta e aprendizado</td>
+    <td style="padding:0.75rem; border:1px solid #ddd">Validação contra requisitos</td>
+  </tr>
+  <tr style="background:#f9f9f9; border:1px solid #ddd">
+    <td style="padding:0.75rem; border:1px solid #ddd">Flexível e adaptativa</td>
+    <td style="padding:0.75rem; border:1px solid #ddd">Repetível e auditável</td>
+  </tr>
+  <tr>
+    <td style="padding:0.75rem; border:1px solid #ddd">Boa para explorar o desconhecido</td>
+    <td style="padding:0.75rem; border:1px solid #ddd">Boa para regressão e compliance</td>
+  </tr>
+</table>
+
+<h3>📌 Exemplo de charter</h3>
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+Charter: explorar o fluxo de pagamento em um cenário de falha de cartão.
+Objetivo: encontrar problemas de validação, feedback e recuperação de erro.
+Escopo: página de pagamento, seleção de cupom e retorno após falha.
+Critério de sucesso: identificar pelo menos 3 riscos ou bugs com impacto real.
+</pre>
+
+<h3>🧭 Heurísticas úteis</h3>
+<ul style="margin:1rem 0">
+  <li><strong>CRUD</strong>: criar, ler, atualizar, excluir</li>
+  <li><strong>SFDPOT</strong>: estrutura, função, dados, plataforma, operações, tempo</li>
+  <li><strong>FEW HICCUPPS</strong>: feedback, erro, workflow, compatibilidade, complexidade, performance, permissões, segurança</li>
+  <li><strong>Ambiente</strong>: navegador diferente, rede lenta, sessão expirada, usuário sem permissão</li>
+</ul>
+
+<h3>📝 Como registrar achados</h3>
+<p>Documente o que importa: o passo feito, o comportamento observado, o risco e a evidência. Evite relatórios vagos como “não funcionou”.</p>
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+Sessão: checkout
+Passo: tentar pagar com CVV vazio
+Observação: a mensagem de erro é genérica e o botão continua ativo
+Impacto: confusão do usuário e possível envio indevido
+Prioridade: alta
+</pre>
+
+<h3>✅ O que um QA sênior faz aqui</h3>
+<p>Ele não apenas testa. Ele usa a sessão para aprender sobre o produto, desafiar suposições e encontrar riscos antes que eles se tornem bugs caros em produção. A melhor exploração gera insight, não só relatório.</p>
+
+<h3>🧭 Exemplo de sessão real</h3>
+<p>Supor que você esteja explorando um fluxo de login com MFA. Um charter forte seria: “Validar a experiência de recuperação de conta quando o código de verificação é enviado com atraso e o usuário tenta reutilizar o mesmo código.”</p>
+<p>Em uma sessão assim, você provavelmente vai olhar para:</p>
+<ul style="margin:1rem 0">
+  <li>Mensagens de erro confusas ou inconsistentes</li>
+  <li>Comportamento após múltiplos tentativos</li>
+  <li>Tempo limite do código e recuperação de estado</li>
+  <li>Experiência do usuário em celular e desktop</li>
+</ul>
+
+<h3>✏️ Exercício Prático</h3>
+<p>Escreva um charter para uma funcionalidade de login com MFA e responda:</p>
+<ol style="margin:1rem 0; list-style-position:inside">
+  <li>Quais áreas você exploraria primeiro?</li>
+  <li>Que risco de segurança ou usabilidade você tentaria encontrar?</li>
+  <li>Que evidência você registraria para o time?</li>
+</ol>
+<p><strong>Desafio extra:</strong> escreva 3 hipóteses de teste antes de começar a sessão.</p>
+
+<h3>📚 Recursos</h3>
+<ul style="margin:1rem 0">
+  <li><a href="https://www.ministryoftesting.com/dojo/lessons/exploratory-testing" target="_blank">📖 Exploratory Testing Guide</a></li>
+  <li><a href="https://www.satisfice.com/blog/archives/104" target="_blank">📖 James Bach: Exploratory Testing</a></li>
+  <li><a href="https://www.youtube.com/watch?v=8lTMatA8ega" target="_blank">🎥 Vídeo: Exploratory Testing Explained</a></li>
+</ul>
+
+<h3>🤔 Reflexão</h3>
+<p>Exploração bem feita é uma forma de aprendizado acelerado. Ela revela não só bugs, mas também lacunas de entendimento e oportunidades de melhoria.</p>
+`,
+            resources: [
+              { label: "Exploratory Testing Guide", url: "https://www.ministryoftesting.com/dojo/lessons/exploratory-testing" },
+              { label: "James Bach Exploratory Testing", url: "https://www.satisfice.com/blog/archives/104" },
+              { label: "Vídeo: Exploratory Testing Explained", url: "https://www.youtube.com/watch?v=8lTMatA8ega" }
+            ]
+          }
+          ,
+          {
+            id: "l11",
+            title: "Testes de Regressão e Automação Inteligente",
+            duration: "55 min",
+            content: `<h2>Testes de Regressão e Automação Inteligente</h2>
+
+<h3>🎯 Objetivos de Aprendizado</h3>
+<p>Após esta aula, você será capaz de:</p>
+<ul>
+  <li>Entender o propósito dos testes de regressão</li>
+  <li>Decidir quais casos merecem automação</li>
+  <li>Evitar automação excessiva e de baixo valor</li>
+  <li>Construir uma suite de regressão sustentável</li>
+</ul>
+
+<h3>📊 Resumo Executivo</h3>
+<p>Teste de regressão é a prova de que as mudanças não quebraram o que já funcionava. Automação ajuda, mas só se for aplicada nos casos mais estáveis, críticos e repetitivos.</p>
+
+<h3>🔍 Quando automatizar</h3>
+<ul style="margin:1rem 0">
+  <li>Fluxos críticos do negócio que são executados a cada release</li>
+  <li>Casos repetitivos e fáceis de parametrizar</li>
+  <li>Configurações estáveis que não mudam constantemente</li>
+  <li>Testes com alto custo manual e baixo custo de manutenção</li>
+</ul>
+
+<h3>⚠️ Quando evitar automação</h3>
+<ul style="margin:1rem 0">
+  <li>Fluxos muito instáveis ou em constante mudança</li>
+  <li>Testes com alto valor exploratório</li>
+  <li>Casos de borda esporádicos sem impacto crítico</li>
+</ul>
+
+<h3>📌 Estrutura de uma suite de regressão</h3>
+<ol style="margin:1rem 0; list-style-position:inside">
+  <li>Casos críticos que não podem falhar em produção</li>
+  <li>Funcionalidades principais com alto volume de uso</li>
+  <li>Regras de negócio sensíveis a mudanças</li>
+  <li>Testes automatizados para cobertura rápida de regressão</li>
+</ol>
+
+<h3>✏️ Exercício Prático</h3>
+<p>Liste cinco casos de regressão para um checkout online e classifique quais devem ser automatizados e quais devem permanecer manuais.</p>
+`,
+            resources: [
+              { label: "Regression Testing Best Practices", url: "https://www.guru99.com/regression-testing.html" },
+              { label: "Automation Strategy", url: "https://www.tutorialspoint.com/software_testing_dictionary/automation_testing.htm" }
+            ]
+          }
+        ]
+      }
+    ,
       {
         id: "c13",
         title: "Ferramentas Técnicas de QA",
@@ -1477,310 +1782,6 @@ pipeline {
 
 <h3>✏️ Exercício</h3>
 <p>Execute OWASP ZAP against a demo app and summarize the top 3 findings with remediation suggestions.</p>`
-          }
-        ]
-      }
-    ]
-  },
-  {
-    id: "intermediate",
-    slug: "advanced-testing",
-    title: "Testes Avançados",
-    icon: "bolt",
-    color: "#f59e0b",
-    description: "Técnicas de teste mais sofisticadas: automação, performance, segurança.",
-    level: "Intermediário",
-    topics: ["Automação", "Performance", "Segurança", "API Testing"],
-    courses: [
-      {
-        id: "c3",
-        title: "Técnicas de Teste",
-        lessons: [
-          {
-            id: "l5",
-            title: "Partição de Equivalência e Valor Limite",
-            duration: "55 min",
-            content: `<h2>Partição de Equivalência e Valor Limite</h2>
-
-<h3>🎯 Objetivos de Aprendizado</h3>
-<p>Após esta aula, você será capaz de:</p>
-<ul>
-  <li>Transformar regras de negócio em classes de teste claras e úteis</li>
-  <li>Escolher os casos mais valiosos sem perder cobertura</li>
-  <li>Encontrar falhas em bordas, limites e condições de transição</li>
-  <li>Pensar como um QA estratégico, não apenas como alguém que “preenche tabela”</li>
-</ul>
-
-<h3>📊 Por que isso importa</h3>
-<p>Boa estratégia de teste não é fazer mais casos. É fazer os casos certos. Partição de equivalência e valor limite ajudam você a concentrar esforço onde há maior risco de falha e onde pequenas decisões de produto podem causar grandes problemas.</p>
-<p><strong>Regra prática:</strong> para cada regra, teste um valor representativo válido, um inválido e pelo menos dois valores na borda.</p>
-
-<h3>🧠 O pensamento certo</h3>
-<p>Em vez de testar todos os valores possíveis, você agrupa entradas em classes que devem se comportar de forma semelhante. Se uma entrada de uma classe funciona, a maioria das outras da mesma classe tende a funcionar do mesmo jeito. Depois, você valida os pontos de transição entre classes.</p>
-
-<h3>🔍 Como montar as partições</h3>
-<ol style="margin:1rem 0; list-style-position:inside">
-  <li>Entenda a regra de negócio e os limites explícitos ou implícitos</li>
-  <li>Separe entradas válidas, inválidas e limites de comportamento</li>
-  <li>Escolha um valor representativo de cada classe</li>
-  <li>Adicione valores imediatamente abaixo, no limite e acima do limite</li>
-</ol>
-
-<h3>📌 Exemplo prático</h3>
-<p>Regra: a idade deve estar entre 18 e 65 anos.</p>
-<ul style="margin:1rem 0">
-  <li><strong>Classe válida:</strong> 18, 25, 65</li>
-  <li><strong>Classe inválida:</strong> 17, 66</li>
-  <li><strong>Valores limite:</strong> 17, 18, 19, 64, 65, 66</li>
-</ul>
-
-<h3>📊 Exemplo de matriz de decisão</h3>
-<table style="width:100%; border-collapse:collapse; margin:1rem 0">
-  <tr style="background:#f5f5f5; border:1px solid #ddd">
-    <th style="padding:0.75rem; border:1px solid #ddd">Categoria</th>
-    <th style="padding:0.75rem; border:1px solid #ddd">Valores</th>
-    <th style="padding:0.75rem; border:1px solid #ddd">Esperado</th>
-  </tr>
-  <tr>
-    <td style="padding:0.75rem; border:1px solid #ddd">Válido</td>
-    <td style="padding:0.75rem; border:1px solid #ddd">25</td>
-    <td style="padding:0.75rem; border:1px solid #ddd">Cadastro aceito</td>
-  </tr>
-  <tr style="background:#f9f9f9; border:1px solid #ddd">
-    <td style="padding:0.75rem; border:1px solid #ddd">Inválido</td>
-    <td style="padding:0.75rem; border:1px solid #ddd">17</td>
-    <td style="padding:0.75rem; border:1px solid #ddd">Mensagem de erro exibida</td>
-  </tr>
-  <tr>
-    <td style="padding:0.75rem; border:1px solid #ddd">Limite</td>
-    <td style="padding:0.75rem; border:1px solid #ddd">18, 19, 64, 65</td>
-    <td style="padding:0.75rem; border:1px solid #ddd">Comportamento consistente e previsível</td>
-  </tr>
-</table>
-
-<h3>⚠️ Erros comuns</h3>
-<ul style="margin:1rem 0">
-  <li>Testar apenas valores "bonitos" ou fáceis de lembrar</li>
-  <li>Ignorar as bordas entre classes válidas e inválidas</li>
-  <li>Esquecer regras adicionais, como formato, obrigatoriedade e dependências</li>
-  <li>Confundir “muitos casos” com “boa cobertura”</li>
-</ul>
-
-<h3>🧪 Caso de teste guiado</h3>
-<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
-Regra: quantidade do pedido deve estar entre 1 e 100.
-Casos prioritários:
-- 0 -> esperado: bloqueado
-- 1 -> esperado: aceito
-- 2 -> esperado: aceito
-- 99 -> esperado: aceito
-- 100 -> esperado: aceito
-- 101 -> esperado: bloqueado
-</pre>
-
-<h3>✅ O que um QA sênior faz aqui</h3>
-<p>Um bom QA não só cria casos. Ele pergunta: qual é o risco real? Quais entradas podem quebrar a regra? Onde o sistema provavelmente falhará primeiro? Essa é a diferença entre testar por hábito e testar com propósito.</p>
-
-<h3>🧪 Exemplo mais realista</h3>
-<p>Imagine um fluxo de checkout onde o valor do pedido deve estar entre 1 e 1000 reais para liberar o desconto de primeira compra.</p>
-<ul style="margin:1rem 0">
-  <li><strong>Classe válida:</strong> 50, 250, 1000</li>
-  <li><strong>Classe inválida:</strong> 0, 1001</li>
-  <li><strong>Valores de borda:</strong> 0, 1, 2, 999, 1000, 1001</li>
-</ul>
-<p>Se esse regra estiver implementada de forma inconsistente, o tipo de bug que você provavelmente vai encontrar é: desconto aceito em 1001, bloqueado em 1000 ou mensagem de erro confusa em 999.</p>
-
-<h3>✏️ Exercício Prático</h3>
-<p>Escolha uma regra de negócio do seu projeto atual e escreva:</p>
-<ol style="margin:1rem 0; list-style-position:inside">
-  <li>As classes válidas e inválidas</li>
-  <li>Quatro valores de teste em borda</li>
-  <li>Um caso que provavelmente revelaria um bug real</li>
-</ol>
-<p><strong>Desafio extra:</strong> transforme sua resposta em uma tabela de teste pronta para compartilhar com o time.</p>
-
-<h3>📚 Recursos</h3>
-<ul style="margin:1rem 0">
-  <li><a href="https://www.guru99.com/equivalence-partitioning.html" target="_blank">📖 Equivalence Partitioning in Software Testing</a></li>
-  <li><a href="https://www.softwaretestinghelp.com/boundary-value-analysis/" target="_blank">📖 Boundary Value Analysis Guide</a></li>
-  <li><a href="https://www.softwaretestinghelp.com/equivalence-partitioning-boundary-value-analysis/" target="_blank">📖 Equivalence Partitioning + BVA Comparison</a></li>
-</ul>
-`,
-            resources: [
-              { label: "Equivalence Partitioning in Software Testing", url: "https://www.guru99.com/equivalence-partitioning.html" },
-              { label: "Boundary Value Analysis Guide", url: "https://www.softwaretestinghelp.com/boundary-value-analysis/" },
-              { label: "Equivalence Partitioning + BVA Comparison", url: "https://www.softwaretestinghelp.com/equivalence-partitioning-boundary-value-analysis/" }
-            ]
-          },
-          {
-            id: "l6",
-            title: "Teste Exploratório",
-            duration: "60 min",
-            content: `<h2>Teste Exploratório</h2>
-
-<h3>🎯 Objetivos de Aprendizado</h3>
-<p>Após esta aula, você será capaz de:</p>
-<ul>
-  <li>Saber quando usar exploração livre e quando usar roteiros formais</li>
-  <li>Planejar uma sessão com charter claro, escopo e foco em risco</li>
-  <li>Usar heurísticas para encontrar defeitos reais de usabilidade, fluxo e integração</li>
-  <li>Transformar observações em achados úteis para o time</li>
-</ul>
-
-<h3>📊 Por que isso importa</h3>
-<p>Testes exploratórios são fundamentais quando o sistema é novo, o fluxo é complexo ou o risco é alto. Eles ajudam a descobrir problemas que não aparecem em cenários padronizados, sobretudo em áreas onde o usuário real tende a agir de forma inesperada.</p>
-<p><strong>Regra prática:</strong> nunca entre em uma sessão sem uma hipótese. Pergunte: “o que pode dar errado aqui?” e “onde eu esperaria um comportamento estranho?”</p>
-
-<h3>🧭 O ciclo de uma sessão exploratória</h3>
-<ol style="margin:1rem 0; list-style-position:inside">
-  <li>Defina um charter: o que você vai explorar e por quê</li>
-  <li>Teste com hipóteses e curiosidade, não apenas com passos fixos</li>
-  <li>Observe comportamento, mensagens, tempos de resposta e estados inesperados</li>
-  <li>Registre achados com contexto, impacto e evidência</li>
-  <li>Feche com aprendizado, próximos passos e gaps de cobertura</li>
-</ol>
-
-<h3>✨ Quando usar</h3>
-<ul style="margin:1rem 0">
-  <li>Em funcionalidades novas ou pouco conhecidas</li>
-  <li>Quando há pouco tempo para uma cobertura inicial</li>
-  <li>Para investigar bugs intermitentes ou falhas de experiência</li>
-  <li>Para validar fluxos reais de usuário, não apenas requisitos escritos</li>
-</ul>
-
-<h3>📌 Exploratório vs Roteirizado</h3>
-<table style="width:100%; border-collapse:collapse; margin:1rem 0">
-  <tr style="background:#f5f5f5; border:1px solid #ddd">
-    <th style="padding:0.75rem; text-align:left; border:1px solid #ddd">Exploratória</th>
-    <th style="padding:0.75rem; text-align:left; border:1px solid #ddd">Roteirizada</th>
-  </tr>
-  <tr>
-    <td style="padding:0.75rem; border:1px solid #ddd">Descoberta e aprendizado</td>
-    <td style="padding:0.75rem; border:1px solid #ddd">Validação contra requisitos</td>
-  </tr>
-  <tr style="background:#f9f9f9; border:1px solid #ddd">
-    <td style="padding:0.75rem; border:1px solid #ddd">Flexível e adaptativa</td>
-    <td style="padding:0.75rem; border:1px solid #ddd">Repetível e auditável</td>
-  </tr>
-  <tr>
-    <td style="padding:0.75rem; border:1px solid #ddd">Boa para explorar o desconhecido</td>
-    <td style="padding:0.75rem; border:1px solid #ddd">Boa para regressão e compliance</td>
-  </tr>
-</table>
-
-<h3>📌 Exemplo de charter</h3>
-<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
-Charter: explorar o fluxo de pagamento em um cenário de falha de cartão.
-Objetivo: encontrar problemas de validação, feedback e recuperação de erro.
-Escopo: página de pagamento, seleção de cupom e retorno após falha.
-Critério de sucesso: identificar pelo menos 3 riscos ou bugs com impacto real.
-</pre>
-
-<h3>🧭 Heurísticas úteis</h3>
-<ul style="margin:1rem 0">
-  <li><strong>CRUD</strong>: criar, ler, atualizar, excluir</li>
-  <li><strong>SFDPOT</strong>: estrutura, função, dados, plataforma, operações, tempo</li>
-  <li><strong>FEW HICCUPPS</strong>: feedback, erro, workflow, compatibilidade, complexidade, performance, permissões, segurança</li>
-  <li><strong>Ambiente</strong>: navegador diferente, rede lenta, sessão expirada, usuário sem permissão</li>
-</ul>
-
-<h3>📝 Como registrar achados</h3>
-<p>Documente o que importa: o passo feito, o comportamento observado, o risco e a evidência. Evite relatórios vagos como “não funcionou”.</p>
-<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
-Sessão: checkout
-Passo: tentar pagar com CVV vazio
-Observação: a mensagem de erro é genérica e o botão continua ativo
-Impacto: confusão do usuário e possível envio indevido
-Prioridade: alta
-</pre>
-
-<h3>✅ O que um QA sênior faz aqui</h3>
-<p>Ele não apenas testa. Ele usa a sessão para aprender sobre o produto, desafiar suposições e encontrar riscos antes que eles se tornem bugs caros em produção. A melhor exploração gera insight, não só relatório.</p>
-
-<h3>🧭 Exemplo de sessão real</h3>
-<p>Supor que você esteja explorando um fluxo de login com MFA. Um charter forte seria: “Validar a experiência de recuperação de conta quando o código de verificação é enviado com atraso e o usuário tenta reutilizar o mesmo código.”</p>
-<p>Em uma sessão assim, você provavelmente vai olhar para:</p>
-<ul style="margin:1rem 0">
-  <li>Mensagens de erro confusas ou inconsistentes</li>
-  <li>Comportamento após múltiplos tentativos</li>
-  <li>Tempo limite do código e recuperação de estado</li>
-  <li>Experiência do usuário em celular e desktop</li>
-</ul>
-
-<h3>✏️ Exercício Prático</h3>
-<p>Escreva um charter para uma funcionalidade de login com MFA e responda:</p>
-<ol style="margin:1rem 0; list-style-position:inside">
-  <li>Quais áreas você exploraria primeiro?</li>
-  <li>Que risco de segurança ou usabilidade você tentaria encontrar?</li>
-  <li>Que evidência você registraria para o time?</li>
-</ol>
-<p><strong>Desafio extra:</strong> escreva 3 hipóteses de teste antes de começar a sessão.</p>
-
-<h3>📚 Recursos</h3>
-<ul style="margin:1rem 0">
-  <li><a href="https://www.ministryoftesting.com/dojo/lessons/exploratory-testing" target="_blank">📖 Exploratory Testing Guide</a></li>
-  <li><a href="https://www.satisfice.com/blog/archives/104" target="_blank">📖 James Bach: Exploratory Testing</a></li>
-  <li><a href="https://www.youtube.com/watch?v=8lTMatA8ega" target="_blank">🎥 Vídeo: Exploratory Testing Explained</a></li>
-</ul>
-
-<h3>🤔 Reflexão</h3>
-<p>Exploração bem feita é uma forma de aprendizado acelerado. Ela revela não só bugs, mas também lacunas de entendimento e oportunidades de melhoria.</p>
-`,
-            resources: [
-              { label: "Exploratory Testing Guide", url: "https://www.ministryoftesting.com/dojo/lessons/exploratory-testing" },
-              { label: "James Bach Exploratory Testing", url: "https://www.satisfice.com/blog/archives/104" },
-              { label: "Vídeo: Exploratory Testing Explained", url: "https://www.youtube.com/watch?v=8lTMatA8ega" }
-            ]
-          }
-          ,
-          {
-            id: "l11",
-            title: "Testes de Regressão e Automação Inteligente",
-            duration: "55 min",
-            content: `<h2>Testes de Regressão e Automação Inteligente</h2>
-
-<h3>🎯 Objetivos de Aprendizado</h3>
-<p>Após esta aula, você será capaz de:</p>
-<ul>
-  <li>Entender o propósito dos testes de regressão</li>
-  <li>Decidir quais casos merecem automação</li>
-  <li>Evitar automação excessiva e de baixo valor</li>
-  <li>Construir uma suite de regressão sustentável</li>
-</ul>
-
-<h3>📊 Resumo Executivo</h3>
-<p>Teste de regressão é a prova de que as mudanças não quebraram o que já funcionava. Automação ajuda, mas só se for aplicada nos casos mais estáveis, críticos e repetitivos.</p>
-
-<h3>🔍 Quando automatizar</h3>
-<ul style="margin:1rem 0">
-  <li>Fluxos críticos do negócio que são executados a cada release</li>
-  <li>Casos repetitivos e fáceis de parametrizar</li>
-  <li>Configurações estáveis que não mudam constantemente</li>
-  <li>Testes com alto custo manual e baixo custo de manutenção</li>
-</ul>
-
-<h3>⚠️ Quando evitar automação</h3>
-<ul style="margin:1rem 0">
-  <li>Fluxos muito instáveis ou em constante mudança</li>
-  <li>Testes com alto valor exploratório</li>
-  <li>Casos de borda esporádicos sem impacto crítico</li>
-</ul>
-
-<h3>📌 Estrutura de uma suite de regressão</h3>
-<ol style="margin:1rem 0; list-style-position:inside">
-  <li>Casos críticos que não podem falhar em produção</li>
-  <li>Funcionalidades principais com alto volume de uso</li>
-  <li>Regras de negócio sensíveis a mudanças</li>
-  <li>Testes automatizados para cobertura rápida de regressão</li>
-</ol>
-
-<h3>✏️ Exercício Prático</h3>
-<p>Liste cinco casos de regressão para um checkout online e classifique quais devem ser automatizados e quais devem permanecer manuais.</p>
-`,
-            resources: [
-              { label: "Regression Testing Best Practices", url: "https://www.guru99.com/regression-testing.html" },
-              { label: "Automation Strategy", url: "https://www.tutorialspoint.com/software_testing_dictionary/automation_testing.htm" }
-            ]
           }
         ]
       }

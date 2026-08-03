@@ -1,0 +1,217 @@
+{
+  "lessons": [
+    {
+      "path": "content/lessons/l1.md",
+      "words": 1047,
+      "chars": 8982
+    },
+    {
+      "path": "content/lessons/l10.md",
+      "words": 1136,
+      "chars": 11367
+    },
+    {
+      "path": "content/lessons/l11.md",
+      "words": 1366,
+      "chars": 13180
+    },
+    {
+      "path": "content/lessons/l12.md",
+      "words": 913,
+      "chars": 7768
+    },
+    {
+      "path": "content/lessons/l13.md",
+      "words": 1393,
+      "chars": 12709
+    },
+    {
+      "path": "content/lessons/l14.md",
+      "words": 1621,
+      "chars": 14963
+    },
+    {
+      "path": "content/lessons/l15.md",
+      "words": 1468,
+      "chars": 15573
+    },
+    {
+      "path": "content/lessons/l16.md",
+      "words": 1594,
+      "chars": 16586
+    },
+    {
+      "path": "content/lessons/l17.md",
+      "words": 655,
+      "chars": 4788
+    },
+    {
+      "path": "content/lessons/l18.md",
+      "words": 959,
+      "chars": 8985
+    },
+    {
+      "path": "content/lessons/l19.md",
+      "words": 1052,
+      "chars": 10188
+    },
+    {
+      "path": "content/lessons/l2.md",
+      "words": 1015,
+      "chars": 10412
+    },
+    {
+      "path": "content/lessons/l20.md",
+      "words": 796,
+      "chars": 6134
+    },
+    {
+      "path": "content/lessons/l21.md",
+      "words": 991,
+      "chars": 7707
+    },
+    {
+      "path": "content/lessons/l22.md",
+      "words": 546,
+      "chars": 4766
+    },
+    {
+      "path": "content/lessons/l23.md",
+      "words": 367,
+      "chars": 2734
+    },
+    {
+      "path": "content/lessons/l24.md",
+      "words": 297,
+      "chars": 2242
+    },
+    {
+      "path": "content/lessons/l25.md",
+      "words": 295,
+      "chars": 2256
+    },
+    {
+      "path": "content/lessons/l26.md",
+      "words": 301,
+      "chars": 2411
+    },
+    {
+      "path": "content/lessons/l27.md",
+      "words": 169,
+      "chars": 1442
+    },
+    {
+      "path": "content/lessons/l28.md",
+      "words": 217,
+      "chars": 2069
+    },
+    {
+      "path": "content/lessons/l29.md",
+      "words": 388,
+      "chars": 3234
+    },
+    {
+      "path": "content/lessons/l3.md",
+      "words": 1242,
+      "chars": 10788
+    },
+    {
+      "path": "content/lessons/l30.md",
+      "words": 323,
+      "chars": 2877
+    },
+    {
+      "path": "content/lessons/l31.md",
+      "words": 520,
+      "chars": 4117
+    },
+    {
+      "path": "content/lessons/l32.md",
+      "words": 329,
+      "chars": 2621
+    },
+    {
+      "path": "content/lessons/l33.md",
+      "words": 604,
+      "chars": 4776
+    },
+    {
+      "path": "content/lessons/l34.md",
+      "words": 293,
+      "chars": 2303
+    },
+    {
+      "path": "content/lessons/l35.md",
+      "words": 249,
+      "chars": 2139
+    },
+    {
+      "path": "content/lessons/l4.md",
+      "words": 1890,
+      "chars": 17100
+    },
+    {
+      "path": "content/lessons/l5.md",
+      "words": 1215,
+      "chars": 11046
+    },
+    {
+      "path": "content/lessons/l6.md",
+      "words": 1977,
+      "chars": 16706
+    },
+    {
+      "path": "content/lessons/l7.md",
+      "words": 1879,
+      "chars": 15803
+    },
+    {
+      "path": "content/lessons/l8.md",
+      "words": 1229,
+      "chars": 9426
+    },
+    {
+      "path": "content/lessons/l9.md",
+      "words": 1165,
+      "chars": 10082
+    },
+    {
+      "path": "content/lessons/perf-l1.md",
+      "words": 952,
+      "chars": 7714
+    },
+    {
+      "path": "content/lessons/perf-l2.md",
+      "words": 550,
+      "chars": 4331
+    },
+    {
+      "path": "content/lessons/perf-l3.md",
+      "words": 564,
+      "chars": 4494
+    },
+    {
+      "path": "content/lessons/perf-l4.md",
+      "words": 772,
+      "chars": 5990
+    },
+    {
+      "path": "content/lessons/perf-l5.md",
+      "words": 601,
+      "chars": 4635
+    },
+    {
+      "path": "content/lessons/perf-l6.md",
+      "words": 465,
+      "chars": 3697
+    },
+    {
+      "path": "content/lessons/perf-l7.md",
+      "words": 595,
+      "chars": 4557
+    }
+  ],
+  "pt_keys": 129,
+  "en_keys": 129,
+  "missing_in_en": 0
+}

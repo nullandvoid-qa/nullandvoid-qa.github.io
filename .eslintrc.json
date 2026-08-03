@@ -77,6 +77,12 @@
       "rules": {
         "no-unused-vars": "off"
       }
+    },
+    {
+      "files": ["js/__tests__/**/*.js"],
+      "env": {
+        "node": true
+      }
     }
   ]
 }

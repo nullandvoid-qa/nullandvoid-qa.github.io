@@ -1,5 +1,3 @@
-const path = require('path');
-
 const { validateLessonStructure } = require('../../scripts/validate-lessons.js');
 
 describe('lesson structure validation', () => {

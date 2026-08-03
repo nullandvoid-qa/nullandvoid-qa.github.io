@@ -48,6 +48,10 @@ python3 -m http.server 8000
 4. Valide qualidade com os scripts disponíveis:
 
 ```bash
+npm run validate:tracks
+npm run validate:lessons
+npm run validate:i18n
+npm run validate:all
 npm test
 npm run lint
 npm run test:e2e

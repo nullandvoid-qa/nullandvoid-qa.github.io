@@ -198,20 +198,11 @@
   const applyStaticI18n = window.NVAppSettings.applyStaticI18n;
   const updateLangToggle = window.NVAppSettings.updateLangToggle;
   const renderNavLinks = window.NVAppSettings.renderNavLinks;
-  const bindNavLinks = window.NVAppSettings.bindNavLinks;
-  const setLang = window.NVAppSettings.setLang;
   const toggleLang = window.NVAppSettings.toggleLang;
 
   // ── Utilities ─────────────────────────────────────────────────────────────
 
     // showToast is now provided by js/app-ui.js
-
-  function getIconMarkup(name, size = "18", className = "") {
-    if (!window.NVIcons || typeof window.NVIcons.get !== "function") {
-      return "";
-    }
-    return window.NVIcons.get(name, className, size);
-  }
 
   // Code highlighting and copy button helpers live in `js/utils.js`.
 
