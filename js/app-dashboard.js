@@ -22,6 +22,21 @@
     }
   }
 
+  function renderAchievements() {
+    const state = getState();
+    const grid = document.getElementById("achievements-grid");
+    if (!grid) return;
+    const unlocked = window.loadJson("testers-guild-unlocked-achievements", []);
+    grid.innerHTML = window.NVViewHelpers.buildAchievementsHtml(
+      state.achievementsList || [],
+      unlocked,
+      state.lang,
+      window.escapeHtml,
+      window.NVIcons,
+      getHelpers().t,
+    );
+  }
+
   async function renderDashboard() {
     const state = getState();
     const helpers = getHelpers();
@@ -141,6 +156,7 @@
 
   window.NVAppDashboard = {
     renderDashboard,
+    renderAchievements,
   };
   window.renderDashboard = renderDashboard;
 })();

@@ -86,7 +86,7 @@ function saveProgress(progress) {
 
 function saveLastLesson(id) {
   if (typeof localStorage !== "undefined") {
-    localStorage.setItem("testers-guild-last-lesson", id);
+    window.setStoredItem?.("testers-guild-last-lesson", id);
   }
 }
 

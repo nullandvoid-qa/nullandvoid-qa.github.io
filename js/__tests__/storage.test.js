@@ -67,6 +67,14 @@ describe('Storage helpers', () => {
       expect(retrieved).toEqual(testData);
     });
 
+    test('uses shared storage helpers for direct string values', () => {
+      const { setStoredItem, getStoredItem, removeStoredItem } = require('../utils.js');
+      setStoredItem('shared-key', 'shared-value');
+      expect(getStoredItem('shared-key')).toBe('shared-value');
+      removeStoredItem('shared-key');
+      expect(getStoredItem('shared-key')).toBeNull();
+    });
+
     test('overwrites existing data', () => {
       const { saveJson } = require('../utils.js');
       saveJson('test-key', { version: 1 });

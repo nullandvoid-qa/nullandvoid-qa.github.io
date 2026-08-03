@@ -720,7 +720,7 @@
         // ignore
       }
 
-      const certificates = JSON.parse(localStorage.getItem('testers-guild-certificates') || '[]');
+      const certificates = JSON.parse((typeof window !== 'undefined' && window.getStoredItem ? window.getStoredItem('testers-guild-certificates') : localStorage.getItem('testers-guild-certificates')) || '[]');
       const verifyCode = this.generateVerificationCode(userName, trackId, completedDate);
       certificates.push({
         trackId,
@@ -729,7 +729,11 @@
         generatedAt: new Date().toISOString(),
         verifyCode,
       });
-      localStorage.setItem('testers-guild-certificates', JSON.stringify(certificates));
+      if (typeof window !== 'undefined' && window.setStoredItem) {
+        window.setStoredItem('testers-guild-certificates', JSON.stringify(certificates));
+      } else {
+        localStorage.setItem('testers-guild-certificates', JSON.stringify(certificates));
+      }
       return certificates[certificates.length - 1];
     },
 
@@ -737,7 +741,7 @@
      * Get all user certificates
      */
     getUserCertificates: function() {
-      return JSON.parse(localStorage.getItem('testers-guild-certificates') || '[]');
+      return JSON.parse((typeof window !== 'undefined' && window.getStoredItem ? window.getStoredItem('testers-guild-certificates') : localStorage.getItem('testers-guild-certificates')) || '[]');
     }
   };
 })();

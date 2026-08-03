@@ -123,14 +123,35 @@ function getStorage(key, legacyKey) {
     return null;
   }
 
-  let value = localStorage.getItem(key);
+  let value = getStoredItem(key);
   if (!value && legacyKey) {
-    value = localStorage.getItem(legacyKey);
+    value = getStoredItem(legacyKey);
     if (value) {
-      localStorage.setItem(key, value);
+      setStoredItem(key, value);
     }
   }
   return value;
+}
+
+function getStoredItem(key) {
+  if (typeof localStorage === "undefined") {
+    return null;
+  }
+  return localStorage.getItem(key);
+}
+
+function setStoredItem(key, value) {
+  if (typeof localStorage === "undefined") {
+    return;
+  }
+  localStorage.setItem(key, value);
+}
+
+function removeStoredItem(key) {
+  if (typeof localStorage === "undefined") {
+    return;
+  }
+  localStorage.removeItem(key);
 }
 
 function loadJson(key, fallback, validator) {
@@ -154,7 +175,7 @@ function loadJson(key, fallback, validator) {
 function saveJson(key, data) {
   try {
     if (typeof localStorage !== "undefined") {
-      localStorage.setItem(key, JSON.stringify(data));
+      setStoredItem(key, JSON.stringify(data));
     }
   } catch (e) {
     console.error(e);
@@ -242,6 +263,9 @@ if (typeof module !== "undefined" && module.exports) {
     escapeHtml,
     getCurrentLangKey,
     getStorage,
+    getStoredItem,
+    setStoredItem,
+    removeStoredItem,
     loadJson,
     saveJson,
     getStoredProgress,

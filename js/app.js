@@ -356,6 +356,10 @@
   }
 
   function renderAchievements() {
+    if (window.NVAppDashboard?.renderAchievements) {
+      window.NVAppDashboard.renderAchievements();
+      return;
+    }
     const grid = document.getElementById("achievements-grid");
     if (!grid) return;
     const unlocked = loadJson("testers-guild-unlocked-achievements", []);
@@ -410,15 +414,23 @@
   // ── Home / Tracks / Roadmap ─────────────────────────────────────────────────
   // These renderers are implemented in js/app-home.js.
 
-  // ── Glossary ──────────────────────────────────────────────────────────────
+  // ── Content / quiz views ────────────────────────────────────────────────
+  // These renderers now live in js/app-content.js and are exposed on window.
   function renderGlossary() {
+    if (window.NVAppContent?.renderGlossary) {
+      window.NVAppContent.renderGlossary();
+      return;
+    }
     const items = window.TG_GLOSSARY?.[getLangKey()] || [];
     document.getElementById("glossary-content").innerHTML = window.NVViewHelpers.buildGlossaryHtml(items, escapeHtml);
   }
   window.renderGlossary = renderGlossary;
 
-  // ── Labs ──────────────────────────────────────────────────────────────────
   function renderLabs() {
+    if (window.NVAppContent?.renderLabs) {
+      window.NVAppContent.renderLabs();
+      return;
+    }
     const container = document.getElementById("labs-content");
     if (!container) return;
     const labs = labsData[getLangKey()] || labsData.pt || [];
@@ -447,6 +459,10 @@
   window.renderLabs = renderLabs;
 
   function renderSandbox() {
+    if (window.NVAppContent?.renderSandbox) {
+      window.NVAppContent.renderSandbox();
+      return;
+    }
     const menu = document.getElementById("sandbox-menu");
     const example = document.getElementById("sandbox-example");
     if (!menu || !example) return;
@@ -480,8 +496,11 @@
   }
   window.renderSandbox = renderSandbox;
 
-  // ── Quiz ──────────────────────────────────────────────────────────────────
   function renderQuiz(trackId) {
+    if (window.NVAppContent?.renderQuiz) {
+      window.NVAppContent.renderQuiz(trackId);
+      return;
+    }
     const container = document.getElementById("quiz-content");
     if (!container) return;
 
@@ -502,7 +521,6 @@
     const lt = localizedTrack(track);
     const alreadyPassed = !!quizzesPassed[trackId];
 
-    // Set breadcrumb
     const bc = document.getElementById("quiz-breadcrumb");
     if (bc) bc.textContent = lt.title;
 
@@ -546,6 +564,10 @@
 
   // ── Bookmarks ─────────────────────────────────────────────────────────────
   function toggleBookmark(lessonId) {
+    if (window.NVAppBookmarks?.toggleBookmark) {
+      window.NVAppBookmarks.toggleBookmark(lessonId);
+      return;
+    }
     const idx = bookmarks.indexOf(lessonId);
     if (idx === -1) {
       bookmarks.push(lessonId);
@@ -564,6 +586,10 @@
 
   // ── Search ────────────────────────────────────────────────────────────────
   function handleSearch(query) {
+    if (window.NVAppSearch?.handleSearch) {
+      window.NVAppSearch.handleSearch(query);
+      return;
+    }
     const resultsEl = getElementById("search-results");
     const glossaryItems = window.TG_GLOSSARY?.[getLangKey()] || [];
     window.NVViewHelpers.searchAndRender(

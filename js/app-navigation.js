@@ -1,10 +1,13 @@
 async function navigate(view, params = {}) {
   const safeView = typeof view === "string" && view ? view : "home";
   const safeParams = params && typeof params === "object" ? params : {};
+  const state = window.NVApp?.state || {};
 
   if (typeof window !== "undefined") {
     window.currentView = safeView;
     window.viewParams = safeParams;
+    state.currentView = safeView;
+    state.viewParams = safeParams;
   }
 
   if (window.NVViewHelpers && typeof window.NVViewHelpers.setActiveView === "function") {
