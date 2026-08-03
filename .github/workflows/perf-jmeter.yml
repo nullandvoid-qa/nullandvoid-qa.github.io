@@ -15,7 +15,7 @@ jobs:
           docker run --rm -v ${{ github.workspace }}/scripts/jmeter:/test -w /test justb4/jmeter:5.4.1 -n -t test-plan.jmx -l results.jtl -JBASE_URL=${PERF_BASE_URL}
           docker run --rm -v ${{ github.workspace }}/scripts/jmeter:/test -w /test justb4/jmeter:5.4.1 -g results.jtl -o report
       - name: Upload results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: jmeter-report
           path: scripts/jmeter/report
