@@ -123,10 +123,10 @@ Produção (real)         $150,000 - $1,000,000
 
 <h3>📚 Recursos (Leitura Extra)</h3>
 <ul style="margin:1rem 0">
-  <li><a href="https://www.istqb.org/certifications/foundation-level" target="_blank">📖 Syllabus ISTQB Foundation</a> - A certificação mais reconhecida no mundo em QA. Seção 1 cobre QA basics.</li>
-  <li><a href="https://martinfowler.com/articles/qa-in-agile.html" target="_blank">📖 Martin Fowler: QA in Agile</a> - Um dos arquitetos mais respeitados explica o papel de QA moderno.</li>
-  <li><a href="https://testcraft.io/blog/shift-left-testing/" target="_blank">📖 Shift-Left Testing Explained</a> - Por quê QA no início economiza tempo e dinheiro.</li>
-  <li><a href="https://www.youtube.com/watch?v=X6kyD2ksKpc" target="_blank">🎥 Vídeo (7min): O que QA NÃO é</a> - Demolindo misconceptions comuns.</li>
+  <li><a href="https://www.istqb.org/certifications/foundation-level" target="_blank" rel="noopener noreferrer">📖 Syllabus ISTQB Foundation</a> - A certificação mais reconhecida no mundo em QA. Seção 1 cobre QA basics.</li>
+  <li><a href="https://martinfowler.com/articles/qa-in-agile.html" target="_blank" rel="noopener noreferrer">📖 Martin Fowler: QA in Agile</a> - Um dos arquitetos mais respeitados explica o papel de QA moderno.</li>
+  <li><a href="https://testcraft.io/blog/shift-left-testing/" target="_blank" rel="noopener noreferrer">📖 Shift-Left Testing Explained</a> - Por quê QA no início economiza tempo e dinheiro.</li>
+  <li><a href="https://www.youtube.com/watch?v=X6kyD2ksKpc" target="_blank" rel="noopener noreferrer">🎥 Vídeo (7min): O que QA NÃO é</a> - Demolindo misconceptions comuns.</li>
 </ul>
 
 <h3>🤔 Perguntas para Você Refletir</h3>

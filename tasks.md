@@ -19,17 +19,8 @@ Os principais pontos de melhoria identificados são:
 
 ## ✅ Checklist priorizada para execução incremental
 
-- [x] 3. Melhorar robustez do frontend
-  - [x] Revisar fluxo de carregamento de lições e trilhas em cenários inesperados.
-
 - [ ] 4. Reduzir acoplamento do bootstrap principal
   - [ ] Extrair mais lógica de [js/app.js](js/app.js) para módulos específicos.
-  - [x] Padronizar inicialização e dependências entre módulos.
-
-- [ ] 6. Melhorar performance e experiência offline
-  - [x] Revisar cache do service worker e arquivos estáticos.
-  - [x] Avaliar imagens, scripts e CSS para reduzir peso desnecessário.
-  - [x] Confirmar comportamento útil quando o navegador estiver offline.
 
 - [ ] 7. Completar conteúdo de apoio e exercícios
   - [ ] Priorizar aulas com maior impacto pedagógico.

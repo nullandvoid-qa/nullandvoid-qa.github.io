@@ -64,3 +64,29 @@ O projeto usa um sistema i18n em camadas. Sempre que criar ou modificar textos, 
 
 Antes de abrir PR, execute:
 
+```bash
+# Start a local static server (Python 3):
+python -m http.server 8000
+
+# Run unit tests locally using npm/yarn (node + jest required):
+npx jest
+
+# Quick lint check (if you have eslint configured):
+npx eslint . --ext .js,.html
+```
+
+### Desenvolvimento local
+
+1. Serve the site locally for manual testing:
+
+```bash
+# from repository root
+python -m http.server 8000
+# then open http://localhost:8000/
+```
+
+2. If you change large assets (fonts, images), re-run service worker by unregistering it in the browser devtools or increment `CACHE_VERSION` in `js/service-worker.js`.
+
+3. When updating styles or fonts, test both with JS enabled and disabled to ensure fallbacks work (`noscript`).
+
+
