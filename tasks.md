@@ -20,6 +20,7 @@ Os principais pontos de melhoria identificados são:
 ## ✅ Checklist priorizada para execução incremental
 
 - [ ] 4. Reduzir acoplamento do bootstrap principal
+  - [x] Remover chamadas duplicadas de inicialização global (`ensureGlobalNVApp`) em `js/app.js`.
   - [ ] Extrair mais lógica de [js/app.js](js/app.js) para módulos específicos.
 
 - [ ] 7. Completar conteúdo de apoio e exercícios
