@@ -863,11 +863,14 @@
   // ── Init ──────────────────────────────────────────────────────────────────
   function mergeTrackSources() {
     if (window.NVAppTracks && typeof window.NVAppTracks.mergeTrackSources === 'function') {
-      try { return window.NVAppTracks.mergeTrackSources(); } catch (err) { /* fall back */ }
+      try {
+        return window.NVAppTracks.mergeTrackSources();
+      } catch (err) {
+        // fall back to empty list when the helper unexpectedly throws
+      }
     }
 
-    // Fallback: basic merge when the extracted helper is not present.
-    return Array.isArray(window.TG_QAWAY_TRACKS) ? window.TG_QAWAY_TRACKS : [];
+    return [];
   }
 
   function init() {

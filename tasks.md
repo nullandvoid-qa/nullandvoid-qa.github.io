@@ -21,8 +21,8 @@ Os principais pontos de melhoria identificados são:
 
 - [ ] 4. Reduzir acoplamento do bootstrap principal
   - [x] Remover chamadas duplicadas de inicialização global (`ensureGlobalNVApp`) em `js/app.js`.
-  - [ ] Extrair mais lógica de [js/app.js](js/app.js) para módulos específicos.
   - [x] Extrair `ensureGlobalNVApp` para `js/app-bootstrap-helpers.js` e delegar em `js/app.js`.
+  - [x] Delegar `mergeTrackSources` para `js/app-tracks.js` e simplificar o fallback em `js/app.js`.
   - [ ] Extrair mais lógica de [js/app.js](js/app.js) para módulos específicos.
 
 - [ ] 7. Completar conteúdo de apoio e exercícios
