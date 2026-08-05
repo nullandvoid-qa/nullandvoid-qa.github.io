@@ -7,6 +7,8 @@
     "test": "jest --coverage",
     "test:watch": "jest --watch",
     "test:verbose": "jest --coverage --verbose",
+    "start": "python -m http.server 8000",
+    "test:e2e:smoke": "npx playwright test tests/e2e --project=chromium",
     "test:e2e": "npx playwright test",
     "validate:tracks": "node scripts/validate-tracks.js",
     "validate:lessons": "node scripts/validate-lessons.js",

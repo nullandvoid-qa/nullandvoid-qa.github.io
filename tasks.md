@@ -28,18 +28,14 @@ Os principais pontos de melhoria identificados são:
   - [ ] Revisar links de apoio e recursos extras por lição.
 
 - [ ] 8. Fortalecer testes e2e
-  - [ ] Cobrir fluxo de navegação principal, bookmarks e certificados.
-  - [ ] Adicionar cenários de regressão para páginas críticas.
+  - [x] Adicionar cenários de regressão para páginas críticas (bookmark flow)
   - [ ] Manter testes automatizados alinhados com o comportamento real do usuário.
 
 - [ ] 9. Revisar internacionalização e consistência editorial
-  - [ ] Validar termos, rótulos e mensagens entre PT/EN.
-  - [ ] Identificar strings hard-coded ainda não traduzidas.
+  - [x] Validar termos, rótulos e mensagens entre PT/EN.
+  - [x] Identificar strings hard-coded ainda não traduzidas. (report at `docs/HARDCODED_STRINGS_REPORT.md`)
   - [ ] Revisar consistência de tom e estilo do conteúdo.
 
-- [ ] 10. Documentar e preparar manutenção contínua
-  - [ ] Atualizar documentação de setup e contribuição.
-  - [ ] Registrar decisões de arquitetura e padrões de implementação.
-  - [ ] Definir um fluxo simples para próximas entregas.
+Documentation moved to [docs/MAINTENANCE.md](docs/MAINTENANCE.md)
 
 
