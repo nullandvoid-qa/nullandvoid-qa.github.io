@@ -38,7 +38,7 @@ Os principais pontos de melhoria identificados são:
   - [x] Validar termos, rótulos e mensagens entre PT/EN.
   - [x] Identificar strings hard-coded ainda não traduzidas. (report at `docs/HARDCODED_STRINGS_REPORT.md`)
   - [ ] Revisar consistência de tom e estilo do conteúdo.
-  - [ ] Extrair strings inline do `js/service-worker.js` para i18n (em progresso).
+  - [x] Extrair strings inline do `js/service-worker.js` para i18n (adicionadas chaves em `data/translations-pt.json`).
 
 Documentation moved to [docs/MAINTENANCE.md](docs/MAINTENANCE.md)
 
