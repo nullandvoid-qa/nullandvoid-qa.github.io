@@ -21,16 +21,25 @@
     if (!resultsEl) return;
     const helpers = getHelpers();
     const glossaryItems = window.TG_GLOSSARY?.[getLangKey()] || [];
-    window.NVViewHelpers.searchAndRender(
-      resultsEl,
-      query,
-      helpers.getAllLessons || (() => []),
-      glossaryItems,
-      window.NVIcons,
-      window.escapeHtml,
-      window.t,
-      window.navigate,
-    );
+    const allLessons = typeof helpers.getAllLessons === 'function' ? helpers.getAllLessons : () => [];
+    const t = typeof helpers.t === 'function' ? helpers.t : (key, fallback) => fallback || key;
+    const escape = typeof window.escapeHtml === 'function' ? window.escapeHtml : (value) => String(value == null ? '' : value);
+
+    if (typeof window.NVViewHelpers?.searchAndRender === 'function') {
+      window.NVViewHelpers.searchAndRender(
+        resultsEl,
+        query,
+        allLessons,
+        glossaryItems,
+        window.NVIcons,
+        escape,
+        t,
+        window.navigate,
+      );
+      return;
+    }
+
+    resultsEl.innerHTML = `<div class="search-empty">${escape(t('search.unavailable', 'Search is unavailable.'))}</div>`;
   }
 
   window.NVAppSearch = { handleSearch };

@@ -53,12 +53,12 @@ function normalizeQuizzesState(quizzesState) {
 }
 
 function getAuthProgress() {
-  if (!window.NVAuth || !window.NVAuth.isAuthenticated) {
+  if (!window.NVAuth || !window.NVAuth.isAuthenticated || typeof window.NVAuth.getProgress !== 'function') {
     return null;
   }
 
   const userProgress = window.NVAuth.getProgress();
-  return Object.keys(userProgress || {}).length > 0 ? userProgress : null;
+  return userProgress && Object.keys(userProgress).length > 0 ? userProgress : null;
 }
 
 function loadProgress() {
@@ -68,7 +68,20 @@ function loadProgress() {
       return normalizeProgressState(authProgress);
     }
 
-    return normalizeProgressState(getStoredProgress(["testers-guild-progress", "tg-qaway-progress"], {}));
+    // Prefer an available getStoredProgress helper from the environment,
+    // fallback to requiring the local utils implementation when running in Node tests.
+    let stored = {};
+    if (typeof getStoredProgress === 'function') {
+      stored = getStoredProgress(["testers-guild-progress", "tg-qaway-progress"], {});
+    } else {
+      try {
+        const u = require('./utils.js');
+        stored = u.getStoredProgress(["testers-guild-progress", "tg-qaway-progress"], {});
+      } catch (e) {
+        stored = {};
+      }
+    }
+    return normalizeProgressState(stored);
   } catch {
     return {};
   }
@@ -77,17 +90,116 @@ function loadProgress() {
 function saveProgress(progress) {
   const normalizedProgress = normalizeProgressState(progress);
 
-  if (window.NVAuth && window.NVAuth.isAuthenticated) {
+  if (window.NVAuth && window.NVAuth.isAuthenticated && typeof window.NVAuth.setProgress === 'function') {
     window.NVAuth.setProgress(normalizedProgress);
   }
 
-  persistProgress(["testers-guild-progress"], normalizedProgress);
+  // Use available persistProgress helper from environment or fallback to utils implementation
+  if (typeof persistProgress === 'function') {
+    persistProgress(["testers-guild-progress"], normalizedProgress);
+  } else {
+    try {
+      const u = require('./utils.js');
+      if (u && typeof u.persistProgress === 'function') u.persistProgress(["testers-guild-progress"], normalizedProgress);
+    } catch (e) {
+      // last resort: try to save as JSON into localStorage
+      try {
+        if (typeof localStorage !== 'undefined') localStorage.setItem('testers-guild-progress', JSON.stringify(normalizedProgress));
+      } catch (err) {
+        // ignore
+      }
+    }
+  }
+}
+
+function safeGetStoredItem(key) {
+  if (typeof window !== 'undefined' && typeof window.getStoredItem === 'function') {
+    try { return window.getStoredItem(key); } catch (e) { /* ignore */ }
+  }
+  if (typeof getStoredItem === 'function') {
+    try { return getStoredItem(key); } catch (e) { /* ignore */ }
+  }
+  try {
+    if (typeof localStorage !== 'undefined') {
+      return localStorage.getItem(key);
+    }
+  } catch (e) {
+    // ignore
+  }
+  return null;
+}
+
+function safeSetStoredItem(key, value) {
+  if (typeof window !== 'undefined' && typeof window.setStoredItem === 'function') {
+    try { window.setStoredItem(key, value); return; } catch (e) { /* ignore */ }
+  }
+  if (typeof setStoredItem === 'function') {
+    try { setStoredItem(key, value); return; } catch (e) { /* ignore */ }
+  }
+  try {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(key, value);
+    }
+  } catch (e) {
+    // ignore
+  }
+}
+
+function safeRemoveStoredItem(key) {
+  if (typeof window !== 'undefined' && typeof window.removeStoredItem === 'function') {
+    try { window.removeStoredItem(key); return; } catch (e) { /* ignore */ }
+  }
+  if (typeof removeStoredItem === 'function') {
+    try { removeStoredItem(key); return; } catch (e) { /* ignore */ }
+  }
+  try {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem(key);
+    }
+  } catch (e) {
+    // ignore
+  }
+}
+
+function safeLoadJson(key, fallback, validator) {
+  if (typeof window !== 'undefined' && typeof window.loadJson === 'function') {
+    try { return window.loadJson(key, fallback, validator); } catch (e) { /* ignore */ }
+  }
+  if (typeof loadJson === 'function') {
+    try { return loadJson(key, fallback, validator); } catch (e) { /* ignore */ }
+  }
+  try {
+    if (typeof localStorage !== 'undefined') {
+      const raw = localStorage.getItem(key);
+      if (raw === null) return fallback;
+      const data = JSON.parse(raw);
+      if (validator && !validator(data)) return fallback;
+      return data;
+    }
+  } catch (e) {
+    // ignore
+  }
+  return fallback;
+}
+
+function safeSaveJson(key, data) {
+  if (typeof window !== 'undefined' && typeof window.saveJson === 'function') {
+    try { window.saveJson(key, data); return; } catch (e) { /* ignore */ }
+  }
+  if (typeof saveJson === 'function') {
+    try { saveJson(key, data); return; } catch (e) { /* ignore */ }
+  }
+  try {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(key, JSON.stringify(data));
+    }
+  } catch (e) {
+    // ignore
+  }
 }
 
 function saveLastLesson(id) {
-  if (typeof localStorage !== "undefined") {
-    window.setStoredItem?.("testers-guild-last-lesson", id);
-  }
+  setStoredItem("testers-guild-last-lesson", id);
 }
 
 function exportProgressToFile(progress, bookmarks, quizzesPassed, checklistState) {
@@ -186,5 +298,32 @@ if (typeof module !== "undefined" && module.exports) {
     exportProgressToFile,
     isValidImportedPayload,
     importProgressFromFile,
+    safeGetStoredItem,
+    safeSetStoredItem,
+    safeRemoveStoredItem,
+    safeLoadJson,
+    safeSaveJson,
   };
+}
+
+// Expose a safe storage API for other modules in the browser environment.
+if (typeof window !== 'undefined') {
+  window.NVAppStorage = window.NVAppStorage || {};
+  try {
+    window.NVAppStorage.normalizeProgressState = normalizeProgressState;
+    window.NVAppStorage.normalizeBookmarksState = normalizeBookmarksState;
+    window.NVAppStorage.normalizeQuizzesState = normalizeQuizzesState;
+    window.NVAppStorage.loadProgress = loadProgress;
+    window.NVAppStorage.saveProgress = saveProgress;
+    window.NVAppStorage.saveLastLesson = saveLastLesson;
+    window.NVAppStorage.exportProgressToFile = exportProgressToFile;
+    window.NVAppStorage.importProgressFromFile = importProgressFromFile;
+    window.NVAppStorage.isValidImportedPayload = isValidImportedPayload;
+    window.NVAppStorage.safeGetStoredItem = safeGetStoredItem;
+  window.NVAppStorage.safeSetStoredItem = safeSetStoredItem;
+  window.NVAppStorage.safeRemoveStoredItem = safeRemoveStoredItem;
+    window.NVAppStorage.safeSaveJson = safeSaveJson;
+  } catch (e) {
+    // noop - defensive write to window
+  }
 }

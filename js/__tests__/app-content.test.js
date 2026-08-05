@@ -42,6 +42,7 @@ describe('app-content renderers', () => {
     window.t = (key) => key;
     window.showToast = jest.fn();
     window.navigate = jest.fn();
+    window.setStoredItem = jest.fn();
     window.TG_GLOSSARY = {
       pt: [{ term: 'Glossário', def: 'Definição' }],
     };
@@ -85,5 +86,24 @@ describe('app-content renderers', () => {
     expect(window.NVViewHelpers.buildTrackQuizHtml).toHaveBeenCalled();
     expect(window.NVViewHelpers.bindTrackQuizHandlers).toHaveBeenCalled();
     expect(document.getElementById('quiz-content').innerHTML).toBe('quiz-markup');
+  });
+
+  test('renderQuiz persists quiz state through helper storage when available', () => {
+    let passedCallback;
+    window.NVViewHelpers.bindTrackQuizHandlers = jest.fn((container, _quizData, icons, lang, t, onBack, onRetry, onPassed) => {
+      passedCallback = onPassed;
+    });
+
+    window.NVAppContent.renderQuiz('track-1');
+    expect(window.NVViewHelpers.bindTrackQuizHandlers).toHaveBeenCalled();
+
+    passedCallback?.(1);
+
+    expect(window.NVApp.state.quizzesPassed['track-1']).toBeDefined();
+    expect(window.setStoredItem).toHaveBeenCalledWith(
+      'testers-guild-quizzes',
+      JSON.stringify(window.NVApp.state.quizzesPassed),
+    );
+    expect(window.showToast).toHaveBeenCalled();
   });
 });

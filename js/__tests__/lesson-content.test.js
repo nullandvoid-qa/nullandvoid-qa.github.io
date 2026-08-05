@@ -199,4 +199,22 @@ duration: 50 min
     expect(result.duration).toBe('50 min');
     expect(result.content).toContain('<h1>Performance Fundamentals</h1>');
   });
+
+  test('falls back to lesson metadata when markdown cannot be loaded', async () => {
+    const { loadLessonContent } = require('../lesson-content.js');
+
+    const result = await loadLessonContent(
+      { id: 'l1', title: 'Aula fallback', duration: '5 min', content: '<p>conteúdo local</p>' },
+      {
+        fetchImpl: async () => {
+          throw new Error('network failed');
+        },
+        markdownMap: { l1: '/content/lessons/l1.md' },
+      },
+    );
+
+    expect(result.title).toBe('Aula fallback');
+    expect(result.duration).toBe('5 min');
+    expect(result.content).toBe('<p>conteúdo local</p>');
+  });
 });

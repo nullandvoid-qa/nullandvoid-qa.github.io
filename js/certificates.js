@@ -704,6 +704,40 @@
     },
 
     /**
+     * Read saved certificate entries from storage.
+     */
+    getStoredCertificates: function() {
+      if (typeof window !== 'undefined' && window.NVAppStorage?.safeLoadJson) {
+        return window.NVAppStorage.safeLoadJson('testers-guild-certificates', []);
+      }
+      if (typeof window !== 'undefined' && typeof window.loadJson === 'function') {
+        try { return window.loadJson('testers-guild-certificates', []); } catch (e) { /* ignore */ }
+      }
+      try {
+        return JSON.parse(localStorage.getItem('testers-guild-certificates') || '[]');
+      } catch (e) {
+        return [];
+      }
+    },
+
+    /**
+     * Save certificate entries to storage.
+     */
+    saveCertificateEntries: function(certificates) {
+      if (typeof window !== 'undefined' && window.NVAppStorage?.safeSaveJson) {
+        return window.NVAppStorage.safeSaveJson('testers-guild-certificates', certificates);
+      }
+      if (typeof window !== 'undefined' && typeof window.saveJson === 'function') {
+        try { window.saveJson('testers-guild-certificates', certificates); return; } catch (e) { /* ignore */ }
+      }
+      try {
+        localStorage.setItem('testers-guild-certificates', JSON.stringify(certificates));
+      } catch (e) {
+        // ignore
+      }
+    },
+
+    /**
      * Save certificate to local storage
      */
     saveCertificate: function(trackId, userName, completedDate) {
@@ -720,7 +754,7 @@
         // ignore
       }
 
-      const certificates = JSON.parse((typeof window !== 'undefined' && window.getStoredItem ? window.getStoredItem('testers-guild-certificates') : localStorage.getItem('testers-guild-certificates')) || '[]');
+      const certificates = this.getStoredCertificates();
       const verifyCode = this.generateVerificationCode(userName, trackId, completedDate);
       certificates.push({
         trackId,
@@ -729,11 +763,7 @@
         generatedAt: new Date().toISOString(),
         verifyCode,
       });
-      if (typeof window !== 'undefined' && window.setStoredItem) {
-        window.setStoredItem('testers-guild-certificates', JSON.stringify(certificates));
-      } else {
-        localStorage.setItem('testers-guild-certificates', JSON.stringify(certificates));
-      }
+      this.saveCertificateEntries(certificates);
       return certificates[certificates.length - 1];
     },
 
@@ -741,7 +771,7 @@
      * Get all user certificates
      */
     getUserCertificates: function() {
-      return JSON.parse((typeof window !== 'undefined' && window.getStoredItem ? window.getStoredItem('testers-guild-certificates') : localStorage.getItem('testers-guild-certificates')) || '[]');
+      return this.getStoredCertificates();
     }
   };
 })();

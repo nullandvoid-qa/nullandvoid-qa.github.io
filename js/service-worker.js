@@ -22,6 +22,43 @@ function isNetworkFirstAsset(request) {
   return NETWORK_FIRST_ASSETS.includes(url.pathname) || url.pathname.startsWith("/data/");
 }
 
+function shouldServeOfflinePage(request) {
+  return request.mode === 'navigate' || (request.headers.get('accept') || '').includes('text/html');
+}
+
+function createOfflinePageResponse() {
+  return new Response(
+    `<!DOCTYPE html>
+      <html lang="pt-BR">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>Null and Void - Offline</title>
+          <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { font-family: system-ui, sans-serif; background: #0b1120; color: #f8fafc; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
+            .container { text-align: center; max-width: 520px; }
+            .icon { font-size: 4rem; margin-bottom: 1rem; }
+            a { color: #38bdf8; text-decoration: none; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="icon">📡</div>
+            <h1>Você está offline</h1>
+            <p>O conteúdo não está disponível no momento, mas você ainda pode retornar à página inicial.</p>
+            <p><a href="/">Voltar para a home</a></p>
+          </div>
+        </body>
+      </html>`,
+    {
+      status: 503,
+      statusText: "Service Unavailable",
+      headers: { "Content-Type": "text/html; charset=utf-8" },
+    },
+  );
+}
+
 // Assets to cache on install
 const CRITICAL_ASSETS = [
   "/",
@@ -96,6 +133,11 @@ self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
+  // Only handle GET requests. POST, PUT and other methods should bypass the cache.
+  if (request.method !== "GET") {
+    return;
+  }
+
   // Skip cross-origin requests
   if (url.origin !== location.origin) {
     return;
@@ -147,7 +189,10 @@ async function cacheFirst(request) {
     return response;
   } catch (error) {
     console.warn("[SW] Cache first failed:", error);
-    // Return a generic offline response
+    if (shouldServeOfflinePage(request)) {
+      return createOfflinePageResponse();
+    }
+
     return new Response("Offline - asset not available", {
       status: 503,
       statusText: "Service Unavailable"
@@ -177,52 +222,14 @@ async function networkFirst(request) {
       return cached;
     }
 
-    // Return offline page
-    return new Response(
-      `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>Null and Void - Offline</title>
-          <style>
-            * { margin: 0; padding: 0; box-sizing: border-box; }
-            body {
-              font-family: system-ui;
-              background: linear-gradient(135deg, #1a1a1a 0%, #2e2e2e 100%);
-              color: #f0f0f0;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              min-height: 100vh;
-              padding: 2rem;
-            }
-            .container {
-              text-align: center;
-              max-width: 500px;
-            }
-            h1 { font-size: 2rem; margin-bottom: 1rem; }
-            p { color: #9a9a9a; margin-bottom: 1rem; }
-            .icon { font-size: 4rem; margin-bottom: 1rem; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="icon">📡</div>
-            <h1>Você está offline</h1>
-            <p>Mas não se preocupe! Seu progresso está salvo localmente.</p>
-            <p>Volte à <a href="/" style="color: #00e5ff; text-decoration: none;">página principal</a> para continuar estudando.</p>
-          </div>
-        </body>
-      </html>
-      `,
-      {
-        status: 503,
-        statusText: "Service Unavailable",
-        headers: { "Content-Type": "text/html; charset=utf-8" }
-      }
-    );
+    if (shouldServeOfflinePage(request)) {
+      return createOfflinePageResponse();
+    }
+
+    return new Response("Offline - asset not available", {
+      status: 503,
+      statusText: "Service Unavailable"
+    });
   }
 }
 

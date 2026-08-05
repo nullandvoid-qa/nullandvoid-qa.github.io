@@ -109,12 +109,13 @@ function attachCopyButtons(container) {
 }
 
 function getCurrentLangKey() {
-  const g =
-    typeof window !== "undefined"
-      ? window
-      : typeof global !== "undefined"
-        ? global
-        : {};
+  if (typeof window !== "undefined") {
+    if (window.NVApp?.state?.lang === "en") return "en";
+    if (window.NVApp?.state?.lang) return "pt";
+    return window.lang === "en" ? "en" : "pt";
+  }
+
+  const g = typeof global !== "undefined" ? global : {};
   return g.lang === "en" ? "en" : "pt";
 }
 

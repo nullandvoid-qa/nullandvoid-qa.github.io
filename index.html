@@ -3,10 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Null and Void QA Course — formação gratuita em QA do zero ao sênior com trilhas, aulas práticas, labs e certificados." />
     <meta
-      name="description"
-      content="Null and Void QA Course — Formação QA do zero ao sênior."
+      name="keywords"
+      content="QA, testes, automação, testes de software, curso gratuito, formação QA"
     />
+    <link rel="canonical" href="https://nullandvoid-qa.github.io/" />
+    <meta property="og:title" content="Null and Void QA Course" />
+    <meta
+      property="og:description"
+      content="Formação gratuita em QA do zero ao sênior com trilhas, aulas práticas e labs reais."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://nullandvoid-qa.github.io/" />
+    <meta property="og:image" content="https://nullandvoid-qa.github.io/images/og-image.svg" />
+    <meta property="og:site_name" content="Null and Void QA Course" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Null and Void QA Course" />
+    <meta
+      name="twitter:description"
+      content="Formação gratuita em QA do zero ao sênior com trilhas, aulas práticas e labs reais."
+    />
+    <meta name="twitter:image" content="https://nullandvoid-qa.github.io/images/og-image.svg" />
     <title>Null and Void QA Course</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,7 +32,8 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="preload" href="css/styles.css" as="style" onload="this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="css/styles.css"></noscript>
     <link
       rel="icon"
       href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='70'>⚔</text></svg>"
@@ -27,10 +46,22 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Null and Void" />
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%2310b981' width='180' height='180' rx='40'/><text x='90' y='120' font-size='70' font-weight='bold' fill='white' text-anchor='middle'>🎓</text></svg>" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "EducationalOrganization",
+        "name": "Null and Void QA Course",
+        "url": "https://nullandvoid-qa.github.io/",
+        "description": "Formação gratuita em QA do zero ao sênior com trilhas, aulas práticas, labs e certificados.",
+        "sameAs": [
+          "https://discord.gg/evVQqq4rf"
+        ]
+      }
+    </script>
     <!-- jsPDF for Certificate Generation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <!-- QR Code Generation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   </head>
   <body>
     <a href="#main-content" class="skip-link">Skip to content</a>
@@ -78,7 +109,7 @@
             <div id="auth-section" class="auth-section">
               <div id="auth-signin"></div>
               <div id="auth-user" class="auth-user hidden">
-                <img id="auth-picture" class="auth-picture" alt="User avatar" />
+                <img id="auth-picture" class="auth-picture" alt="User avatar" loading="lazy" />
                 <span id="auth-name" class="auth-name"></span>
                 <button type="button" id="auth-logout" class="btn-logout" title="Logout" aria-label="Logout">
                   <span data-icon="logout" data-icon-size="16"></span>
@@ -225,6 +256,7 @@
         <div class="home-discovery-panel">
           <div class="search-bar-wrap">
             <span class="search-icon" data-icon="search" data-icon-size="18"></span>
+            <label for="global-search" class="sr-only">Buscar conteúdo</label>
             <input
               type="search"
               id="global-search"
@@ -232,6 +264,7 @@
               data-i18n-placeholder="dashboard.searchPlaceholder"
               placeholder="Buscar…"
               autocomplete="off"
+              aria-label="Buscar conteúdo"
             />
             <div id="search-results" class="search-results hidden"></div>
           </div>
@@ -568,7 +601,7 @@
     <div id="onboarding-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="onboarding-title">
       <div class="modal-overlay"></div>
       <div class="modal-content" style="max-width: 500px;">
-        <button class="modal-close" id="onboarding-close" data-i18n-title="onboarding.close">×</button>
+        <button class="modal-close" id="onboarding-close" data-i18n-title="onboarding.close" type="button" aria-label="Fechar painel de boas-vindas">×</button>
         <div style="text-align: center; padding: 2rem;">
           <div style="margin-bottom: 1rem; color: var(--accent);" data-icon="starter" data-icon-size="48"></div>
           <h2 id="onboarding-title" style="margin-bottom: 1rem; font-size: 1.5rem;" data-i18n="onboarding.title">Bem-vindo(a)!</h2>
@@ -633,6 +666,7 @@
     <script src="js/app-storage.js" defer></script>
     <script src="js/app-i18n.js" defer></script>
     <script src="js/app-navigation.js" defer></script>
+    <script src="js/app-bootstrap.js" defer></script>
     <script src="js/view-helpers.js" defer></script>
     <script src="js/lesson-renderers.js" defer></script>
     <script src="js/lesson-content.js" defer></script>
@@ -666,7 +700,9 @@
         <script src="js/app-bookmarks.js" defer></script>
         <script src="js/app-home.js" defer></script>
         <script src="js/app-track.js" defer></script>
+        <script src="js/app-tracks.js" defer></script>
         <script src="js/app.js?v=1784338954" defer></script>
+        <script src="js/app-init.js" defer></script>
     <script src="js/app-lesson.js" defer></script>
     <script src="js/app-dashboard.js" defer></script>
   </body>

@@ -1486,9 +1486,19 @@
   }
 
   function buildEmptyStateHtml(message, className, escapeHtml) {
+    const safeEscapeHtml = typeof escapeHtml === 'function' ? escapeHtml : (value) => String(value);
+    const safeMessage = message == null ? '' : String(message);
     const classes = ["empty-state"];
     if (className) classes.push(className);
-    return `<p class="${classes.join(" ")}">${escapeHtml(message)}</p>`;
+    return `<div class="${classes.join(" ")}" role="status" aria-live="polite"><p>${safeEscapeHtml(safeMessage)}</p></div>`;
+  }
+
+  function buildLoadingStateHtml(message, className, escapeHtml) {
+    const safeEscapeHtml = typeof escapeHtml === 'function' ? escapeHtml : (value) => String(value);
+    const safeMessage = message == null ? 'Loading…' : String(message);
+    const classes = ["loading-state"];
+    if (className) classes.push(className);
+    return `<div class="${classes.join(" ")}" role="status" aria-live="polite"><p>${safeEscapeHtml(safeMessage)}</p></div>`;
   }
 
   function buildDashboardEmptyStateHtml(message, escapeHtml) {
@@ -1496,7 +1506,8 @@
   }
 
   function buildSearchEmptyStateHtml(message, escapeHtml) {
-    return `<div class="search-empty">${escapeHtml(message)}</div>`;
+    const safeEscapeHtml = typeof escapeHtml === 'function' ? escapeHtml : (value) => String(value);
+    return `<div class="search-empty" role="status" aria-live="polite">${safeEscapeHtml(message == null ? '' : String(message))}</div>`;
   }
 
   const api = {
@@ -1540,6 +1551,7 @@
     renderRoadmap,
     renderTrackDetail,
     buildEmptyStateHtml,
+    buildLoadingStateHtml,
     buildDashboardEmptyStateHtml,
     buildSearchEmptyStateHtml,
     buildSearchSkeletonHtml,

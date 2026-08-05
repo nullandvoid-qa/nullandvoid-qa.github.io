@@ -7,20 +7,55 @@
     return window.NVApp?.helpers || {};
   }
 
+  function getTranslator() {
+    const helpers = getHelpers();
+    return typeof helpers.t === 'function'
+      ? helpers.t
+      : (key, fallback) => fallback || key;
+  }
+
+  function safeEscapeHtml(value) {
+    if (typeof window.escapeHtml === 'function') return window.escapeHtml(value);
+    return String(value == null ? '' : value);
+  }
+
+  function buildEmptyState(message, className = 'track-empty-state') {
+    const text = message == null ? '' : String(message);
+    if (typeof window.NVViewHelpers?.buildEmptyStateHtml === 'function') {
+      return window.NVViewHelpers.buildEmptyStateHtml(text, className, safeEscapeHtml);
+    }
+    const classes = ['empty-state', className].filter(Boolean);
+    return `<div class="${classes.join(' ')}" role="status" aria-live="polite"><p>${safeEscapeHtml(text)}</p></div>`;
+  }
+
   function renderTrackCard(track, containerId) {
     const helpers = getHelpers();
-    const localizedTrackData = helpers.localizedTrack(track) || track;
-    const prog = helpers.getTrackProgress(track);
+    const localizedTrackData = (typeof helpers.localizedTrack === 'function' ? helpers.localizedTrack(track) : track) || track;
+    const prog = typeof helpers.getTrackProgress === 'function'
+      ? helpers.getTrackProgress(track)
+      : { pct: 0, done: 0, total: 0 };
     const container = document.getElementById(containerId);
     if (!container) return;
-    const audience = helpers.TRACK_AUDIENCE[track.id] || "intermediate";
+    const audience = helpers.TRACK_AUDIENCE?.[track.id] || "intermediate";
     const isComplete = prog.pct === 100;
 
-    const iconName = helpers.getTrackIcon(localizedTrackData);
-    const iconHtml = window.NVIcons
+    const iconName = typeof helpers.getTrackIcon === 'function'
+      ? helpers.getTrackIcon(localizedTrackData)
+      : localizedTrackData.icon;
+    const iconHtml = window.NVIcons?.get
       ? window.NVIcons.get(iconName, "track-icon-svg", "28")
-      : helpers.escapeHtml(localizedTrackData.icon || "");
-    const title = helpers.normalizeTextLabel(localizedTrackData.title);
+      : safeEscapeHtml(localizedTrackData.icon || "");
+    const title = typeof helpers.normalizeTextLabel === 'function'
+      ? helpers.normalizeTextLabel(localizedTrackData.title)
+      : safeEscapeHtml(localizedTrackData.title || localizedTrackData.id || '');
+
+    if (typeof window.NVViewHelpers?.buildTrackCardHtml !== 'function') {
+      const fallbackCard = document.createElement('div');
+      fallbackCard.className = 'track-card fallback-card';
+      fallbackCard.textContent = title || getTranslator()("track.untitled", "Untitled track");
+      container.appendChild(fallbackCard);
+      return;
+    }
 
     const cardMarkup = window.NVViewHelpers.buildTrackCardHtml(localizedTrackData, {
       prog: {
@@ -34,7 +69,7 @@
       iconHtml,
       lang: helpers.lang,
       icons: window.NVIcons,
-      escapeHtml: helpers.escapeHtml,
+      escapeHtml: helpers.escapeHtml || safeEscapeHtml,
       t: helpers.t,
       tierLabel: helpers.tierLabel,
     });
@@ -44,8 +79,10 @@
     const cardElement = card.firstElementChild;
     if (cardElement) {
       cardElement.style.setProperty("--track-color", localizedTrackData.color || track.color);
-      const open = () => helpers.navigate("track", { trackId: track.id });
-      window.NVViewHelpers.bindAccessibleAction(cardElement, open);
+      const open = () => typeof helpers.navigate === 'function' && helpers.navigate("track", { trackId: track.id });
+      if (typeof window.NVViewHelpers?.bindAccessibleAction === 'function') {
+        window.NVViewHelpers.bindAccessibleAction(cardElement, open);
+      }
       container.appendChild(cardElement);
     }
   }
@@ -53,11 +90,21 @@
   async function renderTrackDetail(trackId) {
     const state = getState();
     const helpers = getHelpers();
-    const raw = helpers.findTrack(trackId);
-    if (!raw) return;
-
+    const t = getTranslator();
+    const raw = typeof helpers.findTrack === 'function' ? helpers.findTrack(trackId) : null;
     const container = document.getElementById("track-detail");
-    if (container && window.NVViewHelpers?.buildDashboardSkeletonGridHtml) {
+
+    if (!raw) {
+      if (container) {
+        container.innerHTML = buildEmptyState(
+          (helpers.t?.("track.notFound", "Trilha indisponível no momento.") || "Trilha indisponível no momento."),
+          "track-empty-state",
+        );
+      }
+      return;
+    }
+
+    if (container && typeof window.NVViewHelpers?.buildDashboardSkeletonGridHtml === 'function') {
       container.innerHTML = window.NVViewHelpers.buildDashboardSkeletonGridHtml(
         Array.from({ length: 3 }, () => ({
           className: "skeleton-card track-card skeleton-card",
@@ -72,43 +119,55 @@
 
     await frameWait;
 
-    const track = helpers.localizedTrack(raw);
+    const track = typeof helpers.localizedTrack === 'function' ? helpers.localizedTrack(raw) : raw;
     const breadcrumb = document.getElementById("track-breadcrumb");
-    if (breadcrumb) breadcrumb.textContent = track.title;
-    const prog = helpers.getTrackProgress(raw);
+    if (breadcrumb) breadcrumb.textContent = track?.title || raw?.title || t("track.titleMissing", "Track");
+    const prog = typeof helpers.getTrackProgress === 'function'
+      ? helpers.getTrackProgress(raw)
+      : { pct: 0, done: 0, total: 0 };
     const hasQuiz = !!helpers.quizzes?.[trackId];
 
-    const coursesHtml = window.NVViewHelpers.buildTrackCoursesHtml(
-      raw,
-      state.progress,
-      helpers.getEnrichment,
-      helpers.localizedLesson,
-      helpers.localizedCourse,
-      window.escapeHtml,
-      helpers.t,
-      window.NVIcons,
-    );
+    const coursesHtml = typeof window.NVViewHelpers?.buildTrackCoursesHtml === 'function'
+      ? window.NVViewHelpers.buildTrackCoursesHtml(
+          raw,
+          state.progress,
+          helpers.getEnrichment,
+          helpers.localizedLesson,
+          helpers.localizedCourse,
+          window.escapeHtml,
+          helpers.t,
+          window.NVIcons,
+        )
+      : buildEmptyState(t("track.coursesUnavailable", "Course content is unavailable."), "track-courses-empty");
 
     if (!container) return;
-    window.NVViewHelpers.renderTrackDetail(
-      container,
-      { ...track, icon: track.icon },
-      coursesHtml,
-      prog,
-      {
-        modules: helpers.getTrackModules(raw),
-        hours: helpers.getTrackHours(raw),
-        audience: helpers.TRACK_AUDIENCE[raw.id],
-      },
-      {
-        icons: window.NVIcons,
-        escapeHtml: window.escapeHtml,
-        t: helpers.t,
-        tierLabel: helpers.tierLabel,
-        getTrackIcon: helpers.getTrackIcon,
-      },
-      helpers.navigate,
-      hasQuiz,
+    if (typeof window.NVViewHelpers?.renderTrackDetail === 'function') {
+      window.NVViewHelpers.renderTrackDetail(
+        container,
+        { ...track, icon: track.icon },
+        coursesHtml,
+        prog,
+        {
+          modules: typeof helpers.getTrackModules === 'function' ? helpers.getTrackModules(raw) : [],
+          hours: typeof helpers.getTrackHours === 'function' ? helpers.getTrackHours(raw) : 0,
+          audience: helpers.TRACK_AUDIENCE?.[raw.id],
+        },
+        {
+          icons: window.NVIcons,
+          escapeHtml: window.escapeHtml,
+          t: helpers.t,
+          tierLabel: helpers.tierLabel,
+          getTrackIcon: helpers.getTrackIcon,
+        },
+        typeof helpers.navigate === 'function' ? helpers.navigate : () => {},
+        hasQuiz,
+      );
+      return;
+    }
+
+    container.innerHTML = buildEmptyState(
+      t("track.detailUnavailable", "Detalhes da trilha indisponíveis."),
+      "track-detail-empty",
     );
   }
 

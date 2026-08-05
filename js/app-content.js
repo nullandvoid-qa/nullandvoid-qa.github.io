@@ -17,11 +17,36 @@
     return getState().lang === 'en' ? 'en' : 'pt';
   }
 
+  function safeEscapeHtml(value) {
+    if (typeof window.escapeHtml === 'function') return window.escapeHtml(value);
+    return String(value == null ? '' : value);
+  }
+
+  function buildEmptyState(message, className = '') {
+    const text = message == null ? '' : String(message);
+    if (window.NVViewHelpers?.buildEmptyStateHtml) {
+      return window.NVViewHelpers.buildEmptyStateHtml(text, className, safeEscapeHtml);
+    }
+    const classes = ['empty-state'];
+    if (className) classes.push(className);
+    return `<div class="${classes.join(' ')}" role="status" aria-live="polite"><p>${safeEscapeHtml(text)}</p></div>`;
+  }
+
+  function buildTrackQuizHtml(track, quizData, status, lang, icons, escapeHtml, t) {
+    if (window.NVViewHelpers?.buildTrackQuizHtml) {
+      return window.NVViewHelpers.buildTrackQuizHtml(track, quizData, status, lang, icons, escapeHtml, t);
+    }
+    return `<div class="track-quiz"><h2>${safeEscapeHtml(track.title || 'Quiz')}</h2><p>${safeEscapeHtml(t ? t('quiz.unavailable', 'Quiz is unavailable') : 'Quiz is unavailable')}</p></div>`;
+  }
+
   function renderGlossary() {
     const items = window.TG_GLOSSARY?.[getLangKey()] || [];
     const el = document.getElementById('glossary-content');
     if (el) {
-      el.innerHTML = window.NVViewHelpers.buildGlossaryHtml(items, window.escapeHtml);
+      const markup = window.NVViewHelpers?.buildGlossaryHtml
+        ? window.NVViewHelpers.buildGlossaryHtml(items, window.escapeHtml || safeEscapeHtml)
+        : `<div class="glossary-list">${safeEscapeHtml(JSON.stringify(items))}</div>`;
+      el.innerHTML = markup;
     }
   }
 
@@ -33,10 +58,9 @@
     const labsData = window.TG_LABS || {};
     const labs = labsData[getLangKey()] || labsData.pt || [];
     if (!labs.length) {
-      container.innerHTML = window.NVViewHelpers.buildEmptyStateHtml(
+      container.innerHTML = buildEmptyState(
         state.lang === 'en' ? 'No labs available.' : 'Nenhum lab disponível.',
         '',
-        window.escapeHtml,
       );
       return;
     }
@@ -45,14 +69,23 @@
       (state.tracks || []).map((track) => [track.id, helpers.localizedTrack(track)]),
     );
 
-    container.innerHTML = window.NVViewHelpers.buildLabsHtml(
-      labs,
-      trackMap,
-      window.NVIcons,
-      window.escapeHtml,
-      helpers.getTrackIcon,
-      state.lang,
-    );
+    if (window.NVViewHelpers?.buildLabsHtml) {
+      container.innerHTML = window.NVViewHelpers.buildLabsHtml(
+        labs,
+        trackMap,
+        window.NVIcons,
+        window.escapeHtml || safeEscapeHtml,
+        helpers.getTrackIcon,
+        state.lang,
+      );
+      return;
+    }
+
+    container.innerHTML = `<div class="labs-list">${labs
+      .map(
+        (lab) => `<article class="lab-card"><h3>${safeEscapeHtml(lab.name || lab.id)}</h3><p>${safeEscapeHtml(lab.description || '')}</p></article>`,
+      )
+      .join('')}</div>`;
   }
 
   function renderSandbox() {
@@ -71,13 +104,14 @@
       return;
     }
 
+    const escapeHtml = window.escapeHtml || safeEscapeHtml;
     menu.innerHTML = examples
-      .map((item, index) => `<button type="button" class="sandbox-item" data-index="${index}">${window.escapeHtml(item.name || item.id || `Example ${index + 1}`)}</button>`)
+      .map((item, index) => `<button type="button" class="sandbox-item" data-index="${index}">${escapeHtml(item.name || item.id || `Example ${index + 1}`)}</button>`)
       .join('');
 
     const renderExample = (index) => {
       const item = examples[index] || examples[0];
-      example.innerHTML = `<pre class="sandbox-example-code">${window.escapeHtml(item.code || '')}</pre>`;
+      example.innerHTML = `<pre class="sandbox-example-code">${escapeHtml(item.code || '')}</pre>`;
     };
 
     menu.querySelectorAll('.sandbox-item').forEach((btn) => {
@@ -87,6 +121,28 @@
     });
 
     renderExample(0);
+  }
+
+  function persistQuizzes(quizzesPassed) {
+    if (typeof window !== 'undefined' && window.NVAppStorage?.safeSaveJson) {
+      return window.NVAppStorage.safeSaveJson('testers-guild-quizzes', quizzesPassed);
+    }
+    if (typeof window !== 'undefined' && typeof window.saveJson === 'function') {
+      try { window.saveJson('testers-guild-quizzes', quizzesPassed); return; } catch (e) { /* ignore */ }
+    }
+    if (typeof saveJson === 'function') {
+      try { saveJson('testers-guild-quizzes', quizzesPassed); return; } catch (e) { /* ignore */ }
+    }
+    if (typeof window !== 'undefined' && typeof window.setStoredItem === 'function') {
+      try { window.setStoredItem('testers-guild-quizzes', JSON.stringify(quizzesPassed)); return; } catch (e) { /* ignore */ }
+    }
+    try {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('testers-guild-quizzes', JSON.stringify(quizzesPassed));
+      }
+    } catch (e) {
+      // ignore
+    }
   }
 
   function renderQuiz(trackId) {
@@ -114,38 +170,40 @@
     const alreadyPassed = !!(state.quizzesPassed || {})[trackId];
 
     const bc = document.getElementById('quiz-breadcrumb');
-    if (bc) bc.textContent = lt.title;
+    if (bc) bc.textContent = lt.title || '';
 
-    container.innerHTML = window.NVViewHelpers.buildTrackQuizHtml(
+    container.innerHTML = buildTrackQuizHtml(
       { ...track, icon: track.icon },
       quizData,
       { alreadyPassed },
       state.lang,
       window.NVIcons,
-      window.escapeHtml,
-      window.t,
+      window.escapeHtml || safeEscapeHtml,
+      window.t || ((key, fallback) => fallback || String(key)),
     );
 
-    window.NVViewHelpers.bindTrackQuizHandlers(
-      container,
-      quizData,
-      window.NVIcons,
-      state.lang,
-      window.t,
-      () => window.navigate('track', { trackId }),
-      () => renderQuiz(trackId),
-      (correct) => {
-        const quizzesPassed = state.quizzesPassed || {};
-        if (quizzesPassed[trackId]) return;
-        quizzesPassed[trackId] = {
-          passedAt: new Date().toISOString(),
-          score: correct,
-        };
-        try { localStorage.setItem('testers-guild-quizzes', JSON.stringify(quizzesPassed)); } catch (e) { /* ignore */ }
-        if (typeof window.checkAchievements === 'function') window.checkAchievements();
-        window.showToast(window.t('toast.quizPassed'));
-      },
-    );
+    if (typeof window.NVViewHelpers?.bindTrackQuizHandlers === 'function') {
+      window.NVViewHelpers.bindTrackQuizHandlers(
+        container,
+        quizData,
+        window.NVIcons,
+        state.lang,
+        window.t || ((key, fallback) => fallback || String(key)),
+        () => window.navigate?.('track', { trackId }),
+        () => renderQuiz(trackId),
+        (correct) => {
+          const quizzesPassed = state.quizzesPassed || {};
+          if (quizzesPassed[trackId]) return;
+          quizzesPassed[trackId] = {
+            passedAt: new Date().toISOString(),
+            score: correct,
+          };
+          persistQuizzes(quizzesPassed);
+          if (typeof window.checkAchievements === 'function') window.checkAchievements();
+          if (typeof window.showToast === 'function') window.showToast(window.t('toast.quizPassed'));
+        },
+      );
+    }
   }
 
   window.NVAppContent = { renderGlossary, renderLabs, renderSandbox, renderQuiz };

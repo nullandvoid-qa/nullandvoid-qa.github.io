@@ -3,6 +3,10 @@ function getLangKey() {
     return window.NV_I18N.getCurrentLangKey();
   }
 
+  if (typeof window !== "undefined" && window.NVApp?.state?.lang) {
+    return window.NVApp.state.lang === "en" ? "en" : "pt";
+  }
+
   return window.lang === "en" ? "en" : "pt";
 }
 

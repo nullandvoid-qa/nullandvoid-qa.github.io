@@ -183,6 +183,47 @@ describe('Storage helpers', () => {
     });
   });
 
+  describe('safe storage wrappers', () => {
+    beforeEach(() => {
+      delete window.saveJson;
+      delete window.loadJson;
+      delete window.getStoredItem;
+    });
+
+    test('safeSaveJson writes to localStorage when no helper exists', () => {
+      const { safeSaveJson } = require('../app-storage.js');
+      safeSaveJson('test-key', { foo: 'bar' });
+      expect(JSON.parse(localStorage.getItem('test-key'))).toEqual({ foo: 'bar' });
+    });
+
+    test('safeLoadJson reads from localStorage when no helper exists', () => {
+      const { safeLoadJson } = require('../app-storage.js');
+      localStorage.setItem('test-key', JSON.stringify({ foo: 'bar' }));
+      expect(safeLoadJson('test-key', null)).toEqual({ foo: 'bar' });
+    });
+
+    test('safeGetStoredItem uses window.getStoredItem when available', () => {
+      window.getStoredItem = jest.fn(() => 'helper-value');
+      const { safeGetStoredItem } = require('../app-storage.js');
+      expect(safeGetStoredItem('test-key')).toBe('helper-value');
+      expect(window.getStoredItem).toHaveBeenCalledWith('test-key');
+    });
+
+    test('safeSaveJson uses window.saveJson when available', () => {
+      window.saveJson = jest.fn();
+      const { safeSaveJson } = require('../app-storage.js');
+      safeSaveJson('test-key', { foo: 'bar' });
+      expect(window.saveJson).toHaveBeenCalledWith('test-key', { foo: 'bar' });
+    });
+
+    test('safeLoadJson uses window.loadJson when available', () => {
+      window.loadJson = jest.fn(() => ({ foo: 'bar' }));
+      const { safeLoadJson } = require('../app-storage.js');
+      expect(safeLoadJson('test-key', null)).toEqual({ foo: 'bar' });
+      expect(window.loadJson).toHaveBeenCalledWith('test-key', null, undefined);
+    });
+  });
+
   describe('importProgressFromFile', () => {
     test('accepts a valid payload with checklist data when the shared validator is available', async () => {
       const { importProgressFromFile } = require('../app-storage.js');

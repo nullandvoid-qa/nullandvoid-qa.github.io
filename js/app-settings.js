@@ -9,123 +9,154 @@
     return window.NVApp?.state || {};
   }
 
+  function getTranslator() {
+    return typeof window.t === 'function'
+      ? window.t
+      : (key, fallback) => fallback || key;
+  }
+
+  function getElement(id) {
+    if (typeof window.getElementById === 'function') return window.getElementById(id);
+    return document.getElementById(id);
+  }
+
+  function safeSetLocalStorage(key, value) {
+    if (typeof window !== 'undefined' && window.NVAppStorage?.safeSetStoredItem) {
+      try { window.NVAppStorage.safeSetStoredItem(key, value); return; } catch (e) { /* ignore */ }
+    }
+    try { localStorage.setItem(key, value); } catch (e) { /* ignore */ }
+  }
+
   function applyTheme() {
+    const t = getTranslator();
     const state = getState();
     const theme = state.theme || 'dark';
     document.documentElement.setAttribute('data-theme', theme);
-    const btn = window.getElementById ? window.getElementById('theme-toggle') : document.getElementById('theme-toggle');
+    const btn = getElement('theme-toggle');
     if (btn) {
       const iconName = theme === 'dark' ? 'moon' : 'sun';
-      btn.innerHTML = window.getIconMarkup ? window.getIconMarkup(iconName, '18') : window.NVIcons?.get(iconName, '', '18') || '';
+      btn.innerHTML = typeof window.getIconMarkup === 'function'
+        ? window.getIconMarkup(iconName, '18')
+        : window.NVIcons?.get?.(iconName, '', '18') || '';
       const nextThemeLabel = theme === 'dark'
-        ? window.t('settings.toggleThemeLight')
-        : window.t('settings.toggleThemeDark');
+        ? t('settings.toggleThemeLight', 'Switch to light theme')
+        : t('settings.toggleThemeDark', 'Switch to dark theme');
       btn.setAttribute('aria-label', nextThemeLabel);
       btn.setAttribute('title', nextThemeLabel);
     }
-    try { localStorage.setItem('testers-guild-theme', theme); } catch (e) { /* ignore */ }
+    safeSetLocalStorage('testers-guild-theme', theme);
   }
 
   function toggleTheme() {
+    const t = getTranslator();
     const state = getState();
     state.theme = state.theme === 'dark' ? 'light' : 'dark';
     applyTheme();
-    window.showToast(window.t(state.theme === 'dark' ? 'settings.themeDark' : 'settings.themeLight'));
+    if (typeof window.showToast === 'function') {
+      window.showToast(t(state.theme === 'dark' ? 'settings.themeDark' : 'settings.themeLight', state.theme === 'dark' ? 'Dark theme enabled' : 'Light theme enabled'));
+    }
   }
 
   function applySeniorMode() {
+    const t = getTranslator();
     const state = getState();
     const seniorMode = !!state.seniorMode;
     document.documentElement.classList.toggle('senior-mode', seniorMode);
-    const btn = document.getElementById('senior-mode-toggle');
+    const btn = getElement('senior-mode-toggle');
     if (btn) {
       btn.classList.toggle('active-toggle', seniorMode);
       btn.title = seniorMode
-        ? window.t('settings.seniorModeOn', state.lang === 'en' ? 'Senior Mode ON' : 'Modo Sênior ATIVO')
-        : window.t('settings.seniorModeOff', state.lang === 'en' ? 'Senior Mode' : 'Modo Sênior');
+        ? t('settings.seniorModeOn', state.lang === 'en' ? 'Senior Mode ON' : 'Modo Sênior ATIVO')
+        : t('settings.seniorModeOff', state.lang === 'en' ? 'Senior Mode' : 'Modo Sênior');
     }
-    try { localStorage.setItem('testers-guild-senior-mode', String(seniorMode)); } catch (e) { /* ignore */ }
+    safeSetLocalStorage('testers-guild-senior-mode', String(seniorMode));
   }
 
   function toggleSeniorMode() {
+    const t = getTranslator();
     const state = getState();
     state.seniorMode = !state.seniorMode;
     applySeniorMode();
-    window.showToast(
-      state.seniorMode
-        ? window.t('settings.seniorModeOnToast', state.lang === 'en' ? 'Senior Mode ON — beginner tips hidden' : 'Modo Sênior ativado — dicas iniciante ocultas')
-        : window.t('settings.seniorModeOffToast', state.lang === 'en' ? 'Senior Mode OFF' : 'Modo Sênior desativado'),
-    );
+    if (typeof window.showToast === 'function') {
+      window.showToast(
+        state.seniorMode
+          ? t('settings.seniorModeOnToast', state.lang === 'en' ? 'Senior Mode ON — beginner tips hidden' : 'Modo Sênior ativado — dicas iniciante ocultas')
+          : t('settings.seniorModeOffToast', state.lang === 'en' ? 'Senior Mode OFF' : 'Modo Sênior desativado'),
+      );
+    }
     if (state.currentView === 'lesson' && typeof window.renderLesson === 'function') {
       window.renderLesson(state.viewParams?.lessonId);
     }
   }
 
   function applyStaticI18n() {
+    const t = getTranslator();
     document.querySelectorAll('[data-i18n]').forEach((el) => {
       const key = el.dataset.i18n;
-      if (key) el.textContent = window.t(key);
+      if (key) el.textContent = t(key);
     });
     document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
       const key = el.dataset.i18nPlaceholder;
-      if (key) el.placeholder = window.t(key);
+      if (key) el.placeholder = t(key);
     });
     document.querySelectorAll('[data-i18n-title]').forEach((el) => {
       const key = el.dataset.i18nTitle;
-      if (key) el.title = window.t(key);
+      if (key) el.title = t(key);
     });
     document.querySelectorAll('[data-i18n-label]').forEach((el) => {
       const key = el.dataset.i18nLabel;
-      if (key) el.setAttribute('aria-label', window.t(key));
+      if (key) el.setAttribute('aria-label', t(key));
     });
 
-    const langToggle = document.getElementById('lang-toggle');
+    const langToggle = getElement('lang-toggle');
     if (langToggle) {
-      const langLabel = window.t('settings.toggleLanguage');
+      const langLabel = t('settings.toggleLanguage', 'Toggle language');
       langToggle.setAttribute('aria-label', langLabel);
       langToggle.setAttribute('title', langLabel);
     }
 
-    const priceEl = document.getElementById('stat-price');
-    if (priceEl) priceEl.textContent = window.t('price');
+    const priceEl = getElement('stat-price');
+    if (priceEl) priceEl.textContent = t('price', 'Price');
   }
 
   function updateLangToggle() {
+    const t = getTranslator();
     const state = getState();
-    const btn = document.getElementById('lang-toggle');
-    const label = document.getElementById('lang-label');
+    const btn = getElement('lang-toggle');
+    const label = getElement('lang-label');
     const flag = btn?.querySelector('.lang-flag');
-    if (label) label.textContent = window.t('lang.toggle');
+    if (label) label.textContent = t('lang.toggle', 'Language');
     if (flag) flag.textContent = state.lang === 'pt' ? '🇧🇷' : '🇺🇸';
 
     if (btn) {
-      const langLabel = window.t('settings.toggleLanguage');
+      const langLabel = t('settings.toggleLanguage', 'Toggle language');
       btn.setAttribute('aria-label', langLabel);
       btn.setAttribute('title', langLabel);
     }
   }
 
   function renderNavLinks() {
-    const navLinksEl = document.getElementById('nav-links');
+    const t = getTranslator();
+    const navLinksEl = getElement('nav-links');
     if (!navLinksEl) return;
 
-    const navItems = window.TG_NAV_ITEMS || [];
+    const navItems = Array.isArray(window.TG_NAV_ITEMS) ? window.TG_NAV_ITEMS : [];
     const navHtml = navItems
       .map((item) => `
         <a href="${item.href}" data-nav="${item.nav}" data-i18n="${item.i18n}">
-          ${window.t(item.i18n)}
+          ${t(item.i18n, item.title || item.nav)}
         </a>
       `)
       .join('');
 
     const badgeHtml = `
       <span class="badge-free" data-i18n="nav.allUnlocked">
-        <span data-icon="unlock" data-icon-size="14"></span> ${window.t('nav.allUnlocked')}
+        <span data-icon="unlock" data-icon-size="14"></span> ${t('nav.allUnlocked', 'All unlocked')}
       </span>
     `;
 
     navLinksEl.innerHTML = navHtml + badgeHtml;
-    bindNavLinks();
+    if (typeof bindNavLinks === 'function') bindNavLinks();
   }
 
   function bindNavLinks() {
@@ -142,21 +173,21 @@
   }
 
   function setLang(newLang) {
+    const t = getTranslator();
     const state = getState();
     state.lang = newLang === 'en' ? 'en' : 'pt';
-    window.lang = state.lang; // Sync with global
-    try { localStorage.setItem('testers-guild-lang', state.lang); } catch (e) { /* ignore */ }
+    safeSetLocalStorage('testers-guild-lang', state.lang);
     document.documentElement.lang = state.lang === 'en' ? 'en' : 'pt-BR';
-    document.title = window.t('meta.title');
+    if (typeof document.title !== 'undefined') document.title = t('meta.title', document.title || '');
     const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) metaDesc.content = window.t('meta.description');
-    renderNavLinks();
-    applyStaticI18n();
-    applyTheme();
-    applySeniorMode();
-    updateLangToggle();
+    if (metaDesc) metaDesc.content = t('meta.description', metaDesc.content || '');
+    if (typeof renderNavLinks === 'function') renderNavLinks();
+    if (typeof applyStaticI18n === 'function') applyStaticI18n();
+    if (typeof applyTheme === 'function') applyTheme();
+    if (typeof applySeniorMode === 'function') applySeniorMode();
+    if (typeof updateLangToggle === 'function') updateLangToggle();
     if (typeof window.refreshCurrentView === 'function') window.refreshCurrentView();
-    window.showToast(window.t('toast.langChanged'));
+    if (typeof window.showToast === 'function') window.showToast(t('toast.langChanged', state.lang === 'en' ? 'Language changed' : 'Idioma alterado'));
   }
 
   function toggleLang() {

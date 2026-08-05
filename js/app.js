@@ -62,25 +62,255 @@
   const labsData = window.TG_LABS || {};
   const achievementsList = window.TG_ACHIEVEMENTS || [];
 
-  let lang = getStorage(STORAGE_LANG, "tg-qaway-lang") || "pt";
-  window.lang = lang; // Sync with global
+  function getGlobalHelper(name) {
+    if (typeof globalThis !== 'undefined' && typeof globalThis[name] === 'function') {
+      return globalThis[name];
+    }
+    if (typeof window !== 'undefined' && typeof window[name] === 'function') {
+      return window[name];
+    }
+    return undefined;
+  }
+
+  const runtimeNavigate = getGlobalHelper('navigate');
+  const runtimeRefreshCurrentView = getGlobalHelper('refreshCurrentView');
+  const runtimeGetTrackIcon = getGlobalHelper('getTrackIcon');
+  const runtimeSaveLastLesson = getGlobalHelper('saveLastLesson');
+  const runtimeSaveProgress = getGlobalHelper('saveProgress');
+  const runtimeSafeSaveJson = getGlobalHelper('safeSaveJson');
+  const runtimeHighlightCode = getGlobalHelper('highlightCode');
+  const runtimeAttachCopyButtons = getGlobalHelper('attachCopyButtons');
+  const runtimeNormalizeTextLabel = getGlobalHelper('normalizeTextLabel');
+  const runtimeEscapeHtml = getGlobalHelper('escapeHtml');
+
+  function navigate(view, params = {}) {
+    if (typeof runtimeNavigate === 'function') {
+      return runtimeNavigate(view, params);
+    }
+    return undefined;
+  }
+
+  function refreshCurrentView() {
+    if (typeof runtimeRefreshCurrentView === 'function') {
+      return runtimeRefreshCurrentView();
+    }
+    return undefined;
+  }
+
+  function getTrackIcon(track) {
+    if (typeof runtimeGetTrackIcon === 'function') {
+      return runtimeGetTrackIcon(track);
+    }
+    return 'tracks';
+  }
+
+  function saveLastLesson(lessonId) {
+    if (typeof runtimeSaveLastLesson === 'function') {
+      return runtimeSaveLastLesson(lessonId);
+    }
+    return undefined;
+  }
+
+  function saveProgress(progressState) {
+    if (typeof runtimeSaveProgress === 'function') {
+      return runtimeSaveProgress(progressState);
+    }
+    return undefined;
+  }
+
+  function saveJson(key, data) {
+    if (typeof runtimeSafeSaveJson === 'function') {
+      return runtimeSafeSaveJson(key, data);
+    }
+    return undefined;
+  }
+
+  function highlightCode(html) {
+    if (typeof runtimeHighlightCode === 'function') {
+      return runtimeHighlightCode(html);
+    }
+    return typeof html === 'string' ? html : '';
+  }
+
+  function attachCopyButtons(container) {
+    if (typeof runtimeAttachCopyButtons === 'function') {
+      return runtimeAttachCopyButtons(container);
+    }
+    return undefined;
+  }
+
+  function normalizeTextLabel(text) {
+    if (typeof runtimeNormalizeTextLabel === 'function') {
+      return runtimeNormalizeTextLabel(text);
+    }
+    return String(text || '').replace(/^[^\wÀ-ž]+\s*/, '').trim();
+  }
+
+  function escapeHtml(text) {
+    if (typeof runtimeEscapeHtml === 'function') {
+      return runtimeEscapeHtml(text);
+    }
+    if (typeof text !== 'string') {
+      return String(text);
+    }
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  const runtimeGetStorage = getGlobalHelper('getStorage');
+  const runtimeLoadProgress = getGlobalHelper('loadProgress');
+  const runtimeValidateBookmarksData = getGlobalHelper('validateBookmarksData') || ((data) => Array.isArray(data) && data.every((item) => typeof item === 'string'));
+  const runtimeValidateQuizzesPassedData = getGlobalHelper('validateQuizzesPassedData') || ((data) => {
+    if (!data || typeof data !== 'object' || Array.isArray(data)) return false;
+    return Object.values(data).every((value) => value && typeof value === 'object' && typeof value.passedAt === 'string' && typeof value.score === 'number');
+  });
+  const runtimeValidateChecklistState = getGlobalHelper('validateChecklistState') || ((data) => {
+    if (!data || typeof data !== 'object' || Array.isArray(data)) return false;
+    return Object.values(data).every((item) => Array.isArray(item) && item.every((idx) => typeof idx === 'number'));
+  });
+
+  let lang = (typeof runtimeGetStorage === 'function' ? runtimeGetStorage(STORAGE_LANG, "tg-qaway-lang") : null) || "pt";
   // Default to no persona so home track filter uses "all"
-  let persona = getStorage(STORAGE_PERSONA) || null;
-  let progress = loadProgress();
-  const bookmarks = loadJson(STORAGE_BOOKMARKS, [], validateBookmarksData);
-  const quizzesPassed = loadJson(
+  let persona = typeof runtimeGetStorage === 'function' ? runtimeGetStorage(STORAGE_PERSONA) : null;
+  let progress = typeof runtimeLoadProgress === 'function' ? runtimeLoadProgress() : {};
+  const bookmarks = safeLoadJson(STORAGE_BOOKMARKS, [], runtimeValidateBookmarksData);
+  const quizzesPassed = safeLoadJson(
     STORAGE_QUIZZES,
     {},
-    validateQuizzesPassedData,
+    runtimeValidateQuizzesPassedData,
   );
-  const checklistState = loadJson(STORAGE_CHECKLISTS, {});
-  let theme = getStorage(STORAGE_THEME) || "dark";
-  let seniorMode = getStorage(STORAGE_SENIOR_MODE) === "true";
+  const checklistState = safeLoadJson(STORAGE_CHECKLISTS, {}, runtimeValidateChecklistState);
+  let theme = "dark";
+  let seniorMode = false;
   let currentView = "home";
   let viewParams = {};
   let trackFilter = "all";
   let homeFilter = "all";
   let searchTimeout = null;
+
+  const t = typeof window !== 'undefined' && typeof window.t === 'function'
+    ? window.t
+    : (key, fallback) => fallback || key;
+  const showToast = typeof window !== 'undefined' && typeof window.showToast === 'function'
+    ? window.showToast
+    : (msg) => {
+      if (typeof console !== 'undefined' && typeof console.info === 'function') {
+        console.info(msg);
+      }
+    };
+  const safeConfirm = typeof window !== 'undefined' && typeof window.confirm === 'function'
+    ? window.confirm
+    : () => false;
+  const NVAppStorage = typeof window !== 'undefined' && window.NVAppStorage ? window.NVAppStorage : null;
+  const appStorage = typeof module !== 'undefined' && module.exports ? require('./app-storage.js') : null;
+  const storage = NVAppStorage || appStorage || null;
+
+  function safeGetStoredItem(key) {
+    try {
+      return storage?.safeGetStoredItem?.(key) ?? null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function safeLoadJson(key, fallback, validator) {
+    try {
+      return storage?.safeLoadJson?.(key, fallback, validator) ?? fallback;
+    } catch (e) {
+      return fallback;
+    }
+  }
+
+  function safeSaveJson(key, data) {
+    try {
+      storage?.safeSaveJson?.(key, data);
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  function safeSetStoredItem(key, value) {
+    try {
+      storage?.safeSetStoredItem?.(key, value);
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  function safeRemoveStoredItem(key) {
+    try {
+      storage?.safeRemoveStoredItem?.(key);
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  function getAppSettings() {
+    return typeof window !== 'undefined' && window.NVAppSettings ? window.NVAppSettings : {};
+  }
+
+  function applyTheme() {
+    return getAppSettings().applyTheme?.();
+  }
+
+  function toggleTheme() {
+    return getAppSettings().toggleTheme?.();
+  }
+
+  function applySeniorMode() {
+    return getAppSettings().applySeniorMode?.();
+  }
+
+  function toggleSeniorMode() {
+    return getAppSettings().toggleSeniorMode?.();
+  }
+
+  function applyStaticI18n() {
+    return getAppSettings().applyStaticI18n?.();
+  }
+
+  function updateLangToggle() {
+    return getAppSettings().updateLangToggle?.();
+  }
+
+  function renderNavLinks() {
+    return getAppSettings().renderNavLinks?.();
+  }
+
+  function toggleLang() {
+    return getAppSettings().toggleLang?.();
+  }
+
+  function getElement(id) {
+    if (typeof window !== 'undefined' && typeof window.getElementById === 'function') {
+      return window.getElementById(id);
+    }
+    return typeof document !== 'undefined' ? document.getElementById(id) : null;
+  }
+
+  const NVViewHelpers = typeof window !== 'undefined' && window.NVViewHelpers ? window.NVViewHelpers : {};
+
+  function buildAchievementsHtml(...args) {
+    return typeof NVViewHelpers.buildAchievementsHtml === 'function'
+      ? NVViewHelpers.buildAchievementsHtml(...args)
+      : '';
+  }
+
+  function bindTrackQuizHandlers(...args) {
+    return typeof NVViewHelpers.bindTrackQuizHandlers === 'function'
+      ? NVViewHelpers.bindTrackQuizHandlers(...args)
+      : undefined;
+  }
+
+  function searchAndRender(...args) {
+    return typeof NVViewHelpers.searchAndRender === 'function'
+      ? NVViewHelpers.searchAndRender(...args)
+      : undefined;
+  }
 
   const PERSONA_TRACKS = {
     beginner: ["starter", "web", "api", "accessibility", "mobile"],
@@ -120,7 +350,8 @@
     const global = getGlobalProgress();
     const total = tracks.length;
     const lessons = global.total;
-    if (lang === "en") {
+    const currentLang = appState.lang === 'en' ? 'en' : 'pt';
+    if (currentLang === 'en') {
       const base = `${filteredCount} of ${total} paths · ${lessons} lessons`;
       return filteredCount === total ? `${total} paths · ${lessons} lessons` : `Showing ${base}`;
     }
@@ -136,7 +367,8 @@
   // Translation helper is defined in js/app-i18n.js and uses window.lang.
 
   function localizedTrack(track) {
-    if (lang === "en" && enOverlay.tracks[track.id]) {
+    const currentLang = appState.lang === 'en' ? 'en' : 'pt';
+    if (currentLang === 'en' && enOverlay.tracks[track.id]) {
       const o = enOverlay.tracks[track.id];
       return {
         ...track,
@@ -151,14 +383,16 @@
 
   function localizedCourse(course) {
     const enCourseId = EN_COURSE_ID_MAP[course.id] || course.id;
-    if (lang === "en" && enOverlay.courses[enCourseId])
+    const currentLang = appState.lang === 'en' ? 'en' : 'pt';
+    if (currentLang === 'en' && enOverlay.courses[enCourseId])
       return { ...course, title: enOverlay.courses[enCourseId].title };
     return course;
   }
 
   function localizedLesson(lesson) {
     const enLessonId = EN_LESSON_ID_MAP[lesson.id] || lesson.id;
-    if (lang === "en" && enOverlay.lessons[enLessonId]) {
+    const currentLang = appState.lang === 'en' ? 'en' : 'pt';
+    if (currentLang === 'en' && enOverlay.lessons[enLessonId]) {
       const o = enOverlay.lessons[enLessonId];
       return {
         ...lesson,
@@ -188,66 +422,77 @@
     return t(map[tier] || "lesson.tierIntermediate");
   }
 
-    // ── Theme / Senior Mode / Language / Nav Links ────────────────────────────
-  // These functions are now provided by js/app-settings.js (loaded before app.js).
-  // We assign local aliases so the rest of app.js keeps using the same names.
-  const applyTheme = window.NVAppSettings.applyTheme;
-  const toggleTheme = window.NVAppSettings.toggleTheme;
-  const applySeniorMode = window.NVAppSettings.applySeniorMode;
-  const toggleSeniorMode = window.NVAppSettings.toggleSeniorMode;
-  const applyStaticI18n = window.NVAppSettings.applyStaticI18n;
-  const updateLangToggle = window.NVAppSettings.updateLangToggle;
-  const renderNavLinks = window.NVAppSettings.renderNavLinks;
-  const toggleLang = window.NVAppSettings.toggleLang;
-
   // ── Utilities ─────────────────────────────────────────────────────────────
 
-    // showToast is now provided by js/app-ui.js
+  // showToast is now provided by js/app-ui.js
 
   // Code highlighting and copy button helpers live in `js/utils.js`.
 
 
 
+  function getTrackHelpers() {
+    return typeof window !== 'undefined' && window.NVAppTracks ? window.NVAppTracks : null;
+  }
+
   function countLessons(track) {
+    const helpers = getTrackHelpers();
+    if (helpers?.countLessons) return helpers.countLessons(track);
     if (!track || !track.courses || !Array.isArray(track.courses)) return 0;
-    return track.courses.reduce((s, c) => s + (c.lessons ? c.lessons.length : 0), 0);
+    return track.courses.reduce(
+      (sum, course) => sum + (Array.isArray(course.lessons) ? course.lessons.length : 0),
+      0,
+    );
   }
 
   function getTrackModules(track) {
-    if (!track) return 0;
-    return track.modules || countLessons(track);
+    const helpers = getTrackHelpers();
+    if (helpers?.getTrackModules) return helpers.getTrackModules(track);
+    return typeof track?.modules === 'number' && track.modules > 0 ? track.modules : countLessons(track);
   }
 
   function getTrackHours(track) {
-    if (!track) return 0;
-    if (typeof track.hours === 'number' && track.hours > 0) return track.hours;
+    const helpers = getTrackHelpers();
+    if (helpers?.getTrackHours) return helpers.getTrackHours(track);
+    if (typeof track?.hours === 'number' && track.hours > 0) return track.hours;
     const lessons = countLessons(track);
     return lessons > 0 ? lessons : 0;
   }
 
   function getTrackProgress(track) {
+    const helpers = getTrackHelpers();
+    if (helpers?.getTrackProgress) return helpers.getTrackProgress(track, progress);
     if (!track || !track.courses) return { done: 0, total: 0, pct: 0 };
     const total = countLessons(track);
-    const done = track.courses.reduce(
-      (s, c) => s + (c.lessons ? c.lessons.filter((l) => progress[l.id]).length : 0),
-      0,
-    );
+    const done = track.courses.reduce((sum, course) => {
+      if (!course || !Array.isArray(course.lessons)) return sum;
+      return sum + course.lessons.filter((lesson) => lesson && progress[lesson.id]).length;
+    }, 0);
     return { done, total, pct: total ? Math.round((done / total) * 100) : 0 };
   }
 
   function getGlobalProgress() {
-    const all = tracks
-      .filter(tr => tr && tr.courses && Array.isArray(tr.courses))
-      .flatMap((tr) => tr.courses.flatMap((c) => c.lessons || []));
-    const done = all.filter((l) => l && progress[l.id]).length;
+    const helpers = getTrackHelpers();
+    if (helpers?.getGlobalProgress) return helpers.getGlobalProgress(tracks, progress);
+    const allLessons = tracks
+      .filter((track) => track && track.courses && Array.isArray(track.courses))
+      .flatMap((track) => track.courses.flatMap((course) => Array.isArray(course.lessons) ? course.lessons : []));
+    const done = allLessons.filter((lesson) => lesson && progress[lesson.id]).length;
     return {
       done,
-      total: all.length,
-      pct: all.length ? Math.round((done / all.length) * 100) : 0,
+      total: allLessons.length,
+      pct: allLessons.length ? Math.round((done / allLessons.length) * 100) : 0,
     };
   }
 
   function getAllLessons() {
+    const helpers = getTrackHelpers();
+    if (helpers?.getAllLessons) {
+      return helpers.getAllLessons(tracks, {
+        localizedTrack,
+        localizedCourse,
+        localizedLesson,
+      });
+    }
     const lessons = [];
     tracks.forEach((track) => {
       if (!track || !track.courses || !Array.isArray(track.courses)) return;
@@ -256,6 +501,7 @@
         if (!course || !course.lessons || !Array.isArray(course.lessons)) return;
         const lc = localizedCourse(course);
         course.lessons.forEach((lesson) => {
+          if (!lesson) return;
           lessons.push({
             ...localizedLesson(lesson),
             trackId: track.id,
@@ -269,13 +515,25 @@
   }
 
   function findTrack(id) {
-    return tracks.find((tr) => tr.id === id);
+    const helpers = getTrackHelpers();
+    if (helpers?.findTrack) return helpers.findTrack(tracks, id);
+    return tracks.find((track) => track && track.id === id) || null;
   }
 
   function findLesson(lessonId) {
+    const helpers = getTrackHelpers();
+    if (helpers?.findLesson) {
+      return helpers.findLesson(tracks, lessonId, {
+        localizedTrack,
+        localizedCourse,
+        localizedLesson,
+      });
+    }
     for (const track of tracks) {
+      if (!track || !track.courses || !Array.isArray(track.courses)) continue;
       for (const course of track.courses) {
-        const lesson = course.lessons.find((l) => l.id === lessonId);
+        if (!course || !course.lessons || !Array.isArray(course.lessons)) continue;
+        const lesson = course.lessons.find((l) => l && l.id === lessonId);
         if (lesson) {
           return {
             track: localizedTrack(track),
@@ -293,84 +551,11 @@
 
   // ── Achievements ──────────────────────────────────────────────────────────
   function checkAchievements() {
-    const global = getGlobalProgress();
-    const passedAll = Object.keys(quizzesPassed).length;
-    const bookmarkCount = bookmarks.length;
-    const unlockedIds = [];
-
-    const rules = [
-      { id: "first_lesson", test: () => global.done >= 1 },
-      { id: "ten_lessons", test: () => global.done >= 10 },
-      { id: "fifty_lessons", test: () => global.done >= 50 },
-      {
-        id: "track_complete",
-        test: () => tracks.some((tr) => getTrackProgress(tr).pct === 100),
-      },
-      { id: "quiz_pass", test: () => passedAll >= 1 },
-      { id: "all_quizzes", test: () => passedAll >= 9 },
-      {
-        id: "recruit_route",
-        test: () => {
-          const starterTrack = findTrack("starter");
-          return starterTrack
-            ? getTrackProgress(starterTrack).pct === 100
-            : false;
-        },
-      },
-      {
-        id: "master_route",
-        test: () => {
-          const leadTrack = findTrack("leadership");
-          return leadTrack ? getTrackProgress(leadTrack).pct === 100 : false;
-        },
-      },
-      { id: "bookworm", test: () => bookmarkCount >= 5 },
-      {
-        id: "checklist_done",
-        test: () => {
-          return Object.values(checklistState).some(
-            (arr) => Array.isArray(arr) && arr.length > 0,
-          );
-        },
-      },
-    ];
-
-    const prev = loadJson("testers-guild-unlocked-achievements", []);
-    rules.forEach((rule) => {
-      if (rule.test() && !prev.includes(rule.id)) {
-        unlockedIds.push(rule.id);
-        prev.push(rule.id);
-      }
-    });
-    if (unlockedIds.length) {
-      saveJson("testers-guild-unlocked-achievements", prev);
-      unlockedIds.forEach((id) => {
-        const ach = achievementsList.find((a) => a.id === id);
-        if (ach)
-          showToast(
-            `${ach.icon} ${t("toast.achievementUnlocked")}: ${ach[lang]?.title || ach.pt.title}`,
-          );
-      });
-    }
-    return prev;
+    return window.NVAppAchievements?.checkAchievements?.() ?? [];
   }
 
   function renderAchievements() {
-    if (window.NVAppDashboard?.renderAchievements) {
-      window.NVAppDashboard.renderAchievements();
-      return;
-    }
-    const grid = document.getElementById("achievements-grid");
-    if (!grid) return;
-    const unlocked = loadJson("testers-guild-unlocked-achievements", []);
-    grid.innerHTML = window.NVViewHelpers.buildAchievementsHtml(
-      achievementsList,
-      unlocked,
-      lang,
-      escapeHtml,
-      window.NVIcons,
-      t,
-    );
+    return window.NVAppAchievements?.renderAchievements?.();
   }
 
   // ── Persona & filters ─────────────────────────────────────────────────────
@@ -383,14 +568,14 @@
 
   function setPersona(p) {
     persona = p;
-    localStorage.setItem(STORAGE_PERSONA, p);
+    safeSetStoredItem(STORAGE_PERSONA, p);
     document.querySelectorAll(".persona-card").forEach((el) => {
       el.classList.toggle("active", el.dataset.persona === p);
     });
     // sync home filter chip with persona
     homeFilter = PERSONA_FILTER[p] || "all";
     showToast(t("toast.personaSaved"));
-    if (currentView === "home") renderHome();
+    if (appState.currentView === "home") renderHome();
   }
 
   function sortTracksForPersona(list) {
@@ -416,145 +601,10 @@
 
   // ── Content / quiz views ────────────────────────────────────────────────
   // These renderers now live in js/app-content.js and are exposed on window.
-  function renderGlossary() {
-    if (window.NVAppContent?.renderGlossary) {
-      window.NVAppContent.renderGlossary();
-      return;
-    }
-    const items = window.TG_GLOSSARY?.[getLangKey()] || [];
-    document.getElementById("glossary-content").innerHTML = window.NVViewHelpers.buildGlossaryHtml(items, escapeHtml);
-  }
-  window.renderGlossary = renderGlossary;
-
-  function renderLabs() {
-    if (window.NVAppContent?.renderLabs) {
-      window.NVAppContent.renderLabs();
-      return;
-    }
-    const container = document.getElementById("labs-content");
-    if (!container) return;
-    const labs = labsData[getLangKey()] || labsData.pt || [];
-    if (!labs.length) {
-      container.innerHTML = window.NVViewHelpers.buildEmptyStateHtml(
-        lang === "en" ? "No labs available." : "Nenhum lab disponível.",
-        "",
-        escapeHtml,
-      );
-      return;
-    }
-
-    const trackMap = Object.fromEntries(
-      (tracks || []).map((track) => [track.id, localizedTrack(track)]),
-    );
-
-    container.innerHTML = window.NVViewHelpers.buildLabsHtml(
-      labs,
-      trackMap,
-      window.NVIcons,
-      escapeHtml,
-      getTrackIcon,
-      lang,
-    );
-  }
-  window.renderLabs = renderLabs;
-
-  function renderSandbox() {
-    if (window.NVAppContent?.renderSandbox) {
-      window.NVAppContent.renderSandbox();
-      return;
-    }
-    const menu = document.getElementById("sandbox-menu");
-    const example = document.getElementById("sandbox-example");
-    if (!menu || !example) return;
-
-    const examples = Array.isArray(window.TG_MOBILE_AUTOMATION_EXAMPLES)
-      ? window.TG_MOBILE_AUTOMATION_EXAMPLES
-      : [];
-
-    if (!examples.length) {
-      menu.innerHTML = "";
-      example.textContent = lang === "en" ? "Sandbox examples are not available yet." : "Exemplos do sandbox ainda não estão disponíveis.";
-      return;
-    }
-
-    menu.innerHTML = examples
-      .map((item, index) => `<button type="button" class="sandbox-item" data-index="${index}">${escapeHtml(item.name || item.id || `Example ${index + 1}`)}</button>`)
-      .join("");
-
-    const renderExample = (index) => {
-      const item = examples[index] || examples[0];
-      example.innerHTML = `<pre class="sandbox-example-code">${escapeHtml(item.code || "")}</pre>`;
-    };
-
-    menu.querySelectorAll(".sandbox-item").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        renderExample(Number(btn.dataset.index || 0));
-      });
-    });
-
-    renderExample(0);
-  }
-  window.renderSandbox = renderSandbox;
-
-  function renderQuiz(trackId) {
-    if (window.NVAppContent?.renderQuiz) {
-      window.NVAppContent.renderQuiz(trackId);
-      return;
-    }
-    const container = document.getElementById("quiz-content");
-    if (!container) return;
-
-    const track = findTrack(trackId);
-    if (!track) return;
-
-    const langKey = getLangKey();
-    const quizData = quizzes[trackId]?.[langKey] || quizzes[trackId]?.pt;
-    if (!quizData) {
-      container.innerHTML = window.NVViewHelpers.buildEmptyStateHtml(
-        lang === "en" ? "No quiz available for this track yet." : "Nenhum quiz disponível para esta trilha ainda.",
-        "",
-        escapeHtml,
-      );
-      return;
-    }
-
-    const lt = localizedTrack(track);
-    const alreadyPassed = !!quizzesPassed[trackId];
-
-    const bc = document.getElementById("quiz-breadcrumb");
-    if (bc) bc.textContent = lt.title;
-
-    container.innerHTML = window.NVViewHelpers.buildTrackQuizHtml(
-      { ...track, icon: track.icon },
-      quizData,
-      { alreadyPassed },
-      lang,
-      window.NVIcons,
-      escapeHtml,
-      t,
-    );
-
-    window.NVViewHelpers.bindTrackQuizHandlers(
-      container,
-      quizData,
-      window.NVIcons,
-      lang,
-      t,
-      () => navigate("track", { trackId }),
-      () => renderQuiz(trackId),
-      (correct) => {
-        if (quizzesPassed[trackId]) return;
-        quizzesPassed[trackId] = {
-          passedAt: new Date().toISOString(),
-          score: correct,
-        };
-        saveJson(STORAGE_QUIZZES, quizzesPassed);
-        checkAchievements();
-        showToast(t("toast.quizPassed"));
-      },
-    );
-  }
-  window.renderQuiz = renderQuiz;
+  // Renderers for glossary, labs, sandbox and quiz views are implemented
+  // in js/app-content.js and exposed as window.NVAppContent helpers.
+  // Content renderers are provided by js/app-content.js and are exposed
+  // globally through window.NVAppContent and window.render* helpers.
 
   // ── Checklist and lesson rendering ─────────────────────────────────────────
   // Lesson-specific rendering has been moved to js/app-lesson.js.
@@ -564,20 +614,7 @@
 
   // ── Bookmarks ─────────────────────────────────────────────────────────────
   function toggleBookmark(lessonId) {
-    if (window.NVAppBookmarks?.toggleBookmark) {
-      window.NVAppBookmarks.toggleBookmark(lessonId);
-      return;
-    }
-    const idx = bookmarks.indexOf(lessonId);
-    if (idx === -1) {
-      bookmarks.push(lessonId);
-      showToast(t("toast.bookmarkAdded"));
-    } else {
-      bookmarks.splice(idx, 1);
-      showToast(t("toast.bookmarkRemoved"));
-    }
-    saveJson(STORAGE_BOOKMARKS, bookmarks);
-    checkAchievements();
+    return window.NVAppBookmarks?.toggleBookmark?.(lessonId);
   }
 
   // The lesson rendering flow is handled in js/app-lesson.js.
@@ -586,86 +623,35 @@
 
   // ── Search ────────────────────────────────────────────────────────────────
   function handleSearch(query) {
-    if (window.NVAppSearch?.handleSearch) {
-      window.NVAppSearch.handleSearch(query);
-      return;
-    }
-    const resultsEl = getElementById("search-results");
-    const glossaryItems = window.TG_GLOSSARY?.[getLangKey()] || [];
-    window.NVViewHelpers.searchAndRender(
-      resultsEl,
-      query,
-      getAllLessons,
-      glossaryItems,
-      window.NVIcons,
-      escapeHtml,
-      t,
-      navigate,
-    );
+    return window.NVAppSearch?.handleSearch?.(query);
   }
 
   // ── Event Listeners ───────────────────────────────────────────────────────
-  document.querySelectorAll(".persona-card").forEach((el) => {
-    el.addEventListener("click", () => setPersona(el.dataset.persona));
-  });
+  // Event listeners moved to `js/app-init.js` to reduce bootstrap responsibilities.
 
-  const langToggle = getElementById("lang-toggle");
-  if (langToggle) {
-    langToggle.addEventListener("click", toggleLang);
-  }
-  const themeToggle = getElementById("theme-toggle");
-  if (themeToggle) {
-    themeToggle.addEventListener("click", toggleTheme);
-  }
-
-  const seniorModeToggle = getElementById("senior-mode-toggle");
-  if (seniorModeToggle) {
-    seniorModeToggle.addEventListener("click", toggleSeniorMode);
-  }
-
-  const globalSearch = getElementById("global-search");
-  if (globalSearch) {
-    globalSearch.addEventListener("input", () => {
-      clearTimeout(searchTimeout);
-      searchTimeout = setTimeout(
-        () => handleSearch(document.getElementById("global-search").value),
-        200,
-      );
-    });
-  }
-
-  document.addEventListener("click", (e) => {
-    if (!e.target.closest(".search-bar-wrap")) {
-      const resultsEl = getElementById("search-results");
-      if (resultsEl) {
-        resultsEl.classList.add("hidden");
-      }
-    }
-  });
-
-  getElementById("btn-reset-progress")
+  getElement("btn-reset-progress")
     ?.addEventListener("click", () => {
-      if (confirm(t("dashboard.resetConfirm"))) {
+      if (safeConfirm(t("dashboard.resetConfirm"))) {
         progress = {};
         saveProgress(progress);
-        localStorage.removeItem(STORAGE_LAST_LESSON);
+        safeRemoveStoredItem(STORAGE_LAST_LESSON);
         showToast(t("toast.progressReset"));
         refreshCurrentView();
         renderContinueBanner();
       }
     });
 
-  getElementById("btn-export-progress")
+  getElement("btn-export-progress")
     ?.addEventListener("click", () => {
       exportProgressToFile(progress, bookmarks, quizzesPassed, checklistState);
     });
 
-  getElementById("btn-import-progress")
+  getElement("btn-import-progress")
     ?.addEventListener("click", () => {
-      document.getElementById("progress-import-input").click();
+      getElement("progress-import-input")?.click();
     });
 
-  getElementById("progress-import-input")
+  getElement("progress-import-input")
     ?.addEventListener("change", async (event) => {
       const file = event.target.files?.[0];
       if (!file) return;
@@ -680,9 +666,9 @@
       Object.keys(checklistState).forEach((key) => delete checklistState[key]);
       Object.assign(checklistState, imported.checklistState);
       saveProgress(progress);
-      saveJson("testers-guild-bookmarks", bookmarks);
-      saveJson("testers-guild-quizzes", quizzesPassed);
-      saveJson("testers-guild-checklists", checklistState);
+      safeSaveJson("testers-guild-bookmarks", bookmarks);
+      safeSaveJson("testers-guild-quizzes", quizzesPassed);
+      safeSaveJson("testers-guild-checklists", checklistState);
       showToast(t("toast.importProgressSuccess"));
       refreshCurrentView();
       renderContinueBanner();
@@ -690,14 +676,14 @@
 
   // Keyboard shortcuts: ArrowLeft / ArrowRight to navigate lessons
   document.addEventListener("keydown", (e) => {
-    if (currentView !== "lesson") return;
+    if (appState.currentView !== "lesson") return;
     if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
-    const found = findLesson(viewParams.lessonId);
+    const found = findLesson(appState.viewParams.lessonId);
     if (!found) return;
     const allLessons = (found.rawTrack && found.rawTrack.courses && Array.isArray(found.rawTrack.courses))
       ? found.rawTrack.courses.flatMap((c) => c.lessons || [])
       : [];
-    const idx = allLessons.findIndex((l) => l.id === viewParams.lessonId);
+    const idx = allLessons.findIndex((l) => l.id === appState.viewParams.lessonId);
     if (e.key === "ArrowRight" && allLessons[idx + 1])
       navigate("lesson", { lessonId: allLessons[idx + 1].id });
     if (e.key === "ArrowLeft" && allLessons[idx - 1])
@@ -724,220 +710,165 @@
     showToast(t("toast.progressSavedLocal"));
   });
 
-  window.NVApp = window.NVApp || { state: {}, helpers: {} };
-  window.NVApp.state = {
-      get lang() {
-        return lang;
-      },
-      set lang(value) {
-        lang = value;
-      },
-      get persona() {
-        return persona;
-      },
-      set persona(value) {
-        persona = value;
-      },
-      get tracks() {
-        return tracks;
-      },
-      set tracks(value) {
-        tracks = value;
-      },
-      get progress() {
-        return progress;
-      },
-      set progress(value) {
-        progress = value;
-      },
-      get bookmarks() {
-        return bookmarks;
-      },
-      get quizzesPassed() {
-        return quizzesPassed;
-      },
-      get checklistState() {
-        return checklistState;
-      },
-      get theme() {
-        return theme;
-      },
-      set theme(value) {
-        theme = value;
-      },
-      get seniorMode() {
-        return seniorMode;
-      },
-      set seniorMode(value) {
-        seniorMode = value;
-      },
-      get currentView() {
-        return currentView;
-      },
-      set currentView(value) {
-        currentView = value;
-      },
-      get viewParams() {
-        return viewParams;
-      },
-      set viewParams(value) {
-        viewParams = value;
-      },
-      get trackFilter() {
-        return trackFilter;
-      },
-      set trackFilter(value) {
-        trackFilter = value;
-      },
-      get homeFilter() {
-        return homeFilter;
-      },
-      set homeFilter(value) {
-        homeFilter = value;
-      },
-    };
-  window.NVApp.helpers = {
-      ...window.NVApp.helpers,
-      t,
-      navigate,
-      refreshCurrentView,
-      findLesson,
-      findTrack,
-      getEnrichment,
-      getTrackIcon,
-      localizedLesson,
-      localizedCourse,
-      checkAchievements,
-      renderAchievements,
-      saveLastLesson,
-      saveProgress,
-      saveJson,
-      getGlobalProgress,
-      renderTrackCard: window.NVAppTrack?.renderTrackCard,
-      renderContinueBanner: window.NVAppHome?.renderContinueBanner,
-      renderInstallBanner: window.NVViewHelpers?.renderInstallBanner,
-      STORAGE_LAST_LESSON,
-      getTrackProgress,
-      getTrackModules,
-      getTrackHours,
-      highlightCode,
-      attachCopyButtons,
-      toggleBookmark,
-      quizzes,
-      TRACK_AUDIENCE,
-      localizedTrack,
-      normalizeTextLabel,
-      escapeHtml,
-      tierLabel,
-      sortTracksForPersona,
-      getHomeTrackSummary,
-    };
+  const appState = {
+    get lang() {
+      return lang;
+    },
+    set lang(value) {
+      lang = value;
+    },
+    get persona() {
+      return persona;
+    },
+    set persona(value) {
+      persona = value;
+    },
+    get tracks() {
+      return tracks;
+    },
+    set tracks(value) {
+      tracks = value;
+    },
+    get progress() {
+      return progress;
+    },
+    set progress(value) {
+      progress = value;
+    },
+    get bookmarks() {
+      return bookmarks;
+    },
+    get quizzesPassed() {
+      return quizzesPassed;
+    },
+    get checklistState() {
+      return checklistState;
+    },
+    get theme() {
+      return theme;
+    },
+    set theme(value) {
+      theme = value;
+    },
+    get seniorMode() {
+      return seniorMode;
+    },
+    set seniorMode(value) {
+      seniorMode = value;
+    },
+    get currentView() {
+      return currentView;
+    },
+    set currentView(value) {
+      currentView = value;
+    },
+    get viewParams() {
+      return viewParams;
+    },
+    set viewParams(value) {
+      viewParams = value;
+    },
+    get trackFilter() {
+      return trackFilter;
+    },
+    set trackFilter(value) {
+      trackFilter = value;
+    },
+    get homeFilter() {
+      return homeFilter;
+    },
+    set homeFilter(value) {
+      homeFilter = value;
+    },
+    get tracks() {
+      return tracks;
+    },
+    set tracks(value) {
+      tracks = Array.isArray(value) ? value : [];
+    },
+  };
+
+  const appHelpers = {
+    t,
+    navigate,
+    refreshCurrentView,
+    findLesson,
+    findTrack,
+    getEnrichment,
+    getTrackIcon,
+    localizedLesson,
+    localizedCourse,
+    checkAchievements,
+    renderAchievements,
+    saveLastLesson,
+    saveProgress,
+    saveJson,
+    getGlobalProgress,
+    renderTrackCard: window.NVAppTrack?.renderTrackCard,
+    renderContinueBanner: window.NVAppHome?.renderContinueBanner,
+    renderInstallBanner: window.NVViewHelpers?.renderInstallBanner,
+    STORAGE_LAST_LESSON,
+    getTrackProgress,
+    getTrackModules,
+    getTrackHours,
+    highlightCode,
+    attachCopyButtons,
+    toggleBookmark,
+    setPersona,
+    toggleLang,
+    toggleTheme,
+    toggleSeniorMode,
+    handleSearch,
+    quizzes,
+    TRACK_AUDIENCE,
+    localizedTrack,
+    normalizeTextLabel,
+    escapeHtml,
+    tierLabel,
+    sortTracksForPersona,
+    getHomeTrackSummary,
+  };
+
+  function ensureGlobalNVApp() {
+    if (typeof window !== 'undefined') {
+      window.NVApp = window.NVApp || {};
+      window.NVApp.state = window.NVApp.state || appState;
+      window.NVApp.helpers = window.NVApp.helpers || appHelpers;
+    }
+  }
+
+  if (window.initAppRegistry) {
+    window.initAppRegistry({ stateAccessors: appState, helpers: appHelpers });
+  } else if (window.NVAppBootstrap?.registerAppBindings) {
+    window.NVAppBootstrap.registerAppBindings({ state: appState, helpers: appHelpers });
+  } else {
+    // Prefer the app-bootstrap to register the global NVApp.
+    // Creating globals from non-bootstrap modules increases coupling
+    // and makes initialization order brittle — skip creating it here.
+    if (typeof console !== 'undefined' && typeof console.warn === 'function') {
+      console.warn('NVApp bootstrap not found; skipping global NVApp creation from app.js');
+    }
+  }
+
+  ensureGlobalNVApp();
 
   // ── Init ──────────────────────────────────────────────────────────────────
   function mergeTrackSources() {
-    const baseTracks = window.TG_QAWAY_TRACKS || [];
-    const mergedTracks = [...baseTracks];
-
-    const sources = [
-      {
-        key: "TG_PERFORMANCE_TRACK",
-        id: "performance",
-        slug: "performance-testing",
-        icon: "perf",
-        title: "Arena de Carga",
-        color: "#f59e0b",
-        description: "Performance testing com K6 e JMeter.",
-        level: "Sênior",
-        modules: 3,
-        hours: 40,
-        topics: ["Load Testing", "K6", "JMeter"],
-      },
-      {
-        key: "TG_MENTORSHIP",
-        id: "mentorship",
-        slug: "mentorship",
-        icon: "mentor",
-        title: "Mentorship",
-        color: "#6366f1",
-        description: "Programa de mentoria e liderança.",
-        level: "Intermediário",
-        modules: 3,
-        hours: 30,
-        topics: ["Mentoring", "Liderança"],
-      },
-    ];
-
-    sources.forEach((source) => {
-      const dataset = window[source.key];
-      if (dataset && dataset.courses && !mergedTracks.find((track) => track.id === source.id)) {
-        mergedTracks.push({
-          id: source.id,
-          slug: source.slug,
-          icon: source.icon,
-          title: source.title,
-          color: source.color,
-          description: source.description,
-          level: source.level,
-          modules: source.modules,
-          hours: source.hours,
-          topics: source.topics,
-          courses: dataset.courses,
-        });
-      }
-    });
-
-    if (window.TG_MOBILE_LABS && Array.isArray(window.TG_MOBILE_LABS)) {
-      const mobileLessons = window.TG_MOBILE_LABS.map((lab, index) => ({
-        id: `mobile-lab-${index + 1}-${lab.id}`,
-        title: lab.name || `Mobile Lab ${index + 1}`,
-        duration: "20 min",
-        content: `
-          <h2>${lab.name || `Mobile Lab ${index + 1}`}</h2>
-          <p><strong>Tipo:</strong> ${lab.type || "mobile"}</p>
-          <p><strong>Dispositivo:</strong> ${lab.device || (Array.isArray(lab.devices) ? lab.devices.join(", ") : "N/A")}</p>
-          <p><strong>Ferramentas:</strong> ${Array.isArray(lab.tools) ? lab.tools.join(", ") : "Appium + WebDriverIO"}</p>
-          <p><strong>Custo:</strong> ${lab.cost || "N/A"}</p>
-          <pre>${lab.setup || ""}</pre>
-        `,
-      }));
-
-      const mobileTrack = mergedTracks.find((track) => track.id === "mobile");
-      const mobileTrackPayload = {
-        id: "mobile",
-        slug: "mobile-testing",
-        icon: "mobile",
-        title: "Trilha de Testes Mobile",
-        color: "#22c55e",
-        description: "Trilha única para testes mobile em emuladores, simuladores e dispositivos reais.",
-        level: "Intermediário",
-        modules: mobileLessons.length,
-        hours: Math.max(4, mobileLessons.length),
-        topics: ["Appium", "WebDriverIO", "Android", "iOS", "Emuladores", "Devices reais"],
-        courses: [
-          {
-            id: "mobile-labs-course",
-            title: "Mobile Testing Labs",
-            lessons: mobileLessons,
-          },
-        ],
-      };
-
-      if (mobileTrack) {
-        Object.assign(mobileTrack, mobileTrackPayload);
-      } else {
-        mergedTracks.push(mobileTrackPayload);
-      }
+    if (window.NVAppTracks && typeof window.NVAppTracks.mergeTrackSources === 'function') {
+      try { return window.NVAppTracks.mergeTrackSources(); } catch (err) { /* fall back */ }
     }
 
-    return mergedTracks;
+    // Fallback: basic merge when the extracted helper is not present.
+    return Array.isArray(window.TG_QAWAY_TRACKS) ? window.TG_QAWAY_TRACKS : [];
   }
 
   function init() {
     // Load all tracks: merge main tracks + new specialized tracks
     tracks = mergeTrackSources();
+    tracks = Array.isArray(tracks) ? tracks : [];
 
-    window.lang = lang; // Sync with global for utility functions
-    document.documentElement.lang = lang === "en" ? "en" : "pt-BR";
+    appState.lang = lang;
+    document.documentElement.lang = appState.lang === "en" ? "en" : "pt-BR";
     // sync homeFilter with saved persona on load
     homeFilter = PERSONA_FILTER[persona] || "all";
     renderNavLinks();
@@ -946,7 +877,7 @@
     applyStaticI18n();
     updateLangToggle();
     checkAchievements();
-    const lastLessonId = localStorage.getItem(STORAGE_LAST_LESSON);
+const lastLessonId = safeGetStoredItem(STORAGE_LAST_LESSON);
     if (lastLessonId && findLesson(lastLessonId)) {
       navigate("lesson", { lessonId: lastLessonId });
     } else {
@@ -1006,4 +937,6 @@
   }
 
   init();
+
+  ensureGlobalNVApp();
 })();

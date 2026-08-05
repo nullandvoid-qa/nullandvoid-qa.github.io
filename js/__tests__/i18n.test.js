@@ -39,6 +39,8 @@ describe('i18n functions', () => {
         en: { hero: { freeAccessLabel: 'Free access' } },
       };
       delete window.t;
+      delete window.NV_I18N;
+      delete window.NVApp;
     });
 
     test('returns PT translation when lang is pt', () => {
@@ -75,6 +77,13 @@ describe('i18n functions', () => {
       const { t: utilsT } = require('../utils.js');
       expect(window.t('hero.freeAccessLabel')).toBe('central:hero.freeAccessLabel');
       expect(utilsT('hero.freeAccessLabel', 'fallback')).toBe('fallback');
+    });
+
+    test('falls back to NVApp.state.lang when window.lang is absent', () => {
+      delete window.lang;
+      window.NVApp = { state: { lang: 'en' } };
+      require('../app-i18n.js');
+      expect(window.t('hero.freeAccessLabel')).toBe('Free access');
     });
   });
 });

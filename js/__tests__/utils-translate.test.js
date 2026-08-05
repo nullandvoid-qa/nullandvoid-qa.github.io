@@ -37,4 +37,11 @@ describe('utils.t translation helper', () => {
     const { t: tEn } = require('../utils.js');
     expect(tEn('track.inProgress')).toBe('In progress');
   });
+
+  test('uses NVApp.state.lang when lang is provided through shared app state', () => {
+    delete window.lang;
+    window.NVApp = { state: { lang: 'en' } };
+    const { t } = require('../utils.js');
+    expect(t('nav.home')).toBe('Home');
+  });
 });

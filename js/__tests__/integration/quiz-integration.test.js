@@ -42,6 +42,7 @@ beforeEach(() => {
   window.escapeHtml = (s) => s;
   window.showToast = () => {};
   window.checkAchievements = () => {};
+  window.setStoredItem = jest.fn((key, value) => localStorage.setItem(key, value));
 });
 
 test('renderQuiz persists quiz pass to localStorage and state', () => {
@@ -56,8 +57,12 @@ test('renderQuiz persists quiz pass to localStorage and state', () => {
   expect(submit).not.toBeNull();
   submit.click();
 
-  // assert localStorage and state updated
+  // assert localStorage and state updated via helper storage path
   const stored = JSON.parse(localStorage.getItem('testers-guild-quizzes') || '{}');
   expect(stored['track-1']).toBeDefined();
   expect(window.NVApp.state.quizzesPassed['track-1']).toBeDefined();
+  expect(window.setStoredItem).toHaveBeenCalledWith(
+    'testers-guild-quizzes',
+    JSON.stringify(window.NVApp.state.quizzesPassed),
+  );
 });

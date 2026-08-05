@@ -301,6 +301,16 @@ describe('view helpers', () => {
     expect(search).toContain('No results');
   });
 
+  test('buildLoadingStateHtml renders a polite loading message', () => {
+    const { buildLoadingStateHtml } = require('../view-helpers.js');
+
+    const html = buildLoadingStateHtml('Loading content…', 'lesson-loading', (value) => String(value));
+
+    expect(html).toContain('loading-state');
+    expect(html).toContain('lesson-loading');
+    expect(html).toContain('Loading content…');
+  });
+
   test('bindTrackQuizHandlers wires quiz submission, result rendering and retry', () => {
     const { bindTrackQuizHandlers } = require('../view-helpers.js');
     const quizData = {
