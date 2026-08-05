@@ -26,14 +26,37 @@ function shouldServeOfflinePage(request) {
   return request.mode === 'navigate' || (request.headers.get('accept') || '').includes('text/html');
 }
 
-function createOfflinePageResponse() {
+async function createOfflinePageResponse() {
+  let texts = null;
+  try {
+    const res = await fetch('/data/translations-pt.json');
+    if (res && res.ok) {
+      const json = await res.json();
+      // expected shape: { offline: { title, heading, message, cta, lang } }
+      if (json && json.offline) texts = json.offline;
+    }
+  } catch (e) {
+    // ignore fetch errors and fall back to built-in defaults
+  }
+
+  const t = Object.assign(
+    {
+      title: 'Null and Void - Offline',
+      heading: 'Você está offline',
+      message: 'O conteúdo não está disponível no momento, mas você ainda pode retornar à página inicial.',
+      cta: 'Voltar para a home',
+      lang: 'pt-BR',
+    },
+    texts || {},
+  );
+
   return new Response(
     `<!DOCTYPE html>
-      <html lang="pt-BR">
+      <html lang="${t.lang}">
         <head>
           <meta charset="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>Null and Void - Offline</title>
+          <title>${escapeHtml(t.title)}</title>
           <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body { font-family: system-ui, sans-serif; background: #0b1120; color: #f8fafc; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
@@ -45,18 +68,29 @@ function createOfflinePageResponse() {
         <body>
           <div class="container">
             <div class="icon">📡</div>
-            <h1>Você está offline</h1>
-            <p>O conteúdo não está disponível no momento, mas você ainda pode retornar à página inicial.</p>
-            <p><a href="/">Voltar para a home</a></p>
+            <h1>${escapeHtml(t.heading)}</h1>
+            <p>${escapeHtml(t.message)}</p>
+            <p><a href="/">${escapeHtml(t.cta)}</a></p>
           </div>
         </body>
       </html>`,
     {
       status: 503,
-      statusText: "Service Unavailable",
-      headers: { "Content-Type": "text/html; charset=utf-8" },
+      statusText: 'Service Unavailable',
+      headers: { 'Content-Type': 'text/html; charset=utf-8' },
     },
   );
+}
+
+// Minimal HTML-escape helper for insertion into the offline page
+function escapeHtml(s) {
+  if (!s) return '';
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 // Assets to cache on install
