@@ -830,6 +830,14 @@
   };
 
   function ensureGlobalNVApp() {
+    if (typeof window !== 'undefined' && window.NVAppBootstrap && typeof window.NVAppBootstrap.ensureGlobalNVApp === 'function') {
+      try {
+        return window.NVAppBootstrap.ensureGlobalNVApp(appState, appHelpers);
+      } catch (e) {
+        // fall back to local attach
+      }
+    }
+
     if (typeof window !== 'undefined') {
       window.NVApp = window.NVApp || {};
       window.NVApp.state = window.NVApp.state || appState;
