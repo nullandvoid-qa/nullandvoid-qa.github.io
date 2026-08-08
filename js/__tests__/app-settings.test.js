@@ -53,4 +53,15 @@ describe('app-settings fallback behavior', () => {
     expect(document.documentElement.lang).toBe('en');
     expect(window.refreshCurrentView).toHaveBeenCalled();
   });
+
+  test('exposes toggle state semantics for the theme and senior-mode buttons', () => {
+    window.NVAppSettings.applyTheme();
+    window.NVAppSettings.applySeniorMode();
+
+    const themeToggle = document.getElementById('theme-toggle');
+    const seniorModeToggle = document.getElementById('senior-mode-toggle');
+
+    expect(themeToggle.getAttribute('aria-pressed')).toBe('true');
+    expect(seniorModeToggle.getAttribute('aria-pressed')).toBe('false');
+  });
 });

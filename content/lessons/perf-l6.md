@@ -61,6 +61,13 @@ jobs:
   <li>Descreva brevemente como você alteraria esse arquivo para disparar o pipeline de testes de performance de forma agendada (ex: rodar todas as noites à meia-noite usando expressões `cron`).</li>
 </ol>
 
+<h3>✅ Gabarito (exercício)</h3>
+<ul>
+  <li><strong>Pipeline básico:</strong> as etapas principais são checkout, setup do k6 e execução do script com `k6 run`.</li>
+  <li><strong>Agendamento:</strong> para cron, adicione `on.schedule` com expressão adequada (`0 0 * * *` para meia-noite, por exemplo) e mantenha o mesmo job de performance.</li>
+  <li><strong>Valor de observabilidade:</strong> a automação de regressão de performance permite buscar mudanças de comportamento de forma previsível e guardar evidência no pipeline.</li>
+</ul>
+
 <h3>📚 Recursos</h3>
 <ul>
   <li><a href="https://k6.io/docs/results-output/real-time/prometheus/" target="_blank">Exportando Métricas do k6 para o Prometheus</a></li>

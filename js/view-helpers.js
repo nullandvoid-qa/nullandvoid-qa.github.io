@@ -64,9 +64,11 @@
   function bindAccessibleAction(element, onActivate) {
     if (!element) return;
 
+    const isActivationKey = (key) => key === "Enter" || key === " " || key === "Spacebar";
+
     element.addEventListener("click", () => onActivate());
     element.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" || event.key === " ") {
+      if (isActivationKey(event.key)) {
         event.preventDefault();
         onActivate();
       }
@@ -97,10 +99,24 @@
     const navLinks = documentRef.querySelectorAll(".nav-links a[data-nav]") || [];
     navLinks.forEach((a) => {
       const nav = a.dataset.nav;
-      a.classList.toggle(
-        "active",
-        nav === view || ((view === "track" || view === "lesson" || view === "quiz") && nav === activeNav),
-      );
+      const isActive = nav === view || ((view === "track" || view === "lesson" || view === "quiz") && nav === activeNav);
+      a.classList.toggle("active", isActive);
+      if (isActive) {
+        if (typeof a.setAttribute === 'function') {
+          a.setAttribute("aria-current", "page");
+          a.setAttribute("aria-label", `${a.textContent || nav} (current page)`);
+        }
+      } else {
+        if (typeof a.removeAttribute === 'function') a.removeAttribute("aria-current");
+        try {
+          const label = (typeof a.getAttribute === 'function') ? a.getAttribute("aria-label") : null;
+          if (label && label.endsWith("(current page)")) {
+            if (typeof a.removeAttribute === 'function') a.removeAttribute("aria-label");
+          }
+        } catch (err) {
+          // defensive: some test doubles may not implement getAttribute; ignore
+        }
+      }
     });
   }
 
@@ -120,6 +136,9 @@
     }
 
     banner.classList.remove("hidden");
+    banner.setAttribute && banner.setAttribute("aria-live", "polite");
+    banner.setAttribute && banner.setAttribute("role", "status");
+    banner.removeAttribute && banner.removeAttribute("aria-hidden");
     const trackIcon = createIconHtml(icons, getTrackIcon(found.track), "search-result-icon", "14");
     banner.innerHTML = `
       <div class="continue-card">
@@ -319,24 +338,30 @@
     const lessonHtml = lessonMatches
       .slice(0, 8)
       .map(
-        (l) => `
-      <button type="button" class="search-result-item" data-lesson="${l.id}">
+        (l) => {
+          const label = `${l.title} — ${l.trackTitle} · ${l.courseTitle}`;
+          return `
+      <button type="button" class="search-result-item" data-lesson="${l.id}" aria-label="${escapeHtml(label)}">
         <span class="search-result-icon">${icons ? icons.get('book','search-result-icon','16') : ''}</span>
         <span class="search-result-title">${escapeHtml(l.title)}</span>
         <span class="search-result-meta">${escapeHtml(l.trackTitle)} · ${escapeHtml(l.courseTitle)}</span>
-      </button>`,
+      </button>`;
+        },
       )
       .join("");
 
     const glossaryHtml = glossaryMatches
       .slice(0, 3)
       .map(
-        (g) => `
-      <button type="button" class="search-result-item search-glossary-item" data-glossary="1">
+        (g) => {
+          const label = `${g.term}: ${g.def.substring(0, 80)}`;
+          return `
+      <button type="button" class="search-result-item search-glossary-item" data-glossary="1" aria-label="${escapeHtml(label)}">
         <span class="search-result-icon">${icons ? icons.get('book', 'search-result-icon', '16') : ''}</span>
         <span class="search-result-title">${escapeHtml(g.term)}</span>
         <span class="search-result-meta">${escapeHtml(g.def.substring(0, 80))}…</span>
-      </button>`,
+      </button>`;
+        },
       )
       .join("");
 
@@ -747,13 +772,18 @@
       tierLabel,
     } = options;
 
+    const translate = (key, fallback) => {
+      const result = typeof t === 'function' ? t(key, fallback) : undefined;
+      return typeof result === 'string' && result !== key ? result : (fallback || key);
+    };
+
     const contentTitle = escapeHtml(title || track.title || track.id);
     const description = escapeHtml(track.description || "");
     const topics = Array.isArray(track.topics) ? track.topics : [];
     const topicTags = topics.slice(0, 3).map((topic) => `<span class="tag">${escapeHtml(topic)}</span>`).join("");
 
     return `
-      <article class="track-card${isComplete ? " track-complete" : ""}" style="--track-color:${track.color || "#8b5cf6"};" role="button" tabindex="0">
+      <article class="track-card${isComplete ? " track-complete" : ""}" style="--track-color:${track.color || "#8b5cf6"};" role="button" tabindex="0" aria-label="${escapeHtml(translate("track.open", "Open track") + ": " + contentTitle)}">
         <div class="track-card-header">
           <span class="track-icon">${iconHtml}</span>
           <div class="track-badges">
@@ -1471,7 +1501,7 @@
           <div class="roadmap-step-body">
             <strong>${escapeHtml(step.label)}</strong>
             <p class="roadmap-why"><em>${t("roadmap.why")}:</em> ${escapeHtml(step.why)}</p>
-            <button type="button" class="btn btn-secondary btn-sm roadmap-go" data-track="${step.trackId}" data-lesson="${step.lessonId || ""}">${t("roadmap.start")}</button>
+            <button type="button" class="btn btn-secondary btn-sm roadmap-go" data-track="${step.trackId}" data-lesson="${step.lessonId || ""}" aria-label="${escapeHtml(t("roadmap.start") + ": " + step.label)}">${t("roadmap.start")}</button>
           </div>
         </div>`,
           )

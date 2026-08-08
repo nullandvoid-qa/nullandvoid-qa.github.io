@@ -54,6 +54,13 @@ jmeter -n -t scripts/jmeter/test-plan.jmx -l scripts/jmeter/results.jtl -JBASE_U
   <li>Proponha duas hipóteses de melhoria de código caso a latência p95 ultrapasse 1 segundo (ex: adicionar cache na rota de listagem ou paginação nas queries).</li>
 </ol>
 
+<h3>✅ Gabarito (exercício)</h3>
+<ul>
+  <li><strong>Execução esperada:</strong> um cenário simples com `vus: 30` e `duration: '2m'` deve mostrar latência média e p95 em console/relatório.</li>
+  <li><strong>Interpretação:</strong> se p95 ultrapassar 1s, isso sugere gargalo real de API, banco ou rendering secundário; o resultado precisa ser contextualizado com a jornada de usuário crítica.</li>
+  <li><strong>Hipóteses de melhoria:</strong> cache de listagens, paginação nas consultas, reduzir payloads e evitar joins pesados em rotas sem necessidade.</li>
+</ul>
+
 <h3>📚 Recursos</h3>
 <ul>
   <li><a href="https://k6.io/docs/using-k6/scenarios/" target="_blank">Criação de Cenários e Workloads no k6</a></li>

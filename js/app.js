@@ -7,9 +7,6 @@
   const STORAGE_BOOKMARKS = "testers-guild-bookmarks";
   const STORAGE_QUIZZES = "testers-guild-quizzes";
   const STORAGE_CHECKLISTS = "testers-guild-checklists";
-  const STORAGE_THEME = "testers-guild-theme";
-  const STORAGE_SENIOR_MODE = "testers-guild-senior-mode";
-
   let tracks = [];
   const enOverlay = window.TG_QAWAY_EN || {
     tracks: {},
@@ -59,8 +56,6 @@
   };
   const enrichment = window.TG_LESSON_ENRICHMENT || {};
   const quizzes = window.TG_QUIZZES || {};
-  const labsData = window.TG_LABS || {};
-  const achievementsList = window.TG_ACHIEVEMENTS || [];
 
   function getGlobalHelper(name) {
     if (typeof globalThis !== 'undefined' && typeof globalThis[name] === 'function') {
@@ -173,6 +168,25 @@
     return Object.values(data).every((item) => Array.isArray(item) && item.every((idx) => typeof idx === 'number'));
   });
 
+  const t = typeof window !== 'undefined' && typeof window.t === 'function'
+    ? window.t
+    : (key, fallback) => fallback || key;
+  const showToast = typeof window !== 'undefined' && typeof window.showToast === 'function'
+    ? window.showToast
+    : (msg) => {
+      if (typeof console !== 'undefined' && typeof console.info === 'function') {
+        console.info(msg);
+      }
+    };
+  const NVAppStorage = typeof window !== 'undefined' && typeof window.NVAppStorage === 'object' ? window.NVAppStorage : null;
+  const appStorage = typeof module !== 'undefined' && module.exports ? require('./app-storage.js') : null;
+
+  const {
+    safeGetStoredItem,
+    safeLoadJson,
+    safeSetStoredItem,
+  } = appStorage || NVAppStorage || {};
+
   let lang = (typeof runtimeGetStorage === 'function' ? runtimeGetStorage(STORAGE_LANG, "tg-qaway-lang") : null) || "pt";
   // Default to no persona so home track filter uses "all"
   let persona = typeof runtimeGetStorage === 'function' ? runtimeGetStorage(STORAGE_PERSONA) : null;
@@ -190,64 +204,6 @@
   let viewParams = {};
   let trackFilter = "all";
   let homeFilter = "all";
-  let searchTimeout = null;
-
-  const t = typeof window !== 'undefined' && typeof window.t === 'function'
-    ? window.t
-    : (key, fallback) => fallback || key;
-  const showToast = typeof window !== 'undefined' && typeof window.showToast === 'function'
-    ? window.showToast
-    : (msg) => {
-      if (typeof console !== 'undefined' && typeof console.info === 'function') {
-        console.info(msg);
-      }
-    };
-  const safeConfirm = typeof window !== 'undefined' && typeof window.confirm === 'function'
-    ? window.confirm
-    : () => false;
-  const NVAppStorage = typeof window !== 'undefined' && window.NVAppStorage ? window.NVAppStorage : null;
-  const appStorage = typeof module !== 'undefined' && module.exports ? require('./app-storage.js') : null;
-  const storage = NVAppStorage || appStorage || null;
-
-  function safeGetStoredItem(key) {
-    try {
-      return storage?.safeGetStoredItem?.(key) ?? null;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  function safeLoadJson(key, fallback, validator) {
-    try {
-      return storage?.safeLoadJson?.(key, fallback, validator) ?? fallback;
-    } catch (e) {
-      return fallback;
-    }
-  }
-
-  function safeSaveJson(key, data) {
-    try {
-      storage?.safeSaveJson?.(key, data);
-    } catch (e) {
-      // ignore
-    }
-  }
-
-  function safeSetStoredItem(key, value) {
-    try {
-      storage?.safeSetStoredItem?.(key, value);
-    } catch (e) {
-      // ignore
-    }
-  }
-
-  function safeRemoveStoredItem(key) {
-    try {
-      storage?.safeRemoveStoredItem?.(key);
-    } catch (e) {
-      // ignore
-    }
-  }
 
   function getAppSettings() {
     return typeof window !== 'undefined' && window.NVAppSettings ? window.NVAppSettings : {};
@@ -283,33 +239,6 @@
 
   function toggleLang() {
     return getAppSettings().toggleLang?.();
-  }
-
-  function getElement(id) {
-    if (typeof window !== 'undefined' && typeof window.getElementById === 'function') {
-      return window.getElementById(id);
-    }
-    return typeof document !== 'undefined' ? document.getElementById(id) : null;
-  }
-
-  const NVViewHelpers = typeof window !== 'undefined' && window.NVViewHelpers ? window.NVViewHelpers : {};
-
-  function buildAchievementsHtml(...args) {
-    return typeof NVViewHelpers.buildAchievementsHtml === 'function'
-      ? NVViewHelpers.buildAchievementsHtml(...args)
-      : '';
-  }
-
-  function bindTrackQuizHandlers(...args) {
-    return typeof NVViewHelpers.bindTrackQuizHandlers === 'function'
-      ? NVViewHelpers.bindTrackQuizHandlers(...args)
-      : undefined;
-  }
-
-  function searchAndRender(...args) {
-    return typeof NVViewHelpers.searchAndRender === 'function'
-      ? NVViewHelpers.searchAndRender(...args)
-      : undefined;
   }
 
   const PERSONA_TRACKS = {
@@ -484,36 +413,6 @@
     };
   }
 
-  function getAllLessons() {
-    const helpers = getTrackHelpers();
-    if (helpers?.getAllLessons) {
-      return helpers.getAllLessons(tracks, {
-        localizedTrack,
-        localizedCourse,
-        localizedLesson,
-      });
-    }
-    const lessons = [];
-    tracks.forEach((track) => {
-      if (!track || !track.courses || !Array.isArray(track.courses)) return;
-      const lt = localizedTrack(track);
-      track.courses.forEach((course) => {
-        if (!course || !course.lessons || !Array.isArray(course.lessons)) return;
-        const lc = localizedCourse(course);
-        course.lessons.forEach((lesson) => {
-          if (!lesson) return;
-          lessons.push({
-            ...localizedLesson(lesson),
-            trackId: track.id,
-            trackTitle: lt.title,
-            courseTitle: lc.title,
-          });
-        });
-      });
-    });
-    return lessons;
-  }
-
   function findTrack(id) {
     const helpers = getTrackHelpers();
     if (helpers?.findTrack) return helpers.findTrack(tracks, id);
@@ -629,87 +528,6 @@
   // ── Event Listeners ───────────────────────────────────────────────────────
   // Event listeners moved to `js/app-init.js` to reduce bootstrap responsibilities.
 
-  getElement("btn-reset-progress")
-    ?.addEventListener("click", () => {
-      if (safeConfirm(t("dashboard.resetConfirm"))) {
-        progress = {};
-        saveProgress(progress);
-        safeRemoveStoredItem(STORAGE_LAST_LESSON);
-        showToast(t("toast.progressReset"));
-        refreshCurrentView();
-        renderContinueBanner();
-      }
-    });
-
-  getElement("btn-export-progress")
-    ?.addEventListener("click", () => {
-      exportProgressToFile(progress, bookmarks, quizzesPassed, checklistState);
-    });
-
-  getElement("btn-import-progress")
-    ?.addEventListener("click", () => {
-      getElement("progress-import-input")?.click();
-    });
-
-  getElement("progress-import-input")
-    ?.addEventListener("change", async (event) => {
-      const file = event.target.files?.[0];
-      if (!file) return;
-      const imported = await importProgressFromFile(file);
-      event.target.value = "";
-      if (!imported) return;
-      progress = imported.progress;
-      bookmarks.length = 0;
-      bookmarks.push(...imported.bookmarks);
-      Object.keys(quizzesPassed).forEach((key) => delete quizzesPassed[key]);
-      Object.assign(quizzesPassed, imported.quizzesPassed);
-      Object.keys(checklistState).forEach((key) => delete checklistState[key]);
-      Object.assign(checklistState, imported.checklistState);
-      saveProgress(progress);
-      safeSaveJson("testers-guild-bookmarks", bookmarks);
-      safeSaveJson("testers-guild-quizzes", quizzesPassed);
-      safeSaveJson("testers-guild-checklists", checklistState);
-      showToast(t("toast.importProgressSuccess"));
-      refreshCurrentView();
-      renderContinueBanner();
-    });
-
-  // Keyboard shortcuts: ArrowLeft / ArrowRight to navigate lessons
-  document.addEventListener("keydown", (e) => {
-    if (appState.currentView !== "lesson") return;
-    if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
-    const found = findLesson(appState.viewParams.lessonId);
-    if (!found) return;
-    const allLessons = (found.rawTrack && found.rawTrack.courses && Array.isArray(found.rawTrack.courses))
-      ? found.rawTrack.courses.flatMap((c) => c.lessons || [])
-      : [];
-    const idx = allLessons.findIndex((l) => l.id === appState.viewParams.lessonId);
-    if (e.key === "ArrowRight" && allLessons[idx + 1])
-      navigate("lesson", { lessonId: allLessons[idx + 1].id });
-    if (e.key === "ArrowLeft" && allLessons[idx - 1])
-      navigate("lesson", { lessonId: allLessons[idx - 1].id });
-  });
-
-  // ── Auth Integration ──────────────────────────────────────────────────────
-  // Sincroniza progresso ao fazer login
-  document.addEventListener("nvauth:login", (e) => {
-    const userProgress = window.NVAuth.getProgress();
-    if (Object.keys(userProgress).length > 0) {
-      progress = userProgress;
-      showToast(`Progresso restaurado para ${e.detail.name}`);
-    } else {
-      // Se não tem progresso salvo, salva o atual
-      window.NVAuth.setProgress(progress);
-    }
-    refreshCurrentView();
-  });
-
-  // Ao fazer logout, salva o progresso da sessão
-  document.addEventListener("nvauth:logout", () => {
-    saveProgress(progress);
-    showToast(t("toast.progressSavedLocal"));
-  });
-
   const appState = {
     get lang() {
       return lang;
@@ -722,12 +540,6 @@
     },
     set persona(value) {
       persona = value;
-    },
-    get tracks() {
-      return tracks;
-    },
-    set tracks(value) {
-      tracks = value;
     },
     get progress() {
       return progress;

@@ -72,6 +72,13 @@ Recomendações Técnicas:
   <li>Escreva um relatório executivo curto baseado no cenário acima, preenchendo as métricas e sugerindo duas possíveis soluções práticas de otimização de banco ou cache.</li>
 </ol>
 
+<h3>✅ Gabarito (exercício)</h3>
+<ul>
+  <li><strong>Resumo executivo:</strong> o cenário deve indicar falha de SLA com p95 acima do limite esperado e impacto direto na experiência de navegação e compra.</li>
+  <li><strong>Soluções práticas:</strong> adicionar índice ou reescrever a query de catálogo; usar cache de listagens em Redis ou cache de fragmento para reduzir leitura no banco.</li>
+  <li><strong>Entregável esperado:</strong> o relatório deve resumir a falha, evidenciar a métrica crítica e apontar ações de mitigação em curto prazo com prioridade clara.</li>
+</ul>
+
 <h3>📚 Recursos</h3>
 <ul>
   <li><a href="https://blog.k6.io/share-performance-results/" target="_blank">Melhores Práticas para Compartilhar Resultados de Carga (k6 Blog)</a></li>

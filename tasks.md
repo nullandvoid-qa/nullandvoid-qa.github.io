@@ -1,45 +1,25 @@
 # Backlog de Tarefas - Null and Void QA Course
 
-Este arquivo resume as melhorias prioritárias para continuar o projeto de forma incremental e segura.
+Este arquivo reúne as próximas ações prioritárias para manter o projeto saudável e evoluir com segurança.
 
-## 🔎 Análise geral do projeto
+## Status atual
 
-O projeto está em um bom estado geral de base técnica:
-- A suíte de testes está verde: 27/27 suites e 123/123 testes passaram no último run.
-- O lint está limpo para JavaScript, CSS e HTML.
-- A estrutura já é bastante rica em conteúdo, módulos e documentação, o que dá boa base para evolução.
+A base já passou por uma consolidação importante de conteúdo, estrutura e módulos. O foco atual é restaurar a qualidade de manutenção da aplicação e, em seguida, seguir com melhorias incrementais.
 
-Os principais pontos de melhoria identificados são:
-- Melhorar SEO e metadados sociais para a home e páginas principais.
-- Fortalecer acessibilidade e navegação por teclado.
-- Reduzir ainda mais o acoplamento do bootstrap principal e padronizar o estado global.
-- Melhorar tratamento de erros e estados de carregamento para conteúdo e aulas.
-- Completar conteúdo de apoio e exercícios nas aulas prioritárias.
-- Aumentar a cobertura de testes e2e para fluxos críticos.
+## Prioridade 1 — Restaurar a base de manutenção
 
-## ✅ Checklist priorizada para execução incremental
+- [x] Remover blocos vazios, inconsistências de escopo e duplicidades que ainda impedem uma validação limpa.
 
-- [ ] 4. Reduzir acoplamento do bootstrap principal
-  - [x] Remover chamadas duplicadas de inicialização global (`ensureGlobalNVApp`) em `js/app.js`.
-  - [x] Extrair `ensureGlobalNVApp` para `js/app-bootstrap-helpers.js` e delegar em `js/app.js`.
-  - [x] Delegar `mergeTrackSources` para `js/app-tracks.js` e simplificar o fallback em `js/app.js`.
-  - [ ] Extrair mais lógica de [js/app.js](js/app.js) para módulos específicos.
+## Prioridade 2 — Melhorias incrementais
 
-- [ ] 7. Completar conteúdo de apoio e exercícios
-  - [ ] Priorizar aulas com maior impacto pedagógico.
-  - [ ] Adicionar exercícios práticos e gabaritos onde ainda estiverem ausentes.
-  - [ ] Revisar links de apoio e recursos extras por lição.
+- [ ] Melhorar SEO e metadados sociais da home e páginas principais.
+- [ ] Fortalecer acessibilidade e navegação por teclado.
+- [ ] Reduzir ainda mais o acoplamento do bootstrap e padronizar o estado global.
+- [ ] Melhorar tratamento de erros e estados de carregamento para aulas e conteúdo.
+- [ ] Expandir a cobertura de testes e2e para fluxos críticos.
 
-- [ ] 8. Fortalecer testes e2e
-  - [x] Adicionar cenários de regressão para páginas críticas (bookmark flow)
-  - [ ] Manter testes automatizados alinhados com o comportamento real do usuário.
+## Nota
 
-- [ ] 9. Revisar internacionalização e consistência editorial
-  - [x] Validar termos, rótulos e mensagens entre PT/EN.
-  - [x] Identificar strings hard-coded ainda não traduzidas. (report at `docs/HARDCODED_STRINGS_REPORT.md`)
-  - [ ] Revisar consistência de tom e estilo do conteúdo.
-  - [x] Extrair strings inline do `js/service-worker.js` para i18n (adicionadas chaves em `data/translations-pt.json`).
-
-Documentation moved to [docs/MAINTENANCE.md](docs/MAINTENANCE.md)
+Trabalhos já concluídos não precisam permanecer aqui; este arquivo deve refletir apenas o que ainda exige atenção.
 
 

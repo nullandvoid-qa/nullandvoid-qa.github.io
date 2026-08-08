@@ -19,6 +19,25 @@
     return String(value == null ? '' : value);
   }
 
+  function bindFallbackAction(element, onActivate) {
+    if (!element || typeof onActivate !== 'function') return;
+
+    const isActivationKey = (key) => key === 'Enter' || key === ' ' || key === 'Spacebar';
+
+    if (typeof window.NVViewHelpers?.bindAccessibleAction === 'function') {
+      window.NVViewHelpers.bindAccessibleAction(element, onActivate);
+      return;
+    }
+
+    element.addEventListener('click', () => onActivate());
+    element.addEventListener('keydown', (event) => {
+      if (isActivationKey(event.key)) {
+        event.preventDefault();
+        onActivate();
+      }
+    });
+  }
+
   function buildEmptyState(message, className = 'track-empty-state') {
     const text = message == null ? '' : String(message);
     if (typeof window.NVViewHelpers?.buildEmptyStateHtml === 'function') {
@@ -52,7 +71,12 @@
     if (typeof window.NVViewHelpers?.buildTrackCardHtml !== 'function') {
       const fallbackCard = document.createElement('div');
       fallbackCard.className = 'track-card fallback-card';
+      fallbackCard.setAttribute('role', 'button');
+      fallbackCard.setAttribute('tabindex', '0');
+      fallbackCard.setAttribute('aria-label', title || getTranslator()("track.untitled", "Untitled track"));
       fallbackCard.textContent = title || getTranslator()("track.untitled", "Untitled track");
+      const open = () => typeof helpers.navigate === 'function' && helpers.navigate("track", { trackId: track.id });
+      bindFallbackAction(fallbackCard, open);
       container.appendChild(fallbackCard);
       return;
     }

@@ -39,19 +39,31 @@ describe('view helpers', () => {
     const calls = [];
     bindAccessibleAction(element, () => calls.push('open'));
 
-    const keyEvent = { type: 'keydown', key: 'Enter', preventDefault: jest.fn() };
-    listeners.click({ type: 'click' });
-    listeners.keydown(keyEvent);
+    const enterEvent = { type: 'keydown', key: 'Enter', preventDefault: jest.fn() };
+    const spaceEvent = { type: 'keydown', key: ' ', preventDefault: jest.fn() };
+    const spacebarEvent = { type: 'keydown', key: 'Spacebar', preventDefault: jest.fn() };
 
-    expect(calls).toEqual(['open', 'open']);
-    expect(keyEvent.preventDefault).toHaveBeenCalled();
+    listeners.click({ type: 'click' });
+    listeners.keydown(enterEvent);
+    listeners.keydown(spaceEvent);
+    listeners.keydown(spacebarEvent);
+
+    expect(calls).toEqual(['open', 'open', 'open', 'open']);
+    expect(enterEvent.preventDefault).toHaveBeenCalled();
+    expect(spaceEvent.preventDefault).toHaveBeenCalled();
+    expect(spacebarEvent.preventDefault).toHaveBeenCalled();
   });
 
   test('setActiveView toggles the active view and nav state', () => {
     const { setActiveView } = require('../view-helpers.js');
 
     const viewEl = { classList: { add: jest.fn(), remove: jest.fn() } };
-    const navEl = { dataset: { nav: 'tracks' }, classList: { toggle: jest.fn() } };
+    const navEl = {
+      dataset: { nav: 'tracks' },
+      classList: { toggle: jest.fn() },
+      setAttribute: jest.fn(),
+      removeAttribute: jest.fn(),
+    };
     const views = [{ classList: { add: jest.fn(), remove: jest.fn() } }, viewEl];
     const documentStub = {
       querySelectorAll: jest.fn((selector) => {
@@ -98,6 +110,9 @@ describe('view helpers', () => {
     expect(html).toContain('Web');
     expect(html).toContain('API');
     expect(html).toContain('50');
+    expect(html).toContain('role="button"');
+    expect(html).toContain('tabindex="0"');
+    expect(html).toContain('aria-label="Open track: Web"');
   });
 
   test('renderTrackCard forwards the localized track metadata to the card markup builder', () => {
@@ -230,6 +245,39 @@ describe('view helpers', () => {
     expect(banner.innerHTML).toContain('btn-continue');
   });
 
+  test('renderContinueBanner announces progress updates to assistive technologies', () => {
+    const { renderContinueBanner } = require('../view-helpers.js');
+
+    localStorage.setItem('resume-test', 'lesson-1');
+    const banner = {
+      classList: { add: jest.fn(), remove: jest.fn() },
+      innerHTML: '',
+      setAttribute: jest.fn(),
+      removeAttribute: jest.fn(),
+    };
+    const navigate = jest.fn();
+    const findLesson = jest.fn(() => ({
+      lesson: { title: 'Introdução ao QA' },
+      track: { title: 'Fundamentos', icon: 'web' },
+    }));
+
+    renderContinueBanner(
+      banner,
+      { id: 'lesson-1' },
+      findLesson,
+      () => 'web',
+      (value) => String(value),
+      (key) => key,
+      navigate,
+      { get: () => '' },
+      'resume-test',
+    );
+
+    expect(banner.setAttribute).toHaveBeenCalledWith('aria-live', 'polite');
+    expect(banner.setAttribute).toHaveBeenCalledWith('role', 'status');
+    expect(banner.removeAttribute).toHaveBeenCalledWith('aria-hidden');
+  });
+
   test('buildGlossaryHtml and buildLabsHtml render their sections', () => {
     const { buildGlossaryHtml, buildLabsHtml } = require('../view-helpers.js');
 
@@ -276,6 +324,7 @@ describe('view helpers', () => {
 
     expect(html).toContain('roadmap-card');
     expect(html).toContain('roadmap-go');
+    expect(html).toContain('aria-label="roadmap.start: Primeiro passo"');
     expect(html).toContain('Primeiro passo');
   });
 

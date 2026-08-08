@@ -34,15 +34,17 @@
     document.documentElement.setAttribute('data-theme', theme);
     const btn = getElement('theme-toggle');
     if (btn) {
-      const iconName = theme === 'dark' ? 'moon' : 'sun';
+      const isDark = theme === 'dark';
+      const iconName = isDark ? 'moon' : 'sun';
       btn.innerHTML = typeof window.getIconMarkup === 'function'
         ? window.getIconMarkup(iconName, '18')
         : window.NVIcons?.get?.(iconName, '', '18') || '';
-      const nextThemeLabel = theme === 'dark'
+      const nextThemeLabel = isDark
         ? t('settings.toggleThemeLight', 'Switch to light theme')
         : t('settings.toggleThemeDark', 'Switch to dark theme');
       btn.setAttribute('aria-label', nextThemeLabel);
       btn.setAttribute('title', nextThemeLabel);
+      btn.setAttribute('aria-pressed', String(isDark));
     }
     safeSetLocalStorage('testers-guild-theme', theme);
   }
@@ -68,6 +70,7 @@
       btn.title = seniorMode
         ? t('settings.seniorModeOn', state.lang === 'en' ? 'Senior Mode ON' : 'Modo Sênior ATIVO')
         : t('settings.seniorModeOff', state.lang === 'en' ? 'Senior Mode' : 'Modo Sênior');
+      btn.setAttribute('aria-pressed', String(seniorMode));
     }
     safeSetLocalStorage('testers-guild-senior-mode', String(seniorMode));
   }

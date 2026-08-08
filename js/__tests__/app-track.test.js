@@ -39,6 +39,25 @@ describe('app-track fallback rendering', () => {
     expect(document.getElementById('tracks-grid').textContent).toContain('Track 1');
   });
 
+  test('renderTrackCard fallback supports keyboard activation', () => {
+    const navigateCalls = [];
+    window.NVApp.helpers.navigate = (view, params) => navigateCalls.push({ view, params });
+
+    window.NVAppTrack.renderTrackCard({ id: 'track-1', title: 'Track 1' }, 'tracks-grid');
+    const card = document.querySelector('.track-card.fallback-card');
+    expect(card).not.toBeNull();
+
+    const clickEvent = new Event('click', { bubbles: true });
+    card.dispatchEvent(clickEvent);
+
+    const keyEvent = new window.KeyboardEvent('keydown', { key: ' ', bubbles: true });
+    const preventSpy = jest.spyOn(keyEvent, 'preventDefault');
+    card.dispatchEvent(keyEvent);
+
+    expect(navigateCalls.length).toBe(2);
+    expect(preventSpy).toHaveBeenCalled();
+  });
+
   test('renderTrackDetail renders empty state when helper track is missing', async () => {
     await window.NVAppTrack.renderTrackDetail('missing-track');
     expect(document.getElementById('track-detail').innerHTML).toContain('Trilha indisponível no momento.');

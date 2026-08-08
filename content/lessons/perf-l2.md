@@ -69,6 +69,13 @@ k6 run scripts/k6/basic-script.js
   <li>Adicione um threshold para garantir que 90% das requisições (`p(90)`) respondam em menos de 400ms. Rode o teste e analise se o threshold passou ou falhou no relatório de console do k6.</li>
 </ol>
 
+<h3>✅ Gabarito (exercício)</h3>
+<ul>
+  <li><strong>Script mínimo:</strong> deve usar `http.get()` para `https://jsonplaceholder.typicode.com/posts`, com `vus: 20`, `duration: '45s'` e threshold para `p(90)<400`.</li>
+  <li><strong>Resultado esperado:</strong> o console do k6 deve indicar se a execução passou ou falhou; se falhar, o threshold evidencia a degradação de latência.</li>
+  <li><strong>Aplicação prática:</strong> a ideia é tornar a execução de performance um substituto simples para gates automatizados, com SLA visível e rastreável em CI.</li>
+</ul>
+
 <h3>📚 Recursos</h3>
 <ul>
   <li><a href="https://k6.io/docs/" target="_blank">Documentação Oficial do k6</a></li>

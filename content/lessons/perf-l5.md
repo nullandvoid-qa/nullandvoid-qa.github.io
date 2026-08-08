@@ -55,6 +55,13 @@ LIMIT 10;
   <li>Explique qual seria o impacto dessa mudança no plano de execução (Seq Scan vs. Index Scan).</li>
 </ol>
 
+<h3>✅ Gabarito (exercício)</h3>
+<ul>
+  <li><strong>Índice sugerido:</strong> `CREATE INDEX idx_transacoes_status ON transacoes(status);` é o exemplo mínimo, cobrindo o filtro por status.</li>
+  <li><strong>Impacto no plano:</strong> o banco passa de um `Seq Scan` completo na tabela para um `Index Scan` direcionado, reduzindo leitura desnecessária e o custo total da query.</li>
+  <li><strong>Observação:</strong> a mudança reduz o tempo de resposta em cenários com filtros seletivos, mas deve ser acompanhada de análise de custo de manutenção e volume de writes.</li>
+</ul>
+
 <h3>📚 Recursos</h3>
 <ul>
   <li><a href="https://www.postgresql.org/docs/current/using-explain.html" target="_blank">Entendendo Planos de Execução (EXPLAIN) no PostgreSQL</a></li>

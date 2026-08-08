@@ -69,6 +69,13 @@ npx @lhci/cli@0.8.0 autorun --url=http://localhost:8000 --chrome-flags="--no-san
   <li>Identifique nas recomendações do relatório os scripts ou imagens que mais estão atrasando a renderização visual.</li>
 </ol>
 
+<h3>✅ Gabarito (exercício)</h3>
+<ul>
+  <li><strong>Saída esperada:</strong> o relatório de Lighthouse deve expor pontuações e diagnósticos de performance e acessibilidade, com foco nas métricas FCP, LCP e CLS.</li>
+  <li><strong>Diagnóstico:</strong> scripts de terceiros, imagens pesadas ou bloqueios de renderização tendem a causar picos de LCP e CLS, principalmente com layout instável.</li>
+  <li><strong>Plano de ação:</strong> compressão de imagens, lazy loading e remoção de blocos de renderização desnecessários ajudam a melhorar a percepção de carregamento e usabilidade.</li>
+</ul>
+
 <h3>📚 Recursos</h3>
 <ul>
   <li><a href="https://web.dev/explore/vitals" target="_blank">Core Web Vitals - Documentação do web.dev</a></li>

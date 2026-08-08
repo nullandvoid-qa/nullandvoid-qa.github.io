@@ -1,5 +1,24 @@
 const safeShowToast = typeof showToast === "function" ? showToast : () => {};
 const safeTranslate = typeof t === "function" ? t : (key) => key;
+const globalScope = typeof globalThis !== "undefined" ? globalThis : (typeof window !== "undefined" ? window : {});
+const getStoredProgressHelper = typeof globalScope.getStoredProgress === "function" ? globalScope.getStoredProgress : null;
+const persistProgressHelper = typeof globalScope.persistProgress === "function" ? globalScope.persistProgress : null;
+const getStoredItemHelper = typeof globalScope.getStoredItem === "function" ? globalScope.getStoredItem : null;
+const setStoredItemHelper = typeof globalScope.setStoredItem === "function" ? globalScope.setStoredItem : null;
+const removeStoredItemHelper = typeof globalScope.removeStoredItem === "function" ? globalScope.removeStoredItem : null;
+const loadJsonHelper = typeof globalScope.loadJson === "function" ? globalScope.loadJson : null;
+const saveJsonHelper = typeof globalScope.saveJson === "function" ? globalScope.saveJson : null;
+
+const safeRun = (callback) => {
+  try {
+    return callback();
+  } catch (error) {
+    return undefined;
+  }
+};
+
+const safeGlobalFn = (fn, ...args) => safeRun(() => (typeof fn === 'function' ? fn(...args) : undefined));
+
 const validateProgress = typeof validateProgressData === "function" ? validateProgressData : (data) => {
   if (!data || typeof data !== "object" || Array.isArray(data)) {
     return false;
@@ -53,11 +72,12 @@ function normalizeQuizzesState(quizzesState) {
 }
 
 function getAuthProgress() {
-  if (!window.NVAuth || !window.NVAuth.isAuthenticated || typeof window.NVAuth.getProgress !== 'function') {
+  const auth = typeof window !== "undefined" ? window.NVAuth : null;
+  if (!auth || !auth.isAuthenticated || typeof auth.getProgress !== "function") {
     return null;
   }
 
-  const userProgress = window.NVAuth.getProgress();
+  const userProgress = auth.getProgress();
   return userProgress && Object.keys(userProgress).length > 0 ? userProgress : null;
 }
 
@@ -71,41 +91,46 @@ function loadProgress() {
     // Prefer an available getStoredProgress helper from the environment,
     // fallback to requiring the local utils implementation when running in Node tests.
     let stored = {};
-    if (typeof getStoredProgress === 'function') {
-      stored = getStoredProgress(["testers-guild-progress", "tg-qaway-progress"], {});
+    if (typeof getStoredProgressHelper === "function") {
+      stored = getStoredProgressHelper(["testers-guild-progress", "tg-qaway-progress"], {});
     } else {
       try {
-        const u = require('./utils.js');
-        stored = u.getStoredProgress(["testers-guild-progress", "tg-qaway-progress"], {});
-      } catch (e) {
+        const utilsModule = require('./utils.js');
+        stored = utilsModule.getStoredProgress(["testers-guild-progress", "tg-qaway-progress"], {});
+      } catch (error) {
         stored = {};
       }
     }
     return normalizeProgressState(stored);
-  } catch {
+  } catch (error) {
     return {};
   }
 }
 
 function saveProgress(progress) {
   const normalizedProgress = normalizeProgressState(progress);
+  const auth = typeof window !== "undefined" ? window.NVAuth : null;
 
-  if (window.NVAuth && window.NVAuth.isAuthenticated && typeof window.NVAuth.setProgress === 'function') {
-    window.NVAuth.setProgress(normalizedProgress);
+  if (auth && auth.isAuthenticated && typeof auth.setProgress === "function") {
+    auth.setProgress(normalizedProgress);
   }
 
   // Use available persistProgress helper from environment or fallback to utils implementation
-  if (typeof persistProgress === 'function') {
-    persistProgress(["testers-guild-progress"], normalizedProgress);
+  if (typeof persistProgressHelper === "function") {
+    persistProgressHelper(["testers-guild-progress"], normalizedProgress);
   } else {
     try {
-      const u = require('./utils.js');
-      if (u && typeof u.persistProgress === 'function') u.persistProgress(["testers-guild-progress"], normalizedProgress);
-    } catch (e) {
+      const utilsModule = require('./utils.js');
+      if (utilsModule && typeof utilsModule.persistProgress === "function") {
+        utilsModule.persistProgress(["testers-guild-progress"], normalizedProgress);
+      }
+    } catch (error) {
       // last resort: try to save as JSON into localStorage
       try {
-        if (typeof localStorage !== 'undefined') localStorage.setItem('testers-guild-progress', JSON.stringify(normalizedProgress));
-      } catch (err) {
+        if (typeof localStorage !== "undefined") {
+          localStorage.setItem("testers-guild-progress", JSON.stringify(normalizedProgress));
+        }
+      } catch (storageError) {
         // ignore
       }
     }
@@ -113,93 +138,90 @@ function saveProgress(progress) {
 }
 
 function safeGetStoredItem(key) {
-  if (typeof window !== 'undefined' && typeof window.getStoredItem === 'function') {
-    try { return window.getStoredItem(key); } catch (e) { /* ignore */ }
+  if (typeof window !== "undefined" && typeof window.getStoredItem === "function") {
+    return safeGlobalFn(window.getStoredItem, key);
   }
-  if (typeof getStoredItem === 'function') {
-    try { return getStoredItem(key); } catch (e) { /* ignore */ }
+  if (typeof getStoredItemHelper === "function") {
+    return safeGlobalFn(getStoredItemHelper, key);
   }
-  try {
-    if (typeof localStorage !== 'undefined') {
+  return safeRun(() => {
+    if (typeof localStorage !== "undefined") {
       return localStorage.getItem(key);
     }
-  } catch (e) {
-    // ignore
-  }
-  return null;
+    return null;
+  }) || null;
 }
 
 function safeSetStoredItem(key, value) {
-  if (typeof window !== 'undefined' && typeof window.setStoredItem === 'function') {
-    try { window.setStoredItem(key, value); return; } catch (e) { /* ignore */ }
+  if (typeof window !== "undefined" && typeof window.setStoredItem === "function") {
+    return safeGlobalFn(window.setStoredItem, key, value);
   }
-  if (typeof setStoredItem === 'function') {
-    try { setStoredItem(key, value); return; } catch (e) { /* ignore */ }
+  if (typeof setStoredItemHelper === "function") {
+    return safeGlobalFn(setStoredItemHelper, key, value);
   }
-  try {
-    if (typeof localStorage !== 'undefined') {
+  return safeRun(() => {
+    if (typeof localStorage !== "undefined") {
       localStorage.setItem(key, value);
     }
-  } catch (e) {
-    // ignore
-  }
+    return undefined;
+  });
 }
 
 function safeRemoveStoredItem(key) {
-  if (typeof window !== 'undefined' && typeof window.removeStoredItem === 'function') {
-    try { window.removeStoredItem(key); return; } catch (e) { /* ignore */ }
+  if (typeof window !== "undefined" && typeof window.removeStoredItem === "function") {
+    return safeGlobalFn(window.removeStoredItem, key);
   }
-  if (typeof removeStoredItem === 'function') {
-    try { removeStoredItem(key); return; } catch (e) { /* ignore */ }
+  if (typeof removeStoredItemHelper === "function") {
+    return safeGlobalFn(removeStoredItemHelper, key);
   }
-  try {
-    if (typeof localStorage !== 'undefined') {
+  return safeRun(() => {
+    if (typeof localStorage !== "undefined") {
       localStorage.removeItem(key);
     }
-  } catch (e) {
-    // ignore
-  }
+    return undefined;
+  });
 }
 
 function safeLoadJson(key, fallback, validator) {
-  if (typeof window !== 'undefined' && typeof window.loadJson === 'function') {
-    try { return window.loadJson(key, fallback, validator); } catch (e) { /* ignore */ }
+  if (typeof window !== "undefined" && typeof window.loadJson === "function") {
+    return safeGlobalFn(window.loadJson, key, fallback, validator);
   }
-  if (typeof loadJson === 'function') {
-    try { return loadJson(key, fallback, validator); } catch (e) { /* ignore */ }
+  if (typeof loadJsonHelper === "function") {
+    return safeGlobalFn(loadJsonHelper, key, fallback, validator);
   }
-  try {
-    if (typeof localStorage !== 'undefined') {
+  return safeRun(() => {
+    if (typeof localStorage !== "undefined") {
       const raw = localStorage.getItem(key);
-      if (raw === null) return fallback;
+      if (raw === null) {
+        return fallback;
+      }
       const data = JSON.parse(raw);
-      if (validator && !validator(data)) return fallback;
+      if (validator && !validator(data)) {
+        return fallback;
+      }
       return data;
     }
-  } catch (e) {
-    // ignore
-  }
-  return fallback;
+    return fallback;
+  }) || fallback;
 }
 
 function safeSaveJson(key, data) {
-  if (typeof window !== 'undefined' && typeof window.saveJson === 'function') {
-    try { window.saveJson(key, data); return; } catch (e) { /* ignore */ }
+  if (typeof saveJsonHelper === "function") {
+    return safeGlobalFn(saveJsonHelper, key, data);
   }
-  if (typeof saveJson === 'function') {
-    try { saveJson(key, data); return; } catch (e) { /* ignore */ }
+  if (typeof window !== "undefined" && typeof window.saveJson === "function") {
+    return safeGlobalFn(window.saveJson, key, data);
   }
-  try {
-    if (typeof localStorage !== 'undefined') {
+  return safeRun(() => {
+    if (typeof localStorage !== "undefined") {
       localStorage.setItem(key, JSON.stringify(data));
     }
-  } catch (e) {
-    // ignore
-  }
+    return undefined;
+  });
 }
 
 function saveLastLesson(id) {
-  setStoredItem("testers-guild-last-lesson", id);
+  safeSetStoredItem("testers-guild-last-lesson", id);
 }
 
 function exportProgressToFile(progress, bookmarks, quizzesPassed, checklistState) {
@@ -216,12 +238,12 @@ function exportProgressToFile(progress, bookmarks, quizzesPassed, checklistState
       type: "application/json",
     });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "nullandvoid-qa-progress.json";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = "nullandvoid-qa-progress.json";
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
     URL.revokeObjectURL(url);
     safeShowToast(safeTranslate("toast.exportProgressSuccess"));
   } catch (error) {
@@ -307,7 +329,7 @@ if (typeof module !== "undefined" && module.exports) {
 }
 
 // Expose a safe storage API for other modules in the browser environment.
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   window.NVAppStorage = window.NVAppStorage || {};
   try {
     window.NVAppStorage.normalizeProgressState = normalizeProgressState;
@@ -320,10 +342,10 @@ if (typeof window !== 'undefined') {
     window.NVAppStorage.importProgressFromFile = importProgressFromFile;
     window.NVAppStorage.isValidImportedPayload = isValidImportedPayload;
     window.NVAppStorage.safeGetStoredItem = safeGetStoredItem;
-  window.NVAppStorage.safeSetStoredItem = safeSetStoredItem;
-  window.NVAppStorage.safeRemoveStoredItem = safeRemoveStoredItem;
+    window.NVAppStorage.safeSetStoredItem = safeSetStoredItem;
+    window.NVAppStorage.safeRemoveStoredItem = safeRemoveStoredItem;
     window.NVAppStorage.safeSaveJson = safeSaveJson;
-  } catch (e) {
+  } catch (error) {
     // noop - defensive write to window
   }
 }
