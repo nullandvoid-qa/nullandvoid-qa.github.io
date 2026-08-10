@@ -5,9 +5,7 @@
  * and persists to storage using a safe helper fallback.
  */
 (function () {
-  const safeShowToast = typeof window !== 'undefined' && typeof window.showToast === 'function'
-    ? window.showToast
-    : () => {};
+  const _safeShowToast = (typeof window !== 'undefined' && window.safeShowToast) ? window.safeShowToast : (typeof window !== 'undefined' && typeof window.showToast === 'function' ? window.showToast : () => {});
   const safeTranslate = typeof window !== 'undefined' && typeof window.t === 'function'
     ? window.t
     : (key, fallback) => fallback || key;
@@ -40,10 +38,10 @@
 
     if (idx === -1) {
       bookmarks.push(lessonId);
-      safeShowToast(safeTranslate('toast.bookmarkAdded', 'Bookmark added'));
+      _safeShowToast(safeTranslate('toast.bookmarkAdded', 'Bookmark added'));
     } else {
       bookmarks.splice(idx, 1);
-      safeShowToast(safeTranslate('toast.bookmarkRemoved', 'Bookmark removed'));
+      _safeShowToast(safeTranslate('toast.bookmarkRemoved', 'Bookmark removed'));
     }
 
     state.bookmarks = bookmarks;

@@ -48,7 +48,27 @@
     if (window.NVViewHelpers?.buildLessonSkeletonHtml) {
       return window.NVViewHelpers.buildLessonSkeletonHtml();
     }
-    return '<div class="lesson-skeleton"><p>Loading lesson...</p></div>';
+    return '<div class="lesson-skeleton" role="status" aria-live="polite"><p>Loading lesson...</p></div>';
+  }
+
+  function getLessonLoadErrorMessage(helpers) {
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+      return helpers.t?.(
+        'lesson.offline',
+        'Você está offline. Conecte-se à internet para carregar esta lição ou tente novamente mais tarde.',
+      ) || 'Você está offline. Conecte-se à internet para carregar esta lição ou tente novamente mais tarde.';
+    }
+
+    return helpers.t?.('lesson.loadError', 'Conteúdo indisponível no momento. Tente novamente mais tarde.')
+      || 'Conteúdo indisponível no momento. Tente novamente mais tarde.';
+  }
+
+  function renderLessonErrorState(lessonDetail, message) {
+    if (!lessonDetail) return;
+    lessonDetail.innerHTML = buildEmptyState(
+      message || 'Não foi possível carregar a lição no momento. Tente novamente mais tarde.',
+      'lesson-error-state',
+    );
   }
 
   function renderChecklist(trackId, container) {
@@ -141,22 +161,42 @@
     const { track, course, lesson, rawTrack, rawCourse, rawLesson } = found;
     const enr = helpers.getEnrichment(rawLesson.id);
     const isBookmarked = state.bookmarks.includes(rawLesson.id);
+    const loadErrorTitle = helpers.t?.("lesson.loadErrorTitle", "Lição indisponível") || "Lição indisponível";
+    const loadErrorMessage = helpers.t?.("lesson.loadError", "Conteúdo indisponível no momento. Tente novamente mais tarde.") || "Conteúdo indisponível no momento. Tente novamente mais tarde.";
+
     let lessonContent = rawLesson?.content
       ? {
           content: rawLesson.content,
           title: rawLesson.title || lesson.title,
           duration: rawLesson.duration || lesson.duration,
         }
-      : window.NVLessonContent?.loadLessonContent
-        ? await window.NVLessonContent.loadLessonContent(rawLesson, {
-            markdownMap: window.TG_LESSON_MARKDOWN_MAP,
-          })
-        : { content: lesson.content, title: lesson.title, duration: lesson.duration };
+      : null;
+
+    if (!lessonContent?.content && window.NVLessonContent?.loadLessonContent) {
+      try {
+        lessonContent = await window.NVLessonContent.loadLessonContent(rawLesson, {
+          markdownMap: window.TG_LESSON_MARKDOWN_MAP,
+        });
+      } catch (error) {
+        if (typeof console !== 'undefined' && console.error) {
+          console.error('Failed to load lesson content:', error);
+        }
+        const errorMessage = getLessonLoadErrorMessage(helpers);
+        renderLessonErrorState(lessonDetail, errorMessage);
+        return;
+      }
+    }
+
+    if (!lessonContent?.content && !rawLesson?.content) {
+      const errorMessage = getLessonLoadErrorMessage(helpers);
+      renderLessonErrorState(lessonDetail, errorMessage);
+      return;
+    }
 
     if (!lessonContent?.content && !lessonContent?.title) {
       lessonContent = {
-        content: helpers.t?.("lesson.loadError", "Conteúdo indisponível no momento. Tente novamente mais tarde.") || "Conteúdo indisponível no momento. Tente novamente mais tarde.",
-        title: lesson.title || rawLesson.title || helpers.t?.("lesson.loadErrorTitle", "Lição indisponível") || "Lição indisponível",
+        content: loadErrorMessage,
+        title: lesson.title || rawLesson.title || loadErrorTitle,
         duration: lesson.duration || rawLesson.duration || "",
       };
     }

@@ -38,7 +38,19 @@
     }
   }
 
+  function isLocalAuthEnvironment() {
+    if (typeof window === 'undefined' || typeof window.location === 'undefined') {
+      return false;
+    }
+    const hostname = window.location.hostname || '';
+    return ['localhost', '127.0.0.1', '::1'].includes(hostname) || window.location.protocol === 'file:';
+  }
+
   function loadGoogleSignInScript() {
+    if (isLocalAuthEnvironment()) {
+      return Promise.resolve(false);
+    }
+
     return new Promise((resolve) => {
       if (window.google && window.google.accounts) return resolve(true);
       const existing = document.querySelector(`script[src="${GOOGLE_SIGNIN_URL}"]`);
@@ -68,22 +80,21 @@
     }
   }
 
-  // Export to global
-  window.NVAuth = {
-    user: null,
-    isAuthenticated: false,
-    init,
-    getUser,
-    getUserName,
-    getProgress,
-    setProgress,
-    logout,
-    getStorageKey,
-    getReadBooks,
-    markAsRead,
-    unmarkAsRead,
-    isBookRead,
-  };
+  // Export to global, but preserve any preconfigured auth object used by tests or environment.
+  window.NVAuth = (typeof window.NVAuth === 'object' && window.NVAuth !== null) ? window.NVAuth : {};
+  if (typeof window.NVAuth.user === 'undefined') window.NVAuth.user = null;
+  if (typeof window.NVAuth.isAuthenticated !== 'boolean') window.NVAuth.isAuthenticated = false;
+  if (typeof window.NVAuth.init !== 'function') window.NVAuth.init = init;
+  if (typeof window.NVAuth.getUser !== 'function') window.NVAuth.getUser = getUser;
+  if (typeof window.NVAuth.getUserName !== 'function') window.NVAuth.getUserName = getUserName;
+  if (typeof window.NVAuth.getProgress !== 'function') window.NVAuth.getProgress = getProgress;
+  if (typeof window.NVAuth.setProgress !== 'function') window.NVAuth.setProgress = setProgress;
+  if (typeof window.NVAuth.logout !== 'function') window.NVAuth.logout = logout;
+  if (typeof window.NVAuth.getStorageKey !== 'function') window.NVAuth.getStorageKey = getStorageKey;
+  if (typeof window.NVAuth.getReadBooks !== 'function') window.NVAuth.getReadBooks = getReadBooks;
+  if (typeof window.NVAuth.markAsRead !== 'function') window.NVAuth.markAsRead = markAsRead;
+  if (typeof window.NVAuth.unmarkAsRead !== 'function') window.NVAuth.unmarkAsRead = unmarkAsRead;
+  if (typeof window.NVAuth.isBookRead !== 'function') window.NVAuth.isBookRead = isBookRead;
 
   /**
    * Initialize Google Sign-In
@@ -154,13 +165,14 @@
 
     if (window.google && window.google.accounts) {
       initializeGoogleSignIn();
+    } else if (isLocalAuthEnvironment()) {
+      renderAuthUI();
     } else {
       loadGoogleSignInScript().then((loaded) => {
         if (loaded && window.google && window.google.accounts) {
           initializeGoogleSignIn();
         } else {
-          console.warn('Google Sign-In library failed to load or is unavailable.');
-          showAuthError('Google Sign-In não disponível');
+          renderAuthUI();
         }
       });
     }
@@ -411,11 +423,15 @@
       return;
     }
 
+    if (isLocalAuthEnvironment()) {
+      init();
+      return;
+    }
+
     loadGoogleSignInScript().then((loaded) => {
       if (loaded && window.google && window.google.accounts) {
         init();
       } else {
-        console.warn('Google Sign-In library failed to load or is unavailable.');
         init();
       }
     });

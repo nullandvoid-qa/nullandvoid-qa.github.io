@@ -34,6 +34,9 @@ describe('view helpers', () => {
       addEventListener: jest.fn((event, callback) => {
         listeners[event] = callback;
       }),
+      tagName: 'DIV',
+      hasAttribute: jest.fn(() => false),
+      setAttribute: jest.fn(),
     };
 
     const calls = [];
@@ -52,6 +55,8 @@ describe('view helpers', () => {
     expect(enterEvent.preventDefault).toHaveBeenCalled();
     expect(spaceEvent.preventDefault).toHaveBeenCalled();
     expect(spacebarEvent.preventDefault).toHaveBeenCalled();
+    expect(element.setAttribute).toHaveBeenCalledWith('role', 'button');
+    expect(element.setAttribute).toHaveBeenCalledWith('tabindex', '0');
   });
 
   test('setActiveView toggles the active view and nav state', () => {

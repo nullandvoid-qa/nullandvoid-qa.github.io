@@ -1,0 +1,120 @@
+{
+  "before": {
+    "activeHome": true,
+    "activeTrack": true,
+    "trackCards": [
+      {
+        "classes": [
+          "track-card"
+        ],
+        "dataset": {
+          "trackId": "starter",
+          "trackTitle": "Testes Básicos"
+        },
+        "visible": true,
+        "outer": "<article class=\"track-card\" style=\"--track-color: #10b981; visibility: visible;\" role=\"button\" tabindex=\"0\" aria-label=\"Open track: Testes Básicos\" data-track-title=\"Testes Básicos\" data-track-id=\"sta"
+      },
+      {
+        "classes": [
+          "track-card"
+        ],
+        "dataset": {
+          "trackId": "intermediate",
+          "trackTitle": "Testes Avançados"
+        },
+        "visible": true,
+        "outer": "<article class=\"track-card\" style=\"--track-color: #f59e0b; visibility: visible;\" role=\"button\" tabindex=\"0\" aria-label=\"Open track: Testes Avançados\" data-track-title=\"Testes Avançados\" data-track-id="
+      },
+      {
+        "classes": [
+          "track-card"
+        ],
+        "dataset": {
+          "trackId": "mobile",
+          "trackTitle": "Trilha de Testes Mobile"
+        },
+        "visible": true,
+        "outer": "<article class=\"track-card\" style=\"--track-color: #22c55e; visibility: visible;\" role=\"button\" tabindex=\"0\" aria-label=\"Open track: Trilha de Testes Mobile\" data-track-title=\"Trilha de Testes Mobile\" "
+      },
+      {
+        "classes": [
+          "track-card"
+        ],
+        "dataset": {
+          "trackId": "senior",
+          "trackTitle": "Maestria em QA"
+        },
+        "visible": true,
+        "outer": "<article class=\"track-card\" style=\"--track-color: #8b5cf6; visibility: visible;\" role=\"button\" tabindex=\"0\" aria-label=\"Open track: Maestria em QA\" data-track-title=\"Maestria em QA\" data-track-id=\"sen"
+      },
+      {
+        "classes": [
+          "track-card"
+        ],
+        "dataset": {
+          "trackId": "performance",
+          "trackTitle": "Arena de Carga"
+        },
+        "visible": true,
+        "outer": "<article class=\"track-card\" style=\"--track-color: #f59e0b; visibility: visible;\" role=\"button\" tabindex=\"0\" aria-label=\"Open track: Arena de Carga\" data-track-title=\"Arena de Carga\" data-track-id=\"per"
+      },
+      {
+        "classes": [
+          "skeleton-card",
+          "track-card"
+        ],
+        "dataset": {},
+        "visible": false,
+        "outer": "<div class=\"skeleton-card track-card skeleton-card\"><div class=\"skeleton skeleton-line skeleton-line-sm\"></div><div class=\"skeleton skeleton-line\"></div><div class=\"skeleton skeleton-line skeleton-lin"
+      },
+      {
+        "classes": [
+          "skeleton-card",
+          "track-card"
+        ],
+        "dataset": {},
+        "visible": false,
+        "outer": "<div class=\"skeleton-card track-card skeleton-card\"><div class=\"skeleton skeleton-line skeleton-line-sm\"></div><div class=\"skeleton skeleton-line\"></div><div class=\"skeleton skeleton-line skeleton-lin"
+      },
+      {
+        "classes": [
+          "skeleton-card",
+          "track-card"
+        ],
+        "dataset": {},
+        "visible": false,
+        "outer": "<div class=\"skeleton-card track-card skeleton-card\"><div class=\"skeleton skeleton-line skeleton-line-sm\"></div><div class=\"skeleton skeleton-line\"></div><div class=\"skeleton skeleton-line skeleton-lin"
+      },
+      {
+        "classes": [
+          "skeleton-card",
+          "track-card"
+        ],
+        "dataset": {},
+        "visible": false,
+        "outer": "<div class=\"skeleton-card track-card skeleton-card\"><div class=\"skeleton skeleton-line skeleton-line-sm\"></div><div class=\"skeleton skeleton-line\"></div><div class=\"skeleton skeleton-line skeleton-lin"
+      }
+    ]
+  },
+  "after": {
+    "navigateCalls": [
+      {
+        "view": "track",
+        "params": {
+          "trackId": "starter"
+        }
+      }
+    ],
+    "activeIds": [
+      "view-track"
+    ],
+    "currentView": "track",
+    "viewHome": false,
+    "viewTrack": true,
+    "breadcrumbText": "Testes Básicos",
+    "trackDetailCount": 6,
+    "trackDetailVisibleCount": 6,
+    "trackDetailHtml": "<div id=\"track-detail\" style=\"visibility: visible;\">\n      <div class=\"track-hero\" style=\"--track-color:#10b981;\">\n        <h1><svg width=\"28\" height=\"28\" class=\"nv-icon track-icon-svg\" aria-hidden=\"t",
+    "viewTrackHtml": "<section id=\"view-track\" class=\"view active\">\n        <div class=\"breadcrumb\">\n          <a href=\"#\" data-nav=\"tracks\" data-i18n=\"breadcrumb.tracks\">Trilhas</a>\n          <span aria-hidden=\"true\">›</s"
+  }
+}

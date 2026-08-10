@@ -1,0 +1,97 @@
+{
+  "rect": {
+    "x": 301,
+    "y": 385.84375,
+    "width": 678,
+    "height": 48.6875
+  },
+  "hit": {
+    "tag": "SPAN",
+    "class": "quiz-option-text",
+    "id": null
+  },
+  "hitStyle": "",
+  "elStyle": "",
+  "ancestorStyles": [
+    {
+      "tag": "LABEL",
+      "class": "quiz-option",
+      "display": "flex",
+      "visibility": "visible",
+      "pointerEvents": "auto",
+      "opacity": "1"
+    },
+    {
+      "tag": "DIV",
+      "class": "quiz-options",
+      "display": "flex",
+      "visibility": "visible",
+      "pointerEvents": "auto",
+      "opacity": "1"
+    },
+    {
+      "tag": "DIV",
+      "class": "quiz-question",
+      "display": "block",
+      "visibility": "visible",
+      "pointerEvents": "auto",
+      "opacity": "1"
+    },
+    {
+      "tag": "FORM",
+      "class": "quiz-form",
+      "display": "flex",
+      "visibility": "visible",
+      "pointerEvents": "auto",
+      "opacity": "1"
+    },
+    {
+      "tag": "DIV",
+      "class": "quiz-card",
+      "display": "block",
+      "visibility": "visible",
+      "pointerEvents": "auto",
+      "opacity": "1"
+    },
+    {
+      "tag": "DIV",
+      "class": "",
+      "display": "block",
+      "visibility": "visible",
+      "pointerEvents": "auto",
+      "opacity": "1"
+    },
+    {
+      "tag": "SECTION",
+      "class": "view active",
+      "display": "block",
+      "visibility": "visible",
+      "pointerEvents": "auto",
+      "opacity": "1"
+    },
+    {
+      "tag": "MAIN",
+      "class": "main",
+      "display": "block",
+      "visibility": "visible",
+      "pointerEvents": "auto",
+      "opacity": "1"
+    },
+    {
+      "tag": "BODY",
+      "class": "",
+      "display": "block",
+      "visibility": "visible",
+      "pointerEvents": "auto",
+      "opacity": "1"
+    },
+    {
+      "tag": "HTML",
+      "class": "",
+      "display": "block",
+      "visibility": "visible",
+      "pointerEvents": "auto",
+      "opacity": "1"
+    }
+  ]
+}

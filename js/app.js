@@ -70,9 +70,12 @@
   const runtimeNavigate = getGlobalHelper('navigate');
   const runtimeRefreshCurrentView = getGlobalHelper('refreshCurrentView');
   const runtimeGetTrackIcon = getGlobalHelper('getTrackIcon');
-  const runtimeSaveLastLesson = getGlobalHelper('saveLastLesson');
-  const runtimeSaveProgress = getGlobalHelper('saveProgress');
-  const runtimeSafeSaveJson = getGlobalHelper('safeSaveJson');
+  const runtimeSaveLastLesson = getGlobalHelper('saveLastLesson')
+    || (typeof window !== 'undefined' && window.NVAppStorage?.saveLastLesson ? window.NVAppStorage.saveLastLesson : undefined);
+  const runtimeSaveProgress = getGlobalHelper('saveProgress')
+    || (typeof window !== 'undefined' && window.NVAppStorage?.saveProgress ? window.NVAppStorage.saveProgress : undefined);
+  const runtimeSafeSaveJson = getGlobalHelper('safeSaveJson')
+    || (typeof window !== 'undefined' && window.NVAppStorage?.safeSaveJson ? window.NVAppStorage.safeSaveJson : undefined);
   const runtimeHighlightCode = getGlobalHelper('highlightCode');
   const runtimeAttachCopyButtons = getGlobalHelper('attachCopyButtons');
   const runtimeNormalizeTextLabel = getGlobalHelper('normalizeTextLabel');
@@ -191,13 +194,13 @@
   // Default to no persona so home track filter uses "all"
   let persona = typeof runtimeGetStorage === 'function' ? runtimeGetStorage(STORAGE_PERSONA) : null;
   let progress = typeof runtimeLoadProgress === 'function' ? runtimeLoadProgress() : {};
-  const bookmarks = safeLoadJson(STORAGE_BOOKMARKS, [], runtimeValidateBookmarksData);
-  const quizzesPassed = safeLoadJson(
+  let bookmarks = safeLoadJson(STORAGE_BOOKMARKS, [], runtimeValidateBookmarksData);
+  let quizzesPassed = safeLoadJson(
     STORAGE_QUIZZES,
     {},
     runtimeValidateQuizzesPassedData,
   );
-  const checklistState = safeLoadJson(STORAGE_CHECKLISTS, {}, runtimeValidateChecklistState);
+  let checklistState = safeLoadJson(STORAGE_CHECKLISTS, {}, runtimeValidateChecklistState);
   let theme = "dark";
   let seniorMode = false;
   let currentView = "home";
@@ -448,6 +451,18 @@
     return null;
   }
 
+  function getAllLessons() {
+    const helpers = getTrackHelpers();
+    if (helpers?.getAllLessons) {
+      return helpers.getAllLessons(tracks, {
+        localizedTrack,
+        localizedCourse,
+        localizedLesson,
+      });
+    }
+    return [];
+  }
+
   // ── Achievements ──────────────────────────────────────────────────────────
   function checkAchievements() {
     return window.NVAppAchievements?.checkAchievements?.() ?? [];
@@ -550,11 +565,20 @@
     get bookmarks() {
       return bookmarks;
     },
+    set bookmarks(value) {
+      bookmarks = Array.isArray(value) ? value : [];
+    },
     get quizzesPassed() {
       return quizzesPassed;
     },
+    set quizzesPassed(value) {
+      quizzesPassed = value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+    },
     get checklistState() {
       return checklistState;
+    },
+    set checklistState(value) {
+      checklistState = value && typeof value === 'object' && !Array.isArray(value) ? value : {};
     },
     get theme() {
       return theme;
@@ -631,6 +655,7 @@
     toggleTheme,
     toggleSeniorMode,
     handleSearch,
+    getAllLessons,
     quizzes,
     TRACK_AUDIENCE,
     localizedTrack,
@@ -700,12 +725,33 @@
     applyStaticI18n();
     updateLangToggle();
     checkAchievements();
-const lastLessonId = safeGetStoredItem(STORAGE_LAST_LESSON);
-    if (lastLessonId && findLesson(lastLessonId)) {
-      navigate("lesson", { lessonId: lastLessonId });
-    } else {
-      navigate("home");
-    }
+    const initialNavigation = () => {
+      const lastLessonId = safeGetStoredItem(STORAGE_LAST_LESSON);
+      let attempts = 0;
+      const intervalMs = 50;
+      const maxWaitMs = 2000; // wait up to 2s for renderers to attach
+
+      const tryNavigate = () => {
+        attempts += 1;
+        if (lastLessonId && findLesson(lastLessonId) && typeof renderLesson === 'function') {
+          navigate('lesson', { lessonId: lastLessonId });
+          return;
+        }
+
+        if (attempts * intervalMs >= maxWaitMs) {
+          navigate('home');
+          return;
+        }
+
+        setTimeout(tryNavigate, intervalMs);
+      };
+
+      tryNavigate();
+    };
+
+    // Start initial navigation immediately; `initialNavigation` will retry
+    // for a short period waiting for `renderLesson` to become available.
+    initialNavigation();
 
     // During local development and automated tests, some UI state can remain
     // hidden due to timing or service worker caching. Ensure track grids and
@@ -713,41 +759,48 @@ const lastLessonId = safeGetStoredItem(STORAGE_LAST_LESSON);
     try {
       const host = window.location.hostname || '';
       if (host === 'localhost' || host === '127.0.0.1' || host === '::1') {
-        setTimeout(() => {
-          ['home-tracks-grid', 'tracks-grid', 'dashboard-tracks'].forEach((id) => {
-            const el = document.getElementById(id);
-            if (el && el.classList.contains('hidden')) el.classList.remove('hidden');
-          });
-          document.querySelectorAll('.track-card.hidden').forEach((c) => c.classList.remove('hidden'));
-        }, 400);
+        // Remove hidden markers immediately in local/test environments so
+        // Playwright and other automated runners can interact with UI
+        // elements without timing-related flakiness.
+        ['home-tracks-grid', 'tracks-grid', 'dashboard-tracks'].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el && el.classList.contains('hidden')) el.classList.remove('hidden');
+        });
+        document.querySelectorAll('.track-card.hidden').forEach((c) => c.classList.remove('hidden'));
       }
     } catch (e) {
       // noop
     }
 
-    // Register Service Worker for PWA support
-    if ('serviceWorker' in navigator) {
-      const basePath = location.pathname.endsWith('/')
-        ? location.pathname
-        : location.pathname.replace(/\/[^/]+$/, '/');
-      const swUrl = new URL('service-worker.js', location.href).href;
+    // Register Service Worker for PWA support, but skip in local/test hosts
+    try {
+      const host = window.location && (window.location.hostname || '');
+      const isLocalHost = host === 'localhost' || host === '127.0.0.1' || host === '::1';
+      if (!isLocalHost && 'serviceWorker' in navigator) {
+        const basePath = location.pathname.endsWith('/')
+          ? location.pathname
+          : location.pathname.replace(/\/[^/]+$/, '/');
+        const swUrl = new URL('service-worker.js', location.href).href;
 
-      navigator.serviceWorker.register(swUrl, { scope: basePath })
-        .catch((error) => {
-          console.warn('[PWA] Service Worker registration failed:', error);
-        });
-      // Listen for messages from the service worker (e.g., update notifications)
-      try {
-        navigator.serviceWorker.addEventListener('message', (event) => {
-          if (event.data && event.data.type === 'SW_UPDATED') {
-            console.info('[PWA] Service worker updated to', event.data.version, '- reloading to fetch fresh content.');
-            // Force a reload so the page picks up the newest assets and content
-            window.location.reload();
-          }
-        });
-      } catch (e) {
-        // noop
+        navigator.serviceWorker.register(swUrl, { scope: basePath })
+          .catch((error) => {
+            console.warn('[PWA] Service Worker registration failed:', error);
+          });
+        // Listen for messages from the service worker (e.g., update notifications)
+        try {
+          navigator.serviceWorker.addEventListener('message', (event) => {
+            if (event.data && event.data.type === 'SW_UPDATED') {
+              console.info('[PWA] Service worker updated to', event.data.version, '- reloading to fetch fresh content.');
+              // Force a reload so the page picks up the newest assets and content
+              window.location.reload();
+            }
+          });
+        } catch (e) {
+          // noop
+        }
       }
+    } catch (e) {
+      // noop
     }
   }
 

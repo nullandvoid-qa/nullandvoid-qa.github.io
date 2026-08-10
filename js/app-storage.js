@@ -1,4 +1,4 @@
-const safeShowToast = typeof showToast === "function" ? showToast : () => {};
+const _storage_safeShowToast = (typeof window !== 'undefined' && window.safeShowToast) ? window.safeShowToast : (typeof showToast === "function" ? showToast : () => {});
 const safeTranslate = typeof t === "function" ? t : (key) => key;
 const globalScope = typeof globalThis !== "undefined" ? globalThis : (typeof window !== "undefined" ? window : {});
 const getStoredProgressHelper = typeof globalScope.getStoredProgress === "function" ? globalScope.getStoredProgress : null;
@@ -245,10 +245,10 @@ function exportProgressToFile(progress, bookmarks, quizzesPassed, checklistState
     anchor.click();
     document.body.removeChild(anchor);
     URL.revokeObjectURL(url);
-    safeShowToast(safeTranslate("toast.exportProgressSuccess"));
+    _storage_safeShowToast(safeTranslate("toast.exportProgressSuccess"));
   } catch (error) {
     console.error(error);
-    safeShowToast(safeTranslate("toast.exportProgressFail"));
+    _storage_safeShowToast(safeTranslate("toast.exportProgressFail"));
   }
 }
 
@@ -292,7 +292,7 @@ async function importProgressFromFile(file) {
     const payload = JSON.parse(text);
 
     if (!isValidImportedPayload(payload)) {
-      safeShowToast(safeTranslate("toast.invalidProgressFile"));
+      _storage_safeShowToast(safeTranslate("toast.invalidProgressFile"));
       return null;
     }
 
@@ -304,7 +304,7 @@ async function importProgressFromFile(file) {
     };
   } catch (error) {
     console.error(error);
-    safeShowToast(safeTranslate("toast.importProgressFail"));
+    _storage_safeShowToast(safeTranslate("toast.importProgressFail"));
     return null;
   }
 }

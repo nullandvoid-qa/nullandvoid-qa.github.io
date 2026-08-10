@@ -1,0 +1,25 @@
+{
+  "viewQuizClass": "view active",
+  "viewTrackClass": "view active",
+  "quizDisplay": "block",
+  "quizVisibility": "visible",
+  "trackDisplay": "block",
+  "trackVisibility": "visible",
+  "element": {
+    "nodeName": "LABEL",
+    "className": "quiz-option",
+    "rect": {
+      "x": 301,
+      "y": 385.84375,
+      "width": 678,
+      "height": 48.6875,
+      "top": 385.84375,
+      "right": 979,
+      "bottom": 434.53125,
+      "left": 301
+    },
+    "offsetParent": "BODY"
+  },
+  "bodyStyle": "block",
+  "htmlStyle": "block"
+}

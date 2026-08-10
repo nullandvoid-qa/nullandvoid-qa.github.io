@@ -1,0 +1,144 @@
+{
+  "currentView": "quiz",
+  "activeViews": [
+    "view-quiz",
+    "view-track"
+  ],
+  "quizHeading": "Quiz — Testes Básicos",
+  "quizOpts": [
+    {
+      "text": "Só clica na tela",
+      "visible": true,
+      "className": "quiz-option",
+      "ariaLabel": "Só clica na tela",
+      "o": "0",
+      "q": "0",
+      "style": null,
+      "hidden": false,
+      "rect": 678
+    },
+    {
+      "text": "Garante qualidade via testes e análise",
+      "visible": true,
+      "className": "quiz-option",
+      "ariaLabel": "Garante qualidade via testes e análise",
+      "o": "1",
+      "q": "0",
+      "style": null,
+      "hidden": false,
+      "rect": 678
+    },
+    {
+      "text": "Escreve código de produção",
+      "visible": true,
+      "className": "quiz-option",
+      "ariaLabel": "Escreve código de produção",
+      "o": "2",
+      "q": "0",
+      "style": null,
+      "hidden": false,
+      "rect": 678
+    },
+    {
+      "text": "Gerencia o budget",
+      "visible": true,
+      "className": "quiz-option",
+      "ariaLabel": "Gerencia o budget",
+      "o": "3",
+      "q": "0",
+      "style": null,
+      "hidden": false,
+      "rect": 678
+    },
+    {
+      "text": "Unitário",
+      "visible": true,
+      "className": "quiz-option",
+      "ariaLabel": "Unitário",
+      "o": "0",
+      "q": "1",
+      "style": null,
+      "hidden": false,
+      "rect": 678
+    },
+    {
+      "text": "Integração",
+      "visible": true,
+      "className": "quiz-option",
+      "ariaLabel": "Integração",
+      "o": "1",
+      "q": "1",
+      "style": null,
+      "hidden": false,
+      "rect": 678
+    },
+    {
+      "text": "E2E",
+      "visible": true,
+      "className": "quiz-option",
+      "ariaLabel": "E2E",
+      "o": "2",
+      "q": "1",
+      "style": null,
+      "hidden": false,
+      "rect": 678
+    },
+    {
+      "text": "Estático",
+      "visible": true,
+      "className": "quiz-option",
+      "ariaLabel": "Estático",
+      "o": "3",
+      "q": "1",
+      "style": null,
+      "hidden": false,
+      "rect": 678
+    },
+    {
+      "text": "Só \"não funciona\"",
+      "visible": true,
+      "className": "quiz-option",
+      "ariaLabel": "Só \"não funciona\"",
+      "o": "0",
+      "q": "2",
+      "style": null,
+      "hidden": false,
+      "rect": 678
+    },
+    {
+      "text": "Passos, esperado vs atual, evidências",
+      "visible": true,
+      "className": "quiz-option",
+      "ariaLabel": "Passos, esperado vs atual, evidências",
+      "o": "1",
+      "q": "2",
+      "style": null,
+      "hidden": false,
+      "rect": 678
+    },
+    {
+      "text": "Opinião pessoal",
+      "visible": true,
+      "className": "quiz-option",
+      "ariaLabel": "Opinião pessoal",
+      "o": "2",
+      "q": "2",
+      "style": null,
+      "hidden": false,
+      "rect": 678
+    },
+    {
+      "text": "Nada, só avisar verbalmente",
+      "visible": true,
+      "className": "quiz-option",
+      "ariaLabel": "Nada, só avisar verbalmente",
+      "o": "3",
+      "q": "2",
+      "style": null,
+      "hidden": false,
+      "rect": 678
+    }
+  ],
+  "quizFormHtml": "<form id=\"quiz-form\" class=\"quiz-form\">\n          \n      <div class=\"quiz-question\" data-qi=\"0\">\n        <p class=\"quiz-q-text\"><strong>1.</strong> O que um QA faz principalmente?</p>\n        <div class=\"quiz-options\">\n          \n              <label class=\"quiz-option\" data-qi=\"0\" data-oi=\"0\" role=\"button\" tabindex=\"0\" aria-label=\"Só clica na tela\">\n              <input type=\"radio\" name=\"q0\" val",
+  "quizContainerStyle": null
+}

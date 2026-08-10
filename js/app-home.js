@@ -84,7 +84,7 @@
     if (homeGrid && typeof window.NVViewHelpers?.buildDashboardSkeletonGridHtml === 'function') {
       homeGrid.innerHTML = window.NVViewHelpers.buildDashboardSkeletonGridHtml(
         Array.from({ length: 4 }, () => ({
-          className: "skeleton-card track-card skeleton-card",
+          className: "skeleton-card",
           lineClasses: ["skeleton-line-sm", "", "skeleton-line-xs"],
         })),
       );
@@ -161,7 +161,7 @@
     if (typeof window.NVViewHelpers?.buildDashboardSkeletonGridHtml === 'function') {
       grid.innerHTML = window.NVViewHelpers.buildDashboardSkeletonGridHtml(
         Array.from({ length: 4 }, () => ({
-          className: "skeleton-card track-card skeleton-card",
+          className: "skeleton-card",
           lineClasses: ["skeleton-line-sm", "", "skeleton-line-xs"],
         })),
       );

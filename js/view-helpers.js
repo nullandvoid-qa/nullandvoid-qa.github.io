@@ -62,9 +62,21 @@
   }
 
   function bindAccessibleAction(element, onActivate) {
-    if (!element) return;
+    if (!element || typeof onActivate !== 'function') return;
 
     const isActivationKey = (key) => key === "Enter" || key === " " || key === "Spacebar";
+    const tagName = typeof element.tagName === 'string' ? element.tagName.toUpperCase() : '';
+
+    if (typeof element.hasAttribute === 'function' && typeof element.setAttribute === 'function') {
+      if (tagName !== 'BUTTON' && tagName !== 'A' && !element.hasAttribute('role')) {
+        element.setAttribute('role', 'button');
+      }
+      if (typeof element.tabIndex === 'number' && element.tabIndex < 0) {
+        element.setAttribute('tabindex', '0');
+      } else if (typeof element.tabIndex === 'undefined' && !element.hasAttribute('tabindex')) {
+        element.setAttribute('tabindex', '0');
+      }
+    }
 
     element.addEventListener("click", () => onActivate());
     element.addEventListener("keydown", (event) => {
@@ -426,7 +438,9 @@
       (l) =>
         (String(l.title || '').toLowerCase().includes(q)) ||
         (String(l.trackTitle || '').toLowerCase().includes(q)) ||
-        (String(l.courseTitle || '').toLowerCase().includes(q)),
+        (String(l.courseTitle || '').toLowerCase().includes(q)) ||
+        (String(l.id || '').toLowerCase().includes(q)) ||
+        (String(l.trackId || '').toLowerCase().includes(q)),
     );
 
     const glossaryMatches = (Array.isArray(glossaryItems) ? glossaryItems : []).filter(
@@ -513,6 +527,29 @@
         }
       });
     });
+
+    // make quiz option labels keyboard-activatable (Enter / Space)
+    try {
+      container.querySelectorAll('.quiz-option').forEach((lbl) => {
+        try {
+          if (typeof lbl.setAttribute === 'function') {
+            lbl.setAttribute('tabindex', '0');
+            lbl.setAttribute('role', 'button');
+          }
+          lbl.addEventListener('keydown', (ev) => {
+            if (ev.key === 'Enter' || ev.key === ' ' || ev.key === 'Spacebar') {
+              ev.preventDefault();
+              const input = lbl.querySelector('input[type="radio"]');
+              if (input) input.click();
+            }
+          });
+        } catch (e) {
+          // noop
+        }
+      });
+    } catch (e) {
+      // noop
+    }
 
     if (!form) return;
 
@@ -641,7 +678,9 @@
       }
     });
 
-    container.querySelector(`#lq-reset-${lessonId}`)?.addEventListener("click", () => {
+      const resetButton = container.querySelector(`#lq-reset-${lessonId}`);
+      if (resetButton) {
+        resetButton.addEventListener("click", () => {
       form.querySelectorAll("input[type='radio']").forEach((r) => {
         r.checked = false;
         r.disabled = false;
@@ -654,6 +693,7 @@
       if (resultElement) resultElement.classList.add("hidden");
       submitted = false;
     });
+      }
   }
 
   function renderLessonQuiz(lessonId, container, quizData, lang, icons, escapeHtml, t) {
@@ -1370,7 +1410,7 @@
           ${q.options
             .map(
               (opt, oi) => `
-            <label class="quiz-option" data-qi="${qi}" data-oi="${oi}">
+              <label class="quiz-option" data-qi="${qi}" data-oi="${oi}" role="button" tabindex="0" aria-label="${escapeHtml(opt)}">
               <input type="radio" name="q${qi}" value="${oi}" class="quiz-radio">
               <span class="quiz-option-text">${escapeHtml(opt)}</span>
             </label>`,
@@ -1461,7 +1501,7 @@
         <div class="lesson-quiz-options">
           ${q.options
             .map((opt, oi) => `
-            <label class="lesson-quiz-option">
+            <label class="lesson-quiz-option" role="button" tabindex="0" aria-label="${escapeHtml(opt)}">
               <input type="radio" name="lq${lessonId}-q${qi}" value="${oi}" class="lesson-quiz-radio">
               <span>${escapeHtml(opt)}</span>
             </label>`)

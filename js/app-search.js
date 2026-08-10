@@ -21,7 +21,15 @@
     if (!resultsEl) return;
     const helpers = getHelpers();
     const glossaryItems = window.TG_GLOSSARY?.[getLangKey()] || [];
-    const allLessons = typeof helpers.getAllLessons === 'function' ? helpers.getAllLessons : () => [];
+    const allLessons = typeof helpers.getAllLessons === 'function'
+      ? helpers.getAllLessons
+      : (window.NVAppTracks && typeof window.NVAppTracks.getAllLessons === 'function'
+        ? () => window.NVAppTracks.getAllLessons(window.NVApp?.state?.tracks || [], {
+            localizedTrack: helpers.localizedTrack || ((track) => track),
+            localizedCourse: helpers.localizedCourse || ((course) => course),
+            localizedLesson: helpers.localizedLesson || ((lesson) => lesson),
+          })
+        : () => []);
     const t = typeof helpers.t === 'function' ? helpers.t : (key, fallback) => fallback || key;
     const escape = typeof window.escapeHtml === 'function' ? window.escapeHtml : (value) => String(value == null ? '' : value);
 

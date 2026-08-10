@@ -1,4 +1,14 @@
 describe('lesson content loader', () => {
+  let consoleWarnSpy;
+
+  beforeEach(() => {
+    consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    consoleWarnSpy.mockRestore();
+  });
+
   test('uses inline lesson content when no markdown source exists', async () => {
     const { loadLessonContent } = require('../lesson-content.js');
 
@@ -202,6 +212,7 @@ duration: 50 min
 
   test('falls back to lesson metadata when markdown cannot be loaded', async () => {
     const { loadLessonContent } = require('../lesson-content.js');
+    const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
     const result = await loadLessonContent(
       { id: 'l1', title: 'Aula fallback', duration: '5 min', content: '<p>conteúdo local</p>' },
@@ -216,5 +227,7 @@ duration: 50 min
     expect(result.title).toBe('Aula fallback');
     expect(result.duration).toBe('5 min');
     expect(result.content).toBe('<p>conteúdo local</p>');
+
+    consoleWarnSpy.mockRestore();
   });
 });

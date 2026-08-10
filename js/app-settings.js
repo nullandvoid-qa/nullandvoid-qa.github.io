@@ -96,19 +96,24 @@
     const t = getTranslator();
     document.querySelectorAll('[data-i18n]').forEach((el) => {
       const key = el.dataset.i18n;
-      if (key) el.textContent = t(key);
+      // Preserve existing static content unless explicitly forced.
+      const force = el.dataset.i18nForce === 'true';
+      if (key && (force || !el.textContent || !el.textContent.trim())) el.textContent = t(key);
     });
     document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
       const key = el.dataset.i18nPlaceholder;
-      if (key) el.placeholder = t(key);
+      const force = el.dataset.i18nPlaceholderForce === 'true';
+      if (key && (force || !el.placeholder || !String(el.placeholder).trim())) el.placeholder = t(key);
     });
     document.querySelectorAll('[data-i18n-title]').forEach((el) => {
       const key = el.dataset.i18nTitle;
-      if (key) el.title = t(key);
+      const force = el.dataset.i18nTitleForce === 'true';
+      if (key && (force || !el.title || !String(el.title).trim())) el.title = t(key);
     });
     document.querySelectorAll('[data-i18n-label]').forEach((el) => {
       const key = el.dataset.i18nLabel;
-      if (key) el.setAttribute('aria-label', t(key));
+      const force = el.dataset.i18nLabelForce === 'true';
+      if (key && (force || !el.getAttribute('aria-label') || !String(el.getAttribute('aria-label')).trim())) el.setAttribute('aria-label', t(key));
     });
 
     const langToggle = getElement('lang-toggle');

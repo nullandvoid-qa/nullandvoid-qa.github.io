@@ -1,0 +1,56 @@
+[
+  {
+    "classes": [
+      "skeleton-card",
+      "track-card"
+    ],
+    "dataset": {},
+    "visible": true,
+    "outer": "<div class=\"skeleton-card track-card skeleton-card\"><div class=\"skeleton skeleton-line skeleton-line-sm\"></div><div class=\"skeleton skeleton-line\"></div><div class=\"skeleton skeleton-line skeleton-lin"
+  },
+  {
+    "classes": [
+      "skeleton-card",
+      "track-card"
+    ],
+    "dataset": {},
+    "visible": true,
+    "outer": "<div class=\"skeleton-card track-card skeleton-card\"><div class=\"skeleton skeleton-line skeleton-line-sm\"></div><div class=\"skeleton skeleton-line\"></div><div class=\"skeleton skeleton-line skeleton-lin"
+  },
+  {
+    "classes": [
+      "skeleton-card",
+      "track-card"
+    ],
+    "dataset": {},
+    "visible": false,
+    "outer": "<div class=\"skeleton-card track-card skeleton-card\"><div class=\"skeleton skeleton-line skeleton-line-sm\"></div><div class=\"skeleton skeleton-line\"></div><div class=\"skeleton skeleton-line skeleton-lin"
+  },
+  {
+    "classes": [
+      "skeleton-card",
+      "track-card"
+    ],
+    "dataset": {},
+    "visible": false,
+    "outer": "<div class=\"skeleton-card track-card skeleton-card\"><div class=\"skeleton skeleton-line skeleton-line-sm\"></div><div class=\"skeleton skeleton-line\"></div><div class=\"skeleton skeleton-line skeleton-lin"
+  },
+  {
+    "classes": [
+      "skeleton-card",
+      "track-card"
+    ],
+    "dataset": {},
+    "visible": false,
+    "outer": "<div class=\"skeleton-card track-card skeleton-card\"><div class=\"skeleton skeleton-line skeleton-line-sm\"></div><div class=\"skeleton skeleton-line\"></div><div class=\"skeleton skeleton-line skeleton-lin"
+  },
+  {
+    "classes": [
+      "skeleton-card",
+      "track-card"
+    ],
+    "dataset": {},
+    "visible": false,
+    "outer": "<div class=\"skeleton-card track-card skeleton-card\"><div class=\"skeleton skeleton-line skeleton-line-sm\"></div><div class=\"skeleton skeleton-line\"></div><div class=\"skeleton skeleton-line skeleton-lin"
+  }
+]

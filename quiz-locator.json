@@ -1,0 +1,28 @@
+{
+  "count": 1,
+  "vis": true,
+  "box": {
+    "x": 301,
+    "y": 385.84375,
+    "width": 678,
+    "height": 48.6875
+  },
+  "js": [
+    {
+      "text": "Garante qualidade via testes e análise",
+      "visible": true,
+      "hidden": false,
+      "rect": {
+        "x": 301,
+        "y": 385.84375,
+        "width": 678,
+        "height": 48.6875,
+        "top": 385.84375,
+        "right": 979,
+        "bottom": 434.53125,
+        "left": 301
+      },
+      "css": ""
+    }
+  ]
+}

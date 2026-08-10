@@ -1,0 +1,36 @@
+{
+  "before": {
+    "active": "view-home",
+    "trackBreadcrumb": "—",
+    "cards": [
+      {
+        "id": "starter",
+        "title": "Testes Básicos"
+      },
+      {
+        "id": "intermediate",
+        "title": "Testes Avançados"
+      },
+      {
+        "id": "mobile",
+        "title": "Trilha de Testes Mobile"
+      },
+      {
+        "id": "senior",
+        "title": "Maestria em QA"
+      },
+      {
+        "id": "performance",
+        "title": "Arena de Carga"
+      }
+    ]
+  },
+  "clickResult": true,
+  "after": {
+    "active": "view-track",
+    "viewTrackActive": true,
+    "breadcrumbText": "Testes Básicos",
+    "trackDetailCount": 6,
+    "detailText": "Testes Básicos\n\nSua jornada como recruta da Guilda. Fundamentos de QA, testes manuais e primeiros passos em automação.\n\n 6 módulos\n ~6 horas\nINICIANTE\n0/6 aulas concluídas 0% Progresso geral\nFazer Qui"
+  }
+}

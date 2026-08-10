@@ -16,6 +16,8 @@ A mesma qualidade de cursos que custam R$500-2000. Sem paywall, sem cadastro obr
 4. Complete aulas no seu ritmo
 5. Ganhe certificados ao final
 
+Para detalhes de deploy, veja `docs/DEPLOYMENT.md`.
+
 Ou rode localmente:
 
 ```bash

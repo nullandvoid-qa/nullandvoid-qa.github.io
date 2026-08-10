@@ -306,8 +306,8 @@
           </p>
         </div>
         <div id="home-tracks-grid" class="tracks-grid">
-          <div class="skeleton-card track-card skeleton-card"><div class="skeleton skeleton-line skeleton-line-sm"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line skeleton-line-xs"></div></div>
-          <div class="skeleton-card track-card skeleton-card"><div class="skeleton skeleton-line skeleton-line-sm"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line skeleton-line-xs"></div></div>
+          <div class="skeleton-card"><div class="skeleton skeleton-line skeleton-line-sm"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line skeleton-line-xs"></div></div>
+          <div class="skeleton-card"><div class="skeleton skeleton-line skeleton-line-sm"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line skeleton-line-xs"></div></div>
         </div>
         <div id="home-tracks-empty" class="empty-state hidden">
           <div class="empty-state-icon" data-icon="roadmap" data-icon-size="48"></div>
@@ -357,8 +357,8 @@
         </p>
         <div class="filter-bar" id="track-filter-bar"></div>
         <div id="tracks-grid" class="tracks-grid">
-          <div class="skeleton-card track-card skeleton-card"><div class="skeleton skeleton-line skeleton-line-sm"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line skeleton-line-xs"></div></div>
-          <div class="skeleton-card track-card skeleton-card"><div class="skeleton skeleton-line skeleton-line-sm"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line skeleton-line-xs"></div></div>
+          <div class="skeleton-card"><div class="skeleton skeleton-line skeleton-line-sm"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line skeleton-line-xs"></div></div>
+          <div class="skeleton-card"><div class="skeleton skeleton-line skeleton-line-sm"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line skeleton-line-xs"></div></div>
         </div>
       </section>
 
@@ -662,6 +662,29 @@
     </script>
 
     <script src="js/utils.js" defer></script>
+    <script>
+      (function(){
+        if (typeof window === 'undefined') return;
+        // global safeShowToast helper — avoid redeclaration errors across multiple scripts
+        if (typeof window.safeShowToast === 'undefined') {
+          window.safeShowToast = (typeof window.showToast === 'function') ? window.showToast : function(){};
+        }
+        // minimal NVAppStorage.safeLoadJson fallback to avoid "not a function" errors
+        if (typeof window.NVAppStorage === 'undefined') window.NVAppStorage = {};
+        if (typeof window.NVAppStorage.safeLoadJson === 'undefined') {
+          window.NVAppStorage.safeLoadJson = function(key, fallback, validator) {
+            try {
+              if (typeof localStorage === 'undefined') return fallback;
+              const raw = localStorage.getItem(key);
+              if (!raw) return fallback;
+              const parsed = JSON.parse(raw);
+              if (typeof validator === 'function' && !validator(parsed)) return fallback;
+              return parsed;
+            } catch (e) { return fallback; }
+          };
+        }
+      })();
+    </script>
     <script src="js/app-storage.js" defer></script>
     <script src="js/app-i18n.js" defer></script>
     <script src="js/app-navigation.js" defer></script>
