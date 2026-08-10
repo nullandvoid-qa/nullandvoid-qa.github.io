@@ -30,12 +30,12 @@ Resultado: a validação estrutural atual passa e os 98 arquivos de conteúdo n�
 
 Estas são as maiores lacunas por volume e densidade de prática. A métrica é um sinal de triagem, não um critério único de qualidade.
 
-- [ ] **Expandir `l29` — Teste Exploratório, Relato de Bug e Critérios de Aceitação** (574 palavras): incluir charter preenchido, sessão time-boxed com notas, bug report completo, severidade versus prioridade, hipótese de causa e gabarito com exemplos observáveis.
-- [ ] **Expandir `l30` — Pirâmide de Testes e Estratégias de Automação** (522 palavras): incluir anti-padrões, critérios para converter E2E em integração/contrato, matriz custo/risco, exemplo aplicado ao projeto e política de retries/flaky tests.
-- [ ] **Expandir `perf-l6` — Integração de CI e Observabilidade** (646 palavras): incluir workflow completo, thresholds, artefatos, retenção, correlação entre métricas k6 e infraestrutura, falha de gate e exercício executável.
-- [ ] **Expandir `perf-l2` — k6 e testes de API** (776 palavras): incluir cenário de API realista, checks de corpo/status, thresholds justificados, p50/p95/p99, dados de teste e interpretação de resultado.
-- [ ] **Expandir `perf-l3` — Carga em APIs e servidores** (790 palavras): incluir modelo de workload, mistura de endpoints, ramp-up, dependências, dados, critérios de parada e diagnóstico de banco/cache/pool.
-- [ ] **Expandir `perf-l7` — Análise e Mitigação** (799 palavras): incluir relatório antes/depois, árvore de diagnóstico, priorização por impacto, hipótese versus evidência e plano de remediação validável.
+- [x] **Expandir `l29` — Teste Exploratório, Relato de Bug e Critérios de Aceitação** (574 palavras): incluir charter preenchido, sessão time-boxed com notas, bug report completo, severidade versus prioridade, hipótese de causa e gabarito com exemplos observáveis.
+- [x] **Expandir `l30` — Pirâmide de Testes e Estratégias de Automação** (522 palavras): incluir anti-padrões, critérios para converter E2E em integração/contrato, matriz custo/risco, exemplo aplicado ao projeto e política de retries/flaky tests.
+- [x] **Expandir `perf-l6` — Integração de CI e Observabilidade** (646 palavras): incluir workflow completo, thresholds, artefatos, retenção, correlação entre métricas k6 e infraestrutura, falha de gate e exercício executável.
+- [x] **Expandir `perf-l2` — k6 e testes de API** (776 palavras): incluir cenário de API realista, checks de corpo/status, thresholds justificados, p50/p95/p99, dados de teste e interpretação de resultado.
+- [x] **Expandir `perf-l3` — Carga em APIs e servidores** (790 palavras): incluir modelo de workload, mistura de endpoints, ramp-up, dependências, dados, critérios de parada e diagnóstico de banco/cache/pool.
+- [x] **Expandir `perf-l7` — Análise e Mitigação** (799 palavras): incluir relatório antes/depois, árvore de diagnóstico, priorização por impacto, hipótese versus evidência e plano de remediação validável.
 
 ## Prioridade 1 — Revisão de aulas abaixo do padrão de profundidade
 
