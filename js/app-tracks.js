@@ -84,7 +84,11 @@
       };
 
       if (mobileTrack) {
-        Object.assign(mobileTrack, mobileTrackPayload);
+        const existingCourses = Array.isArray(mobileTrack.courses) ? mobileTrack.courses : [];
+        const courses = mobileLessons.length > 0
+          ? [...existingCourses, mobileTrackPayload.courses[0]]
+          : existingCourses;
+        Object.assign(mobileTrack, mobileTrackPayload, { courses });
       } else {
         mergedTracks.push(mobileTrackPayload);
       }

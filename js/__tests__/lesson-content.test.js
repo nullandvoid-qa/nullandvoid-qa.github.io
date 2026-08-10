@@ -227,6 +227,7 @@ duration: 50 min
     expect(result.title).toBe('Aula fallback');
     expect(result.duration).toBe('5 min');
     expect(result.content).toBe('<p>conteúdo local</p>');
+    expect(consoleWarnSpy).not.toHaveBeenCalled();
 
     consoleWarnSpy.mockRestore();
   });

@@ -1145,14 +1145,17 @@
     const existing = document.getElementById('cert-modal-root');
     if (existing) existing.remove();
 
-    const url = URL.createObjectURL(blob);
+    const url = typeof URL.createObjectURL === 'function'
+      ? URL.createObjectURL(blob)
+      : '';
     const root = document.createElement('div');
     root.id = 'cert-modal-root';
     root.className = 'cert-modal';
     root.innerHTML = `
       <div class="cert-modal__overlay" id="cert-modal-overlay"></div>
-      <div class="cert-modal__content" role="dialog" aria-modal="true">
-        <button class="cert-modal__close" id="cert-modal-close">×</button>
+      <div class="cert-modal__content" role="dialog" aria-modal="true" aria-labelledby="cert-modal-title">
+        <button class="cert-modal__close" id="cert-modal-close" aria-label="Close certificate preview">×</button>
+        <h2 class="sr-only" id="cert-modal-title">Certificate preview</h2>
         <div class="cert-modal__frame-wrap">
           <iframe class="cert-modal__iframe" src="${url}" title="Certificate preview"></iframe>
         </div>
@@ -1165,15 +1168,39 @@
     `;
 
     document.body.appendChild(root);
+    document.body.classList.add('modal-open');
+
+    const content = document.getElementById('cert-modal-content') || root.querySelector('.cert-modal__content');
+    const closeButton = document.getElementById('cert-modal-close');
+    const closeButtons = [closeButton, document.getElementById('cert-modal-close-2')].filter(Boolean);
 
     function close() {
       root.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 200);
+      document.body.classList.remove('modal-open');
+      if (url && typeof URL.revokeObjectURL === 'function') {
+        setTimeout(() => URL.revokeObjectURL(url), 200);
+      }
     }
 
+    const handleKeydown = (event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        close();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeydown);
+    root.addEventListener('keydown', handleKeydown);
+
+    closeButtons.forEach((button) => button.addEventListener('click', close));
     document.getElementById('cert-modal-overlay').addEventListener('click', close);
-    document.getElementById('cert-modal-close').addEventListener('click', close);
-    document.getElementById('cert-modal-close-2').addEventListener('click', close);
+    if (content) {
+      content.setAttribute('tabindex', '-1');
+      content.focus({ preventScroll: true });
+    } else if (closeButton) {
+      closeButton.focus({ preventScroll: true });
+    }
+
     document.getElementById('cert-modal-download').addEventListener('click', () => {
       // prefer using TG_CERTIFICATES.downloadCertificate if available to maintain naming
       if (window.TG_CERTIFICATES && typeof window.TG_CERTIFICATES.downloadCertificate === 'function') {
@@ -1633,6 +1660,7 @@
     buildDashboardSkeletonGridHtml,
     buildLessonSkeletonHtml,
     renderDashboardSections,
+    showCertificateModal,
   };
 
   window.NVViewHelpers = api;

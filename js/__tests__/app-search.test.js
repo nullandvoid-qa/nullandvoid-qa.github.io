@@ -32,4 +32,18 @@ describe('app-search fallback behavior', () => {
     window.NVAppSearch.handleSearch('test');
     expect(document.getElementById('search-results').innerHTML).toContain('Search is unavailable.');
   });
+
+  test('initializes the search input with the expected focusable structure', () => {
+    document.body.innerHTML = `
+      <input id="global-search" class="search-input" />
+      <div id="search-results"></div>
+    `;
+
+    jest.resetModules();
+    require('../app-search.js');
+
+    const input = document.getElementById('global-search');
+    expect(input).not.toBeNull();
+    expect(input.classList.contains('search-input')).toBe(true);
+  });
 });

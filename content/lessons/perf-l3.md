@@ -41,6 +41,59 @@ jmeter -n -t scripts/jmeter/test-plan.jmx -l scripts/jmeter/results.jtl -JBASE_U
   <li><strong>Taxa de Erro:</strong> Monitorar taxas de erros acima de 1%. Erros 5xx geralmente apontam para falhas internas do servidor, e erros 408 indicam timeouts.</li>
 </ul>
 
+<h3>🧩 Modelagem de Workload e Mix de Endpoints</h3>
+<p>Modele a carga com base em jornadas reais. Uma boa prática é definir um mix de endpoints (porcentagem/ peso) que reflita tráfego de produção:</p>
+<ul>
+  <li>Exemplo de mix: 60% leitura de listagens (`GET /api/lessons`), 30% leitura de detalhe (`GET /api/lessons/:id`), 8% ações de escrita leve (`POST /api/bookmarks`), 2% transações pesadas (`POST /api/checkout`).</li>
+  <li>Use pesos e seleção aleatória de IDs para evitar hotspots artificiais; no k6 isso é feito com `Math.random()` ou com o utilitário `__ITER`/`__VU` para escolher IDs distintos.</li>
+</ul>
+
+<h3>📈 Ramp-up / Stages recomendados</h3>
+<p>Evite subir carga instantaneamente. Use stages para observar comportamento em transições:</p>
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+export let options = {
+  stages: [
+    { duration: '2m', target: 20 }, // aquecimento
+    { duration: '5m', target: 100 }, // aumento gradual até carga alvo
+    { duration: '10m', target: 100 }, // sustentação
+    { duration: '2m', target: 0 }, // ramp-down
+  ],
+  thresholds: {
+    'http_req_failed': ['rate<0.01'],
+    'http_req_duration{p95}': ['p(95)<500'],
+  }
+};
+</pre>
+
+<h3>⛔ Critérios de parada / abort</h3>
+<ul>
+  <li>Abortar e investigar se a taxa de erro exceder 5% por mais de 1 minuto.</li>
+  <li>Abortar se a latência p99 exceder 5× o threshold definido (sinal de sistema degradado).</li>
+  <li>Use health-checks entre stages para garantir sistema responsivo antes de aumentar carga.</li>
+</ul>
+
+<h3>🔧 Diagnóstico de Gargalos (onde olhar primeiro)</h3>
+<ol>
+  <li><strong>Banco de dados:</strong> consulte slow query log, verifique índices, examine locks e tempo de execução das queries; identifique queries com alta variação de latência.</li>
+  <li><strong>Pool de conexões:</strong> confirme contadores de conexões ativas versus limite; pools exauridos causam filas e timeouts.</li>
+  <li><strong>CPU e GC:</strong> picos de CPU ou pausas do GC podem elevar p99; correlacione timestamps do teste com métricas de APM e métricas do host.</li>
+  <li><strong>Cache:</strong> cache-misses em rota de leitura podem aumentar latência dramaticamente; cheque hit-rate do Redis/Memcached.</li>
+  <li><strong>Dependências externas:</strong> serviços terceiros podem degradar a cadeia; use mocks para isolar ou monitorar latências das integrações.</li>
+</ol>
+
+<h3>🔗 Correlacione com APM e Logs</h3>
+<p>Para diagnóstico efetivo, injete um header `X-Request-Id` gerado pelo k6 em cada requisição. Use esse ID para localizar traces no APM e linhas relevantes nos logs. Registrar timestamps precisos no teste e emparelhar com métricas do APM acelera a investigação.</p>
+
+<h3>🧾 Exemplo de roteiro de investigação após falha</h3>
+<ol>
+  <li>Confirmar que a falha é reproduzível: repetir o teste com mesmo cenário e verificar erro.</li>
+  <li>Coletar evidências: HAR/netlogs, métricas de host (CPU/RAM), métricas do DB (slow queries), logs de aplicação com requestId.</li>
+  <li>Isolar camada: reduzir mix para apenas leitura para ver se problema é ligado à escrita/lock.</li>
+  <li>Executar perfil/trace no ambiente (APM/pprof) para identificar função ou query causadora.</li>
+  <li>Documentar hipótese, aplicar mitigação (cache, index, ajuste de pool) e re-testar baseline.</li>
+</ol>
+
+
 <h3>🔍 Amostras de Outputs</h3>
 <p>Você pode comparar suas métricas locais de latência e RPS com a amostra em <code>scripts/perf/examples/k6-summary-sample.json</code> ou ver o modelo de relatório HTML do JMeter em <code>scripts/perf/examples/jmeter-report-placeholder/index.html</code>.</p>
 

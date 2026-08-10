@@ -151,6 +151,7 @@
   try {
     const ensureTrackVisible = () => {
       if (window.__nv_mutation_lock) return;
+      if (window.NVApp?.state?.currentView !== 'track') return;
       window.__nv_mutation_lock = true;
       try {
         const bc = document.getElementById('track-breadcrumb');

@@ -1076,10 +1076,12 @@ a:hover { text-decoration: underline; }
   transition: var(--transition);
 }
 
-.search-input:focus {
+.search-input:focus,
+.search-input:focus-visible {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-glow);
-  outline: none;
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .search-results {
@@ -1428,6 +1430,7 @@ a:hover { text-decoration: underline; }
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 2rem;
+  min-width: 0;
 }
 
 .lesson-content h1 {

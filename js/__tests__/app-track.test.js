@@ -90,6 +90,15 @@ describe('app-track fallback rendering', () => {
     expect(preventSpy).toHaveBeenCalled();
   });
 
+  test('renderTrackDetail does not emit debug logs by default', async () => {
+    const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+
+    await window.NVAppTrack.renderTrackDetail('track-1');
+
+    expect(logSpy).not.toHaveBeenCalled();
+    logSpy.mockRestore();
+  });
+
   test('renderTrackDetail renders empty state when helper track is missing', async () => {
     await window.NVAppTrack.renderTrackDetail('missing-track');
     expect(document.getElementById('track-detail').innerHTML).toContain('Trilha indisponível no momento.');

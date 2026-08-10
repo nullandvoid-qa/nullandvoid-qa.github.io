@@ -186,30 +186,37 @@ test.describe('Regression coverage for core UX flows', () => {
     }, null, { timeout: 10000 });
 
     await page.evaluate(() => {
-      const originalFindLesson = window.NVApp.helpers.findLesson;
-      window.NVApp.helpers.findLesson = (lessonId) => {
-        const result = originalFindLesson(lessonId);
-        if (result && lessonId === 'l1') {
-          const rawLesson = { ...result.rawLesson };
-          delete rawLesson.content;
-          const lesson = { ...result.lesson };
-          if (Object.prototype.hasOwnProperty.call(lesson, 'content')) {
-            lesson.content = undefined;
+      // Remove inline content directly from the in-memory tracks data so
+      // the app will attempt to fetch markdown for l1 and hit the offline
+      // fallback when the route returns an error.
+      try {
+        const stateTracks = window.NVApp?.state?.tracks || [];
+        for (const tr of stateTracks) {
+          if (!tr || !tr.courses) continue;
+          for (const course of tr.courses) {
+            if (!course || !Array.isArray(course.lessons)) continue;
+            for (const lesson of course.lessons) {
+              if (lesson && lesson.id === 'l1') {
+                try { delete lesson.content; } catch (e) { lesson.content = undefined; }
+              }
+            }
           }
-          return { ...result, rawLesson, lesson };
         }
-        return result;
-      };
+      } catch (e) {
+        // ignore
+      }
 
-      const originalLoadLessonContent = window.NVLessonContent.loadLessonContent;
-      window.NVLessonContent.loadLessonContent = async (lesson, options) => {
-        if (lesson?.id === 'l1') {
-          throw new Error('Simulated offline load failure for l1');
-        }
-        return originalLoadLessonContent(lesson, options);
-      };
+      // Simulate that fetching markdown for l1 fails when attempted
+      // so the UI renders the offline/error fallback message.
+      if (window.NVLessonContent && typeof window.NVLessonContent.loadLessonContent === 'function') {
+        const originalLoad = window.NVLessonContent.loadLessonContent;
+        window.NVLessonContent.loadLessonContent = async (lesson, options) => {
+          if (lesson?.id === 'l1') throw new Error('Simulated offline load failure for l1');
+          return originalLoad(lesson, options);
+        };
+      }
 
-      window.navigate('lesson', { lessonId: 'l1' });
+      if (typeof window.navigate === 'function') window.navigate('lesson', { lessonId: 'l1' });
     });
 
     await page.waitForSelector('#lesson-detail');

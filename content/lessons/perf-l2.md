@@ -40,6 +40,42 @@ export default function () {
 }
 </pre>
 
+<h3>📊 Percentis (p50 / p95 / p99) e interpretação</h3>
+<p>Percentis descrevem a distribuição de latências — p50 é a mediana, p95 significa que 95% das requisições responderam naquele tempo ou menos, e p99 é o extremo. Para decisões operacionais prefira p95/p99 (indicadores de experiência da cauda), enquanto p50 ajuda a entender o comportamento típico.</p>
+
+<h3>✅ Verificações em API: checar status e corpo</h3>
+<p>Além de medir latência, um teste de API deve validar status e consistência do corpo. Use `check()` do k6 para essas validações:</p>
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+import { check } from 'k6';
+let res = http.get('https://api.exemplo.local/lessons/42');
+check(res, {
+  'status is 200': (r) => r.status === 200,
+  'body has id and title': (r) => r.json().id === 42 && !!r.json().title,
+});
+</pre>
+
+<h3>⚖️ Justificando thresholds</h3>
+<p>Defina thresholds com base em SLAs reais e capacidade da infra. Exemplo: se o serviço precisa responder 95% das requisições em <500ms em horário de pico, use `http_req_duration: ['p(95)<500']`. Justifique thresholds com dados históricos (logs, APM) e comece conservadoramente.</p>
+
+<h3>🧪 Dados de teste e massa</h3>
+<p>Use massas de dados representativas: IDs que reflitam cargas reais, payloads com tamanhos variados, e autenticação quando aplicável. Para endpoints de leitura, prefira datasets grandes; para escrita, verifique idempotência ou limpar dados entre runs.</p>
+
+<h3>🔬 Exemplo aplicado ao projeto</h3>
+<p>Teste de API exemplo para o catálogo de aulas:</p>
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+// cenário: leitura de aula por ID
+// threshold justificado: p95 < 400ms (baseado em SLA de navegação)
+let res = http.get(`${__ENV.BASE_URL}/api/lessons/42`);
+check(res, { 'status 200': (r) => r.status === 200 });
+</pre>
+
+<h3>📈 Interpretação de resultados</h3>
+<ul>
+  <li>Se p95 ultrapassa threshold: investigar latências de backend, cache-misses e aumento de erros.</li>
+  <li>Aumentos em p99 indicam problemas esparsos (ex.: GC, locks) — correlacione com APM e logs.</li>
+  <li>Se taxa de erro sobe, reproduza com foco em payloads usados no teste para isolar dados problemáticos.</li>
+</ul>
+
 <h3>🚀 Início rápido: Executando o k6 localmente</h3>
 <p>O k6 pode ser instalado de forma simples em qualquer sistema operacional (via Homebrew, Chocolatey ou pacotes de instalação direta). Após a instalação, a execução de um script é feita de forma declarativa:</p>
 <pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">

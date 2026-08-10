@@ -380,6 +380,14 @@ window.TG_QAWAY_EN = {
       "title": "Hello World with Playwright",
       "content": "<pre>npm init playwright@latest\n// tests/example.spec.js\nimport { test, expect } from '@playwright/test';\ntest('homepage', async ({ page }) => {\n  await page.goto('https://example.com');\n  await expect(page).toHaveTitle(/Example/);\n});</pre>"
     },
+    "s10-l4": {
+      "title": "Market Coverage, Risk, and API Contracts",
+      "content": "<p>Map market risk, state transitions, and API contracts into a focused test strategy.</p>"
+    },
+    "s10-l5": {
+      "title": "Checklist, Script, Usability, and Accessibility",
+      "content": "<p>Combine checklists, repeatable scripts, exploratory testing, and assistive technology checks.</p>"
+    },
     "s11-l1": {
       "title": "Levels: Junior, Mid, Senior",
       "content": "<p>Junior: executes and learns. Mid: designs test and automation strategy. Senior: leads quality, mentors, defines test architecture.</p>"

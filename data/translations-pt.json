@@ -126,7 +126,9 @@
   ,"lesson.l30.title": "Fundamentos de teste de performance"
   ,"lesson.l31.title": "Exercícios práticos — automação e critérios de aceite"
   ,"lesson.l32.title": "Modelos de desenvolvimento — Waterfall, Ágil e V-Model"
-  ,"lesson.l33.title": "Cobertura de mercado, checklist vs script e acessibilidade",
+  ,"lesson.l33.title": "Cobertura de mercado, checklist vs script e acessibilidade"
+  ,"lesson.l34.title": "Cobertura de Mercado, Risco e Contratos de API"
+  ,"lesson.l35.title": "Checklist vs Script, Usabilidade e Acessibilidade",
   "offline": {
     "title": "Null and Void - Offline",
     "heading": "Você está offline",

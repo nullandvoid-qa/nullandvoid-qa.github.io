@@ -250,6 +250,44 @@ describe('view helpers', () => {
     expect(banner.innerHTML).toContain('btn-continue');
   });
 
+  test('showCertificateModal focuses the dialog and closes on Escape', () => {
+    const { showCertificateModal } = require('../view-helpers.js');
+
+    const blob = new Blob(['certificate'], { type: 'application/pdf' });
+    const focusSpy = jest.fn();
+    const content = {
+      setAttribute: jest.fn(),
+      focus: focusSpy,
+    };
+    const overlay = { addEventListener: jest.fn() };
+    const closeButton = { addEventListener: jest.fn() };
+    const closeButton2 = { addEventListener: jest.fn() };
+    const downloadButton = { addEventListener: jest.fn() };
+    const downloadImageButton = { addEventListener: jest.fn() };
+
+    document.body.innerHTML = '';
+    document.addEventListener = jest.fn();
+    document.body.classList.add = jest.fn();
+    document.body.classList.remove = jest.fn();
+
+    const originalGetElementById = document.getElementById.bind(document);
+    document.getElementById = jest.fn((id) => {
+      if (id === 'cert-modal-overlay') return overlay;
+      if (id === 'cert-modal-close') return closeButton;
+      if (id === 'cert-modal-close-2') return closeButton2;
+      if (id === 'cert-modal-download') return downloadButton;
+      if (id === 'cert-modal-download-shareable') return downloadImageButton;
+      if (id === 'cert-modal-content') return content;
+      return originalGetElementById(id);
+    });
+
+    showCertificateModal(blob, 'certificate.pdf', 'starter');
+
+    expect(document.body.classList.add).toHaveBeenCalledWith('modal-open');
+    expect(content.setAttribute).toHaveBeenCalledWith('tabindex', '-1');
+    expect(focusSpy).toHaveBeenCalled();
+  });
+
   test('renderContinueBanner announces progress updates to assistive technologies', () => {
     const { renderContinueBanner } = require('../view-helpers.js');
 

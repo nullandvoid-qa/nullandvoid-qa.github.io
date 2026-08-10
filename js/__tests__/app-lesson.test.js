@@ -76,6 +76,51 @@ describe('app-lesson fallback renderers', () => {
     consoleErrorSpy.mockRestore();
   });
 
+  test('renderLesson prefers editorial Markdown over stale inline catalog content', async () => {
+    window.NVApp.helpers.findLesson = () => ({
+      track: { title: 'Track 1', icon: 'web' },
+      course: { title: 'Course 1', id: 'course-1' },
+      lesson: { title: 'Catalog title', duration: '10 min' },
+      rawTrack: { id: 'track-1', courses: [{ lessons: [{ id: 'lesson-1' }] }] },
+      rawCourse: { id: 'course-1', title: 'Course 1' },
+      rawLesson: { id: 'lesson-1', title: 'Catalog title', content: '<p>Stale inline content</p>', duration: '10 min' },
+    });
+    window.NVLessonContent = {
+      loadLessonContent: jest.fn(() => Promise.resolve({
+        content: '<p>Editorial Markdown content</p>',
+        title: 'Editorial title',
+        duration: '20 min',
+      })),
+    };
+    window.NVApp.helpers.attachCopyButtons = jest.fn();
+
+    await window.NVAppLesson.renderLesson('lesson-1');
+
+    const lessonDetail = document.getElementById('lesson-detail');
+    expect(lessonDetail.innerHTML).toContain('Editorial Markdown content');
+    expect(lessonDetail.innerHTML).toContain('Editorial title');
+    expect(lessonDetail.innerHTML).not.toContain('Stale inline content');
+  });
+
+  test('renderLesson shows a friendly empty-state when content is present but blank', async () => {
+    window.NVApp.helpers.findLesson = () => ({
+      track: { title: 'Track 1', icon: 'web' },
+      course: { title: 'Course 1', id: 'course-1' },
+      lesson: { title: 'Lesson 1', duration: '10 min' },
+      rawTrack: { id: 'track-1', courses: [{ lessons: [{ id: 'lesson-1' }] }] },
+      rawCourse: { id: 'course-1', title: 'Course 1' },
+      rawLesson: { id: 'lesson-1', title: 'Lesson 1', duration: '10 min' },
+    });
+    window.NVLessonContent = {
+      loadLessonContent: jest.fn(() => Promise.resolve({ content: '   ', title: 'Lesson 1', duration: '10 min' })),
+    };
+    window.NVApp.helpers.attachCopyButtons = jest.fn();
+
+    await window.NVAppLesson.renderLesson('lesson-1');
+
+    expect(document.getElementById('lesson-detail').innerHTML).toContain('Conteúdo indisponível no momento. Tente novamente mais tarde.');
+  });
+
   test('renderLesson shows offline state when browser is offline and content loading fails', async () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     const offlineSpy = jest.spyOn(window.navigator, 'onLine', 'get').mockReturnValue(false);

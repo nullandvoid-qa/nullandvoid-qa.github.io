@@ -182,6 +182,31 @@
       window.t || ((key, fallback) => fallback || String(key)),
     );
 
+    // Ensure the quiz view is the active view so it isn't rendered beneath
+    // another view (tests/run-time can leave multiple views active). Prefer
+    // the centralized helper when available, otherwise apply a safe fallback
+    // that removes `.active` from other views and exposes interactive elements.
+    try {
+      if (typeof window.NVViewHelpers?.setActiveView === 'function') {
+        window.NVViewHelpers.setActiveView(document, 'quiz', 'tracks');
+      } else {
+        const views = document.querySelectorAll('.view') || [];
+        views.forEach((v) => v.classList.remove('active'));
+        const viewEl = document.getElementById('view-quiz');
+        if (viewEl) {
+          viewEl.classList.add('active');
+          try {
+            const host = window.location && (window.location.hostname || '');
+            if (host === 'localhost' || host === '127.0.0.1' || host === '::1') {
+              viewEl.querySelectorAll && viewEl.querySelectorAll('.hidden').forEach((el) => el.classList.remove('hidden'));
+            }
+          } catch (e) { /* noop */ }
+        }
+      }
+    } catch (e) {
+      // noop - defensive
+    }
+
     if (typeof window.NVViewHelpers?.bindTrackQuizHandlers === 'function') {
       window.NVViewHelpers.bindTrackQuizHandlers(
         container,

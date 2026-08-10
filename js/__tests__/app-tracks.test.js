@@ -48,6 +48,23 @@ describe('app-tracks helper', () => {
     expect(window.NVAppTracks.mergeTrackSources()).toEqual([]);
   });
 
+  test('preserves existing mobile courses when adding generated labs', () => {
+    window.TG_QAWAY_TRACKS = [{
+      id: 'mobile',
+      courses: [{ id: 'mobile-core', lessons: [{ id: 'l27' }] }],
+    }];
+    window.TG_MOBILE_LABS = [{ id: 'lab1', name: 'Mobile Lab 1' }];
+
+    require('../app-tracks.js');
+
+    const mobileTrack = window.NVAppTracks.mergeTrackSources().find((track) => track.id === 'mobile');
+    expect(mobileTrack.courses).toEqual(expect.arrayContaining([
+      expect.objectContaining({ id: 'mobile-core' }),
+      expect.objectContaining({ id: 'mobile-labs-course' }),
+    ]));
+    expect(mobileTrack.courses.flatMap((course) => course.lessons).map((lesson) => lesson.id)).toContain('l27');
+  });
+
   test('mergeTrackSources returns empty array when TG_QAWAY_TRACKS is not an array', () => {
     window.TG_QAWAY_TRACKS = { id: 'starter' };
 

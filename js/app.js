@@ -53,6 +53,8 @@
     l23: 's10-l1',
     l24: 's11-l1',
     l25: 's12-l1',
+    l34: 's10-l4',
+    l35: 's10-l5',
   };
   const enrichment = window.TG_LESSON_ENRICHMENT || {};
   const quizzes = window.TG_QUIZZES || {};
@@ -666,34 +668,48 @@
     getHomeTrackSummary,
   };
 
-  function ensureGlobalNVApp() {
-    if (typeof window !== 'undefined' && window.NVAppBootstrap && typeof window.NVAppBootstrap.ensureGlobalNVApp === 'function') {
-      try {
-        return window.NVAppBootstrap.ensureGlobalNVApp(appState, appHelpers);
-      } catch (e) {
-        // fall back to local attach
-      }
-    }
+  function attachGlobalNVApp() {
+    if (typeof window === 'undefined') return;
 
-    if (typeof window !== 'undefined') {
+    const usingBootstrap = () => {
+      if (window.NVAppBootstrap?.registerAppBindings) {
+        try {
+          window.NVAppBootstrap.registerAppBindings({ state: appState, stateAccessors: appState, helpers: appHelpers });
+          if (window.NVApp?.state) return true;
+        } catch (e) {
+          // fall back to local attach
+        }
+      }
+
+      if (typeof window.initAppRegistry === 'function') {
+        try {
+          window.initAppRegistry({ state: appState, stateAccessors: appState, helpers: appHelpers });
+          if (window.NVApp?.state) return true;
+        } catch (e) {
+          // fall back to local attach
+        }
+      }
+
+      if (window.NVAppBootstrap?.ensureGlobalNVApp) {
+        try {
+          window.NVAppBootstrap.ensureGlobalNVApp(appState, appHelpers);
+          if (window.NVApp?.state) return true;
+        } catch (e) {
+          // fall back to local attach
+        }
+      }
+
+      return false;
+    };
+
+    if (!usingBootstrap()) {
       window.NVApp = window.NVApp || {};
       window.NVApp.state = window.NVApp.state || appState;
       window.NVApp.helpers = window.NVApp.helpers || appHelpers;
     }
   }
 
-  if (window.initAppRegistry) {
-    window.initAppRegistry({ stateAccessors: appState, helpers: appHelpers });
-  } else if (window.NVAppBootstrap?.registerAppBindings) {
-    window.NVAppBootstrap.registerAppBindings({ state: appState, helpers: appHelpers });
-  } else {
-    // Prefer the app-bootstrap to register the global NVApp.
-    // Creating globals from non-bootstrap modules increases coupling
-    // and makes initialization order brittle — skip creating it here.
-    if (typeof console !== 'undefined' && typeof console.warn === 'function') {
-      console.warn('NVApp bootstrap not found; skipping global NVApp creation from app.js');
-    }
-  }
+  attachGlobalNVApp();
 
   
 
@@ -733,6 +749,12 @@
 
       const tryNavigate = () => {
         attempts += 1;
+
+        // A user navigation takes precedence over the delayed startup fallback.
+        if (appState.currentView !== "home" || Object.keys(appState.viewParams || {}).length > 0) {
+          return;
+        }
+
         if (lastLessonId && findLesson(lastLessonId) && typeof renderLesson === 'function') {
           navigate('lesson', { lessonId: lastLessonId });
           return;
@@ -814,5 +836,5 @@
 
   init();
 
-  ensureGlobalNVApp();
+  attachGlobalNVApp();
 })();

@@ -164,15 +164,9 @@
     const loadErrorTitle = helpers.t?.("lesson.loadErrorTitle", "Lição indisponível") || "Lição indisponível";
     const loadErrorMessage = helpers.t?.("lesson.loadError", "Conteúdo indisponível no momento. Tente novamente mais tarde.") || "Conteúdo indisponível no momento. Tente novamente mais tarde.";
 
-    let lessonContent = rawLesson?.content
-      ? {
-          content: rawLesson.content,
-          title: rawLesson.title || lesson.title,
-          duration: rawLesson.duration || lesson.duration,
-        }
-      : null;
+    let lessonContent = null;
 
-    if (!lessonContent?.content && window.NVLessonContent?.loadLessonContent) {
+    if (window.NVLessonContent?.loadLessonContent) {
       try {
         lessonContent = await window.NVLessonContent.loadLessonContent(rawLesson, {
           markdownMap: window.TG_LESSON_MARKDOWN_MAP,
@@ -187,7 +181,21 @@
       }
     }
 
+    if (!lessonContent?.content && rawLesson?.content) {
+      lessonContent = {
+        content: rawLesson.content,
+        title: rawLesson.title || lesson.title,
+        duration: rawLesson.duration || lesson.duration,
+      };
+    }
+
     if (!lessonContent?.content && !rawLesson?.content) {
+      const errorMessage = getLessonLoadErrorMessage(helpers);
+      renderLessonErrorState(lessonDetail, errorMessage);
+      return;
+    }
+
+    if (lessonContent?.content && typeof lessonContent.content === 'string' && lessonContent.content.trim() === '') {
       const errorMessage = getLessonLoadErrorMessage(helpers);
       renderLessonErrorState(lessonDetail, errorMessage);
       return;

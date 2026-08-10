@@ -177,7 +177,6 @@
   }
 
   async function renderTrackDetail(trackId) {
-    try { console.log && console.log('NVAppTrack.renderTrackDetail called', trackId); } catch (e) { /* noop */ }
     const state = getState();
     const helpers = getHelpers();
     const t = getTranslator();
@@ -289,7 +288,6 @@
     // Fallback minimal track detail renderer for environments where the
     // richer renderer is not available (tests / early bootstrap).
       try {
-        try { console.log && console.log('NVAppTrack.fallback: building lessons from stateTrack/raw'); } catch (e) { /* noop */ }
       container.innerHTML = '';
       const header = document.createElement('div');
       header.className = 'track-detail-header';
@@ -326,7 +324,6 @@
       } catch (e) {
         // noop
       }
-      try { console.log && console.log('NVAppTrack.fallback: lessonsFound', lessonsFound); } catch (e) { /* noop */ }
 
       if (!lessonsFound) {
         // If no structured modules available, attempt to derive lessons from raw.courses

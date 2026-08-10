@@ -49,6 +49,75 @@ Recomendações Técnicas:
   <li><strong>Product Owner (PO):</strong> Prioriza as tarefas de mitigação de performance no backlog ágil com base no impacto de negócio e na experiência do usuário.</li>
 </ul>
 
+<h3>🌳 Árvore de Diagnóstico (Diagnostic Tree)</h3>
+<p>Uma árvore de diagnóstico ajuda a convergir rapidamente de sintoma para causa raiz. Exemplo simplificado para latência alta:</p>
+<ol>
+  <li>Latência alta no endpoint `/api/catalog`?
+    <ol>
+      <li>Sim → verificar cache hit-rate
+        <ul>
+          <li>Cache hit-rate baixo → checar política de expiração e chave de cache</li>
+          <li>Cache funcionando → ir para próxima verificação</li>
+        </ul>
+      </li>
+      <li>Não → verificar DB
+        <ul>
+          <li>Queries lentas → executar EXPLAIN e revisar índices</li>
+          <li>Pool esgotado → aumentar pool ou reduzir concorrência</li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+</ol>
+
+<h3>⚖️ Priorização por Impacto</h3>
+<p>Priorize mitigação com base em impacto no negócio e esforço estimado:</p>
+<ul>
+  <li><strong>Impacto Alto / Esforço Baixo:</strong> correções rápidas e com alto retorno (ex: adicionar índice, ajustar timeout) — tratar como P0.</li>
+  <li><strong>Impacto Alto / Esforço Alto:</strong> refatorações ou arquitetura (ex: mudança de modelo de dados) — quebrar em milestones e tratar como P1 com entregas incrementais.</li>
+  <li><strong>Impacto Baixo / Esforço Baixo:</strong> abordagens de melhoria contínua (ex: reduzir payloads) — P2.</li>
+</ul>
+
+<h3>🔬 Hipótese vs Evidência</h3>
+<p>Cada hipótese de causalidade deve ser validada por evidência concreta antes de ser implementada:</p>
+<ul>
+  <li><strong>Hipótese:</strong> "A latência é causada por queries sem índice"</li>
+  <li><strong>Evidência requerida:</strong> EXPLAIN mostrando full table scan; correlação temporal entre p95 e aumento de tempo de execução da query no slow log.</li>
+  <li><strong>Validação pós-fix:</strong> rerun do teste com comparação antes/depois do p95 e monitoramento do slow log para confirmar redução.</li>
+</ul>
+
+<h3>🛠 Plano de Remediação Validável (Template)</h3>
+<ol>
+  <li>Descrição do problema: resumo breve e métricas que falharam (p95, taxa de erro, RPS).</li>
+  <li>Hipótese técnica: causa provável.</li>
+  <li>Ação proposta (curto prazo): passo acionável e de baixo custo (ex: adicionar índice X na tabela Y).</li>
+  <li>Métrica de sucesso: critério objetivo para validar correção (ex: p95 reduzido para <400ms e taxa de erro <1%).</li>
+  <li>Experimento de validação: instruções para executar o teste (script, cenário, duração) e como coletar artefatos.</li>
+  <li>Pós-validação: relatar antes/depois com gráficos e anexar `k6-summary.json` e logs relevantes.</li>
+</ol>
+
+<h3>📄 Relatório Antes/Depois (Modelo)</h3>
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto; font-family:monospace">
+Problema: p95 de /api/catalog = 800ms (SLA 400ms)
+
+Antes:
+- p95: 800ms
+- p99: 1200ms
+- Taxa de erro: 0.5%
+
+Intervenção:
+- Adicionar índice composto em `catalog.items(tenant_id, updated_at)`
+- Ajustar TTL do cache para 60s
+
+Depois:
+- p95: 320ms
+- p99: 410ms
+- Taxa de erro: 0.1%
+
+Conclusão: Intervenção validada. Criar PR com índice e instrumentar rollback caso métricas degradem em produção.
+</pre>
+
+
 <h3>⏭️ Próxima Aula</h3>
 <p>Esta é a última aula do track de Performance; faremos uma revisão e exercícios práticos para consolidar os conceitos aprendidos.</p>
 <h3>🔍 Amostras e Relatórios</h3>

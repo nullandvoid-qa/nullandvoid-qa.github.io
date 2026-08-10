@@ -87,9 +87,6 @@
         duration: data.duration || lesson.duration || "",
       };
     } catch (error) {
-      if (sourcePath && sourcePath !== "/content/lessons/undefined.md") {
-        console.warn(error);
-      }
       return {
         content: lesson.content || "",
         title: lesson.title || "",

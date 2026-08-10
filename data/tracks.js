@@ -616,7 +616,7 @@ Funcionalidade: Login | Impacto: Alto | Probabilidade: Baixo | Prioridade: Médi
           },
           {
             id: "l4",
-            title: "Testes funcionais vs não-funcionais",
+            title: "Testes funcionais, manuais e não-funcionais",
             duration: "55 min",
             content: `<h2>Testes funcionais vs não-funcionais</h2>
 
@@ -825,7 +825,7 @@ Funcionalidade: Login | Impacto: Alto | Probabilidade: Baixo | Prioridade: Médi
         lessons: [
           {
             id: "l5",
-            title: "Partição de Equivalência e Valor Limite",
+            title: "Partição de Equivalência, Valor Limite e Tabela de Decisão",
             duration: "55 min",
             content: `<h2>Partição de Equivalência e Valor Limite</h2>
 
@@ -1659,7 +1659,7 @@ pipeline {
         lessons: [
           {
             id: "l28",
-            title: "Escolhendo frameworks e arquiteturas de teste",
+            title: "Decisão, Risco e Priorização em QA",
             duration: "45 min",
             content: `<h2>Escolhendo frameworks e arquiteturas de teste</h2>
 
@@ -1689,7 +1689,7 @@ pipeline {
           },
           {
             id: "l29",
-            title: "Design de testes para automação sustentável",
+            title: "Teste Exploratório, Relato de Bug e Critérios de Aceitação",
             duration: "50 min",
             content: `<h2>Design de testes para automação sustentável</h2>
 
@@ -1734,8 +1734,8 @@ pipeline {
         lessons: [
           {
             id: "l30",
-            title: "Fundamentos de teste de performance",
-            duration: "40 min",
+            title: "Pirâmide de Testes e Estratégias de Automação",
+            duration: "35 min",
             content: `<h2>Fundamentos de teste de performance</h2>
 
 <h3>🎯 Objetivos</h3>
@@ -1762,8 +1762,8 @@ pipeline {
         lessons: [
           {
             id: "l22",
-            title: "Noções básicas de segurança para QA",
-            duration: "45 min",
+            title: "Lógica e POO para QA",
+            duration: "90 min",
             content: `<h2>Noções básicas de segurança para QA</h2>
 
 <h3>🎯 Objetivos</h3>
@@ -1803,8 +1803,8 @@ pipeline {
         lessons: [
           {
             id: "l13",
-            title: "Por que testes mobile são diferentes",
-            duration: "45 min",
+            title: "iOS Emulator para Testes",
+            duration: "60 min",
             content: `<h2>Por que testes mobile são diferentes</h2>
 
 <h3>🎯 Objetivos de Aprendizado</h3>
@@ -1845,8 +1845,8 @@ pipeline {
           },
           {
             id: "l14",
-            title: "Appium e locators mobile",
-            duration: "50 min",
+            title: "Android Emulator para Testes",
+            duration: "60 min",
             content: `<h2>Appium e locators mobile</h2>
 
 <h3>🎯 Objetivos de Aprendizado</h3>
@@ -1885,8 +1885,8 @@ pipeline {
           },
           {
             id: "l15",
-            title: "Emulador, simulador e device real",
-            duration: "40 min",
+            title: "BrowserStack para Testes",
+            duration: "65 min",
             content: `<h2>Emulador, simulador e device real</h2>
 
 <h3>🎯 Objetivos de Aprendizado</h3>
@@ -1923,8 +1923,8 @@ pipeline {
         lessons: [
           {
             id: "l16",
-            title: "Gestos, scroll e orientação",
-            duration: "45 min",
+            title: "SauceLabs para Testes",
+            duration: "65 min",
             content: `<h2>Gestos, scroll e orientação</h2>
 
 <h3>🎯 Objetivos de Aprendizado</h3>
@@ -1952,8 +1952,8 @@ pipeline {
           },
           {
             id: "l26",
-            title: "CI/CD para apps mobile",
-            duration: "50 min",
+            title: "Exemplo Prático — Teste Mobile Básico (Emulador)",
+            duration: "30 min",
             content: `<h2>CI/CD para apps mobile</h2>
 
 <h3>🎯 Objetivos de Aprendizado</h3>
@@ -1982,7 +1982,7 @@ pipeline {
           },
           {
             id: "l27",
-            title: "Qualidade e métricas mobile",
+            title: "Testes de Contrato — Introdução e Pact",
             duration: "45 min",
             content: `<h2>Qualidade e métricas mobile</h2>
 
@@ -2341,9 +2341,21 @@ História: Como usuário, quero recuperar minha senha para continuar usando a pl
 <p>Escolha um fluxo crítico do produto e monte um checklist com transições de estado, riscos e critérios de acessibilidade.</p>`
           },
           {
-            id: "l23",
-            title: "Construindo uma estratégia de testes efetiva",
+            id: "l34",
+            title: "Cobertura de Mercado, Risco e Contratos de API",
+            duration: "55 min",
+            content: "<h2>Cobertura de Mercado, Risco e Contratos de API</h2><p>Conteúdo editorial carregado de content/lessons/l34.md.</p>"
+          },
+          {
+            id: "l35",
+            title: "Checklist vs Script, Usabilidade e Acessibilidade",
             duration: "50 min",
+            content: "<h2>Checklist vs Script, Usabilidade e Acessibilidade</h2><p>Conteúdo editorial carregado de content/lessons/l35.md.</p>"
+          },
+          {
+            id: "l23",
+            title: "Exemplo Prático — QA em Agile (Caso real)",
+            duration: "30 min",
             content: `<h2>Construindo uma estratégia de testes efetiva</h2>
 
 <h3>🎯 Objetivos</h3>
@@ -2371,8 +2383,8 @@ História: Como usuário, quero recuperar minha senha para continuar usando a pl
         lessons: [
           {
             id: "l24",
-            title: "Métricas úteis para avaliar qualidade",
-            duration: "45 min",
+            title: "Exemplo Prático — Teste de API (Pagamento)",
+            duration: "30 min",
             content: `<h2>Métricas úteis para avaliar qualidade</h2>
 
 <h3>🎯 Objetivos</h3>
@@ -2400,8 +2412,8 @@ História: Como usuário, quero recuperar minha senha para continuar usando a pl
         lessons: [
           {
             id: "l25",
-            title: "Como mentorar QAs e elevar o time",
-            duration: "40 min",
+            title: "Exemplo Prático — CI/CD para QA (GitHub Actions)",
+            duration: "30 min",
             content: `<h2>Como mentorar QAs e elevar o time</h2>
 
 <h3>🎯 Objetivos</h3>
