@@ -41,12 +41,12 @@ Estas são as maiores lacunas por volume e densidade de prática. A métrica é 
 
 As aulas abaixo estão entre aproximadamente 800 e 1.200 palavras ou têm poucos artefatos práticos. Revisar depois das lacunas críticas acima.
 
-- [ ] **Revisar `l17` — colaboração/revisão:** acrescentar caso de PR com risco, evidência de teste, feedback acionável e decisão de merge.
-- [ ] **Revisar `l20` — pipeline/quality gate:** alinhar comandos e artefatos ao CI real do projeto, incluindo falhas, retries, logs e critérios de bloqueio.
-- [ ] **Revisar `l25` — CI/CD para QA:** validar snippets contra o workflow real e separar claramente exemplo didático de comando realmente disponível.
-- [ ] **Revisar `l27` — Pact:** confirmar a correspondência do ID no catálogo antes de considerar o conteúdo entregue; manter exemplo consumer/provider executável.
-- [ ] **Revisar `l31` — exercícios de automação:** transformar o POM e o teste de integração em uma atividade verificável com arquivos, comandos e resultado esperado.
-- [ ] **Revisar `l33` — cobertura/checklist/acessibilidade:** evitar sobreposição com `l35` e definir a progressão pedagógica entre as duas aulas.
+- [x] **Revisar `l17` — colaboração/revisão:** acrescentar caso de PR com risco, evidência de teste, feedback acionável e decisão de merge.
+- [x] **Revisar `l20` — pipeline/quality gate:** alinhar comandos e artefatos ao CI real do projeto, incluindo falhas, retries, logs e critérios de bloqueio.
+- [x] **Revisar `l25` — CI/CD para QA:** validar snippets contra o workflow real e separar claramente exemplo didático de comando realmente disponível.
+- [x] **Revisar `l27` — Pact:** confirmar a correspondência do ID no catálogo antes de considerar o conteúdo entregue; manter exemplo consumer/provider executável.
+- [x] **Revisar `l31` — exercícios de automação:** transformar o POM e o teste de integração em uma atividade verificável com arquivos, comandos e resultado esperado.
+- [x] **Revisar `l33` — cobertura/checklist/acessibilidade:** evitar sobreposição com `l35` e definir a progressão pedagógica entre as duas aulas.
 - [ ] **Revisar `perf-l1`, `perf-l4` e `perf-l5`:** uniformizar objetivos, métricas, exemplos, thresholds e gabaritos com a sequência de performance.
 
 ## Prioridade 2 — Consistência editorial e pedagógica
