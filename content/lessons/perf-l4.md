@@ -52,9 +52,17 @@ npx @lhci/cli@0.8.0 autorun --url=http://localhost:8000 --chrome-flags="--no-san
   <li><strong>LCP:</strong> abaixo de 2,5s costuma ser considerado bom para a maioria das páginas; acima disso, a percepção de lentidão cresce rapidamente.</li>
   <li><strong>CLS:</strong> valores abaixo de 0,1 são desejáveis; mudanças visuais inesperadas geram frustração e cliques errados.</li>
   <li><strong>TTFB:</strong> um valor acima de 600ms pode indicar gargalo de servidor, rede ou cache ruim, especialmente em páginas com conteúdo dinâmico.</li>
-  <li><strong>SLA e thresholds:</strong> sempre defina limites para a operação crítica, como tempo máximo de carregamento, taxa de erro e disponibilidade, e compare as métricas com esses limites antes de fechar uma release.</li>
+  <li><strong>FCP:</strong> idealmente abaixo de 1,8s para a primeira impressão visual ser considerada fluida.</li>
+  <li><strong>SLA e thresholds:</strong> defina limites claros como LCP < 2.5s, CLS < 0.1 e TTFB < 600ms; use esses limites para avaliar se a página precisa de otimização antes de publicar.</li>
 </ul>
 <p>Quando uma métrica piora, a pergunta correta não é apenas “o número subiu?” mas “o que mudou no frontend, no backend ou na rede para gerar esse impacto?”.</p>
+
+<h3>📍 Exemplos de thresholds de frontend</h3>
+<ul style="margin:1rem 0; padding-left:1.2rem">
+  <li><strong>LCP:</strong> p95 abaixo de 2,5s em uma conexão de 4G lenta.</li>
+  <li><strong>CLS:</strong> menos de 0,1 em uma jornada de carregamento inicial.</li>
+  <li><strong>TTFB:</strong> abaixo de 600ms para páginas HTML dinâmicas.</li>
+</ul>
 
 <h3>🔍 Amostras e Outputs</h3>
 <p>Consulte a pasta <code>scripts/perf/examples/</code> para visualizar relatórios estatísticos de comparação entre emulador móvel e dispositivo real para análise de performance de rede e renderização.</p>

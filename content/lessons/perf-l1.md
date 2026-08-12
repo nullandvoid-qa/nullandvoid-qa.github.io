@@ -72,20 +72,30 @@ jmeter -g scripts/jmeter/results.jtl -o scripts/jmeter/report
 </pre>
 <p>Caso prefira usar Docker ou queira ver alternativas de execução, consulte as instruções em <code>scripts/jmeter/README.md</code>.</p>
 
+<h3>📊 Métricas de JMeter e threshold operacional</h3>
+<p>O JMeter não possui um sistema de thresholds tão integrado quanto o k6, mas o resultado do teste pode ser avaliado da mesma forma. Use o Summary Report, Aggregate Report e Response Time Graph para acompanhar:<ul style="margin:1rem 0; padding-left:1.2rem"><li><strong>Throughput:</strong> requisições por minuto/segundo.</li><li><strong>Average / Median / 90% / 95%:</strong> valores de latência que descrevem a dispersão das respostas.</li><li><strong>Error %:</strong> proporção de requisições falhas.</li><li><strong>Active Threads:</strong> quantidade de usuários virtuais no pico.</li></ul></p>
+<p>Para gates de CI baseados em JMeter, exporte o resultado para CSV/JSON e avalie com um script que falhe se:</p>
+<pre style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; overflow-x:auto">
+# exemplo de regras pós-processamento
+if error_rate > 0.01: fail
+if p95 > 500ms: fail
+if throughput < 200 req/s: review
+</pre>
+
 <h3>💡 Amostras e Outputs do Projeto</h3>
 <p>Amostras prontas de logs e relatórios estão disponíveis na pasta <code>scripts/perf/examples/</code> para comparação. O pipeline do curso consolida os sumários de k6 e JMeter em <code>scripts/perf/summary.html</code>, que você pode abrir no navegador local para analisar os indicadores consolidados.</p>
 
 <h3>📝 Exercício Prático</h3>
 <ol>
   <li>Abra a pasta do projeto no seu terminal e identifique o script `scripts/jmeter/test-plan.jmx`.</li>
-  <li>Execute a query de teste local contra a API utilizando o comando CLI do JMeter detalhado acima.</li>
-  <li>Gere o relatório estatístico HTML, abra o arquivo <code>index.html</code> gerado no seu navegador e localize as métricas de tempo de resposta (p95/p99) e a taxa de erros.</li>
+  <li>Execute a simulação localmente usando o comando CLI do JMeter detalhado acima.</li>
+  <li>Gere o relatório estatístico HTML, abra o arquivo <code>index.html</code> no navegador e localize as métricas de tempo de resposta (p90/p95/p99), throughput e taxa de erros.</li>
 </ol>
 <h3>✅ Gabarito (exercício)</h3>
 <ul>
-  <li><strong>Script JMeter:</strong> `scripts/jmeter/test-plan.jmx` deve ser localizado no repositório e usado com `jmeter -n -t ... -l ...` para execução não-GUI.</li>
-  <li><strong>Relatório esperado:</strong> os indicadores de resposta devem trazer p95/p99, throughput e taxa de erro, permitindo confirmar se a API está dentro do SLA esperado.</li>
-  <li><strong>Análise:</strong> se a taxa de erro estiver acima do permitido ou o tempo de resposta estiver muito alto, o cenário de performance deve ser revisado e escalado.</li>
+  <li><strong>Script JMeter:</strong> encontre `scripts/jmeter/test-plan.jmx` e execute com `jmeter -n -t scripts/jmeter/test-plan.jmx -l scripts/jmeter/results.jtl`.</li>
+  <li><strong>Relatório esperado:</strong> o resultado deve mostrar throughput, tempos médios e percentis, além de uma taxa de erro inferior a 1% para um cenário saudável.</li>
+  <li><strong>Análise:</strong> se a taxa de erro estiver alta ou p95 exceder 500ms, identifique gargalos de rede, servidor ou configuração do plano de teste.</li>
 </ul>
 <h3>📌 SLAs e Limites (thresholds) no k6</h3>
 <p>Definir SLAs ajuda a automatizar decisões em pipelines. No <em>k6</em> você declara <strong>limites (thresholds)</strong> que fazem a execução falhar quando os limites não são atendidos — ideal para bloquear deploys.</p>

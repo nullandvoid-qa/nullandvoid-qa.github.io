@@ -42,6 +42,14 @@ LIMIT 10;
   <li><strong>Uso de Caches:</strong> Bancos de chave-valor em memória (como Redis) salvam resultados de queries pesadas e repetitivas (como menus ou listagens estáticas) diminuindo as requisições no banco relacional.</li>
 </ul>
 
+<h3>📊 Métricas de banco e thresholds</h3>
+<ul style="margin:1rem 0; padding-left:1.2rem">
+  <li><strong>Slow queries:</strong> consultas acima de 1s em tabelas críticas devem ser priorizadas.</li>
+  <li><strong>Conexões ativas:</strong> saturação acima de 80% do pool é um sinal de capacidade insuficiente.</li>
+  <li><strong>Taxa de bloqueios:</strong> locks frequentes ou longos indicam necessidade de indexação ou reescrita de consultas.</li>
+  <li><strong>Tempo de resposta do banco:</strong> idealmente abaixo de 200ms para operações críticas de leitura.</li>
+</ul>
+
 <h3>💻 Exemplo e outputs de Exercícios</h3>
 <p>Outputs de exemplo gerados pelo pipeline de testes e relatórios de slow queries estão disponíveis em <code>scripts/perf/examples/</code>. Compare o consumo de conexões simultâneas locais com os benchmarks.</p>
 

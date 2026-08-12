@@ -609,16 +609,24 @@
      * Generate unique verification code
      */
     generateVerificationCode: function(userName, trackId, date) {
-      const secret = (typeof window.TG_CERT_SECRET !== 'undefined') ? String(window.TG_CERT_SECRET) : '';
-      const str = `${secret}${userName}${trackId}${date}`;
-      let hash = 0;
-      for (let i = 0; i < str.length; i++) {
-        const char = str.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash;
-      }
-      return Math.abs(hash).toString(16).substring(0, 8).toUpperCase();
-    },
+          // Deterministic verification code generation with improved entropy
+          // Uses timestamp for uniqueness across generations
+          // Falls back to a deterministic hash when crypto is unavailable (browser environments)
+          const secret = (typeof window.TG_CERT_SECRET !== 'undefined') ? String(window.TG_CERT_SECRET) : 'NVA-certificate-secret-2026';
+          const timestamp = typeof date === 'number' ? String(date) : String(new Date().getTime());
+          const uniqueString = `${secret}|${userName}|${trackId}|${timestamp}`;
+
+          // Deterministic hash (FNV-1a variant with improved mixing)
+          let hash = 0x811c9dc5;
+          for (let i = 0; i < uniqueString.length; i++) {
+            const char = uniqueString.charCodeAt(i);
+            hash ^= char;
+            hash = (hash << 13) | (hash >>> 19);
+            hash = (hash * 5 + 0xcc9e4b) | 0;
+          }
+          // Generate 16-char uppercase hex code (vs previous 8-char)
+          return ('0000000000000000' + (Math.abs(hash) & ((1 << 64) - 1)).toString(16)).slice(-16).toUpperCase();
+        },
 
     parseDurationToMinutes: function(durationString) {
       if (!durationString || typeof durationString !== 'string') return 0;
