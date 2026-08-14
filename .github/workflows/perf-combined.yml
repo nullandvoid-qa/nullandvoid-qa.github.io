@@ -23,7 +23,7 @@ jobs:
         run: |
           python3 scripts/perf/summarize.py --k6 ./scripts/perf/k6-summary.json --jmeter ./scripts/jmeter/report
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: perf-summary
           path: |
