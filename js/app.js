@@ -748,7 +748,14 @@
       const lastLessonId = safeGetStoredItem(STORAGE_LAST_LESSON);
       if (lastLessonId) {
         // Store in viewParams for potential use by route handlers, but don't auto-navigate
-        setStateProp('viewParams', { lastLessonId });
+        // Use inline logic matching app-navigation.js setStateProp pattern
+        if (typeof window !== 'undefined' && window.NVApp && window.NVApp.state) {
+          try {
+            window.NVApp.state.viewParams = { lastLessonId };
+          } catch (e) {
+            // ignore writes to read-only descriptors
+          }
+        }
       }
       // Reset currentView to home on fresh page loads (not coming from a navigation)
       if (appState.currentView === 'home' && !Object.keys(appState.viewParams || {}).length > 0) {
