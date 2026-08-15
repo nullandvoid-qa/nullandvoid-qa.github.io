@@ -742,21 +742,37 @@
     updateLangToggle();
     checkAchievements();
     const initialNavigation = () => {
-      // Do NOT auto-navigate on page load - this was causing blank content / redirect issues.
-      // The lesson navigation should only happen via explicit user action or route parameters.
-      // Just load the stored last lesson ID into state for reference, but don't navigate.
       const lastLessonId = safeGetStoredItem(STORAGE_LAST_LESSON);
-      if (lastLessonId) {
-        // Store in viewParams for potential use by route handlers, but don't auto-navigate
-        setStateProp('viewParams', { lastLessonId });
-      }
-      // Reset currentView to home on fresh page loads (not coming from a navigation)
-      if (appState.currentView === 'home' && !Object.keys(appState.viewParams || {}).length > 0) {
-        // Keep currentView as home - no auto-navigation
-      }
+      let attempts = 0;
+      const intervalMs = 50;
+      const maxWaitMs = 2000; // wait up to 2s for renderers to attach
+
+      const tryNavigate = () => {
+        attempts += 1;
+
+        // A user navigation takes precedence over the delayed startup fallback.
+        if (appState.currentView !== "home" || Object.keys(appState.viewParams || {}).length > 0) {
+          return;
+        }
+
+        if (lastLessonId && findLesson(lastLessonId) && typeof renderLesson === 'function') {
+          navigate('lesson', { lessonId: lastLessonId });
+          return;
+        }
+
+        if (attempts * intervalMs >= maxWaitMs) {
+          navigate('home');
+          return;
+        }
+
+        setTimeout(tryNavigate, intervalMs);
+      };
+
+      tryNavigate();
     };
 
-    // Start initial navigation immediately; this now safely loads stored state without auto-navigating
+    // Start initial navigation immediately; `initialNavigation` will retry
+    // for a short period waiting for `renderLesson` to become available.
     initialNavigation();
 
     // During local development and automated tests, some UI state can remain
