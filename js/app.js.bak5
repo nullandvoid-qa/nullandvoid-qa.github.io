@@ -805,8 +805,7 @@
             if (event.data && event.data.type === 'SW_UPDATED') {
               console.info('[PWA] Service worker updated to', event.data.version, '- reloading to fetch fresh content.');
               // Force a reload so the page picks up the newest assets and content
-              // Do NOT auto-reload - this was causing blank content / redirect issues
-              // The page will fetch fresh content on the next network request
+              window.location.reload();
             }
           });
         } catch (e) {
