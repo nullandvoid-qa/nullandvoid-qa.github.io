@@ -479,12 +479,8 @@ window.TG_I18N = {
   };
 
   function getCurrentLangKey() {
-    // Use the lang getter which is defined in app-bootstrap.js
-    // It reads from window.NVApp.state.lang, with proper fallback
-    const lang = typeof window !== 'undefined' && typeof window.lang === 'function' ? window.lang : undefined;
-    // If lang is a getter, calling it will read from NVApp.state
-    const langKey = typeof lang === 'function' ? lang() : (lang || 'pt');
-    return langKey === 'en' ? 'en' : 'pt';
+    const g = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : {};
+    return g.lang === 'en' ? 'en' : 'pt';
   }
 
   function humanizeTranslationPath(path, lang) {
