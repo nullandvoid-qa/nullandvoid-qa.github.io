@@ -6,6 +6,13 @@ Este arquivo reúne as próximas ações prioritárias para revisão de qualidad
 
 Validações passam: 42 lições validadas, catálogo 0 issues, 177 testes passando, i18n 100%.
 
+## ✅ Concluído nesta sessão
+
+- [x] **Fix: auto-redirect/blank content on page load** - Corrigido `initialNavigation()` em `js/app.js`, removido navegação automática que causava redirecionamento para a aba "Trilhas" e conteúdo em branco na carga inicial
+- [x] **Quiz progress tracking** - Implementado salvamento de resultados, impedimento de re-tentativa se passou, retry se não passou. Banner "Você já passou neste quiz!" aparece corretamente.
+- [x] **Dependabot dependencies** - Merge de 7 PRs de atualização de dependências (playwright, eslint, stylelint, jest, prettier, actions)
+- [x] **Lint/Stylelint/HTMLhint** - 0 erros em todas as validações
+
 ## Pendências — Revisão de Qualidade das Lições
 
 Seguem lições identificadas como podendo ser melhoradas no sentido de ensinar melhor o assunto ou terem conteúdo insuficiente para o objetivo proposto. Estes itens serão trabalhados conforme prioridade (ordem de maior impacto no aprendizado).
