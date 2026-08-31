@@ -24,7 +24,7 @@
   "devDependencies": {
     "@playwright/test": "^1.62.1",
     "eslint": "^8.57.0",
-    "eslint-plugin-jest": "^29.16.0",
+    "eslint-plugin-jest": "^29.16.5",
     "htmlhint": "^1.1.4",
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.1",
