@@ -129,11 +129,7 @@
       });
     }
 
-    const frameWait = typeof window !== "undefined" && typeof window.requestAnimationFrame === "function"
-      ? new Promise((resolve) => window.requestAnimationFrame(resolve))
-      : Promise.resolve();
 
-    await frameWait;
 
     const global = typeof helpers.getGlobalProgress === 'function'
       ? helpers.getGlobalProgress()

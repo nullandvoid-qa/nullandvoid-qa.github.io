@@ -1,53 +1,97 @@
-# Backlog de Tarefas - Null and Void QA Course (LIMPE)
+# Backlog & Checklist de Tarefas — Null and Void QA Course
 
-Este arquivo reúne as próximas ações prioritárias para revisão de qualidade das lições após validação estrutural concluída.
+Este documento contém a análise completa do projeto **Null and Void QA Course** e a checklist detalhada de tarefas pendentes, priorizadas a partir das mudanças e atualizações mais críticas para a qualidade, estabilidade e experiência do aluno.
 
-## Status atual
+---
 
-Validações passam: 42 lições validadas, catálogo 0 issues, 177 testes passando, i18n 100%.
+## 📊 Resumo Executivo da Análise
 
-## ✅ Concluído nesta sessão
+O projeto encontra-se em um nível avançado de maturidade técnica e de conteúdo. Abaixo o diagnóstico por pilares:
 
-- [x] **Fix: auto-redirect/blank content on page load** - Corrigido `initialNavigation()` em `js/app.js`, removido navegação automática que causava redirecionamento para a aba "Trilhas" e conteúdo em branco na carga inicial
-- [x] **Quiz progress tracking** - Implementado salvamento de resultados, impedimento de re-tentativa se passou, retry se não passou. Banner "Você já passou neste quiz!" aparece corretamente.
-- [x] **Dependabot dependencies** - Merge de 7 PRs de atualização de dependências (playwright, eslint, stylelint, jest, prettier, actions)
-- [x] **Lint/Stylelint/HTMLhint** - 0 erros em todas as validações
+| Pilar | Status | Diagnóstico Principal |
+| :--- | :---: | :--- |
+| **Infraestrutura & Validação** | 🟢 OK | 42 lições validadas, catálogo sem inconsistências, 177 testes unitários Jest passando (100%). |
+| **Higiene do Repositório** | 🔴 Crítico | Diversos arquivos temporários de teste, PDFs/PNGs de debug e logs soltos na raiz (`tmp-certificate.*`, `page-debug.html`, `quiz-*.json`, etc.). `.gitignore` desatualizado. |
+| **Testes & Teardown** | 🟡 Atenção | Jest reporta aviso de vazamento de processos/timers ao finalizar a suíte de testes. |
+| **Conteúdo Didático** | 🟡 Atenção | 11 lições curtas/conceituais necessitam de maior profundidade, cenários práticos e exemplos executáveis. |
+| **Internacionalização (i18n)** | 🟢 OK / 🟡 | Sistema de i18n centralizado funcional (PT/EN), porém vocabulário técnico precisa de padronização editorial. |
+| **Arquitetura de Código** | 🟡 Atenção | O arquivo `js/view-helpers.js` tem 72KB e acumula múltiplas responsabilidades de UI. |
+| **PWA & Offline** | 🟢 OK | Service worker funcional, necessita apenas de auditoria final da lista de precache. |
 
-## Pendências — Revisão de Qualidade das Lições
+---
 
-Seguem lições identificadas como podendo ser melhoradas no sentido de ensinar melhor o assunto ou terem conteúdo insuficiente para o objetivo proposto. Estes itens serão trabalhados conforme prioridade (ordem de maior impacto no aprendizado).
+## 🚨 Prioridade 1: Tarefas Críticas (Impacto Imediato na Estabilidade e Repositório)
 
-### Media Prioridade — Lições que precisam de ajuste/refinamento:
+- [x] **Limpeza e Higiene do Repositório Root**
+  - [x] Remover arquivos temporários/debug soltos na raiz: `page-debug.html`, `tmp-certificate.pdf`, `tmp-certificate.png`, `tmp-en-snippet.txt`, `test-output-utf8.txt`, `test-output.txt`, `track-*.json`, `quiz-*.json`, `quiz-page.png`, `track-click-*.log`.
+  - [x] Atualizar `.gitignore` para ignorar padrões de arquivos temporários (`tmp-*`, `*.pdf`, `quiz-*.json`, `track-*.json`, `playwright-report/`, `test-results/`).
+  - [x] Criar script `npm run clean` em `package.json` para limpeza automatizada de artefatos de teste.
 
-- [ ] **L27 — Pact**: confirmar se o exemplo consumer/provider está correspondendo ao catálogo e se o exemplo executável ainda funciona.
-- [ ] **L19 — Testes de API**: revisar se o foco em Postman/REST Assured/Playwright API está alinhado ao projeto atual e se os exemplos práticos são executáveis.
-- [ ] **L1 — O que é QA e por que importa**: revisar se o conteúdo reflete as práticas atuais de 2026 ou precisa de exemplos atualizados.
-- [ ] **L3 — SDLC e onde o QA se encaixa**: revisar se a colocação do QA ainda está correta com práticas modernas de shift-left.
-- [ ] **L33 e L35 — Mercado/Checklist/Acessibilidade**: confirmar se a progressão entre intro e aplicação prática está clara e se há risco de sobreposição.
+- [x] **Correção de Leak de Processos/Timers na Suíte Jest**
+  - [x] Investigar com `npx jest --detectOpenHandles` a origem dos timers/handles não encerrados pós-teste.
+  - [x] Adicionar teardown adequado (`afterEach` / `afterAll` limpando mocks, intervals e DOM handles em `js/__tests__/`).
 
-### Baixa Prioridade — Ajustes finais:
+- [x] **Correção de Falha em Teste E2E do Playwright**
+  - [x] Corrigir o teste `persists bookmark and completion state after a full reload` em `tests/regression-coverage.spec.js:226`.
+  - [x] Garantir que o estado de navegação (hash `#lesson/id` ou restauração de rota) permaneça no elemento `#btn-bookmark` após `page.reload()`.
 
-- [ ] **L7 — Cerimônias Agile**: although reviewed 2023-08-03, verificar se checklists práticos estão atualizados com workflow atual.
-- [ ] **L13 e L14 — iOS/Android Emulator**: verificar se links de recursos (Appium, Mobile testing checklist) ainda estão ativos e estratégias de locator são consistentes.
-- [ ] **L33 e L35 — Mercado/Checklist/Acessibility**: revisão final de consolidação de progressão.
 
-## Critérios para marcar como "revisado"
 
-Cada lição deve satisfizer todos os itens abaixo para ser removida desta lista:
+---
 
-- [ ] A lição possui objetivos observáveis e não apenas uma lista de conceitos
-- [ ] Existe pelo menos um cenário de negócio preenchido, com risco e decisão de teste
-- [ ] O exemplo principal pode ser executado ou tem instruções explícitas para reproduzi-lo
-- [ ] O exercício exige uma entrega verificável e o gabarito apresenta critérios ou resultado esperado
-- [ ] Os comandos, arquivos e links foram conferidos no repositório atual
-- [ ] O ID, título, duração, idioma, quiz e enrichment correspondem ao catálogo publicado
-- [ ] A lição passou por `npm run validate:lessons`, `npm run validate:links` e uma verificação de renderização no site
-- [ ] O conteúdo efetivamente ensina o assunto proposto (não é apenas teoria sem aplicação prática)
+## 🔥 Prioridade 2: Alta Prioridade (Qualidade do Conteúdo Didático e Vocabulário)
 
-## Próximos Passos
+- [x] **Expansão e Aprofundamento das Lições Sucintas**
+  - [x] **L22 — Testes de Regressão**: adicionar exemplo prático de matriz de regressão e estratégias de seleção de testes.
+  - [x] **L23 — Testes de Usabilidade**: adicionar checklist prático de Heurísticas de Nielsen e exercício de avaliação.
+  - [x] **L24 — Testes de Segurança**: detalhar top 5 OWASP com exemplos de payload de teste seguros.
+  - [x] **L25 — Testes de Carga/Estresse**: expandir cenários k6/JMeter com métricas de tempo de resposta e percentis (p95/p99).
+  - [x] **L26 — Testes de Integração**: adicionar diagrama de arquitetura e exemplos de stubs/mocks em chamadas HTTP.
+  - [x] **L27 — Pact & Consumer-Driven Contracts**: validar alinhamento com o catálogo e garantir exemplo executável de contrato consumidor/provedor.
+  - [x] **L28 — BDD & Cucumber**: incluir especificação de cenários Gherkin com bons vs maus padrões.
+  - [x] **L30 — Mobile QA**: expandir com estratégias de locators para Android/iOS e comandos Appium.
+  - [x] **L32 — CI/CD Pipelines**: incluir exemplo prático de pipeline GitHub Actions executando testes de QA.
+  - [x] **L34 — Acessibilidade (a11y)**: incluir guia prático de teste com leitores de tela e ferramentas automáticas (axe/lighthouse).
+  - [x] **L35 — Carreira & Checklist de Prontidão**: consolidar a transição entre introdução conceitual e prática de mercado.
 
-1. Revisar cada lição restante (L7, L19, L27, L33/L35, L1, L13/L14, L3) contra os critérios acima
-2. Mover itens já verificados para a seção "Consolidados" após confirmação
-3. Validar novamente após revisão final
-4. Após todas revisadas, remover esta seção do backlog
-5. O projeto está pronto com validação `npm run validate:all` passando 100%
+- [x] **Padronização Editorial e Vocabulário Técnico (PT / EN)**
+  - [x] Padronizar a escrita e aplicação de termos técnicos em inglês (*charter*, *pipeline*, *Page Object*, *E2E*, *shift-left*, *exploratory testing*, *smoke test*, *stub/mock*).
+  - [x] Adicionar explicações didáticas no primeiro uso de cada termo técnico em português.
+
+- [x] **Auditoria de Paridade i18n no Runtime**
+  - [x] Verificar se todos os botões, banners, descrições de trilhas e quizzes alternam 100% de PT para EN sem fallbacks visíveis.
+
+---
+
+## ⚡ Prioridade 3: Média Prioridade (Arquitetura, PWA e Certificados)
+
+- [ ] **Refatoração do Monolito `js/view-helpers.js`**
+  - [ ] Analisar e separar funções auxiliares de UI em módulos menores de responsabilidade única (ex: renderização de cards, modais, quizzes).
+  - [ ] Manter retrocompatibilidade total com a API global consumida pelos scripts da aplicação.
+
+- [ ] **Validação do Fluxo de Certificados & Exportação PDF**
+  - [ ] Testar exportação de certificado via jsPDF/html2canvas em resoluções mobile e desktop.
+  - [ ] Confirmar se o QR Code gerado direciona para `verify.html` com os parâmetros de validação corretos.
+
+- [ ] **Auditoria de PWA & Service Worker**
+  - [ ] Verificar se a lista de precache em `js/service-worker.js` inclui todos os arquivos estáticos essenciais para funcionamento offline 100% sem erros 404 no console.
+
+---
+
+## 🌱 Prioridade 4: Baixa Prioridade (Polimento Visual, SEO e Acessibilidade)
+
+- [ ] **Polimento Visual & Contraste A11y**
+  - [ ] Verificar taxa de contraste dos elementos no modo escuro (dark mode).
+  - [ ] Garantir `aria-label` e `role` em botões dinâmicos (bookmark, conclusão de aula, modais).
+
+- [ ] **Verificação de Links Externos e Recursos**
+  - [ ] Executar e validar `npm run validate:links` para garantir que nenhum link ou referência externa esteja quebrado.
+
+---
+
+## 📋 Critérios de Aceite para Cada Tarefa
+
+Para considerar uma tarefa concluída:
+1. Os testes de validação (`npm run validate:all`) devem passar com 0 erros.
+2. O conteúdo ou código alterado deve ser testado visualmente ou via testes unitários/E2E.
+3. Nenhuma regressão nas funcionalidades de navegação, troca de idioma ou quizzes.

@@ -6,7 +6,7 @@
  * @global clients
  */
 
-const CACHE_VERSION = "v1.0.10";
+const CACHE_VERSION = "v1.0.11";
 const CACHE_NAME = `nullandvoid-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `nullandvoid-runtime-${CACHE_VERSION}`;
 
@@ -100,12 +100,31 @@ const CRITICAL_ASSETS = [
   "/verify.html",
   "/css/styles.css",
   "/js/app.js",
+  "/js/app-init.js",
+  "/js/app-bootstrap.js",
+  "/js/app-navigation.js",
+  "/js/app-storage.js",
+  "/js/app-home.js",
+  "/js/app-track.js",
+  "/js/app-tracks.js",
+  "/js/app-lesson.js",
+  "/js/app-dashboard.js",
+  "/js/app-search.js",
+  "/js/app-bookmarks.js",
+  "/js/app-settings.js",
+  "/js/app-achievements.js",
+  "/js/app-ui.js",
+  "/js/view-helpers.js",
+  "/js/lesson-renderers.js",
+  "/js/lesson-content.js",
   "/js/icons.js",
   "/js/utils.js",
   "/js/i18n.js",
+  "/js/app-i18n.js",
   "/js/auth.js",
   "/js/certificates.js",
   "/data/tracks.js",
+  "/data/nav-items.js",
   "/data/quizzes.js",
   "/data/checklists.js",
   "/data/glossary.js",
@@ -113,6 +132,7 @@ const CRITICAL_ASSETS = [
   "/data/labs.js",
   "/data/lesson-enrichment.js",
   "/data/translations-en.js",
+  "/data/translations-pt.json",
   "/data/lesson-quizzes.js",
   "/data/performance-track.js",
   "/data/mentorship.js",

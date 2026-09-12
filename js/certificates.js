@@ -789,4 +789,10 @@
       return this.getStoredCertificates();
     }
   };
+
+  window.TG_CERTIFICATES = certificatesModule;
+  window.NVCertificates = certificatesModule;
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = certificatesModule;
+  }
 })();

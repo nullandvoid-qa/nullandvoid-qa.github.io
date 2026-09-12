@@ -115,3 +115,13 @@ global.window.document = global.document;
 global.window.navigator = global.navigator;
 global.window.HTMLElement = global.HTMLElement;
 global.window.HTMLCanvasElement = global.HTMLCanvasElement;
+
+afterEach(() => {
+  if (typeof jest !== 'undefined') {
+    jest.clearAllTimers();
+    jest.restoreAllMocks();
+  }
+  if (global.localStorage && typeof global.localStorage.clear === 'function') {
+    global.localStorage.clear();
+  }
+});

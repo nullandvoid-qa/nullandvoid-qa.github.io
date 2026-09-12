@@ -21,6 +21,7 @@
     "lint:css": "stylelint css/**/*.css",
     "lint:html": "htmlhint *.html",
     "lint": "npm run lint:js && npm run lint:css && npm run lint:html",
+    "clean": "node scripts/clean.js",
     "format": "prettier --write \"**/*.{js,json,css,html,md}\""
   },
   "devDependencies": {

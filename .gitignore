@@ -1,6 +1,8 @@
 node_modules/
 coverage/
+test-results/
 test-results.json
+playwright-report/
 allure-results/
 allure-report/
 *.log
@@ -8,3 +10,13 @@ allure-report/
 .env
 .vscode/
 .idea/
+
+# Temp & Debug Artifacts
+page-debug.html
+tmp-*
+test-output*.txt
+quiz-*.json
+quiz-*.png
+track-*.json
+track-*.log
+certificate-preview.pdf

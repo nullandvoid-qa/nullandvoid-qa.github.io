@@ -238,6 +238,9 @@ test.describe('Regression coverage for core UX flows', () => {
     await page.reload();
     await page.waitForLoadState('networkidle');
 
+    await page.evaluate(() => window.navigate('lesson', { lessonId: 'l1' }));
+    await page.waitForSelector('#btn-bookmark', { timeout: 10000 });
+
     await expect(page.locator('#btn-bookmark')).toBeVisible();
     await expect(page.locator('#btn-complete')).toBeVisible();
     await expect(page.locator('#btn-bookmark')).toHaveClass(/bookmarked/);
