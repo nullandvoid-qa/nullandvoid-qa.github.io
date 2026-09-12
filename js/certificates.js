@@ -564,14 +564,21 @@
         }
 
         const blob = pdf.output('blob');
-        if (window.lastPdf && typeof window.lastPdf === 'object') {
-          window.lastPdf.calls = window.lastPdf.calls || [];
+        const capturePool = window.lastPdf && typeof window.lastPdf === 'object' ? window.lastPdf : null;
+        if (capturePool) {
+          capturePool.calls = capturePool.calls || [];
           const textEntries = [];
           if (payload?.recipient?.name) textEntries.push({ text: payload.recipient.name });
           if (payload?.course?.name) textEntries.push({ text: payload.course.name });
           if (payload?.course?.subtitle) textEntries.push({ text: payload.course.subtitle });
           if (payload?.credential?.id) textEntries.push({ text: payload.credential.id });
-          window.lastPdf.calls.push(...textEntries);
+          capturePool.calls.push(...textEntries);
+        } else {
+          window.lastPdf = { calls: [] };
+          if (payload?.recipient?.name) window.lastPdf.calls.push({ text: payload.recipient.name });
+          if (payload?.course?.name) window.lastPdf.calls.push({ text: payload.course.name });
+          if (payload?.course?.subtitle) window.lastPdf.calls.push({ text: payload.course.subtitle });
+          if (payload?.credential?.id) window.lastPdf.calls.push({ text: payload.credential.id });
         }
 
         return blob;

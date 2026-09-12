@@ -829,4 +829,12 @@
   init();
 
   attachGlobalNVApp();
+
+  try {
+    if (window.NVApp?.state?.currentView === 'home' && typeof window.renderHome === 'function') {
+      window.renderHome();
+    }
+  } catch (error) {
+    // ignore render bootstrapping errors and keep the shell usable
+  }
 })();

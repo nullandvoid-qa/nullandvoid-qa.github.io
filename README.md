@@ -13,7 +13,7 @@ A mesma qualidade de cursos que custam R$500-2000. Sem paywall, sem cadastro obr
 1. Acesse: [nullandvoid-qa.github.io](https://nullandvoid-qa.github.io)
 2. Escolha seu perfil (Iniciante / Intermediário)
 3. Siga uma das rotas recomendadas
-4. Complete aulas no seu ritmo
+4. Complete as aulas no seu ritmo
 5. Ganhe certificados ao final
 
 Para detalhes de deploy, veja `docs/DEPLOYMENT.md`.
@@ -95,7 +95,7 @@ npm run test:e2e
 - Cada aula tem dicas de estudo e exercícios
 - Progresso visual claro
 
-### Para Sêniors  
+### Para Sêniors
 - Notas "Guild Master" em cada aula com insights avançados
 - Trilhas de liderança e estratégia
 - Arquitetura de testes em escala
@@ -125,6 +125,9 @@ npm run test:e2e
 - Adicionado export social-ready de certificado em PNG para compartilhamento em redes sociais, além do fluxo de PDF existente.
 - Incluído fluxo de download de imagem no painel e no modal de certificado.
 - Reforçada a qualidade do conteúdo com exercícios e metadados de revisão em 10 lições amostradas.
+- **Corrigido bug de extensão de arquivo de tradução (.js → .json) — agora carregamento de i18n funciona corretamente**
+- **Corrigido service worker SW_UPDATED — evita reload automático e conteúdo em branco**
+- **Corrigido navegação automática inicial — previne redirect/blank content na carga**
 - Adicionados checks automatizados para trilhas, lições, traduções e links internos.
 
 Consulte [docs/RELEASE_NOTES.md](docs/RELEASE_NOTES.md) para um resumo operacional da release atual.
@@ -133,7 +136,7 @@ Consulte [docs/RELEASE_NOTES.md](docs/RELEASE_NOTES.md) para um resumo operacion
 
 Para acompanhar o fluxo de contribuição com trilhas, aulas e certificados, veja [CONTRIBUTING.md](CONTRIBUTING.md). Para um plano de manutenção e boas práticas de engenharia para o projeto, veja [bestpractices.md](bestpractices.md). Para uma lista de tarefas de refatoração priorizadas por arquivo e risco, veja [docs/REFACTORING_CHECKLIST.md](docs/REFACTORING_CHECKLIST.md).
 
-Bugs, sugestões ou contribuições? 
+Bugs, sugestões ou contribuições?
 
 1. Abra uma [Issue](https://github.com/nullandvoid-qa/nullandvoid-qa.github.io/issues)
 2. Ou junte-se ao [Discord](https://discord.gg/evVQqq4rf) para discussão
@@ -159,19 +162,19 @@ Acredita que QA merece plataforma de primeira classe — e gratuita.
 
 ---
 
-## 📊 **Sumário Final**
+## 📊 Sumário Final
 
-**Antes desta sessão:** Plataforma amadora, sem proposta clara, mobile quebrado, conteúdo superficial.
+**Antes esta sessão:** Plataforma com bugs de i18n, service worker causando reload automático e navegação automática que quebrava a carga.
 
-**Depois desta sessão:** Profissional, vendável, mobile-first, 130+ aulas, certificados, comunidade integrada.
+**Depois desta sessão:** Profissional, estável, 130+ aulas, certificados, comunidade integrada, i18n funcionando corretamente.
 
 **Impacto:**
-- Homepage: **-50% bounce rate** (proposta clara)
-- Mobile: **+60% retention** (responsive fixes)
-- Engajement: **+3x feedback loops** (inline forms)
-- Personas: **+25% progression** (avatar motivation)
+- Homepage: **-stable load** (sem blank content/redirect)
+- i18n: **+correct language loading** (.json extension fix)
+- Service Worker: **+no auto-reload** (estabilidade melhorada)
+- Engajament: **+consistent experience** (sem interrupções inesperadas)
+- Production ready: ✅ YES
 
 **Commits desta sessão:** 4 (P0→P3)
 **Linhas de código:** ~500 adicionadas/modificadas
 **Test coverage:** 93% (29/29 tests passing)
-**Production ready:** ✅ YES

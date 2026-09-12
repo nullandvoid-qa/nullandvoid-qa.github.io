@@ -5,6 +5,37 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Biblioteca de Resumos</title>
   <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #0b1120; color: #e5eefb; }
+    .main { max-width: 1200px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+    .hero { padding: 2rem 0 1rem; }
+    .hero-inner { background: linear-gradient(135deg, #0f172a, #1d4ed8); border-radius: 20px; padding: 2rem; }
+    .hero-inner h1 { margin: 0 0 0.5rem; font-size: clamp(2rem, 5vw, 3rem); }
+    .hero-inner p { margin: 0; color: #dbeafe; }
+    .breadcrumb { display: flex; gap: 0.5rem; align-items: center; color: #bfdbfe; font-size: 0.95rem; margin: 1rem 0 1.5rem; }
+    .breadcrumb a { color: #7dd3fc; text-decoration: none; }
+    #books-guidance { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(125, 211, 252, 0.25); border-radius: 16px; padding: 1.25rem; margin: 1rem 0 1.5rem; }
+    #books-guidance h2 { margin-top: 0; font-size: 1.2rem; }
+    #books-section { margin-top: 1rem; }
+    .books-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+    .book-item { background: #111827; border: 1px solid #23314d; border-radius: 16px; padding: 1rem; cursor: pointer; }
+    .book-item h3 { margin: 0 0 0.5rem; }
+    .book-meta { color: #cbd5e1; font-size: 0.85rem; }
+    .filter-bar { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
+    .filter-chip { border: 1px solid #334155; background: #0f172a; color: #e2e8f0; padding: 0.45rem 0.8rem; border-radius: 999px; cursor: pointer; }
+    .filter-chip.active { background: #38bdf8; color: #082f49; border-color: #38bdf8; }
+    .results-summary { margin: 0.5rem 0 1rem; color: #cbd5e1; }
+    #empty-state, .catalog-state { background: rgba(15, 23, 42, 0.8); border: 1px solid #334155; border-radius: 12px; padding: 1rem; margin-top: 1rem; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 1rem; margin: 1.25rem 0; }
+    .stat-card { background: #111827; padding: 1rem; border-radius: 12px; border: 1px solid #23314d; }
+    .stat-card .label { display: block; color: #93c5fd; font-size: 0.8rem; margin-bottom: 0.4rem; }
+    .stat-card .value { font-size: 1.5rem; font-weight: bold; }
+    .hidden { display: none !important; }
+    #lesson-detail { margin-top: 1rem; background: #111827; border: 1px solid #23314d; border-radius: 16px; padding: 1rem; }
+    #bookmark-btn, #btn-bookmark { background: #1d4ed8; color: white; border: none; border-radius: 10px; padding: 0.7rem 1rem; cursor: pointer; }
+    #bookmark-btn.bookmarked, .btn-bookmark.bookmarked { background: #f59e0b; }
+    .book-toc { margin-top: 1rem; }
+  </style>
 </head>
 <body>
   <main class="main">
@@ -14,9 +45,173 @@
         <p>Resumos selecionados para testers e QA.</p>
       </div>
     </section>
-    <section class="books-list">
-      <p>Conteúdo de exemplo para testes E2E.</p>
+
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Início</a>
+      <span>›</span>
+      <span>Biblioteca</span>
+    </nav>
+
+    <section id="books-guidance">
+      <h2>Guia rápido</h2>
+      <p>Use a busca para encontrar temas, explore por categoria e abra qualquer livro para ler o resumo e salvar preferências.</p>
+    </section>
+
+    <section id="books-section" aria-live="polite">
+      <div class="stats">
+        <div class="stat-card"><span class="label">Livros</span><span id="stat-books" class="value">14</span></div>
+        <div class="stat-card"><span class="label">Categorias</span><span id="stat-categories" class="value">6</span></div>
+      </div>
+
+      <label for="global-search" class="sr-only">Buscar conteúdo</label>
+      <input id="global-search" type="search" placeholder="Buscar por tema ou autor" aria-label="Buscar conteúdo" style="width:100%;max-width:420px;padding:0.8rem 1rem;border-radius:10px;border:1px solid #334155;background:#0f172a;color:#e2e8f0;">
+
+      <div class="filter-bar" aria-label="Categorias de livros">
+        <button type="button" class="filter-chip active" data-filter="Todos">Todos</button>
+        <button type="button" class="filter-chip" data-filter="Psicologia">Psicologia</button>
+        <button type="button" class="filter-chip" data-filter="Produtividade">Produtividade</button>
+        <button type="button" class="filter-chip" data-filter="Tecnologia">Tecnologia</button>
+      </div>
+
+      <p class="results-summary">Mostrando 14 de 14 livros na biblioteca.</p>
+
+      <div class="books-grid">
+        <article class="book-item" data-book-id="book-psicologia-1" tabindex="0">
+          <h3>Psicologia do comportamento</h3>
+          <div class="book-meta">Autor: Ana Costa • 12 min • Psicologia</div>
+        </article>
+        <article class="book-item" data-book-id="book-psicologia-2" tabindex="0">
+          <h3>Hábitos de atenção plena</h3>
+          <div class="book-meta">Autor: Bruno Lima • 18 min • Psicologia</div>
+        </article>
+        <article class="book-item" data-book-id="book-psicologia-3" tabindex="0">
+          <h3>Psicologia da produtividade</h3>
+          <div class="book-meta">Autor: Carla Mendes • 15 min • Psicologia</div>
+        </article>
+        <article class="book-item" data-book-id="book-psicologia-4" tabindex="0">
+          <h3>Emoções e decisões</h3>
+          <div class="book-meta">Autor: Diego Alves • 14 min • Psicologia</div>
+        </article>
+        <article class="book-item" data-book-id="book-psicologia-5" tabindex="0">
+          <h3>Mindset para revisão</h3>
+          <div class="book-meta">Autor: Elaine Nunes • 11 min • Psicologia</div>
+        </article>
+        <article class="book-item" data-book-id="book-produtividade-1" tabindex="0">
+          <h3>O método do foco</h3>
+          <div class="book-meta">Autor: Fábio Silva • 15 min • Produtividade</div>
+        </article>
+        <article class="book-item" data-book-id="book-produtividade-2" tabindex="0">
+          <h3>Rotina de revisão eficiente</h3>
+          <div class="book-meta">Autor: Gabriela Reis • 13 min • Produtividade</div>
+        </article>
+        <article class="book-item" data-book-id="book-produtividade-3" tabindex="0">
+          <h3>Prioridades em testes</h3>
+          <div class="book-meta">Autor: Henrique Costa • 16 min • Produtividade</div>
+        </article>
+        <article class="book-item" data-book-id="book-tecnologia-1" tabindex="0">
+          <h3>Automação de testes em ação</h3>
+          <div class="book-meta">Autor: Ingrid Rocha • 22 min • Tecnologia</div>
+        </article>
+        <article class="book-item" data-book-id="book-tecnologia-2" tabindex="0">
+          <h3>Ferramentas de análise</h3>
+          <div class="book-meta">Autor: João Pereira • 19 min • Tecnologia</div>
+        </article>
+        <article class="book-item" data-book-id="book-tecnologia-3" tabindex="0">
+          <h3>Testes em pipelines</h3>
+          <div class="book-meta">Autor: Karen Souza • 21 min • Tecnologia</div>
+        </article>
+        <article class="book-item" data-book-id="book-tecnologia-4" tabindex="0">
+          <h3>Estratégias de QA</h3>
+          <div class="book-meta">Autor: Lucas Prado • 17 min • Tecnologia</div>
+        </article>
+        <article class="book-item" data-book-id="book-sistemas-1" tabindex="0">
+          <h3>Organização de conhecimento</h3>
+          <div class="book-meta">Autor: Mariana Costa • 20 min • Organização</div>
+        </article>
+        <article class="book-item" data-book-id="book-sistemas-2" tabindex="0">
+          <h3>Feedbacks e melhoria</h3>
+          <div class="book-meta">Autor: Nelson Tavares • 18 min • Comunicação</div>
+        </article>
+      </div>
+
+      <div id="empty-state" class="hidden" role="status" aria-live="polite">
+        <h3>Nenhum livro encontrado</h3>
+        <p>Tente outra busca ou remova um filtro.</p>
+      </div>
+    </section>
+
+    <section id="lesson-detail" aria-live="polite">
+      <h2 id="lesson-title">Resumo de teste</h2>
+      <p id="lesson-meta">8 min de leitura • Resumo completo</p>
+      <button id="bookmark-btn" type="button">Salvar resumo</button>
+      <div class="book-toc">
+        <h3>Índice</h3>
+        <ul>
+          <li>Resumo</li>
+          <li>Principais aprendizados</li>
+          <li>Aplicação prática</li>
+        </ul>
+      </div>
     </section>
   </main>
+
+  <script>
+    (function () {
+      const bookItems = document.querySelectorAll('.book-item');
+      const searchInput = document.getElementById('global-search');
+      const resultsSummary = document.querySelector('.results-summary');
+      const emptyState = document.getElementById('empty-state');
+      const filterButtons = document.querySelectorAll('.filter-chip');
+      let activeFilter = 'Todos';
+
+      function applyFilter() {
+        const query = (searchInput.value || '').trim().toLowerCase();
+        let visible = 0;
+        bookItems.forEach((item) => {
+          const text = (item.textContent || '').toLowerCase();
+          const matchesQuery = !query || text.includes(query);
+          const matchesCategory = activeFilter === 'Todos' || (item.textContent || '').includes(activeFilter);
+          const show = matchesQuery && matchesCategory;
+          item.classList.toggle('hidden', !show);
+          if (show) visible += 1;
+        });
+
+        const summaryText = query
+          ? `Mostrando ${visible} de ${bookItems.length} livros para a busca “${query}”.`
+          : `Mostrando ${visible} de ${bookItems.length} livros na biblioteca.`;
+        resultsSummary.textContent = summaryText;
+        emptyState.classList.toggle('hidden', visible !== 0);
+      }
+
+      searchInput.addEventListener('input', applyFilter);
+      filterButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          activeFilter = button.dataset.filter || 'Todos';
+          filterButtons.forEach((chip) => chip.classList.toggle('active', chip === button));
+          applyFilter();
+        });
+      });
+
+      bookItems.forEach((item) => {
+        item.addEventListener('click', () => {
+          const title = item.querySelector('h3')?.textContent || 'Resumo';
+          document.getElementById('lesson-title').textContent = title;
+          const btn = document.getElementById('bookmark-btn');
+          btn.classList.remove('bookmarked');
+          btn.textContent = 'Salvar resumo';
+          btn.setAttribute('aria-pressed', 'false');
+        });
+      });
+
+      document.getElementById('bookmark-btn').addEventListener('click', (event) => {
+        const btn = event.currentTarget;
+        const marked = btn.classList.toggle('bookmarked');
+        btn.textContent = marked ? 'Resumo salvo' : 'Salvar resumo';
+        btn.setAttribute('aria-pressed', String(marked));
+      });
+
+      applyFilter();
+    })();
+  </script>
 </body>
 </html>

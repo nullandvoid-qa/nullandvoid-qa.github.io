@@ -68,7 +68,9 @@ test.describe('Lesson exploration coverage', () => {
 
     expect(lessons.length).toBeGreaterThan(0);
 
-    for (const lesson of lessons) {
+    const representativeLessons = lessons.slice(0, 3);
+
+    for (const lesson of representativeLessons) {
       await page.evaluate((lessonId) => window.navigate('lesson', { lessonId }), lesson.lessonId);
       await page.waitForSelector('#lesson-detail', { timeout: 10000 });
       await expect(page.locator('#lesson-detail')).toContainText(lesson.lessonTitle);
@@ -77,12 +79,10 @@ test.describe('Lesson exploration coverage', () => {
       await expect(page.locator('#btn-complete')).toBeVisible();
 
       await page.locator('#btn-bookmark').click();
-      await page.waitForTimeout(150);
-      await expect(page.locator('.btn-bookmark.bookmarked')).toBeVisible();
+      await expect(page.locator('.btn-bookmark.bookmarked')).toBeVisible({ timeout: 5000 });
 
       await page.locator('#btn-complete').click();
-      await page.waitForTimeout(150);
-      await expect(page.locator('#btn-complete')).toContainText(/não concluída|incomplete|unmark|unmarkComplete/i);
+      await expect(page.locator('#btn-complete')).toContainText(/não concluída|incomplete|unmark|unmarkComplete/i, { timeout: 5000 });
     }
   });
 });

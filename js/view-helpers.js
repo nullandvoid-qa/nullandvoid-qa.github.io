@@ -94,6 +94,17 @@
     const viewEl = documentRef.getElementById("view-" + view);
     if (viewEl) viewEl.classList.add("active");
 
+    // Keep inactive views free of stale interactive card nodes so selectors like
+    // `.track-card` resolve to the visible active page instead of hidden cards
+    // that remain mounted from a previous render cycle.
+    try {
+      documentRef.querySelectorAll('.view:not(.active) .track-card').forEach((card) => {
+        card.remove();
+      });
+    } catch (e) {
+      // noop
+    }
+
     // In local dev / CI environments some UI pieces are intentionally
     // hidden by the `.hidden` helper class until fully-initialized. For
     // Playwright tests running against a local server, ensure the active

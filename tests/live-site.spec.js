@@ -36,7 +36,10 @@ async function loadTrackMetadata(page, trackId) {
   }, trackId);
 }
 
-test.describe('Null and Void QA live website end-to-end', () => {
+const runLiveSiteChecks = process.env.RUN_LIVE_SITE === '1';
+const liveSiteDescribe = runLiveSiteChecks ? test.describe : test.describe.skip;
+
+liveSiteDescribe('Null and Void QA live website end-to-end', () => {
   test('homepage and main navigation are available on the live site', async ({ page }) => {
     await waitForSiteReady(page);
 
