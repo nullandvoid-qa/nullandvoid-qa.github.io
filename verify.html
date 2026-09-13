@@ -529,6 +529,18 @@
 
       initCertificates();
       showLeaderboard();
+
+      // Check if certificate code was provided in URL query parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      const codeFromUrl = urlParams.get('code');
+      if (codeFromUrl) {
+        const verifyCodeInput = document.getElementById('verifyCode');
+        if (verifyCodeInput) {
+          verifyCodeInput.value = codeFromUrl.toUpperCase();
+          // Auto-verify after a brief delay to ensure UI is ready
+          setTimeout(() => verifyCertificate(), 100);
+        }
+      }
     });
   </script>
 

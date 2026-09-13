@@ -1,97 +1,235 @@
-# Backlog & Checklist de Tarefas — Null and Void QA Course
+# Roadmap Estratégico — Null and Void QA Course
 
-Este documento contém a análise completa do projeto **Null and Void QA Course** e a checklist detalhada de tarefas pendentes, priorizadas a partir das mudanças e atualizações mais críticas para a qualidade, estabilidade e experiência do aluno.
+Este documento concentra o próximo ciclo de evolução do projeto, focado em transformar a plataforma em uma referência gratuita de aprendizagem em QA, com uma camada premium de mentorias, trilhas avançadas, labs e suporte individualizado.
 
----
-
-## 📊 Resumo Executivo da Análise
-
-O projeto encontra-se em um nível avançado de maturidade técnica e de conteúdo. Abaixo o diagnóstico por pilares:
-
-| Pilar | Status | Diagnóstico Principal |
-| :--- | :---: | :--- |
-| **Infraestrutura & Validação** | 🟢 OK | 42 lições validadas, catálogo sem inconsistências, 177 testes unitários Jest passando (100%). |
-| **Higiene do Repositório** | 🔴 Crítico | Diversos arquivos temporários de teste, PDFs/PNGs de debug e logs soltos na raiz (`tmp-certificate.*`, `page-debug.html`, `quiz-*.json`, etc.). `.gitignore` desatualizado. |
-| **Testes & Teardown** | 🟡 Atenção | Jest reporta aviso de vazamento de processos/timers ao finalizar a suíte de testes. |
-| **Conteúdo Didático** | 🟡 Atenção | 11 lições curtas/conceituais necessitam de maior profundidade, cenários práticos e exemplos executáveis. |
-| **Internacionalização (i18n)** | 🟢 OK / 🟡 | Sistema de i18n centralizado funcional (PT/EN), porém vocabulário técnico precisa de padronização editorial. |
-| **Arquitetura de Código** | 🟡 Atenção | O arquivo `js/view-helpers.js` tem 72KB e acumula múltiplas responsabilidades de UI. |
-| **PWA & Offline** | 🟢 OK | Service worker funcional, necessita apenas de auditoria final da lista de precache. |
+O objetivo é criar a melhor plataforma de aprendizagem de QA gratuita disponível na internet, com uma experiência premium que também gere receita por meio de cursos avançados, mentorias e acompanhamento pago.
 
 ---
 
-## 🚨 Prioridade 1: Tarefas Críticas (Impacto Imediato na Estabilidade e Repositório)
+## 🎯 Visão do Produto
 
-- [x] **Limpeza e Higiene do Repositório Root**
-  - [x] Remover arquivos temporários/debug soltos na raiz: `page-debug.html`, `tmp-certificate.pdf`, `tmp-certificate.png`, `tmp-en-snippet.txt`, `test-output-utf8.txt`, `test-output.txt`, `track-*.json`, `quiz-*.json`, `quiz-page.png`, `track-click-*.log`.
-  - [x] Atualizar `.gitignore` para ignorar padrões de arquivos temporários (`tmp-*`, `*.pdf`, `quiz-*.json`, `track-*.json`, `playwright-report/`, `test-results/`).
-  - [x] Criar script `npm run clean` em `package.json` para limpeza automatizada de artefatos de teste.
+A plataforma deve funcionar como:
 
-- [x] **Correção de Leak de Processos/Timers na Suíte Jest**
-  - [x] Investigar com `npx jest --detectOpenHandles` a origem dos timers/handles não encerrados pós-teste.
-  - [x] Adicionar teardown adequado (`afterEach` / `afterAll` limpando mocks, intervals e DOM handles em `js/__tests__/`).
+- base gratuita e de alto valor para quem quer aprender QA do zero até nível profissional;
+- referência em conteúdo técnico de qualidade, com foco em prática, exercícios e casos reais;
+- porta de entrada para uma experiência premium de mentoria, trilhas avançadas e formação aplicada;
+- centro de comunidade e autoridade de marca no ecossistema de QA e testes de software.
 
-- [x] **Correção de Falha em Teste E2E do Playwright**
-  - [x] Corrigir o teste `persists bookmark and completion state after a full reload` em `tests/regression-coverage.spec.js:226`.
-  - [x] Garantir que o estado de navegação (hash `#lesson/id` ou restauração de rota) permaneça no elemento `#btn-bookmark` após `page.reload()`.
+A proposta de monetização ideal é:
 
-
+- conteúdo gratuito e profundo para todos;
+- caminho premium com mentorias, trilhas avançadas, feedback, comunidades fechadas e projetos patrocinados;
+- cursos premium focados em nichos, como testes de API, automação, mobile, performance, segurança e qualidade de produto.
 
 ---
 
-## 🔥 Prioridade 2: Alta Prioridade (Qualidade do Conteúdo Didático e Vocabulário)
+## 🧭 Prioridade P0 — Fundação da Plataforma Premium
 
-- [x] **Expansão e Aprofundamento das Lições Sucintas**
-  - [x] **L22 — Testes de Regressão**: adicionar exemplo prático de matriz de regressão e estratégias de seleção de testes.
-  - [x] **L23 — Testes de Usabilidade**: adicionar checklist prático de Heurísticas de Nielsen e exercício de avaliação.
-  - [x] **L24 — Testes de Segurança**: detalhar top 5 OWASP com exemplos de payload de teste seguros.
-  - [x] **L25 — Testes de Carga/Estresse**: expandir cenários k6/JMeter com métricas de tempo de resposta e percentis (p95/p99).
-  - [x] **L26 — Testes de Integração**: adicionar diagrama de arquitetura e exemplos de stubs/mocks em chamadas HTTP.
-  - [x] **L27 — Pact & Consumer-Driven Contracts**: validar alinhamento com o catálogo e garantir exemplo executável de contrato consumidor/provedor.
-  - [x] **L28 — BDD & Cucumber**: incluir especificação de cenários Gherkin com bons vs maus padrões.
-  - [x] **L30 — Mobile QA**: expandir com estratégias de locators para Android/iOS e comandos Appium.
-  - [x] **L32 — CI/CD Pipelines**: incluir exemplo prático de pipeline GitHub Actions executando testes de QA.
-  - [x] **L34 — Acessibilidade (a11y)**: incluir guia prático de teste com leitores de tela e ferramentas automáticas (axe/lighthouse).
-  - [x] **L35 — Carreira & Checklist de Prontidão**: consolidar a transição entre introdução conceitual e prática de mercado.
+- [ ] **Definir a arquitetura do produto de aprendizagem**
+  - [ ] Separar claramente o modelo de conteúdo gratuito vs premium.
+  - [ ] Criar estrutura de trilhas, módulos, mentorias e certificações.
+  - [ ] Estabelecer experiência de onboarding por perfil: iniciante, intermediário e profissional.
 
-- [x] **Padronização Editorial e Vocabulário Técnico (PT / EN)**
-  - [x] Padronizar a escrita e aplicação de termos técnicos em inglês (*charter*, *pipeline*, *Page Object*, *E2E*, *shift-left*, *exploratory testing*, *smoke test*, *stub/mock*).
-  - [x] Adicionar explicações didáticas no primeiro uso de cada termo técnico em português.
+- [ ] **Mapear a jornada de aluno para conversão**
+  - [ ] Definir etapas: descoberta → matrícula gratuita → engajamento → progresso → mentorias → upgrade premium.
+  - [ ] Criar funnels de CTA para cursos, mentorias e comunidade.
+  - [ ] Medir retenção por aula, trilha e tempo de conclusão.
 
-- [x] **Auditoria de Paridade i18n no Runtime**
-  - [x] Verificar se todos os botões, banners, descrições de trilhas e quizzes alternam 100% de PT para EN sem fallbacks visíveis.
+- [ ] **Reforçar a identidade da marca e autoridade de conteúdo**
+  - [ ] Positionar a plataforma como referência em QA prática, não só teoria.
+  - [ ] Criar série de conteúdos de alta qualidade: casos reais, entrevistas, análises técnicas e tutoriais.
+  - [ ] Produzir materiais de nível premium para destacar a diferença entre conteúdo gratuito e pago.
 
 ---
 
-## ⚡ Prioridade 3: Média Prioridade (Arquitetura, PWA e Certificados)
+## 💎 Prioridade P1 — Melhor experiência de aprendizagem
 
-- [ ] **Refatoração do Monolito `js/view-helpers.js`**
-  - [ ] Analisar e separar funções auxiliares de UI em módulos menores de responsabilidade única (ex: renderização de cards, modais, quizzes).
-  - [ ] Manter retrocompatibilidade total com a API global consumida pelos scripts da aplicação.
+- [ ] **Revolucionar o dashboard do aluno**
+  - [ ] Progressão por trilha, metas, próximos passos e conquistas.
+  - [ ] Indicadores de tempo investido, conclusão por módulo e nível de domínio.
+  - [ ] Modo de estudo: foco, revisão, próximos desafios e últimas aulas.
 
-- [ ] **Validação do Fluxo de Certificados & Exportação PDF**
-  - [ ] Testar exportação de certificado via jsPDF/html2canvas em resoluções mobile e desktop.
-  - [ ] Confirmar se o QR Code gerado direciona para `verify.html` com os parâmetros de validação corretos.
+- [ ] **Criar trilhas de aprendizagem por especialidade**
+  - [ ] QA Manual
+  - [ ] Testes de API
+  - [ ] Automação em Frontend/Backend
+  - [ ] Testes Mobile
+  - [ ] Performance e Resiliência
+  - [ ] Segurança e QA de Produto
+  - [ ] Carreira e posicionamento profissional
 
-- [ ] **Auditoria de PWA & Service Worker**
-  - [ ] Verificar se a lista de precache em `js/service-worker.js` inclui todos os arquivos estáticos essenciais para funcionamento offline 100% sem erros 404 no console.
+- [ ] **Aprimorar o sistema de exercícios e lab prático**
+  - [ ] Adicionar labs com tarefas interativas e avaliações automáticas.
+  - [ ] Incluir cenário real de bug report, triagem, priorização e validação.
+  - [ ] Criar exercícios de debugging, testes de regressão e escrita de casos de teste.
+
+- [ ] **Elevar a qualidade da experiência visual e de aprendizagem**
+  - [ ] Revisar layout dos módulos, cards, dashboard e páginas de curso.
+  - [ ] Melhorar hierarquia visual, leitura, foco e navegação em mobile.
+  - [ ] Garantir microinterações de feedback, progresso e motivação.
 
 ---
 
-## 🌱 Prioridade 4: Baixa Prioridade (Polimento Visual, SEO e Acessibilidade)
+## 🧠 Prioridade P1 — Conteúdo premium e diferenciação
 
-- [ ] **Polimento Visual & Contraste A11y**
-  - [ ] Verificar taxa de contraste dos elementos no modo escuro (dark mode).
-  - [ ] Garantir `aria-label` e `role` em botões dinâmicos (bookmark, conclusão de aula, modais).
+- [ ] **Expandir o conteúdo para nível profissional**
+  - [ ] Adicionar estudos de caso de empresas reais e fluxos de QA em produtos complexos.
+  - [ ] Incluir exemplos com QA em sistemas distribuídos, integrações e microserviços.
+  - [ ] Produzir materiais sobre liderança de QA, qualidade em times ágeis e métricas de produto.
 
-- [ ] **Verificação de Links Externos e Recursos**
-  - [ ] Executar e validar `npm run validate:links` para garantir que nenhum link ou referência externa esteja quebrado.
+- [ ] **Criar cursos pagos em nichos de alta demanda**
+  - [ ] Testes de API e contratos
+  - [ ] Automação de testes com Playwright e Cypress
+  - [ ] QA Mobile + Appium
+  - [ ] Performance, observabilidade e testes de carga
+  - [ ] Segurança em aplicações web e APIs
+  - [ ] QA para produto e UX
+
+- [ ] **Desenvolver mentorias premium**
+  - [ ] mentoria individual ou em grupo;
+  - [ ] revisão de projetos e PRs;
+  - [ ] code review de testes e automação;
+  - [ ] feedback para portfólio e preparação para vagas.
 
 ---
 
-## 📋 Critérios de Aceite para Cada Tarefa
+## 💸 Prioridade P1 — Monetização e modelo de negócio
 
-Para considerar uma tarefa concluída:
-1. Os testes de validação (`npm run validate:all`) devem passar com 0 erros.
-2. O conteúdo ou código alterado deve ser testado visualmente ou via testes unitários/E2E.
-3. Nenhuma regressão nas funcionalidades de navegação, troca de idioma ou quizzes.
+- [ ] **Definir escala de preços e entregáveis premium**
+  - [ ] curso individual;
+  - [ ] assinatura de acesso premium;
+  - [ ] mentorias recorrentes;
+  - [ ] trilhas de aceleração para mercado;
+  - [ ] certificações com valor profissional.
+
+- [ ] **Criar pacote de assinatura premium**
+  - [ ] acesso a módulos avançados;
+  - [ ] comunidade exclusiva;
+  - [ ] materiais extras;
+  - [ ] suporte e feedback personalizado.
+
+- [ ] **Implementar checkout e gestão de acesso**
+  - [ ] fluxo de compra para cursos e mentorias;
+  - [ ] controle de acesso por plano;
+  - [ ] diferenciação de conteúdo liberado por assinante.
+
+---
+
+## 👥 Prioridade P2 — Comunidade, mentorias e networking
+
+- [ ] **Criar comunidade ativa de QA**
+  - [ ] fórum de dúvidas por trilha;
+  - [ ] desafios semanais;
+  - [ ] review de casos de teste e automação;
+  - [ ] vagas e oportunidades profissionais.
+
+- [ ] **Implementar sistema de mentorias**
+  - [ ] agendamento de sessões;
+  - [ ] calendário de disponibilidade;
+  - [ ] histórico de encontros e acompanhamento;
+  - [ ] avaliação de mentor e aluno.
+
+- [ ] **Construir um programa de suporte de carreira**
+  - [ ] review de CV e LinkedIn;
+  - [ ] preparação para entrevistas técnicas;
+  - [ ] simulações de testes de QA e avaliação de desempenho.
+
+---
+
+## 🔍 Prioridade P2 — SEO, crescimento e autoridade digital
+
+- [ ] **Posicionar a plataforma para atrair busca orgânica**
+  - [ ] páginas por assunto: QA manual, automação, testes de API, mobile, segurança, performance.
+  - [ ] guias aprofundados e artigos em PT/EN;
+  - [ ] conteúdo recorrente para SEO e autoridade no mercado.
+
+- [ ] **Criar biblioteca de recursos**
+  - [ ] templates de casos de teste;
+  - [ ] checklists de QA;
+  - [ ] planilhas de regressão;
+  - [ ] artigos e materiais extras para download.
+
+- [ ] **Aumentar assinatura e retenção por conteúdo gratuito de alto valor**
+  - [ ] newsletters;
+  - [ ] desafios e quizzes semanais;
+  - [ ] materiais premium em “next step” para trajetórias de conversão.
+
+---
+
+## 🛠️ Prioridade P2 — Qualidade de produto e engineering
+
+- [ ] **Fortalecer testes automatizados e qualidade de código**
+  - [ ] aumentar cobertura de E2E em fluxos críticos da aprendizagem;
+  - [ ] validar progresso, matrícula, acessos premium e mentorias;
+  - [ ] adicionar testes para regressão em checkout, dashboard e trilhas.
+
+- [ ] **Aumentar robustez em acessibilidade e performance**
+  - [ ] auditoria contínua de Lighthouse e axe;
+  - [ ] melhorar contraste, foco, leitura e usabilidade em todos os componentes;
+  - [ ] garantir performance otimizada em mobile.
+
+- [ ] **Preparar arquitetura para escala**
+  - [ ] estrutura modular e escalável para cursos novos e módulos premium;
+  - [ ] separar domínio de conteúdo, perfil do aluno e monetização;
+  - [ ] facilitar manutenção e evolução da plataforma sem acoplamento.
+
+---
+
+## 🚀 Prioridade P3 — Diferenciação competitiva real
+
+- [ ] **Construir uma “universidade de QA” em vez de apenas um site de conteúdo**
+  - [ ] trilhas guiadas;
+  - [ ] projetos práticos;
+  - [ ] acompanhamento de progresso;
+  - [ ] mentorias e feedback humano;
+  - [ ] certificações reconhecidas.
+
+- [ ] **Criar um portfólio para alunos**
+  - [ ] desafios e projetos entregáveis;
+  - [ ] demonstração de casos de teste e automação;
+  - [ ] documentos para apresentação em entrevistas e processos seletivos.
+
+- [ ] **Transformar a comunidade em vantagem competitiva**
+  - [ ] conteúdo em comunidade ativa;
+  - [ ] rede profissional e oportunidades de carreira;
+  - [ ] presença forte em GitHub, LinkedIn e eventos do setor.
+
+---
+
+## ✅ Critérios de Aceite para o Próximo Ciclo
+
+Para considerar uma iniciativa conclúida, ela deve:
+
+1. entregar valor direto ao aluno em aprendizagem prática;
+2. melhorar retenção, progresso e envolvimento na plataforma;
+3. deixar a base pronta para monetização premium sem quebrar o modelo gratuito;
+4. manter consistência de UX, acessibilidade e performance;
+5. gerar autoridade e crescimento de marca no mercado de QA.
+
+---
+
+## 📌 Prioridade de Execução Recomendada
+
+### Fase 1 — Construção da base premium
+- [ ] arquitetura da jornada e diferenciação gratuita/premium
+- [ ] dashboard e trilhas
+- [ ] labs e exercícios práticos
+- [ ] modelo de mentorias e monetização
+
+### Fase 2 — Aceleração de autoridade
+- [ ] SEO, artigos, comunidade, webinar e desafios
+- [ ] cursos avançados em nichos de mercado
+- [ ] certificações e portfólio para alunos
+
+### Fase 3 — Escala e liderança de mercado
+- [ ] expandir cursos premium, mentorias e programas de carreira
+- [ ] reforçar comunidade e autoridade de marca
+- [ ] tornar a plataforma a referência gratuita de QA no mercado
+
+---
+
+## 🏁 Mensagem Final
+
+O projeto já está com uma base sólida, mas o próximo salto é estratégico: sair do estágio de curso estático para uma plataforma de aprendizagem completa, com conteúdo gratuito de alto nível e uma experiência premium que transforma conhecimento em carreira.
+
+A meta não é apenas ensinar QA; é criar a melhor plataforma gratuita de aprendizagem em QA do mundo, com capacidade real de competir com produtos pagos, mentoria e formação profissional de alto nível.

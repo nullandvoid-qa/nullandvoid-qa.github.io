@@ -33,7 +33,7 @@
         <h1>${escapeHtml(lesson.title)}</h1>
         <div style="display:flex;gap:0.5rem;align-items:center;flex-shrink:0">
           <span class="tier-badge tier-${enr.tier}">${tierLabel(enr.tier)}</span>
-          <button class="btn-bookmark ${isBookmarked ? "bookmarked" : ""}" id="btn-bookmark" title="${isBookmarked ? t("lesson.unbookmark") : t("lesson.bookmark")}" aria-label="${isBookmarked ? t("lesson.unbookmark") : t("lesson.bookmark")}">
+          <button type="button" class="btn-bookmark ${isBookmarked ? "bookmarked" : ""}" id="btn-bookmark" title="${isBookmarked ? t("lesson.unbookmark") : t("lesson.bookmark")}" aria-label="${isBookmarked ? t("lesson.unbookmark") : t("lesson.bookmark")}">
             ${icons ? icons.get(isBookmarked ? 'bookmarkFilled' : 'bookmark', '', '18') : ''}
           </button>
         </div>
@@ -54,10 +54,10 @@
         <div id="lesson-checklist-zone"></div>
         <div id="lesson-quiz-zone"></div>
         <div class="lesson-actions">
-          <button class="btn btn-primary" id="btn-complete">${done ? t("lesson.unmarkComplete") : t("lesson.markComplete")}</button>
-          ${prev ? `<button class="btn btn-secondary" id="btn-prev">${icons ? icons.get('arrowLeft', '', '16') + ' ' : '← '}${t("lesson.prev")}</button>` : ""}
-          ${next ? `<button class="btn btn-secondary" id="btn-next">${t("lesson.next")} ${icons ? icons.get('arrowRight', '', '16') : '→'}</button>` : ""}
-          <button class="btn btn-outline" id="btn-feedback" style="margin-left: auto; display:inline-flex; align-items:center; gap:0.4rem;">${icons ? icons.get('feedback', '', '16') + ' ' : ''}${t("lesson.feedbackTitle", lang === "en" ? "Feedback" : "Feedback")}</button>
+          <button type="button" class="btn btn-primary" id="btn-complete" aria-label="${done ? t("lesson.unmarkComplete") : t("lesson.markComplete")}">${done ? t("lesson.unmarkComplete") : t("lesson.markComplete")}</button>
+          ${prev ? `<button type="button" class="btn btn-secondary" id="btn-prev" aria-label="${t("lesson.prev")}">${icons ? icons.get('arrowLeft', '', '16') + ' ' : '← '}${t("lesson.prev")}</button>` : ""}
+          ${next ? `<button type="button" class="btn btn-secondary" id="btn-next" aria-label="${t("lesson.next")}">${t("lesson.next")} ${icons ? icons.get('arrowRight', '', '16') : '→'}</button>` : ""}
+          <button type="button" class="btn btn-outline" id="btn-feedback" aria-label="${t("lesson.feedbackTitle", lang === "en" ? "Feedback" : "Feedback")}" style="margin-left: auto; display:inline-flex; align-items:center; gap:0.4rem;">${icons ? icons.get('feedback', '', '16') + ' ' : ''}${t("lesson.feedbackTitle", lang === "en" ? "Feedback" : "Feedback")}</button>
         </div>
       </article>`;
   }
@@ -75,8 +75,8 @@
         </div>
         <textarea id="feedback-text" rows="4" style="width:100%;resize:vertical;" placeholder="${t("lesson.feedbackPlaceholder", lang === "en" ? "Tell us what was helpful or confusing" : "Conte-nos o que foi útil ou confuso")}"></textarea>
         <div style="display:flex;gap:0.5rem;margin-top:0.75rem;">
-          <button class="btn btn-primary btn-sm" id="btn-feedback-submit">${t("lesson.feedbackSubmit", lang === "en" ? "Send" : "Enviar")}</button>
-          <button class="btn btn-secondary btn-sm" id="btn-feedback-cancel">${t("lesson.feedbackCancel", lang === "en" ? "Cancel" : "Cancelar")}</button>
+          <button type="button" class="btn btn-primary btn-sm" id="btn-feedback-submit" aria-label="${t("lesson.feedbackSubmit", lang === "en" ? "Send" : "Enviar")}">${t("lesson.feedbackSubmit", lang === "en" ? "Send" : "Enviar")}</button>
+          <button type="button" class="btn btn-secondary btn-sm" id="btn-feedback-cancel" aria-label="${t("lesson.feedbackCancel", lang === "en" ? "Cancel" : "Cancelar")}">${t("lesson.feedbackCancel", lang === "en" ? "Cancel" : "Cancelar")}</button>
         </div>
       </div>`;
   }
