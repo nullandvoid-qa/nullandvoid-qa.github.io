@@ -150,6 +150,9 @@
   // MutationObserver to ensure critical anchors (breadcrumb, track view) are visible
   try {
     const ensureTrackVisible = () => {
+      const currentView = window.NVApp?.state?.currentView;
+      if (currentView !== 'track') return;
+
       if (window.__nv_mutation_lock) return;
       window.__nv_mutation_lock = true;
       try {
@@ -184,6 +187,7 @@
         const bc = document.getElementById('track-breadcrumb');
         const view = document.getElementById('view-track');
         if (!bc && !view) return;
+        if (window.NVApp?.state?.currentView !== 'track') return;
       } catch (e) {
         return;
       }
