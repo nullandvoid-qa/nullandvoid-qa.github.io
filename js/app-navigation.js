@@ -153,6 +153,14 @@ async function navigate(view, params = {}) {
     if (typeof console !== 'undefined' && typeof console.error === 'function') console.error('Navigation error:', err);
   }
 
+  if (safeView === 'track') {
+    const trackDetail = typeof document !== 'undefined' ? document.getElementById('track-detail') : null;
+    const track = (getState().tracks || []).find((item) => item.id === safeParams.trackId);
+    if (trackDetail && track && !trackDetail.textContent.trim()) {
+      trackDetail.innerHTML = `<div class="empty-state track-loading-state" role="status" aria-live="polite">${safeT('track.loading', 'Carregando trilha...')}</div>`;
+    }
+  }
+
   // Post-handler stabilization: when navigating to a track, wait briefly for
   // the track-detail renderer to produce `.lesson-item` elements and ensure
   // breadcrumb/track-detail are unhidden for test runners.

@@ -6,7 +6,7 @@
  * @global clients
  */
 
-const CACHE_VERSION = "v1.0.10";
+const CACHE_VERSION = "v1.0.12";
 const CACHE_NAME = `nullandvoid-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `nullandvoid-runtime-${CACHE_VERSION}`;
 
