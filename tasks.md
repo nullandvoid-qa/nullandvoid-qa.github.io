@@ -12,7 +12,7 @@ A base já passou por uma consolidação importante de conteúdo, estrutura e m�
 - [x] Atualizar a versão do cache do service worker para `v1.0.12`.
 - [x] Validar lint sem erros ou avisos.
 - [x] Validar jornada autenticada, home, navegação de trilhas e console (`6/6` testes E2E aprovados).
-- [ ] Publicar os arquivos atualizados no GitHub Pages e confirmar o comportamento no domínio live.
+- [x] Publicar os arquivos atualizados no GitHub Pages e confirmar o comportamento no domínio live (`v1.0.12`, breadcrumb e 6 aulas renderizados em viewport mobile, sem problemas de console).
 
 - [x] Remover blocos vazios, inconsistências de escopo e duplicidades que ainda impedem uma validação limpa.
 
