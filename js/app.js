@@ -715,6 +715,14 @@
     tracks = mergeTrackSources();
     tracks = Array.isArray(tracks) ? tracks : [];
 
+    // Normalize the initial shell before deferred renderers and service-worker
+    // updates can leave a stale parametrized view active over the home view.
+    try {
+      window.NVViewHelpers?.setActiveView?.(document, 'home', 'tracks');
+    } catch (error) {
+      // Keep startup resilient when the view helper is not ready yet.
+    }
+
     appState.lang = lang;
     document.documentElement.lang = appState.lang === "en" ? "en" : "pt-BR";
     // sync homeFilter with saved persona on load
@@ -752,6 +760,18 @@
     // Start initial navigation immediately; `initialNavigation` will retry
     // for a short period waiting for `renderLesson` to become available.
     initialNavigation();
+
+    const normalizeInitialView = () => {
+      if (appState.currentView !== 'home') return;
+      try {
+        window.NVViewHelpers?.setActiveView?.(document, 'home', 'tracks');
+      } catch (error) {
+        // Keep startup resilient when a deferred view helper is unavailable.
+      }
+    };
+    normalizeInitialView();
+    setTimeout(normalizeInitialView, 0);
+    setTimeout(normalizeInitialView, 250);
 
     // During local development and automated tests, some UI state can remain
     // hidden due to timing or service worker caching. Ensure track grids and
