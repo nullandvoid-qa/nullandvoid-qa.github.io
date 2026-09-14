@@ -772,6 +772,16 @@
     normalizeInitialView();
     setTimeout(normalizeInitialView, 0);
     setTimeout(normalizeInitialView, 250);
+    if (window.MutationObserver) {
+      const initialViewGuard = new MutationObserver(() => {
+        if (appState.currentView === 'home') normalizeInitialView();
+      });
+      initialViewGuard.observe(document.querySelector('main') || document.body, {
+        attributes: true,
+        attributeFilter: ['class'],
+        subtree: true,
+      });
+    }
 
     // During local development and automated tests, some UI state can remain
     // hidden due to timing or service worker caching. Ensure track grids and
