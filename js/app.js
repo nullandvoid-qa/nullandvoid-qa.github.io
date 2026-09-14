@@ -774,7 +774,10 @@
     setTimeout(normalizeInitialView, 250);
     if (window.MutationObserver) {
       const initialViewGuard = new MutationObserver(() => {
-        if (appState.currentView === 'home') normalizeInitialView();
+        const homeView = document.getElementById('view-home');
+        if (appState.currentView === 'home' && homeView && !homeView.classList.contains('active')) {
+          normalizeInitialView();
+        }
       });
       initialViewGuard.observe(document.querySelector('main') || document.body, {
         attributes: true,
